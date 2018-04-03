@@ -1,0 +1,18 @@
+# npm debugging logs
+*.log
+# project dependencies
+node_modules
+# OSX folder attributes
+.DS_Store
+# temporary files
+*.tmp
+*~
+dist
+prices
+SymbolList.json
+coverage
+flow-typed
+*firebase-adminsdk*.json
+lilithEquities.json
+sachielAssets.json
+package-lock.json
