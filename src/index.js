@@ -1,13 +1,10 @@
-// @flow
-let tool = process.argv[2];
-console.log.log('tool ' + tool);
+import pf1 from "./priceFeed1";
 
-let live = process.argv.includes('live');
-util.log('using ' + (live ? 'live' : 'dev') + ' env');
+let tool = process.argv[2];
 
 switch (tool) {
-	default:
-		util.log('no tool selected, exit');
-		process.exit();
+	case "pf1":
+		pf1.startFeeding();
 		break;
+
 }
