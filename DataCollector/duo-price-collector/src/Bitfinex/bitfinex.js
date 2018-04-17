@@ -7,6 +7,7 @@ const price_collect_interval=2;    //2 Sec
 
 var BitfinexCollector = /** @class */ (function () {
 	function BitfinexCollector() {
+		console.log("init func");
 	}
    
 	// BitfinexCollector.prototype.getETHprice = function (url) {

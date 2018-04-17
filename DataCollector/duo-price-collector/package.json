@@ -9,7 +9,7 @@
     "flow": "flow",
     "eslint": "eslint src",
     "postinstall": "flow-typed install",
-    "pf1": "babel-node ./src/index pf1"
+    "bitfinex": "babel-node ./src/index bitfinex"
   },
   "jest": {
     "globals": {
