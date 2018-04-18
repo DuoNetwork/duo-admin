@@ -4,9 +4,9 @@ const request = require('request');
 const url='https://api.bitfinex.com/v1';
 
 
-//Bitfinex Web Socket
-const WebSocket = require('ws');
-const wss = new WebSocket('wss://api.bitfinex.com/ws/');
+//Bitfinex Web Socket Libiray
+// const WebSocket = require('ws');
+// const wss = new WebSocket('wss://api.bitfinex.com/ws/');
 
 
 class BitfinexUtil {

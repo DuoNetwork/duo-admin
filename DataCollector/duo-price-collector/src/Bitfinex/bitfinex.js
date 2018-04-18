@@ -3,7 +3,7 @@
 // var bitfinex_request = require('request');
 const BASE_HOST_LINK='https://api.bitfinex.com/v1';
 
-const price_collect_interval=2;    //2 Sec
+// const price_collect_interval=2;    //2 Sec
 
 var BitfinexCollector = /** @class */ (function () {
 	function BitfinexCollector() {
@@ -32,6 +32,7 @@ var BitfinexCollector = /** @class */ (function () {
 	BitfinexCollector.prototype.startProcess = function () {
 		var _this = this;
 		var FetchPriceFunc = function () {
+			console.log("test!");
 			_this.getETHprice(BASE_HOST_LINK)
 				.then(function () {
 					console.log("test!");
@@ -43,7 +44,7 @@ var BitfinexCollector = /** @class */ (function () {
                
 				});
 		};
-		setInterval(FetchPriceFunc, price_collect_interval);
+		setInterval(FetchPriceFunc, 1);
 	};
 	return BitfinexCollector;
 }());
