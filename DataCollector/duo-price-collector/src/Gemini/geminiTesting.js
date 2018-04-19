@@ -2,8 +2,6 @@
 'use strict';
 
 class GeminiUtil {
- 
-	//version 2 WebSocket API ---
 
 	fetchCurrentETHPriceByOwnWebSocket() {
 
@@ -12,19 +10,17 @@ class GeminiUtil {
 	
 		w.on('message', (msg) => {
 			var parsedJson= JSON.parse(msg);
-			// console.log(parsedJson.events[0].type);
+            
 			if(parsedJson.events[0].type=='trade'){
-				console.log(parsedJson);
+				console.log(parsedJson.events[0]);
 			}
-
 			// console.log(msg);
 		});
  
 	
 		w.on('open', () => {
-			console.log('WebSocket is open');
+			console.log('[Gemini]-WebSocket is open');
 		});  
-
 	}
 
 }

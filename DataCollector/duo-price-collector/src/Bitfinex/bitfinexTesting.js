@@ -255,7 +255,9 @@ class BitfinexUtil {
 		});
 	
 		w.on('open', () => {
+			console.log('[Bitfinex]-WebSocket is open');
 			w.send(msg);
+			console.log('subscribe trade');
 		});  
 
 	}
