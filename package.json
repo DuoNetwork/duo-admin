@@ -9,7 +9,7 @@
     "flow": "flow",
     "eslint": "eslint src",
     "postinstall": "flow-typed install",
-    "pf1": "babel-node ./src/index pf1"
+    "pf": "babel-node ./src/index pf"
   },
   "jest": {
     "globals": {
@@ -45,6 +45,7 @@
     "moment": "^2.21.0",
     "node-binance-api": "^0.4.22",
     "node-bittrex-api": "^0.8.3",
+    "node-schedule": "^1.3.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "web3": "^1.0.0-beta.33"

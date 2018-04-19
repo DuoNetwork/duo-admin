@@ -1,10 +1,10 @@
-import pf1 from "./priceFeed1";
+import pf from "./priceFeed";
 
 let tool = process.argv[2];
 
 switch (tool) {
-	case "pf1":
-		pf1.startFeeding();
+	case "pf":
+		pf.startFeeding();
 		break;
 
 }
