@@ -69,3 +69,26 @@ We are splitting the public trade messages into two: a “te” message which mi
 [946,"hb"]
 [946,"hb"]
 [946,"hb"]
+
+
+
+
+
+GDAX (coinbase) websocket:
+
+{"type":"received","order_id":"7717058a-1265-4e0d-9d5b-adbce8bbc47c","order_type":"limit","size":"30.61730000","price":"572.12000000","side":"buy","product_id":"ETH-USD","sequence":3396459121,"time":"2018-04-20T00:41:39.012000Z"}
+{"type":"open","side":"buy","price":"572.12000000","order_id":"7717058a-1265-4e0d-9d5b-adbce8bbc47c","remaining_size":"30.61730000","product_id":"ETH-USD","sequence":3396459122,"time":"2018-04-20T00:41:39.012000Z"}
+{"type":"received","order_id":"810f8002-90a0-421f-a060-58310bdbae4a","order_type":"limit","size":"0.07500000","price":"566.43000000","side":"buy","client_oid":"bec54e06-7609-4ef5-8000-0019269c6c69","product_id":"ETH-USD","sequence":3396459123,"time":"2018-04-20T00:41:39.015000Z"}
+{"type":"open","side":"buy","price":"566.43000000","order_id":"810f8002-90a0-421f-a060-58310bdbae4a","remaining_size":"0.07500000","product_id":"ETH-USD","sequence":3396459124,"time":"2018-04-20T00:41:39.015000Z"}
+
+
+
+
+
+Kraken实际的return value：
+   price,       amount,                    timestamp,        trade type
+[ ‘556.70000’, ‘0.81900000’, 1524154859.9084, ‘s’, ‘l’, ‘’ ]
+[ ‘557.62000’, ‘0.30160936’, 1524154843.7233, ‘b’, ‘l’, ‘’ ] 
+
+没有tradeid. 但是系统给了一个last = id to be used as since when polling for new trade data
+
