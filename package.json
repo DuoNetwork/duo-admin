@@ -9,7 +9,9 @@
     "flow": "flow",
     "eslint": "eslint src",
     "postinstall": "flow-typed install",
-    "pf": "babel-node ./src/index pf"
+    "pf": "babel-node ./src/index pf",
+    "acceptPrice": "babel-node ./src/index acceptPrice",
+    "createAccount": "babel-node ./src/index createAccount 10"
   },
   "jest": {
     "globals": {
@@ -34,6 +36,7 @@
     "@types/es6-promise": "^3.3.0",
     "bitfinex-api-node": "^1.2.1",
     "coinbase": "^2.0.7",
+    "csv": "^3.0.2",
     "d3-dsv": "^1.0.8",
     "d3-format": "^1.2.2",
     "ethereumjs-tx": "^1.3.4",

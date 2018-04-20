@@ -2,23 +2,25 @@ const Web3 = require('web3');
 const rp = require('request-promise');
 var Tx = require('ethereumjs-tx');
 import { Promise } from 'es6-promise';
+import * as CST from './constant';
 
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 // const provider = 'http://localhost:8545';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
-const CustodianABI = require('./ABI/Custodian.json'); //Custodian Contract ABI
-const addressCustodianContract = '0x468d4aaaf1d6a9734e837f5b1c9d4b8a5b608b49';
-const custodianContract = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
+// const CustodianABI = require('./ABI/Custodian.json'); //Custodian Contract ABI
+const addressCustodianContract = CST.addressCustodianContract;
+// const custodianContract = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
 
-const pfAddress = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
-const privateKey = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
+const pfAddress = CST.pfAddress;
+const privateKey = CST.privateKey;
+
 let gas_price = 100 * Math.pow(10, 9);
-let gas_limit = 6000000;
+let gas_limit = 80000;
 
-const ETH_PRICE_LINK = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD';
-let priceFeedInterval = 60 * 60 * 1000;
+const ETH_PRICE_LINK = CST.ETH_PRICE_LINK;
+// let priceFeedInterval = 60 * 60 * 1000;
 
 class PriceFeed {
 	getETHprice(url: string): Promise<string> {
@@ -90,11 +92,13 @@ class PriceFeed {
 		let priceInSeconds;
 
 		let startContract = () => {
+			priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+			console.log("start contract at "+priceInSeconds);
 			this.getETHprice(ETH_PRICE_LINK)
 				.then(res => {
 					let data = JSON.parse(res);
-					priceInWei = data['USD'];
-					priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+					priceInWei = data['USD'] * Math.pow(10, 9);
+					
 					// console.log(priceInWei);
 					// console.log(priceInSeconds);
 				})
@@ -113,11 +117,13 @@ class PriceFeed {
 		};
 
 		let commitFunc = () => {
+			priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+			console.log("fetch ETH price at "+priceInSeconds);
 			this.getETHprice(ETH_PRICE_LINK)
 				.then(res => {
 					let data = JSON.parse(res);
-					priceInWei = data['USD'];
-					priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+					priceInWei = data['USD'] * Math.pow(10, 9);
+					
 					// console.log(priceInWei);
 					// console.log(priceInSeconds);
 				})
@@ -138,15 +144,19 @@ class PriceFeed {
 		var schedule = require('node-schedule');
 	
 		let startTime = new Date(Date.now());
-		startTime.setMinutes(59);
-		startTime.setSeconds(0);
-		startTime.setMilliseconds(0);
-		let endTime = new Date(startTime.getTime() + 300000);
+		// startTime.setMinutes(59);
+		// startTime.setSeconds(0);
+		// startTime.setMilliseconds(0);
+		let endTime = new Date(startTime.getTime() + 298000);
 
-		let commitStart = new Date(endTime.getTime() + 5000);
+		let commitStart = new Date(endTime.getTime() + 1000);
 
-		var job_start = schedule.scheduleJob({ start: startTime, end: endTime, rule: '00 * * * *' }, startContract);
-		var job_commit = schedule.scheduleJob({ start: commitStart, rule: '00 * * * *' }, commitFunc);
+		var rule = new schedule.RecurrenceRule();
+
+		rule.minute = new schedule.Range(0, 59, 5);
+
+		var job_start = schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, startContract);
+		var job_commit = schedule.scheduleJob({ start: commitStart, rule: rule}, commitFunc);
 	}
 }
 
