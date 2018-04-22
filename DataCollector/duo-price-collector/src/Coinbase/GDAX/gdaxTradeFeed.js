@@ -1,9 +1,10 @@
 'use strict';
-var math = require('mathjs');
 
 var MysqlUtil = require('../../Util/sharedMysql');
 
 var dbConn;
+
+const INTERVAL_SECS=2;
 
 const EXCHANGE_NAME = 'COINBASE_GDAX';
 const db_host = 'localhost';
@@ -41,27 +42,16 @@ class CoinbaseGDAXTradeFeedUtil {
 			});
 
 			response.on('end', function() {
-				// console.log(str);
-
-				// console.log(responseStr);
-				// console.log('type:' + Object.prototype.toString(responseStr));
+				
 				var parsedJson = JSON.parse(responseStr);
-
-				// console.log("=>"+trade_type);
-				// mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(price), trade_type, parsedJson[1]);
 		
 				dbConn = mysqlUtil.dbConn;
 				if(dbConn==undefined){
 					coinbaseGDAXTradeFeedUtil.initDB();
 				}
 
-				var d = '2018-04-22T10:40:32.386Z';
-				console.log("===>"+new Date(d).valueOf()); 
-
 				parsedJson.forEach(function(item) {
-					console.log(item);
 				
-
 					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.trade_id, item.price, item.size, item.side, new Date(item.time).valueOf());
 		
 
@@ -95,4 +85,4 @@ output is:
 let mysqlUtil = new MysqlUtil();
 let coinbaseGDAXTradeFeedUtil = new CoinbaseGDAXTradeFeedUtil();
 // coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI();
-setInterval(coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI, 2*1000);
+setInterval(coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI, INTERVAL_SECS*1000);
