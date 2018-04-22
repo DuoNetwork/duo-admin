@@ -10,7 +10,10 @@ class GDAXUtil {
 
 		w.on('message', (msg) => {
 			var parsedJson= JSON.parse(msg);
-			if(parsedJson.type=="done"){
+
+			// filter out the cancelled 
+			// focus on the 'Done' and 'filled' orders only.
+			if(parsedJson.type=="done" && (parsedJson.reason=="filled")){
 				console.log(msg);
 			}
 		});

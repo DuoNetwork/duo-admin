@@ -16,7 +16,7 @@ class KrankenTesting {
 	// 	const publicKraken = createPublicKrakenClient();
  
 	// 	// Handles only public requests; will throw error if attempting private requests
-	// 	publicKraken.request('Trades', { pair : 'ETHUSD', since:'0' })
+	// 	publicKraken.request(ce'Trades', { pair : 'ETHUSD', since:'0' })
 	// 		.then(response => { 
                 
 	// 			console.log(response);
@@ -47,7 +47,7 @@ Output
 last = id to be used as since when polling for new spread data
 
 
-Kranken实际的return value：
+Kraken实际的return value：
     array of array entries(<time>, <bid>, <ask>)
 
     price,       amount,         timestamp       trade type
