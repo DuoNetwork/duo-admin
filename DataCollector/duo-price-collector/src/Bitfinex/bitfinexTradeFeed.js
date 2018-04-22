@@ -21,7 +21,6 @@ class BitfinexTradeFeedUtil {
 		mysqlUtil.setup(EXCHANGE_NAME, db_host, db_user, db_password, db_name, db_table_name);
 
 		mysqlUtil.initDB();
-
 	}
 
 	//Version 2 WebSocket API ---
@@ -30,7 +29,6 @@ class BitfinexTradeFeedUtil {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', msg => {
-
 			dbConn = mysqlUtil.dbConn;
 			if (dbConn === undefined) {
 				bitfinexTradeFeedUtil.initDB();
