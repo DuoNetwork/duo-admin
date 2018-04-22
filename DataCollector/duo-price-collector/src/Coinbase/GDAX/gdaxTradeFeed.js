@@ -13,6 +13,7 @@ const db_name = 'priceFeedDB';
 const db_table_name = 'ETH_Trades_Table';
 
 class CoinbaseGDAXTradeFeedUtil {
+
 	initDB() {
 		console.log('Init the DB');
 
@@ -22,7 +23,7 @@ class CoinbaseGDAXTradeFeedUtil {
 
 	}
 
-	fetchETHTradesByOwnWebSocket() {
+	fetchETHTradesByRestfulAPI() {
 		var https = require('https');
 
 		var options = {
@@ -93,4 +94,5 @@ output is:
 
 let mysqlUtil = new MysqlUtil();
 let coinbaseGDAXTradeFeedUtil = new CoinbaseGDAXTradeFeedUtil();
-coinbaseGDAXTradeFeedUtil.fetchETHTradesByOwnWebSocket();
+// coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI();
+setInterval(coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI, 2*1000);
