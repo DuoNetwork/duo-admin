@@ -16,3 +16,16 @@ CREATE TABLE `priceFeedDB`.`ETH_Price_Table` (
 
 
 
+
+
+CREATE TABLE `priceFeedDB`.`ETH_Trades_Table` (
+  `exchange_source` VARCHAR(255) NOT NULL,
+  `trade_id` VARCHAR(255) NOT NULL,
+  `price` VARCHAR(255) NOT NULL,
+  `amount` VARCHAR(255) NOT NULL,
+  `trade_type` VARCHAR(255) NOT NULL,
+  `exchange_returned_timestamp` VARCHAR(255) NOT NULL,
+  `system_timestamp` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`exchange_returned_timestamp`, `trade_id`, `exchange_source`));
+
+

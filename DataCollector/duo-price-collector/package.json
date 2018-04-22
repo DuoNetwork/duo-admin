@@ -37,6 +37,7 @@
     "bitfinex-api-node": "^2.0.0",
     "coinbase": "^2.0.7",
     "https": "^1.0.0",
+    "mathjs": "^4.1.2",
     "request": "^2.85.0"
   }
 }

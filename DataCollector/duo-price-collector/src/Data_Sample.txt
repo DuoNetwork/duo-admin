@@ -1,40 +1,23 @@
 
 数据库字段：
 
-exchange_source,trade_id, price, amount, trade_type, exchange_returned_timestamp, system_timestamp(MTS)
+exchange_source，trade_id, price, amount, trade_type, exchange_returned_timestamp, system_timestamp
 
 
 Gemini, tid, price, amount, makerSide, ""(字符串为空)，系统时间
 
 Bitfinex, ID, PRICE, AMOUNT(包含正负), 用AMOUNT的正负来判断，MTS, 系统时间
 
-Kraken， "", price, amount, 's'/'b', timestamp, 系统时间       (Kraken 每次pull data的时候，需要送上次拉取的last标识)
+Kraken， "", price, amount, 's'/'b', timestamp, 系统时间
  
-CoinbaseGDAX, trade_id, price, size, side, time(return formate:2018-04-22T03:37:51.027Z), 系统时间
-
-
-PK: exchange_source，trade_id, exchange_returned_timestamp
+CoinbaseGDAX, trade_id, price, size, side, time(2018-04-22T03:37:51.027Z), 系统时间
 
 
 
-Pre-conditions: 
-1. trade_id and exchange_returned_timestamp cannot be empty at the same time for the same exchange source.
-2. None of the inserted data field is null.
-3. The null data field will be conversted to be empty string.
 
-
-CREATE TABLE `priceFeedDB`.`eth_trades` (
-  `exchange_source` VARCHAR(255) NOT NULL,
-  `trade_id` VARCHAR(255) NOT NULL,
-  `price` VARCHAR(255) NOT NULL,
-  `amount` VARCHAR(255) NOT NULL,
-  `trade_type` VARCHAR(255) NOT NULL,
-  `exchange_returned_timestamp` VARCHAR(255) NOT NULL,
-  `system_timestamp` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`exchange_returned_timestamp`, `trade_id`, `exchange_source`));
-
-
-
+{"type":"done","side":"buy","order_id":"0779015a-a93f-4dfe-a022-ddb9009f3337","reason":"filled","product_id":"ETH-USD","remaining_size":"0.00000000","sequence":3422273722,"time":"2018-04-22T02:52:30.003000Z"}
+{"type":"done","side":"sell","order_id":"8d42e421-4c93-45ab-96e4-817a37441720","reason":"filled","product_id":"ETH-USD","remaining_size":"0.00000000","sequence":3422277003,"time":"2018-04-22T02:53:04.419000Z"}
+{"type":"done","side":"buy","order_id":"aaa69356-7d8b-4a73-bf1e-1dd913811c13","reason":"filled","product_id":"ETH-USD","price":"602.50000000","remaining_size":"0.00000000","sequence":3422277113,"time":"2018-04-22T02:53:05.381000Z"}
 
 Gemini:
 { type: 'trade',
@@ -104,6 +87,8 @@ We are splitting the public trade messages into two: a “te” message which mi
 [946,"hb"]
 [946,"hb"]
 [946,"hb"]
+
+[ 515, 'te', [ 230728418, 1524379621477, 0.04709362, 609.44 ] ]
 
 
 
