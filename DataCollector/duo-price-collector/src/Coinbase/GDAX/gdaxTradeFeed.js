@@ -1,7 +1,7 @@
 'use strict';
 var math = require('mathjs');
 
-var MysqlUtil = require('../Util/sharedMysql');
+var MysqlUtil = require('../../Util/sharedMysql');
 
 var dbConn;
 
@@ -43,12 +43,20 @@ class CoinbaseGDAXTradeFeedUtil {
 			response.on('end', function() {
 				// console.log(str);
 
-				console.log(responseStr);
-				console.log('type:' + Object.prototype.toString(responseStr));
-				var tradeObj = JSON.parse(responseStr);
+				// console.log(responseStr);
+				// console.log('type:' + Object.prototype.toString(responseStr));
+				var parsedJson = JSON.parse(responseStr);
 
-				tradeObj.forEach(function(item) {
+				// console.log("=>"+trade_type);
+				// mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(price), trade_type, parsedJson[1]);
+		
+
+
+				parsedJson.forEach(function(item) {
 					console.log(item);
+					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[1], parsedJson[2], parsedJson[3], parsedJson[4], parsedJson[0]);
+		
+
 				});
 			});
 		};

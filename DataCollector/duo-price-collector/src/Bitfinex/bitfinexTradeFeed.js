@@ -43,28 +43,28 @@ class BitfinexTradeFeedUtil {
 					var snopshotArr = parsedJson[1];
 					snopshotArr.forEach(element => {
 						// console.log("===>"+element);
-						var price = parseFloat(element[2]);
+						var amount = parseFloat(element[2]);
 						var trade_type = 'buy';
-						if (price > 0) {
+						if (amount > 0) {
 							trade_type = 'buy';
 						} else {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3], Math.abs(price), trade_type, element[1]);
+						mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3], Math.abs(amount), trade_type, element[1]);
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					// console.log("<==="+parsedJson);
 					parsedJson = parsedJson[2];
-					var price = parseFloat(parsedJson[2]);
+					var amount = parseFloat(parsedJson[2]);
 					var trade_type = 'buy';
-					if (price > 0) {
+					if (amount > 0) {
 						trade_type = 'buy';
 					} else {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(price), trade_type, parsedJson[1]);
+					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(amount), trade_type, parsedJson[1]);
 				}
 			}
 		});
