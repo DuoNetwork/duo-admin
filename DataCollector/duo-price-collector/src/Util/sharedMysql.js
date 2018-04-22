@@ -59,6 +59,9 @@ class MysqlUtil {
 		var price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		var amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
+		price_str=price_str.split('"').join('');
+		amount_str=amount_str.split('"').join('');
+
 		var sql =
 			'INSERT INTO ' +
 			this.db_table_name +
@@ -78,7 +81,7 @@ class MysqlUtil {
 			system_timestamp +
 			"')";
 
-		// console.log(sql);
+		console.log(sql);
 		this.dbConn.query(sql, function(err, result) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {

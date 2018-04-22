@@ -20,7 +20,6 @@ class CoinbaseGDAXTradeFeedUtil {
 
 		mysqlUtil.initDB();
 
-		dbConn = mysqlUtil.dbConn;
 	}
 
 	fetchETHTradesByOwnWebSocket() {
@@ -50,11 +49,19 @@ class CoinbaseGDAXTradeFeedUtil {
 				// console.log("=>"+trade_type);
 				// mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(price), trade_type, parsedJson[1]);
 		
+				dbConn = mysqlUtil.dbConn;
+				if(dbConn==undefined){
+					coinbaseGDAXTradeFeedUtil.initDB();
+				}
 
+				var d = '2018-04-22T10:40:32.386Z';
+				console.log("===>"+new Date(d).valueOf()); 
 
 				parsedJson.forEach(function(item) {
 					console.log(item);
-					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[1], parsedJson[2], parsedJson[3], parsedJson[4], parsedJson[0]);
+				
+
+					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.trade_id, item.price, item.size, item.side, new Date(item.time).valueOf());
 		
 
 				});
