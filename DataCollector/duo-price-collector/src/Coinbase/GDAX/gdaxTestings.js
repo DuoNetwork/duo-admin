@@ -1,8 +1,6 @@
 
 'use strict';
 
-// const request = require('request');
-
 class GDAXUtil {
 
 	fetchETHTradesHTTPSRestfulAPI(){
@@ -58,26 +56,6 @@ output is:
 		var req = https.request(options, callbackFunc);
 		req.end();
 	}
-
-
-	// fetchETHTradesByRestfulAPI(){
-	// 	// https://api.gdax.com/products/ETH-USD/trades
-		
-	// 	var options = {
-	// 		host: '"https://api.gdax.com',
-	// 		path: '/products/ETH-USD/trades"',
-	// 		port: '443',
-	// 		headers: {'User-Agent': ''}
-	// 	  };
-
-	// 	request.get(options,
-	// 		function(error, response, body) {
-	// 			console.log(response+" "+error+" "+body);
-	// 			// console.log('type:'+Object.prototype.toString(body));
-	// 		});
-	// }
-
-
 
 	fetchETHTradesByOwnWebSocket() {
 

@@ -58,7 +58,7 @@ Kraken实际的return value：
 
     */
 
-	fetchCurrentETHPrice() {
+	fetchETHTradesByOwnWebSocket() {
 
 
 		const Kraken = require('kraken-wrapper');
@@ -90,6 +90,6 @@ Kraken实际的return value：
 	}
 }
 let krankenUtil = new KrankenTesting();
-krankenUtil.fetchCurrentETHPrice();
+krankenUtil.fetchETHTradesByOwnWebSocket();
 
 

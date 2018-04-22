@@ -3,7 +3,7 @@
 
 class GeminiUtil {
 
-	fetchCurrentETHPriceByOwnWebSocket() {
+	fetchETHTradesByOwnWebSocket() {
 
 		const ws = require('ws');
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
@@ -26,6 +26,6 @@ class GeminiUtil {
 }
 
 let geminiUtil = new GeminiUtil();
-geminiUtil.fetchCurrentETHPriceByOwnWebSocket();
+geminiUtil.fetchETHTradesByOwnWebSocket();
 
 

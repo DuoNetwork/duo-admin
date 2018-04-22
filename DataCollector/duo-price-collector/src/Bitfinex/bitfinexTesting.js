@@ -239,7 +239,7 @@ class BitfinexUtil {
 
 	//version 2 WebSocket API ---
 
-	fetchCurrentETHPriceByOwnWebSocket() {
+	fetchETHTradesByOwnWebSocket() {
 
 		const ws = require('ws');
 		const w = new ws('wss://api.bitfinex.com/ws/2');
@@ -266,7 +266,7 @@ class BitfinexUtil {
 
 let bitfinexUtil = new BitfinexUtil();
 // bitfinexUtil.fetchCurrentETHPrice();
-bitfinexUtil.fetchCurrentETHPriceByOwnWebSocket();
+bitfinexUtil.fetchETHTradesByOwnWebSocket();
 // bitfinexUtil.insertDataIntoMysql();
 
 
