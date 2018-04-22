@@ -1,5 +1,5 @@
 'use strict';
-var MysqlUtil = require('./sharedMysql.js');
+var MysqlUtil = require('../Util/sharedMysql');
 
 var dbConn;
 
@@ -10,7 +10,7 @@ const db_password = '123456';
 const db_name = 'priceFeedDB';
 const db_table_name = 'ETH_Trades_Table';
 
-class BitfinexUtil {
+class BitfinexTradeFeedUtil {
 	constructor() {
 		console.log('begin');
 	}
@@ -32,7 +32,7 @@ class BitfinexUtil {
 
 		w.on('message', msg => {
 			if (dbConn === undefined) {
-				bitfinexUtil.initDB();
+				bitfinexTradeFeedUtil.initDB();
 			}
 
 			var parsedJson = JSON.parse(msg);
@@ -88,5 +88,5 @@ class BitfinexUtil {
 	}
 }
 let mysqlUtil = new MysqlUtil();
-let bitfinexUtil = new BitfinexUtil();
-bitfinexUtil.fetchETHTradesByOwnWebSocket();
+let bitfinexTradeFeedUtil = new BitfinexTradeFeedUtil();
+bitfinexTradeFeedUtil.fetchETHTradesByOwnWebSocket();
