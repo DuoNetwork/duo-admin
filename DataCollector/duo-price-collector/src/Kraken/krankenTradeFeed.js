@@ -33,7 +33,7 @@ class KrankenTradeFeedUtil {
 		if (last == 0) {
 			requestJson = { pair: 'ETHUSD' };
 		} else if (last != undefined) {
-			requestJson = { pair: 'ETHUSD', since: last };
+			requestJson = { pair: 'ETHUSD', last: last };
 		}
 		console.log('request: ' + last + 'length: ' + last.toString().split('.')[0].length);
 
@@ -51,7 +51,6 @@ class KrankenTradeFeedUtil {
 				var returnFirstLevelArray = response.result.XETHZUSD;
 
 				returnFirstLevelArray.forEach(function(secondLevelArr) {
-
 					var trade_type = 'buy';
 
 					if (secondLevelArr[3] == 'b') {
@@ -61,12 +60,8 @@ class KrankenTradeFeedUtil {
 					}
 					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, '', secondLevelArr[0], secondLevelArr[1], trade_type, secondLevelArr[2]);
 				});
-				var lastNum = response.result.last;
-				if (lastNum.toString().split('.')[0].length > 10) {
-					last = response.result.last / 1000000000;
-				} else {
-					last = response.result.last;
-				}
+
+				last = response.result.last;
 				console.log(last);
 			})
 			.catch(error => {

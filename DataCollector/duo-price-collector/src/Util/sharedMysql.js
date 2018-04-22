@@ -55,12 +55,10 @@ class MysqlUtil {
 		}
 
 		var system_timestamp = Math.floor(Date.now()); //record down the MTS
-		var price_str = price;
-		var amount_str = amount;
-		if (exchange_name != 'KRANKEN') {
-			price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
-			amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
-		}
+	
+		var price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
+		var amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
+
 		price_str = price_str.split('"').join('');
 		amount_str = amount_str.split('"').join('');
 
@@ -83,7 +81,7 @@ class MysqlUtil {
 			system_timestamp +
 			"')";
 
-		// console.log(sql);
+		console.log(sql);
 		this.dbConn.query(sql, function(err, result) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
@@ -92,7 +90,7 @@ class MysqlUtil {
 			} else if (err) {
 				console.log('err' + err);
 			} else {
-				console.log('insert 1 record into DB');
+				// console.log('insert 1 record into DB');
 			}
 		});
 	}
