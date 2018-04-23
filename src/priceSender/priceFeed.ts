@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const rp = require('request-promise');
 var Tx = require('ethereumjs-tx');
 import { Promise } from 'es6-promise';
-import * as CST from './constant';
+import * as CST from '../constant';
 
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
@@ -22,7 +22,7 @@ let gas_limit = 80000;
 const ETH_PRICE_LINK = CST.ETH_PRICE_LINK;
 // let priceFeedInterval = 60 * 60 * 1000;
 
-class PriceFeed {
+export class PriceFeed {
 	getETHprice(url: string): Promise<string> {
 		return new Promise((resolve, reject) =>
 			rp(
@@ -81,7 +81,7 @@ class PriceFeed {
 			tx.sign(private_key_hex);
 		} catch (err) {
 			console.log(err);
-			return;
+			return '';
 		}
 		var serializedTx = tx.serialize().toString('hex');
 		return serializedTx;
@@ -151,14 +151,14 @@ class PriceFeed {
 
 		let commitStart = new Date(endTime.getTime() + 1000);
 
-		var rule = new schedule.RecurrenceRule();
+		let rule = new schedule.RecurrenceRule();
 
 		rule.minute = new schedule.Range(0, 59, 5);
 
-		var job_start = schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, startContract);
-		var job_commit = schedule.scheduleJob({ start: commitStart, rule: rule}, commitFunc);
+		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, startContract);
+		schedule.scheduleJob({ start: commitStart, rule: rule}, commitFunc);
 	}
 }
 
-let pf = new PriceFeed();
+const pf = new PriceFeed();
 export default pf;

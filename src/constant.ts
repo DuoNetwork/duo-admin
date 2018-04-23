@@ -1,9 +1,20 @@
-export * from '../../sachiel/src/functions/common/constants';
 export const REDRAW_UPDATE_THRESHOLD = 10;
 
 //export const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 export const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 //export const provider = 'http://localhost:8545';
+
+export const EXCHANGE_BITFINEX = 'BITFINEX';
+export const EXCHANGE_GEMINI = 'GEMINI';
+export const EXCHANGE_KRAKEN = 'KRAKEN';
+export const EXCHANGE_GDAX = 'GDAX';
+
+//db setting
+export const DB_HOST = 'localhost';
+export const DB_USER = 'root';
+export const DB_PASSWORD = '';
+export const DB_PRICEFEED = 'priceFeedDB';
+export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 
 export const addressCustodianContract = '0x4458294e6d83696ec9a400dc4f6c27c9a0a1c559';
 export const pfAddress = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
