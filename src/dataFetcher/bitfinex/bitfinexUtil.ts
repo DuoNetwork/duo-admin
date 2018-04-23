@@ -1,8 +1,5 @@
-'use strict';
-const MysqlUtil = require('../../utils/mysqlUtil');
+import MysqlUtil from '../../utils/MysqlUtil';
 import * as CST from '../../constant';
-
-let dbConn;
 
 const EXCHANGE_NAME = CST.EXCHANGE_BITFINEX;
 const DB_HOST = CST.DB_HOST;
@@ -11,17 +8,16 @@ const DB_PASSWORD = CST.DB_PASSWORD;
 const DB_PRICEFEED = CST.DB_PRICEFEED;
 const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
 
-class BitfinexTradeFeedUtil {
+export class BitfinexTradeFeedUtil {
+	mysqlUtil: MysqlUtil;
+
 	constructor() {
-		console.log('begin');
+		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
 	}
 
 	initDB() {
 		console.log('Init the DB');
-
-		mysqlUtil.setup(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
-
-		mysqlUtil.initDB();
+		this.mysqlUtil.initDB();
 	}
 
 	//Version 2 WebSocket API ---
@@ -30,9 +26,9 @@ class BitfinexTradeFeedUtil {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', msg => {
-			dbConn = mysqlUtil.dbConn;
+			const dbConn = this.mysqlUtil.dbConn;
 			if (dbConn === undefined) {
-				bitfinexTradeFeedUtil.initDB();
+				this.initDB();
 			}
 
 			var parsedJson = JSON.parse(msg);
@@ -43,15 +39,15 @@ class BitfinexTradeFeedUtil {
 					var snopshotArr = parsedJson[1];
 					snopshotArr.forEach(element => {
 						// console.log("===>"+element);
-						var amount = parseFloat(element[2]);
-						var trade_type = 'buy';
+						let amount: number = parseFloat(element[2]);
+						let trade_type = 'buy';
 						if (amount > 0) {
 							trade_type = 'buy';
 						} else {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3], Math.abs(amount), trade_type, element[1]);
+						this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3], Math.abs(amount) +"", trade_type, element[1]);
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					// console.log("<==="+parsedJson);
@@ -64,7 +60,7 @@ class BitfinexTradeFeedUtil {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(amount), trade_type, parsedJson[1]);
+					this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(amount)+"", trade_type, parsedJson[1]);
 				}
 			}
 		});
@@ -87,6 +83,5 @@ class BitfinexTradeFeedUtil {
 		});
 	}
 }
-let mysqlUtil = new MysqlUtil();
 let bitfinexTradeFeedUtil = new BitfinexTradeFeedUtil();
 export default bitfinexTradeFeedUtil;

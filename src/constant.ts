@@ -1,4 +1,3 @@
-export * from '../../sachiel/src/functions/common/constants';
 export const REDRAW_UPDATE_THRESHOLD = 10;
 
 //export const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';

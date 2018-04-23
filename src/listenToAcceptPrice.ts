@@ -56,10 +56,10 @@ class ListenToAcceptPrice {
 		};
 
 		
-		var schedule = require('node-schedule');
+		let schedule = require('node-schedule');
 
 
-		var job = schedule.scheduleJob({ rule: '/2 * * * *' }, listenAcceptPriceFunc);
+		schedule.scheduleJob({ rule: '/2 * * * *' }, listenAcceptPriceFunc);
 	}
 }
 
