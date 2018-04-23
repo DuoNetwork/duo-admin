@@ -1,6 +1,6 @@
 'use strict';
 
-var MysqlUtil = require('../Util/sharedMysql');
+var MysqlUtil = require('../Utils/sharedMysql');
 
 var dbConn;
 
@@ -9,7 +9,7 @@ const INTERVAL_SECS = 2;
 const EXCHANGE_NAME = 'KRANKEN';
 const db_host = 'localhost';
 const db_user = 'root';
-const db_password = '';
+const db_password = '123456';
 const db_name = 'priceFeedDB';
 const db_table_name = 'ETH_Trades_Table';
 
@@ -68,11 +68,15 @@ class KrankenTradeFeedUtil {
 				console.log(error);
 			});
 	}
+
+	startFetching() {
+		setInterval(this.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
+	}
 }
 let mysqlUtil = new MysqlUtil();
 let krankenTradeFeedUtil = new KrankenTradeFeedUtil();
 // krankenTradeFeedUtil.fetchETHTradesByOwnWebSocket();
-setInterval(krankenTradeFeedUtil.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
+export default krankenTradeFeedUtil;
 
 /*
     https://www.kraken.com/help/api#get-recent-trades
