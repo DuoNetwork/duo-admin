@@ -10,10 +10,13 @@ class GeminiUtil {
 	
 		w.on('message', (msg) => {
 			var parsedJson= JSON.parse(msg);
-            
-			if(parsedJson.events[0].type=='trade'){
-				console.log(parsedJson.events[0]);
-			}
+			
+			console.log(parsedJson);
+
+				
+			// if(parsedJson.events[0].type=='trade'){
+			// 	console.log(parsedJson.events[0]);
+			// }
 			// console.log(msg);
 		});
  

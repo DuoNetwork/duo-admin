@@ -26,6 +26,8 @@ class GeminiTradeFeedUtil {
 		w.on('message', msg => {
 			var parsedJson = JSON.parse(msg);
 
+			var timestampms=parsedJson.timestampms;
+
 			if (parsedJson.events[0].type == 'trade') {
 				console.log(parsedJson.events[0]);
 
@@ -44,8 +46,12 @@ class GeminiTradeFeedUtil {
 					trade_type = 'sell';
 				}
 
+				if(timestampms==undefined){
+					timestampms='';
+				}
+
 				// no timestamp returned by exchange so we leave empty there.
-				mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.tid, item.price, item.amount, trade_type, '');
+				mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.tid, item.price, item.amount, trade_type, timestampms);
 			}
 		});
 
