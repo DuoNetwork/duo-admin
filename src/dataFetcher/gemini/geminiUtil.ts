@@ -28,10 +28,10 @@ export class GeminiTradeFeedUtil {
 		w.on('message', msg => {
 			const parsedJson: any = JSON.parse(msg);
 
-			var timestampms = parsedJson.timestampms;
-
 			if (parsedJson.events[0].type == 'trade') {
-				console.log(parsedJson.events[0]);
+				var timestampms = parsedJson.timestampms;
+
+				// console.log(parsedJson.events[0]);
 
 				const item = parsedJson.events[0];
 
