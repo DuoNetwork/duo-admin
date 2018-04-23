@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const rp = require('request-promise');
 var Tx = require('ethereumjs-tx');
 import { Promise } from 'es6-promise';
-import * as CST from './constant';
+import * as CST from '../constant';
 
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';

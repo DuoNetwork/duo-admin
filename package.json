@@ -14,7 +14,8 @@
     "createAccount": "babel-node ./src/index createAccount 10",
     "bitfinex": "babel-node ./src/index bitfinex",
     "gemini": "babel-node ./src/index gemini",
-    "kraken": "babel-node ./src/index kraken"
+    "kraken": "babel-node ./src/index kraken",
+    "gdax": "babel-node ./src/index gdax"
   },
   "jest": {
     "globals": {

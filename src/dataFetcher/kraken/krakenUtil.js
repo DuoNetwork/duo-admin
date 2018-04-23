@@ -6,10 +6,10 @@ var dbConn;
 
 const INTERVAL_SECS = 2;
 
-const EXCHANGE_NAME = 'KRANKEN';
+const EXCHANGE_NAME = 'KRAKEN';
 const db_host = 'localhost';
 const db_user = 'root';
-const db_password = '123456';
+const db_password = '';
 const db_name = 'priceFeedDB';
 const db_table_name = 'ETH_Trades_Table';
 
