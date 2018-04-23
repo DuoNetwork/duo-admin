@@ -1,4 +1,4 @@
-import pf from "./dataSender/priceFeed";
+import pf from "./priceSender/priceFeed";
 import listenToAcceptPrice from "./listenToAcceptPrice";
 import createAccount from "./accounts/createAccounts";
 import bitfinexTradeFeedUtil from "./dataFetcher/bitfinex/bitfinexUtil";

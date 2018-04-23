@@ -1,23 +1,23 @@
 'use strict';
+const MysqlUtil = require('../../utils/mysqlUtil');
+import * as CST from '../../constant';
 
-var MysqlUtil = require('../Utils/sharedMysql');
-
-var dbConn;
+let dbConn;
 
 const INTERVAL_SECS = 2;
 
-const EXCHANGE_NAME = 'COINBASE_GDAX';
-const db_host = 'localhost';
-const db_user = 'root';
-const db_password = '';
-const db_name = 'priceFeedDB';
-const db_table_name = 'ETH_Trades_Table';
+const EXCHANGE_NAME = CST.EXCHANGE_GDAX;
+const DB_HOST = CST.DB_HOST;
+const DB_USER = CST.DB_USER;
+const DB_PASSWORD = CST.DB_PASSWORD;
+const DB_PRICEFEED = CST.DB_PRICEFEED;
+const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
 
 class CoinbaseGDAXTradeFeedUtil {
 	initDB() {
 		console.log('Init the DB');
 
-		mysqlUtil.setup(EXCHANGE_NAME, db_host, db_user, db_password, db_name, db_table_name);
+		mysqlUtil.setup(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
 
 		mysqlUtil.initDB();
 	}
@@ -82,6 +82,5 @@ output is:
 
 let mysqlUtil = new MysqlUtil();
 let coinbaseGDAXTradeFeedUtil = new CoinbaseGDAXTradeFeedUtil();
-// coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI();
 export default coinbaseGDAXTradeFeedUtil;
 
