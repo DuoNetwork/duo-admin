@@ -1,8 +1,8 @@
-const Web3 = require('web3');
+import Web3 from 'web3';
+import request from 'request';
+import * as CST from '../constant';
 const Tx = require('ethereumjs-tx');
 const schedule = require('node-schedule');
-import * as CST from '../constant';
-import request from 'request';
 
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
@@ -67,7 +67,7 @@ export class PriceFeed {
 			gasPrice: web3.utils.toHex(gas_price),
 			gasLimit: web3.utils.toHex(gas_limit),
 			to: to_address,
-			value: web3.utils.toHex(web3.utils.toWei(amount.toString())),
+			value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
 			data: data
 		};
 	}
@@ -94,7 +94,7 @@ export class PriceFeed {
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
 		const rule = new schedule.RecurrenceRule();
-		rule.minute = new schedule.Range(0, 59, 5);
+		rule.minute = new schedule.Range(0, 59, 1);
 
 		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () => {
 			priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
