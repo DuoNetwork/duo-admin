@@ -96,6 +96,51 @@ export default class MysqlUtil {
 		});
 	}
 
+	insertETHpriceMysql(timestamp: string, price: string) {
+		if (this.dbConn === undefined) {
+			console.log('dbConn is null. Begin to do the init().');
+		}
+
+		const sql = 'INSERT INTO ' + 'eth_historical_price' + " VALUES ('" + timestamp + "','" + price + "')";
+
+		console.log(sql);
+		this.dbConn.query(sql, function(err: any, result: any) {
+			// if (err) throw err;
+			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
+				// console.log('.');
+				// rocess.stdout.write(".");
+			} else if (err) {
+				console.log('err' + err);
+			} else {
+				console.log(result);
+			}
+		});
+	}
+
+	readLastETHpriceMysql(): Promise<any> {
+		if (this.dbConn === undefined) {
+			console.log('dbConn is null. Begin to do the init().');
+		}
+
+		const sql = 'SELECT * FROM `eth_historical_price` order by timestamp DESC LIMIT 1';
+
+		console.log(sql);
+		return new Promise((resolve, reject) => {
+			this.dbConn.query(sql, function(err: any, result: any) {
+				// if (err) throw err;
+				if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
+					// console.log('.');
+					// rocess.stdout.write(".");
+					reject(err);
+				} else if (err) {
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+		});
+	}
+
 	readDataMysql(current_timestamp: number): Promise<any> {
 		if (this.dbConn === undefined) {
 			console.log('dbConn is null. Begin to do the init().');

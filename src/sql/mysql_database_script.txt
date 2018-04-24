@@ -14,10 +14,6 @@ CREATE TABLE `priceFeedDB`.`ETH_Price_Table` (
   `source_exchange` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`,`timestamp`, `source_exchange`));
 
-
-
-
-
 CREATE TABLE `priceFeedDB`.`ETH_Trades_Table` (
   `exchange_source` VARCHAR(255) NOT NULL,
   `trade_id` VARCHAR(255) NOT NULL,
@@ -27,5 +23,10 @@ CREATE TABLE `priceFeedDB`.`ETH_Trades_Table` (
   `exchange_returned_timestamp` VARCHAR(255) NOT NULL,
   `system_timestamp` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`exchange_returned_timestamp`, `trade_id`, `exchange_source`));
+
+CREATE TABLE `priceFeedDB`.`ETH_Historical_Price` (
+  `timestamp` VARCHAR(255) NOT NULL,
+  `price` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`timestamp`));
 
 
