@@ -16,7 +16,6 @@ export class CalculatePrice {
 	// let omittedKRAKEN: boolean = false;
 
 	constructor() {
-		console.log('begin');
 		this.mysqlUtil = new MysqlUtil('', DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
 	}
 
@@ -43,20 +42,18 @@ export class CalculatePrice {
 		subTrades.sort(function(a, b) {
 			return a.price - b.price;
 		});
-		
+
 		let priceList: number[] = [];
 		let volumeList: number[] = [];
 
-		for(let i = 0; i < subTrades.length; i++) {
+		for (let i = 0; i < subTrades.length; i++) {
 			priceList.push(Number(subTrades[i].price));
 			volumeList.push(Number(subTrades[i].amount));
 		}
 		// console.log(priceList);
 
-		let volumeSum: number = volumeList.reduce((a, b) => a + b, 0 );
+		let volumeSum: number = volumeList.reduce((a, b) => a + b, 0);
 		console.log(volumeSum);
-
-	
 
 		return subTrades[0].price;
 	}

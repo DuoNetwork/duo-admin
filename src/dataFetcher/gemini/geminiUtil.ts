@@ -12,7 +12,6 @@ export class GeminiTradeFeedUtil {
 	mysqlUtil: MysqlUtil;
 
 	constructor() {
-		console.log('begin');
 		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
 	}
 

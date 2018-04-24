@@ -3,13 +3,12 @@ This program is to create parity accounts.
 It takes number of accounts to create,
 and use csv file as phrase source to create parity accounts
 */
-const rp = require("request-promise");
-import { Promise } from "es6-promise";
-import * as CST from "../constant";
-const fs = require("fs");
-const parse = require("csv-parse");
+import request from 'request';
+import * as CST from '../constant';
+const fs = require('fs');
+const parse = require('csv-parse');
 
-const inputFile = "./src/accounts/dictionary.csv";
+const inputFile = './src/accounts/dictionary.csv';
 const all_words: any[] = [];
 
 const NETWORK = CST.NETWORK;
@@ -17,24 +16,24 @@ const NETWORK = CST.NETWORK;
 export class ParityAccount {
 	sendRequest(name: string, url: string, params: string[]): Promise<object> {
 		return new Promise((resolve, reject) =>
-			rp(
+			request(
 				{
 					url: url,
-					method: "POST",
+					method: 'POST',
 					headers: {
-						"Content-Type": "application/json"
+						'Content-Type': 'application/json'
 					},
 					json: {
 						method: name,
 						params: params,
 						id: 1,
-						jsonrpc: "2.0"
+						jsonrpc: '2.0'
 					}
 				},
 				(error, res, body) => {
 					if (error) reject(error);
 					else if (res.statusCode === 200) resolve(body);
-					else reject("Error status " + res.statusCode + " " + res.statusMessage);
+					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
 				}
 			)
 		);
@@ -45,11 +44,11 @@ export class ParityAccount {
 	}
 
 	generateRandomPhrase(): string {
-		let outString: string = "";
+		let outString: string = '';
 		for (let i = 0; i < 12; i++) {
 			const index = this.getRandomInt(200);
-			const word = all_words[index].replace("." , "");
-			if (i < 11) outString = outString + word + " ";
+			const word = all_words[index].replace('.', '');
+			if (i < 11) outString = outString + word + ' ';
 			else outString = outString + word;
 		}
 		return outString;
@@ -63,19 +62,19 @@ export class ParityAccount {
 
 		fs
 			.createReadStream(inputFile)
-			.pipe(parse({ delimiter: ":" }))
-			.on("data", line => {
+			.pipe(parse({ delimiter: ':' }))
+			.on('data', line => {
 				all_words.push(line[0]);
 			})
-			.on("end", function() {
+			.on('end', function() {
 				for (let i = 0; i < num; i++) {
 					const params: string[] = [];
 					const phrases: string = parityAccount.generateRandomPhrase();
 					console.log(phrases);
 					params.push(phrases);
-					params.push("hunter2");
-					parityAccount.sendRequest("parity_newAccountFromPhrase", NETWORK, params).then(res => {
-						console.log("successfully created account: " + res["result"]);
+					params.push('hunter2');
+					parityAccount.sendRequest('parity_newAccountFromPhrase', NETWORK, params).then(res => {
+						console.log('successfully created account: ' + res['result']);
 					});
 				}
 			});
@@ -84,15 +83,15 @@ export class ParityAccount {
 	removeAccount(address: string) {
 		const params: string[] = [];
 		params.push(address);
-		parityAccount.sendRequest("parity_removeAddress", NETWORK, params).then(res => {
-			console.log("successfully removed account: " + address + " " + res["result"]);
+		parityAccount.sendRequest('parity_removeAddress', NETWORK, params).then(res => {
+			console.log('successfully removed account: ' + address + ' ' + res['result']);
 		});
 	}
 
 	allAccountsInfo() {
 		const params: string[] = [];
-		parityAccount.sendRequest("parity_allAccountsInfo", NETWORK, params).then(res => {
-			console.log("all accounts information: " + res["result"]);
+		parityAccount.sendRequest('parity_allAccountsInfo', NETWORK, params).then(res => {
+			console.log('all accounts information: ' + res['result']);
 		});
 	}
 }
