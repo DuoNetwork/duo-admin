@@ -57,13 +57,14 @@ export class KrankenTradeFeedUtil {
 
 				returnFirstLevelArray.forEach((secondLevelArr) => {
 					var trade_type = 'buy';
+					let exchange_returned_timestamp = Math.floor(Number(secondLevelArr[2]) * 1000) + "";
 
 					if (secondLevelArr[3] == 'b') {
 						trade_type = 'buy';
 					} else if (secondLevelArr[3] == 's') {
 						trade_type = 'sell';
 					}
-					krankenTradeFeedUtil.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, '', secondLevelArr[0], secondLevelArr[1], trade_type, secondLevelArr[2]);
+					krankenTradeFeedUtil.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, '', secondLevelArr[0], secondLevelArr[1], trade_type, exchange_returned_timestamp);
 				});
 
 				last = response.result.last;

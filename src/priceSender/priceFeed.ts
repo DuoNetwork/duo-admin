@@ -62,7 +62,7 @@ export class PriceFeed {
 		return res;
 	}
 
-	create_tx_command(nonce: number, gas_price: number, gas_limit: number, to_address: string, amount: number, data: string): object {
+	createTxCommand(nonce: number, gas_price: number, gas_limit: number, to_address: string, amount: number, data: string): object {
 		var rawTx = {
 			nonce: nonce, //web3.utils.toHex(nonce), //nonce,
 			gasPrice: web3.utils.toHex(gas_price),
@@ -74,7 +74,7 @@ export class PriceFeed {
 		return rawTx;
 	}
 
-	sign_tx(rawTx: object, private_key: string): string {
+	signTx(rawTx: object, private_key: string): string {
 		try {
 			var tx = new Tx(rawTx);
 			var private_key_hex = new Buffer(private_key, 'hex');
@@ -108,8 +108,8 @@ export class PriceFeed {
 						// console.log(nonce);
 						command = this.generateTxStrng(priceInWei, priceInSeconds, 'startContract');
 
-						let rawTx = this.create_tx_command(nonce, gas_price, gas_limit, addressCustodianContract, 0, command);
-						let transactionMSG = this.sign_tx(rawTx, privateKey);
+						let rawTx = this.createTxCommand(nonce, gas_price, gas_limit, addressCustodianContract, 0, command);
+						let transactionMSG = this.signTx(rawTx, privateKey);
 						// sending out transaction
 						web3.eth.sendSignedTransaction('0x' + transactionMSG).on('receipt', console.log);
 					});
@@ -133,8 +133,8 @@ export class PriceFeed {
 						console.log(nonce);
 						command = this.generateTxStrng(priceInWei, priceInSeconds, 'commitPrice');
 
-						let rawTx = this.create_tx_command(nonce, gas_price, gas_limit, addressCustodianContract, 0, command);
-						let transactionMSG = this.sign_tx(rawTx, privateKey);
+						let rawTx = this.createTxCommand(nonce, gas_price, gas_limit, addressCustodianContract, 0, command);
+						let transactionMSG = this.signTx(rawTx, privateKey);
 						// sending out transaction
 						web3.eth.sendSignedTransaction('0x' + transactionMSG).on('receipt', console.log);
 					});

@@ -1,5 +1,5 @@
-import * as mysql from 'mysql';
-const math = require('mathjs');
+import * as mysql from "mysql";
+const math = require("mathjs");
 
 export default class MysqlUtil {
 
@@ -7,16 +7,16 @@ export default class MysqlUtil {
 	exchange_name: string;
 	db_host: string;
 	db_user: string;
-	db_password : string;
-	db_name : string;
-	db_table_name : string;
+	db_password: string;
+	db_name: string;
+	db_table_name: string;
 
 	constructor(
-		exchange_name: string, 
-		db_host: string, 
-		db_user: string, 
-		db_password: string, 
-		db_name: string, 
+		exchange_name: string,
+		db_host: string,
+		db_user: string,
+		db_password: string,
+		db_name: string,
 		db_table_name: string
 	) {
 		this.exchange_name = exchange_name;
@@ -26,8 +26,8 @@ export default class MysqlUtil {
 		this.db_name = db_name;
 		this.db_table_name = db_table_name;
 
-		if (this.db_host == '') {
-			console.log('[Required Parameters] Please input the correct DB parameters first.');
+		if (this.db_host == "") {
+			console.log("[Required Parameters] Please input the correct DB parameters first.");
 		}
 
 		this.dbConn = mysql.createConnection({
@@ -41,10 +41,10 @@ export default class MysqlUtil {
 	initDB() {
 		this.dbConn.connect(function(err) {
 			if (err) {
-				console.log('err' + err);
+				console.log("err" + err);
 				// throw err;
 			}
-			console.log('Connected!');
+			console.log("Connected!");
 			// dbConn.close();
 		});
 	}
@@ -58,22 +58,21 @@ export default class MysqlUtil {
 		exchange_returned_timestamp: string
 	) {
 		if (this.dbConn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
+			console.log("dbConn is null. Begin to do the init().");
 		}
 
-		var system_timestamp = Math.floor(Date.now()); //record down the MTS
-		if (!exchange_returned_timestamp){
-			exchange_returned_timestamp = system_timestamp + '';
+		const system_timestamp = Math.floor(Date.now()); // record down the MTS
+		if (!exchange_returned_timestamp) {
+			exchange_returned_timestamp = system_timestamp + "";
 		}
-		
-		var price_str = math.format(price, { exponential: { lowerExp: 1e-100, upperExp: 1e100 } });
-		var amount_str = math.format(amount, { exponential: { lowerExp: 1e-100, upperExp: 1e100 } });
+		let price_str = math.format(price, { exponential: { lowerExp: 1e-100, upperExp: 1e100 } });
+		let amount_str = math.format(amount, { exponential: { lowerExp: 1e-100, upperExp: 1e100 } });
 
-		price_str = price_str.split('"').join('');
-		amount_str = amount_str.split('"').join('');
+		price_str = price_str.split('"').join("");
+		amount_str = amount_str.split('"').join("");
 
-		var sql =
-			'INSERT INTO ' +
+		const sql =
+			"INSERT INTO " +
 			this.db_table_name +
 			" VALUES ('" +
 			exchange_soucre +
@@ -94,36 +93,43 @@ export default class MysqlUtil {
 		console.log(sql);
 		this.dbConn.query(sql, function(err: any, result: any) {
 			// if (err) throw err;
-			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
+			if (err && err.code != undefined && err.code === "ER_DUP_ENTRY") {
 				// console.log('.');
 				// rocess.stdout.write(".");
 			} else if (err) {
-				console.log('err' + err);
+				console.log("err" + err);
 			} else {
 				console.log(result);
 			}
 		});
 	}
 
-	// readDataMysql(
-	// ) {
-	// 	if (this.dbConn === undefined) {
-	// 		console.log('dbConn is null. Begin to do the init().');
-	// 	}
+	readDataMysql( current_timestamp: number
+	): Promise<any> {
+		if (this.dbConn === undefined) {
+			console.log("dbConn is null. Begin to do the init().");
+		}
 
-	// 	var sql = "SELECT * FROM "+ this.db_table_name + " ;
+		const lowerTime =  current_timestamp - 3600000 + "";
+		const upperTime = current_timestamp + "";
+		// const sql = "SELECT * FROM " + this.db_table_name + " WHERE exchange_returned_timestamp >= UNIX_TIMESTAMP(NOW()) - 3600";
+		const sql = "SELECT * FROM " + this.db_table_name + " WHERE exchange_returned_timestamp >= " + lowerTime + " AND exchange_returned_timestamp <= " + upperTime;
 
-	// 	console.log(sql);
-	// 	this.dbConn.query(sql, function(err: string, result: any) {
-	// 		// if (err) throw err;
-	// 		if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
-	// 			// console.log('.');
-	// 			// rocess.stdout.write(".");
-	// 		} else if (err) {
-	// 			console.log('err' + err);
-	// 		} else {
-	// 			console.log(result);
-	// 		}
-	// 	});
-	// }
+		console.log(sql);
+		return new Promise((resolve, reject) => {
+			this.dbConn.query(sql, function(err: any, result: any) {
+				// if (err) throw err;
+				if (err && err.code != undefined && err.code === "ER_DUP_ENTRY") {
+					// console.log('.');
+					// rocess.stdout.write(".");
+					reject(err);
+				} else if (err) {
+					reject(err);
+				} else {
+					resolve(result);
+				}
+			});
+
+		});
+	}
 }
