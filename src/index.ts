@@ -7,6 +7,7 @@ import pf from './priceSender/priceFeed';
 import listenToAcceptPrice from './listenToAcceptPrice';
 import parityAccount from './accounts/parityAccounts';
 import contractRead from './utils/contractReader';
+import decoder from './utils/inputDecoder';
 
 const tool: string = process.argv[2];
 
@@ -57,6 +58,11 @@ switch (tool) {
 		console.log('starting reading custodian contract state');
 		const state: string = process.argv[3];
 		contractRead.read(state);
+		break;
+	case 'decoder':
+		console.log('starting decoding contract input');
+		const input: string = process.argv[3];
+		console.log(decoder.decode(input));
 		break;
 	default:
 		console.log('no such tool ' + tool);

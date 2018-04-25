@@ -78,8 +78,8 @@ export class PriceFeed {
 			console.log('start contract at ' + priceInSeconds);
 			calculatePrice.calculatePrice()
 				.then(res => {
-					priceInWei = res[0] * Math.pow(10, 9);
-					priceInSeconds = Math.floor(res[1] / 1000) * Math.pow(10, 9);
+					priceInWei = res[0] * Math.pow(10, 18);
+					priceInSeconds = Math.floor(res[1] / 1000);
 					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {
@@ -103,8 +103,8 @@ export class PriceFeed {
 			console.log('fetch ETH price at ' + priceInSeconds);
 			calculatePrice.calculatePrice()
 				.then(res => {
-					priceInWei = res[0] * Math.pow(10, 9);
-					priceInSeconds = Math.floor(res[1] / 1000) * Math.pow(10, 9);
+					priceInWei = res[0] * Math.pow(10, 18);
+					priceInSeconds = Math.floor(res[1] / 1000);
 					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {

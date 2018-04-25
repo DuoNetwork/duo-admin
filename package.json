@@ -8,6 +8,7 @@
     "test": "ts-jest",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "readContract": "ts-node ./src/index readContract",
+    "decoder": "ts-node ./src/index decoder",
     "calculatePrice": "ts-node ./src/index calculatePrice",
     "pf": "ts-node ./src/index pf",
     "acceptPrice": "ts-node ./src/index acceptPrice",
@@ -32,6 +33,7 @@
     "tslint": "^5.9.1"
   },
   "dependencies": {
+    "abi-decoder": "^1.1.0",
     "bitfinex-api-node": "^2.0.0-beta",
     "coinbase": "^2.0.7",
     "csv": "^3.0.2",
