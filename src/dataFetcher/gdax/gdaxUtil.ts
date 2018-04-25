@@ -1,5 +1,6 @@
 import MysqlUtil from '../../utils/MysqlUtil';
 import * as CST from '../../constant';
+import request from 'request';
 
 const INTERVAL_SECS = 2;
 
@@ -23,38 +24,39 @@ export class CoinbaseGDAXTradeFeedUtil {
 	}
 
 	fetchETHTradesByRestfulAPI() {
-		var https = require('https');
-
-		var options = {
-			host: 'api.gdax.com',
-			path: '/products/ETH-USD/trades',
-			port: '443',
-			//This is the only line that is new. `headers` is an object with the headers to request
-			headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0' }
-		};
-
-		var callbackFunc = response => {
-			var responseStr = '';
-			response.on('data', chunk => {
-				responseStr += chunk;
-			});
-
-			response.on('end', () => {
-				var parsedJson = JSON.parse(responseStr);
-
-				let dbConn = coinbaseGDAXTradeFeedUtil.mysqlUtil.dbConn;
-				if (dbConn == undefined) {
-					coinbaseGDAXTradeFeedUtil.initDB();
+		const requestPromise = new Promise<string>((resolve, reject) =>
+			request(
+				{
+					url: 'https://api.gdax.com:443/products/ETH-USD/trades',
+					// This is the only line that is new. `headers` is an object with the headers to request
+					headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0' }
+				},
+				(error, res, body) => {
+					if (error) reject(error);
+					else if (res.statusCode === 200) resolve(body);
+					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
 				}
+			)
+		);
 
-				parsedJson.forEach(item => {
-					coinbaseGDAXTradeFeedUtil.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.trade_id, item.price, item.size, item.side, new Date(item.time).valueOf() +"");
-				});
+		requestPromise.then(data => {
+			const dbConn = coinbaseGDAXTradeFeedUtil.mysqlUtil.dbConn;
+			if (dbConn == undefined) {
+				coinbaseGDAXTradeFeedUtil.initDB();
+			}
+			const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
+
+			parsedData.forEach(item => {
+				coinbaseGDAXTradeFeedUtil.mysqlUtil.insertDataIntoMysql(
+					EXCHANGE_NAME,
+					item.trade_id,
+					item.price,
+					item.size,
+					item.side,
+					new Date(item.time).valueOf() + ''
+				);
 			});
-		};
-
-		var req = https.request(options, callbackFunc);
-		req.end();
+		});
 	}
 
 	startFetching() {

@@ -12,8 +12,8 @@ const DB_PASSWORD = CST.DB_PASSWORD;
 const DB_PRICEFEED = CST.DB_PRICEFEED;
 const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
 
-var last = 0; // last = id to be used as since when polling for new trade data
-var requestJson: object = {};
+let last = 0; // last = id to be used as since when polling for new trade data
+let requestJson: object = {};
 
 export class KrankenTradeFeedUtil {
 	mysqlUtil: MysqlUtil;
@@ -24,7 +24,6 @@ export class KrankenTradeFeedUtil {
 
 	initDB() {
 		console.log('Init the DB');
-
 
 		this.mysqlUtil.initDB();
 	}
@@ -46,24 +45,31 @@ export class KrankenTradeFeedUtil {
 			.then(response => {
 				// var jsonObj= JSON.parse(response);
 
-				let dbConn = krankenTradeFeedUtil.mysqlUtil.dbConn;
+				const dbConn = krankenTradeFeedUtil.mysqlUtil.dbConn;
 
 				if (dbConn == undefined) {
 					krankenTradeFeedUtil.initDB();
 				}
 
-				var returnFirstLevelArray = response.result.XETHZUSD;
+				const returnFirstLevelArray = response.result.XETHZUSD;
 
-				returnFirstLevelArray.forEach((secondLevelArr) => {
-					var trade_type = 'buy';
-					let exchange_returned_timestamp = Math.floor(Number(secondLevelArr[2]) * 1000) + "";
+				returnFirstLevelArray.forEach(secondLevelArr => {
+					let trade_type: string = 'buy';
+					const exchange_returned_timestamp = Math.floor(Number(secondLevelArr[2]) * 1000) + '';
 
 					if (secondLevelArr[3] == 'b') {
 						trade_type = 'buy';
 					} else if (secondLevelArr[3] == 's') {
 						trade_type = 'sell';
 					}
-					krankenTradeFeedUtil.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, '', secondLevelArr[0], secondLevelArr[1], trade_type, exchange_returned_timestamp);
+					krankenTradeFeedUtil.mysqlUtil.insertDataIntoMysql(
+						EXCHANGE_NAME,
+						'',
+						secondLevelArr[0],
+						secondLevelArr[1],
+						trade_type,
+						exchange_returned_timestamp
+					);
 				});
 
 				last = response.result.last;

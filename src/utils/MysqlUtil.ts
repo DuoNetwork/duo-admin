@@ -57,6 +57,7 @@ export default class MysqlUtil {
 		if (!exchange_returned_timestamp) {
 			exchange_returned_timestamp = system_timestamp + '';
 		}
+
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 

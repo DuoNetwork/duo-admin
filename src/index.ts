@@ -6,6 +6,7 @@ import calculatePrice from './priceCalculator/priceCalculatorUtil';
 import pf from './priceSender/priceFeed';
 import listenToAcceptPrice from './listenToAcceptPrice';
 import parityAccount from './accounts/parityAccounts';
+import contractRead from './utils/contractReader';
 
 const tool: string = process.argv[2];
 
@@ -52,7 +53,12 @@ switch (tool) {
 		console.log('starting calculate ETH price');
 		calculatePrice.calculatePrice();
 		break;
+	case 'readContract':
+		console.log('starting reading custodian contract state');
+		const state: string = process.argv[3];
+		contractRead.read(state);
+		break;
 	default:
-		console.log('no such tool');
+		console.log('no such tool ' + tool);
 		break;
 }

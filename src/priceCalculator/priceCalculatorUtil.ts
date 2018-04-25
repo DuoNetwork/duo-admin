@@ -187,14 +187,14 @@ export class CalculatePrice {
 		return priceFeed;
 	}
 
-	calculatePrice() {
+	calculatePrice(): Promise<any> {
 		const dbConn = this.mysqlUtil.dbConn;
 		if (dbConn == undefined) {
 			this.initDB();
 		}
 
-		const current_timestamp = Math.floor(Date.now());
-		this.mysqlUtil.readDataMysql(current_timestamp).then(res => {
+		const current_timestamp: number = Math.floor(Date.now());
+		return this.mysqlUtil.readDataMysql(current_timestamp).then(res => {
 			let EXCHANGES_TRADES: object;
 
 			EXCHANGES_TRADES = {
@@ -223,18 +223,27 @@ export class CalculatePrice {
 				});
 			}
 
-			const priceFix: any = this.consolidatePriceFix(exchangePriceVolume);
-			if (priceFix === 0) {
-				console.log('no priceFix found, use the last ETH price');
-				this.mysqlUtil.readLastETHpriceMysql().then(res => {
-					const lastPrice = res[0]['price'];
-					console.log('the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp);
-				});
-			} else {
-				console.log('the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp);
-				// save price into DB
-				this.mysqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
-			}
+			return new Promise((resolve) => {
+				const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
+
+				if (priceFix === 0) {
+					console.log('no priceFix found, use the last ETH price');
+					this.mysqlUtil.readLastETHpriceMysql().then(res => {
+						const lastPrice: number = res[0]['price'];
+						console.log('the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp);
+						// price["price"] = lastPrice;
+						// price["time"] = current_timestamp;
+						resolve([lastPrice, current_timestamp]);
+					});
+				} else {
+					console.log('the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp);
+					// save price into DB
+					this.mysqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
+					resolve([priceFix, current_timestamp]);
+				}
+
+			});
+
 		});
 	}
 }

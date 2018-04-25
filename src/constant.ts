@@ -18,7 +18,7 @@ export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 
 // wallet and contract
 export const NETWORK = 'http://localhost:8545';
-export const addressCustodianContract = '0x4458294e6d83696ec9a400dc4f6c27c9a0a1c559';
+export const addressCustodianContract = '0x0347f0406510f75835e1db271b274a6296abdb48';
 export const pfAddress = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const privateKey = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const ETH_PRICE_LINK = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD';

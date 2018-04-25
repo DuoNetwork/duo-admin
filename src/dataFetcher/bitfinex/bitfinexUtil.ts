@@ -20,7 +20,7 @@ export class BitfinexTradeFeedUtil {
 		this.mysqlUtil.initDB();
 	}
 
-	//Version 2 WebSocket API ---
+	// Version 2 WebSocket API ---
 	fetchETHTradesByOwnWebSocket() {
 		const ws = require('ws');
 		const w = new ws('wss://api.bitfinex.com/ws/2');
@@ -31,41 +31,41 @@ export class BitfinexTradeFeedUtil {
 				this.initDB();
 			}
 
-			var parsedJson = JSON.parse(msg);
+			let parsedJson = JSON.parse(msg);
 			if (parsedJson != undefined) {
-				//handle the snopshot
+				// handle the snopshot
 				if (parsedJson.event === undefined && parsedJson[1] != 'hb' && !(parsedJson[1] == 'te' || parsedJson[1] == 'tu')) {
 					// console.log(parsedJson);
-					var snopshotArr = parsedJson[1];
+					const snopshotArr = parsedJson[1];
 					snopshotArr.forEach(element => {
 						// console.log("===>"+element);
-						let amount: number = parseFloat(element[2]);
-						let trade_type = 'buy';
+						const amount: number = parseFloat(element[2]);
+						let trade_type: string = 'buy';
 						if (amount > 0) {
 							trade_type = 'buy';
 						} else {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3], Math.abs(amount) +"", trade_type, element[1]);
+						this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3] + '', Math.abs(amount) + '', trade_type, element[1]);
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					// console.log("<==="+parsedJson);
 					parsedJson = parsedJson[2];
-					var amount = parseFloat(parsedJson[2]);
-					var trade_type = 'buy';
+					const amount: number = parseFloat(parsedJson[2]);
+					let trade_type: string = 'buy';
 					if (amount > 0) {
 						trade_type = 'buy';
 					} else {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3], Math.abs(amount)+"", trade_type, parsedJson[1]);
+					this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3] + '', Math.abs(amount) + '', trade_type, parsedJson[1]);
 				}
 			}
 		});
 
-		let msg = JSON.stringify({
+		const msg = JSON.stringify({
 			event: 'subscribe',
 			channel: 'trades',
 			symbol: 'ETHUSD'
@@ -83,5 +83,5 @@ export class BitfinexTradeFeedUtil {
 		});
 	}
 }
-let bitfinexTradeFeedUtil = new BitfinexTradeFeedUtil();
+const bitfinexTradeFeedUtil = new BitfinexTradeFeedUtil();
 export default bitfinexTradeFeedUtil;

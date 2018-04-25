@@ -1,6 +1,6 @@
 import Web3 from 'web3';
-import request from 'request';
 import * as CST from '../constant';
+import calculatePrice from '../priceCalculator/priceCalculatorUtil';
 const Tx = require('ethereumjs-tx');
 const schedule = require('node-schedule');
 
@@ -9,37 +9,17 @@ const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 // const provider = 'http://localhost:8545';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
-// const CustodianABI = require('./ABI/Custodian.json'); //Custodian Contract ABI
+// const CustodianABI = require('../ABI/Custodian.json'); // Custodian Contract ABI
 const addressCustodianContract = CST.addressCustodianContract;
-// const custodianContract = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
+// const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
 
 const pfAddress = CST.pfAddress;
 const privateKey = CST.privateKey;
 
 const gas_price = 100 * Math.pow(10, 9);
-const gas_limit = 80000;
-
-const ETH_PRICE_LINK = CST.ETH_PRICE_LINK;
-// let priceFeedInterval = 60 * 60 * 1000;
+const gas_limit = 200000;
 
 export class PriceFeed {
-	getETHprice(url: string): Promise<string> {
-		return new Promise((resolve, reject) =>
-			request(
-				{
-					url: url,
-					headers: {
-						'user-agent': 'node.js'
-					}
-				},
-				(error, res, body) => {
-					if (error) reject(error);
-					else if (res.statusCode === 200) resolve(body);
-					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
-				}
-			)
-		);
-	}
 
 	generateTxStrng(priceInWei: number, priceInSeconds: number, name: string): string {
 		return web3.eth.abi.encodeFunctionCall(
@@ -88,24 +68,19 @@ export class PriceFeed {
 		let priceInSeconds;
 
 		const startTime = new Date(Date.now());
-		// startTime.setMinutes(59);
-		// startTime.setSeconds(0);
-		// startTime.setMilliseconds(0);
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
 		const rule = new schedule.RecurrenceRule();
-		rule.minute = new schedule.Range(0, 59, 1);
+		rule.minute = new schedule.Range(0, 59, 5);
 
 		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () => {
-			priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('start contract at ' + priceInSeconds);
-			this.getETHprice(ETH_PRICE_LINK)
+			calculatePrice.calculatePrice()
 				.then(res => {
-					const data = JSON.parse(res);
-					priceInWei = data['USD'] * Math.pow(10, 9);
-
-					// console.log(priceInWei);
-					// console.log(priceInSeconds);
+					priceInWei = res[0] * Math.pow(10, 9);
+					priceInSeconds = Math.floor(res[1] / 1000) * Math.pow(10, 9);
+					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {
 					web3.eth.getTransactionCount(pfAddress).then(nonce => {
@@ -124,20 +99,18 @@ export class PriceFeed {
 				});
 		});
 		schedule.scheduleJob({ start: commitStart, rule: rule }, () => {
-			priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
+			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('fetch ETH price at ' + priceInSeconds);
-			this.getETHprice(ETH_PRICE_LINK)
+			calculatePrice.calculatePrice()
 				.then(res => {
-					const data = JSON.parse(res);
-					priceInWei = data['USD'] * Math.pow(10, 9);
-
-					// console.log(priceInWei);
-					// console.log(priceInSeconds);
+					priceInWei = res[0] * Math.pow(10, 9);
+					priceInSeconds = Math.floor(res[1] / 1000) * Math.pow(10, 9);
+					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {
 					web3.eth.getTransactionCount(pfAddress).then(nonce => {
 						let command;
-						console.log(nonce);
+						// console.log(nonce);
 						command = this.generateTxStrng(priceInWei, priceInSeconds, 'commitPrice');
 
 						// sending out transaction

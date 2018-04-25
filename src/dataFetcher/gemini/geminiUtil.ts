@@ -28,7 +28,7 @@ export class GeminiTradeFeedUtil {
 			const parsedJson: any = JSON.parse(msg);
 
 			if (parsedJson.events[0].type == 'trade') {
-				var timestampms = parsedJson.timestampms;
+				let timestampms = parsedJson.timestampms;
 
 				// console.log(parsedJson.events[0]);
 
