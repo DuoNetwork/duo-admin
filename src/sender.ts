@@ -9,7 +9,7 @@ const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 // const provider = 'http://localhost:8545';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
-const CustodianABI = require('../ABI/Custodian.json'); // Custodian Contract ABI
+const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
 const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
 const gas_price = 10 * Math.pow(10, 9);

@@ -52,6 +52,7 @@ export class KrakenUtil {
 				}
 
 				const returnFirstLevelArray = response.result.XETHZUSD;
+				// console.log(returnFirstLevelArray);
 
 				returnFirstLevelArray.forEach(secondLevelArr => {
 					let trade_type: string = 'buy';
@@ -82,7 +83,7 @@ export class KrakenUtil {
 	}
 
 	startFetching() {
-		setInterval(this.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
+		setInterval(() => this.fetchETHTradesByOwnWebSocket(), INTERVAL_SECS * 1000);
 	}
 }
 const krakenUtil = new KrakenUtil();

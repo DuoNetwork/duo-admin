@@ -1,6 +1,5 @@
 import calculatePrice from './calculator';
 import * as CST from './constants';
-
 const trades: Array<{ [key: string]: string }> = require('../samples/ETHUSDtrades.json');
 
 test('test getVolumeMedianPrice', () => {
@@ -33,3 +32,16 @@ test('test modifyWeightage', () => {
 	inputWeightage = [0.8, 0.2];
 	expect(calculatePrice.modifyWeightage(inputWeightage)).toMatchSnapshot();
 });
+
+test('test getExchangePriceFix', () => {
+	CST.EXCHANGES.forEach( exchange => {
+		const exchange_trades: Array<{ [key: string]: string }> = trades.filter(item => item['exchange_source'] === exchange);
+		const timestamp = exchange_trades.reduce((min, p) => Number(p.exchange_returned_timestamp) < min ? Number(p.exchange_returned_timestamp) : min, Number(exchange_trades[0].exchange_returned_timestamp));
+		expect(calculatePrice.getExchangePriceFix(exchange_trades, timestamp, exchange )).toMatchSnapshot();
+		// expect(calculatePrice.getExchangePriceFix([{}], timestamp, exchange )).toMatchSnapshot();
+	});
+
+});
+
+
+

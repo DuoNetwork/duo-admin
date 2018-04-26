@@ -30,8 +30,7 @@ export class GdaxUtil {
 					url: 'https://api.gdax.com:443/products/ETH-USD/trades',
 					// This is the only line that is new. `headers` is an object with the headers to request
 					headers: {
-						'User-Agent':
-							'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0'
+						'User-Agent': 'nodejs'
 					}
 				},
 				(error, res, body) => {
@@ -63,7 +62,7 @@ export class GdaxUtil {
 	}
 
 	startFetching() {
-		setInterval(this.fetchETHTradesByRestfulAPI, INTERVAL_SECS * 1000);
+		setInterval(() => this.fetchETHTradesByRestfulAPI(), INTERVAL_SECS * 1000);
 	}
 }
 
