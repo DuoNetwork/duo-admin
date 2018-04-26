@@ -12,9 +12,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
-const gas_price = 10 * Math.pow(10, 9);
-const gas_limit = 80000;
-
 export class ContractUtil {
 	async read(name: string) {
 		console.log(await custodianContract.methods[name]().call());
@@ -104,7 +101,8 @@ export class ContractUtil {
 		});
 	}
 
-	async commitSinglePrice(isInception: boolean) {
+	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
+
 		const res = await calculatePrice.calculatePrice();
 		const priceInWei = res[0] * Math.pow(10, 18);
 		const priceInSeconds = Math.floor(res[1] / 1000);
@@ -122,8 +120,8 @@ export class ContractUtil {
 					this.signTx(
 						this.createTxCommand(
 							nonce,
-							gas_price,
-							gas_limit,
+							gasPrice,
+							gasLimit,
 							CST.CUSTODIAN_ADDR,
 							0,
 							command
@@ -134,7 +132,23 @@ export class ContractUtil {
 			.on('receipt', console.log);
 	}
 
-	async commitPrice() {
+	async commitPrice(argv: string[]) {
+		let gasPrice = 5e9;
+		let gasLimit = 60000;
+		for (let i = 3; i < argv.length; i++) {
+			const args = argv[i].split('=');
+			switch (args[0]) {
+				case 'gasPrice':
+					gasPrice = Number(args[1]) || gasPrice;
+					break;
+				case 'gasLimit':
+					gasLimit = Number(args[1]) || gasLimit;
+					break;
+				default:
+					break;
+			}
+		}
+
 		const startTime = new Date(Date.now());
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
@@ -146,12 +160,12 @@ export class ContractUtil {
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () =>
-				this.commitSinglePrice(true)
+				this.commitSinglePrice(true, gasPrice, gasLimit)
 			);
 		}
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule: rule }, () =>
-			this.commitSinglePrice(false)
+			this.commitSinglePrice(false, gasPrice, gasLimit)
 		);
 	}
 }

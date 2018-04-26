@@ -10,13 +10,13 @@ import * as CST from './constants';
 
 const tool: string = process.argv[2];
 
-if (['bitfinex', 'gemini', 'kraken', 'gdax'].includes(tool))
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'pf', 'calculatePrice'].includes(tool))
 	sqlUtil.initDB(CST.DB_USER, CST.DB_PASSWORD);
 
 switch (tool) {
 	case 'pf':
 		console.log('starting commitPrice process');
-		contractUtil.commitPrice();
+		contractUtil.commitPrice(process.argv);
 		break;
 	case 'acceptPrice':
 		console.log('starting listening to acceptPrice event');

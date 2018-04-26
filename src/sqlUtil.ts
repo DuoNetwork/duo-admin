@@ -25,7 +25,6 @@ export class SqlUtil {
 
 	checkConn() {
 		if (this.conn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
 			throw new Error('db connection is not initialized');
 		}
 	}
