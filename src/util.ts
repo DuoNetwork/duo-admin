@@ -6,7 +6,7 @@ export class Util {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
 
-	get(url: string): Promise<string> {
+	get(url: string): Promise<any> {
 		return new Promise((resolve, reject) =>
 			request(
 				{

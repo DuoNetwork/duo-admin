@@ -1,31 +1,30 @@
 import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
-const Kraken = require('kraken-wrapper');
+import util from '../util';
 
-// let dbConn;
 
 const INTERVAL_SECS = 2;
 
 let last = 0; // last = id to be used as since when polling for new trade data
-let requestJson: object = {};
 
 export class KrakenUtil {
 	async fetchETHTradesByOwnWebSocket() {
-		const kraken = new Kraken();
+		// const kraken = new Kraken();
+		const baseUrl: string = 'https://api.kraken.com/0/public/Trades?pair=ETHUSD';
+		let url: string = '';
 
 		if (last == 0) {
-			requestJson = { pair: 'ETHUSD' };
+			url = baseUrl;
 		} else if (last != undefined) {
-			requestJson = { pair: 'ETHUSD', last: last };
+			url = baseUrl + '&last=' + last + '';
 		}
 		console.log('request: ' + last + 'length: ' + last.toString().split('.')[0].length);
 
 		try {
-			const response = await kraken.getTrades(requestJson);
-			// var jsonObj= JSON.parse(response);
+			const response: any = await util.get(url);
+			const jsonObj = JSON.parse(response);
 
-			const returnFirstLevelArray = response.result.XETHZUSD;
-			// console.log(returnFirstLevelArray);
+			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
 
 			returnFirstLevelArray.forEach(secondLevelArr => {
 				let trade_type: string = 'buy';
@@ -47,7 +46,7 @@ export class KrakenUtil {
 				);
 			});
 
-			last = response.result.last;
+			last = jsonObj['result']['last'];
 			console.log(last);
 		} catch (error) {
 			console.log(error);
