@@ -54,7 +54,7 @@ export class SqlUtil {
 		const amountStr = amount.split('"').join('');
 
 		const sql =
-			'INSERT INTO ' +
+			'REPLACE ' +
 			CST.DB_TABLE_TRADE +
 			" VALUES ('" +
 			exchangeSoucre +

@@ -21,7 +21,6 @@ export const NETWORK = 'http://localhost:8545';
 export const CUSTODIAN_ADDR = '0xfa28c05288f84e0d59aaa250fc1fa379a304d7ae';
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
-export const ETH_PRICE_LINK = 'https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD';
 export const ETHSCAN_API_KEY = '8VS7KBP65Q7TQE4NGNUDEF69M6M6TH4BRS';
 export const ETHSCAN_API_KOVAN_LINK = 'https://api-kovan.etherscan.io/api?';
 export const KOVAN_FROM_BLOCK = '6900000';
