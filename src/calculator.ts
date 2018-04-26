@@ -1,7 +1,7 @@
 import sqlUtil from './sqlUtil';
 import * as CST from './constants';
 
-export class CalculatePrice {
+export class Calculateor {
 	omitted: object = {
 		BITFINEX: false,
 		GEMINI: false,
@@ -180,7 +180,7 @@ export class CalculatePrice {
 
 	calculatePrice(): Promise<any> {
 		const current_timestamp: number = Math.floor(Date.now());
-		return sqlUtil.readDataMysql(current_timestamp).then(res => {
+		return sqlUtil.readSourceData(current_timestamp).then(res => {
 			let EXCHANGES_TRADES: object;
 
 			EXCHANGES_TRADES = {
@@ -222,7 +222,7 @@ export class CalculatePrice {
 
 				if (priceFix === 0) {
 					console.log('no priceFix found, use the last ETH price');
-					sqlUtil.readLastETHpriceMysql().then(res => {
+					sqlUtil.readLastPrice().then(res => {
 						const lastPrice: number = res[0]['price'];
 						console.log(
 							'the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp
@@ -236,12 +236,12 @@ export class CalculatePrice {
 						'the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp
 					);
 					// save price into DB
-					sqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
+					sqlUtil.insertPrice(current_timestamp + '', priceFix + '');
 					resolve([priceFix, current_timestamp]);
 				}
 			});
 		});
 	}
 }
-const calculatePrice = new CalculatePrice();
-export default calculatePrice;
+const calculateor = new Calculateor();
+export default calculateor;

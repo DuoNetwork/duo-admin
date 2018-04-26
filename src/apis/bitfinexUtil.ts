@@ -28,7 +28,7 @@ export class BitfinexUtil {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						sqlUtil.insertDataIntoMysql(
+						sqlUtil.insertSourceData(
 							CST.EXCHANGE_BITFINEX,
 							element[0],
 							element[3] + '',
@@ -48,7 +48,7 @@ export class BitfinexUtil {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					sqlUtil.insertDataIntoMysql(
+					sqlUtil.insertSourceData(
 						CST.EXCHANGE_BITFINEX,
 						parsedJson[0],
 						parsedJson[3] + '',

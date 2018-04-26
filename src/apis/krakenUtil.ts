@@ -36,7 +36,7 @@ export class KrakenUtil {
 				} else if (secondLevelArr[3] == 's') {
 					trade_type = 'sell';
 				}
-				sqlUtil.insertDataIntoMysql(
+				sqlUtil.insertSourceData(
 					CST.EXCHANGE_KRAKEN,
 					'',
 					secondLevelArr[0],

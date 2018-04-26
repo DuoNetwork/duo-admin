@@ -10,7 +10,7 @@ export class GdaxUtil {
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 		parsedData.forEach(item => {
-			sqlUtil.insertDataIntoMysql(
+			sqlUtil.insertSourceData(
 				CST.EXCHANGE_GDAX,
 				item.trade_id,
 				item.price,

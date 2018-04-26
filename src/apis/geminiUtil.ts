@@ -29,7 +29,7 @@ export class GeminiUtil {
 				}
 
 				// no timestamp returned by exchange so we leave empty there.
-				sqlUtil.insertDataIntoMysql(
+				sqlUtil.insertSourceData(
 					CST.EXCHANGE_GEMINI,
 					item.tid,
 					item.price,
