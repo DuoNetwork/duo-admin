@@ -3,7 +3,7 @@ import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
 
 export class BitfinexUtil {
-	parseTrade(trade: object): string[] {
+	parseTrade(trade: object): object {
 		const amount: number = parseFloat(trade[2]);
 		let trade_type: string = 'buy';
 		if (amount > 0) {
@@ -11,21 +11,22 @@ export class BitfinexUtil {
 		} else {
 			trade_type = 'sell';
 		}
-		return [trade[0], trade[3] + '', Math.abs(amount) + '', trade_type, trade[1]];
+		return {
+			[CST.TRADE_ID]: trade[0],
+			[CST.PRICE]: trade[3] + '',
+			[CST.AMOUNT]: Math.abs(amount) + '',
+			[CST.TRADE_TYPE]: trade_type,
+			[CST.EXCHANGE_TIME_STAMP]: trade[1]
+		};
 	}
 
 	// Version 2 WebSocket API ---
-	fetchETHTradesByOwnWebSocket() {
+	fetchTrades() {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', msg => {
 			let parsedJson = JSON.parse(msg.toString());
 			if (parsedJson != undefined) {
-				let tradeID: string,
-					price: string,
-					amount: string,
-					tradeType: string,
-					exchangeTimeStamp: string;
 				// handle the snopshot
 				if (
 					parsedJson.event === undefined &&
@@ -35,39 +36,28 @@ export class BitfinexUtil {
 					// console.log(parsedJson);
 					const snopshotArr = parsedJson[1];
 					snopshotArr.forEach(trade => {
-						[tradeID, price, amount, tradeType, exchangeTimeStamp] = this.parseTrade(
-							trade
-						);
+						const parsedTrad: object = this.parseTrade(trade);
 
 						sqlUtil.insertSourceData(
 							CST.EXCHANGE_BITFINEX,
-							tradeID,
-							price,
-							amount,
-							tradeType,
-							exchangeTimeStamp
+							parsedTrad[CST.TRADE_ID],
+							parsedTrad[CST.PRICE],
+							parsedTrad[CST.AMOUNT],
+							parsedTrad[CST.TRADE_TYPE],
+							parsedTrad[CST.EXCHANGE_TIME_STAMP]
 						);
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					parsedJson = parsedJson[2];
 
-					// const amount: number = parseFloat(parsedJson[2]);
-					// let trade_type: string = 'buy';
-					// if (amount > 0) {
-					// 	trade_type = 'buy';
-					// } else {
-					// 	trade_type = 'sell';
-					// }
-					[tradeID, price, amount, tradeType, exchangeTimeStamp] = this.parseTrade(
-						parsedJson
-					);
+					const parsedTrad: object = this.parseTrade(parsedJson);
 					sqlUtil.insertSourceData(
 						CST.EXCHANGE_BITFINEX,
-						tradeID,
-						price,
-						amount,
-						tradeType,
-						exchangeTimeStamp
+						parsedTrad[CST.TRADE_ID],
+						parsedTrad[CST.PRICE],
+						parsedTrad[CST.AMOUNT],
+						parsedTrad[CST.TRADE_TYPE],
+						parsedTrad[CST.EXCHANGE_TIME_STAMP]
 					);
 				}
 			}

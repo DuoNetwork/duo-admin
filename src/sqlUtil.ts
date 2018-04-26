@@ -71,7 +71,6 @@ export class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"')";
-
 		console.log(await this.executeQuery(sql));
 	}
 

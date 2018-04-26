@@ -7,7 +7,7 @@ const INTERVAL_SECS = 2;
 let last = 0; // last = id to be used as since when polling for new trade data
 
 export class KrakenUtil {
-	parseTrade(trade: object): string[] {
+	parseTrade(trade: object): object {
 		let trade_type: string = 'buy';
 		const exchange_returned_timestamp = Math.floor(Number(trade[2]) * 1000) + '';
 
@@ -16,13 +16,14 @@ export class KrakenUtil {
 		} else if (trade[3] == 's') {
 			trade_type = 'sell';
 		}
-		return [
-			exchange_returned_timestamp,
-			trade[0],
-			trade[1],
-			trade_type,
-			exchange_returned_timestamp
-		];
+
+		return {
+			[CST.TRADE_ID]: exchange_returned_timestamp,
+			[CST.PRICE]: trade[0],
+			[CST.AMOUNT]: trade[1],
+			[CST.TRADE_TYPE]: trade_type,
+			[CST.EXCHANGE_TIME_STAMP]: exchange_returned_timestamp
+		};
 	}
 
 	async fetchETHTradesByOwnWebSocket() {
@@ -35,30 +36,25 @@ export class KrakenUtil {
 		} else if (last != undefined) {
 			url = baseUrl + '&last=' + last + '';
 		}
-		console.log('request: ' + last + 'length: ' + last.toString().split('.')[0].length);
+		console.log('request: ' + last + ' length: ' + last.toString().split('.')[0].length);
 
 		try {
 			const response: any = await util.get(url);
 			const jsonObj = JSON.parse(response);
 
 			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
-
+			// console.log(url);
 			returnFirstLevelArray.forEach(trade => {
-				let tradeID: string,
-					price: string,
-					amount: string,
-					tradeType: string,
-					exchangeTimeStamp: string;
-
-				[tradeID, price, amount, tradeType, exchangeTimeStamp] = krakenUtil.parseTrade(trade);
+				console.log(trade);
+				const parsedTrad: object = krakenUtil.parseTrade(trade);
 
 				sqlUtil.insertSourceData(
 					CST.EXCHANGE_KRAKEN,
-					tradeID,
-					price,
-					amount,
-					tradeType,
-					exchangeTimeStamp
+					parsedTrad[CST.TRADE_ID],
+					parsedTrad[CST.PRICE],
+					parsedTrad[CST.AMOUNT],
+					parsedTrad[CST.TRADE_TYPE],
+					parsedTrad[CST.EXCHANGE_TIME_STAMP]
 				);
 			});
 

@@ -4,7 +4,7 @@ exports[`connection initalization 1`] = `"db connection is not initialized"`;
 
 exports[`insertPrice 1`] = `"INSERT INTO eth_historical_price VALUES ('ts','px')"`;
 
-exports[`insertSourceData 1`] = `"INSERT INTO ETH_Trades_Table VALUES ('src','id','px','amt','type','ts','1524735853923')"`;
+exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','px','amt','type','ts','1524736485960')"`;
 
 exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
 

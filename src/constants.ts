@@ -27,6 +27,11 @@ export const KOVAN_FROM_BLOCK = '6900000';
 export const ACCEPT_PRICE_EVENT = '0x8eb94c6a87f56bd59f4a2a7d571f32a264458ff5b910a34862b9051e5953442d';
 
 // priceFeed
+export const TRADE_ID = 'tradeID';
+export const PRICE = 'price';
+export const AMOUNT = 'amount';
+export const TRADE_TYPE  = 'tradeType';
+export const EXCHANGE_TIME_STAMP = 'exchangeTimeStamp';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
 	'4': [0.35, 0.3, 0.25, 0.2],

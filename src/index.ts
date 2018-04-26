@@ -36,11 +36,11 @@ switch (tool) {
 		break;
 	case 'bitfinex':
 		console.log('starting fetchTrade of bitfinex');
-		bitfinexUtil.fetchETHTradesByOwnWebSocket();
+		bitfinexUtil.fetchTrades();
 		break;
 	case 'gemini':
 		console.log('starting fetchTrade of gemini');
-		geminiUtil.fetchETHTradesByOwnWebSocket();
+		geminiUtil.fetchTrades();
 		break;
 	case 'kraken':
 		console.log('starting fetchTrade of kraken');
