@@ -1,4 +1,4 @@
-import mysqlUtil from '../mysqlUtil';
+import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
 import ws from 'ws';
 
@@ -29,7 +29,7 @@ export class GeminiUtil {
 				}
 
 				// no timestamp returned by exchange so we leave empty there.
-				mysqlUtil.insertDataIntoMysql(
+				sqlUtil.insertDataIntoMysql(
 					CST.EXCHANGE_GEMINI,
 					item.tid,
 					item.price,

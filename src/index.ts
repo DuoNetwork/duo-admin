@@ -5,13 +5,13 @@ import gdaxUtil from './apis/gdaxUtil';
 import calculatePrice from './calculator';
 import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
-import mysqlUtil from './mysqlUtil';
+import sqlUtil from './sqlUtil';
 import * as CST from './constants';
 
 const tool: string = process.argv[2];
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax'].includes(tool))
-	mysqlUtil.initDB(CST.DB_USER, CST.DB_PASSWORD);
+	sqlUtil.initDB(CST.DB_USER, CST.DB_PASSWORD);
 
 switch (tool) {
 	case 'pf':

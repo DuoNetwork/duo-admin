@@ -2,8 +2,8 @@ import * as mysql from 'mysql';
 import * as CST from './constants';
 // const math = require("mathjs");
 
-export class MysqlUtil {
-	conn: mysql.Connection;
+export class SqlUtil {
+	conn: undefined | mysql.Connection = undefined;
 
 	initDB(user: string, pwd: string) {
 		this.conn = mysql.createConnection({
@@ -53,7 +53,7 @@ export class MysqlUtil {
 
 		const sql =
 			'INSERT INTO ' +
-			this.tableName +
+			CST.DB_TABLE_TRADE +
 			" VALUES ('" +
 			exchangeSoucre +
 			"','" +
@@ -71,7 +71,7 @@ export class MysqlUtil {
 			"')";
 
 		console.log(sql);
-		this.conn.query(sql, function(err: any, result: any) {
+		this.conn && this.conn.query(sql, function(err: any, result: any) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 				// console.log('.');
@@ -97,7 +97,7 @@ export class MysqlUtil {
 			"')";
 
 		console.log(sql);
-		this.conn.query(sql, function(err: any, result: any) {
+		this.conn && this.conn.query(sql, function(err: any, result: any) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 				// console.log('.');
@@ -117,7 +117,7 @@ export class MysqlUtil {
 
 		console.log(sql);
 		return new Promise((resolve, reject) => {
-			this.conn.query(sql, function(err: any, result: any) {
+			this.conn && this.conn.query(sql, function(err: any, result: any) {
 				// if (err) throw err;
 				if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 					// console.log('.');
@@ -140,7 +140,7 @@ export class MysqlUtil {
 		// const sql = "SELECT * FROM " + this.db_table_name + " WHERE exchange_returned_timestamp >= UNIX_TIMESTAMP(NOW()) - 3600";
 		const sql =
 			'SELECT * FROM ' +
-			this.tableName +
+			CST.DB_TABLE_TRADE +
 			' WHERE exchange_returned_timestamp >= ' +
 			lowerTime +
 			' AND exchange_returned_timestamp <= ' +
@@ -148,7 +148,7 @@ export class MysqlUtil {
 
 		console.log(sql);
 		return new Promise((resolve, reject) => {
-			this.conn.query(sql, function(err: any, result: any) {
+			this.conn && this.conn.query(sql, function(err: any, result: any) {
 				// if (err) throw err;
 				if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 					// console.log('.');
@@ -164,5 +164,5 @@ export class MysqlUtil {
 	}
 }
 
-const mysqlUtil = new MysqlUtil();
-export default mysqlUtil;
+const sqlUtil = new SqlUtil();
+export default sqlUtil;

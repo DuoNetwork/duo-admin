@@ -1,4 +1,4 @@
-import mysqlUtil from '../mysqlUtil';
+import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
 const Kraken = require('kraken-wrapper');
 
@@ -37,7 +37,7 @@ export class KrakenUtil {
 				} else if (secondLevelArr[3] == 's') {
 					trade_type = 'sell';
 				}
-				mysqlUtil.insertDataIntoMysql(
+				sqlUtil.insertDataIntoMysql(
 					CST.EXCHANGE_KRAKEN,
 					'',
 					secondLevelArr[0],

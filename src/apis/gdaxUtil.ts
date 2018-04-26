@@ -1,4 +1,4 @@
-import mysqlUtil from '../mysqlUtil';
+import sqlUtil from '../sqlUtil';
 import util from '../util';
 import * as CST from '../constants';
 
@@ -10,7 +10,7 @@ export class GdaxUtil {
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 		parsedData.forEach(item => {
-			mysqlUtil.insertDataIntoMysql(
+			sqlUtil.insertDataIntoMysql(
 				CST.EXCHANGE_GDAX,
 				item.trade_id,
 				item.price,
