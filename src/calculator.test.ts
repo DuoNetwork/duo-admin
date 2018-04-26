@@ -1,5 +1,6 @@
-import calculatePrice from '../priceCalculator/priceCalculatorUtil';
-import * as CST from '../constant';
+import calculatePrice from './calculator';
+import * as CST from './constants';
+
 const trades: Array<{ [key: string]: string }> = require('../samples/ETHUSDtrades.json');
 
 test('test getVolumeMedianPrice', () => {

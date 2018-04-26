@@ -8,11 +8,11 @@ aching
 lucky
 past
 kids
-books..
+books
 franchise
 jon
 go
-terrible..
+terrible
 best
 films
 rosie
@@ -42,7 +42,7 @@ disliked
 lol
 hate
 luv
-jokes..
+jokes
 random
 excellent
 here
@@ -62,8 +62,8 @@ hating
 draco
 acoustic
 study
-around..
-bye..
+around
+bye
 becoming
 through
 young
@@ -100,7 +100,7 @@ independent
 college
 table
 stuff
-code..
+code
 show
 hey
 start
@@ -125,7 +125,7 @@ not
 where
 challenge
 postponed
-potter..
+potter
 acceptable
 rather
 racism

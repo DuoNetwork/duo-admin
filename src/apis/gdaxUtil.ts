@@ -1,21 +1,21 @@
-import MysqlUtil from '../../utils/MysqlUtil';
-import * as CST from '../../constant';
+import MysqlUtil from '../MysqlUtil';
+import * as CST from '../constants';
 import request from 'request';
 
 const INTERVAL_SECS = 2;
 
-const EXCHANGE_NAME = CST.EXCHANGE_GDAX;
-const DB_HOST = CST.DB_HOST;
-const DB_USER = CST.DB_USER;
-const DB_PASSWORD = CST.DB_PASSWORD;
-const DB_PRICEFEED = CST.DB_PRICEFEED;
-const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
-
-export class CoinbaseGDAXTradeFeedUtil {
+export class GdaxUtil {
 	mysqlUtil: MysqlUtil;
 
 	constructor() {
-		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
+		this.mysqlUtil = new MysqlUtil(
+			CST.EXCHANGE_GDAX,
+			CST.DB_HOST,
+			CST.DB_USER,
+			CST.DB_PASSWORD,
+			CST.DB_PRICEFEED,
+			CST.DB_TABLE_TRADE
+		);
 	}
 
 	initDB() {
@@ -29,7 +29,10 @@ export class CoinbaseGDAXTradeFeedUtil {
 				{
 					url: 'https://api.gdax.com:443/products/ETH-USD/trades',
 					// This is the only line that is new. `headers` is an object with the headers to request
-					headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0' }
+					headers: {
+						'User-Agent':
+							'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10; rv:33.0) Gecko/20100101 Firefox/33.0'
+					}
 				},
 				(error, res, body) => {
 					if (error) reject(error);
@@ -40,15 +43,15 @@ export class CoinbaseGDAXTradeFeedUtil {
 		);
 
 		requestPromise.then(data => {
-			const dbConn = coinbaseGDAXTradeFeedUtil.mysqlUtil.dbConn;
+			const dbConn = this.mysqlUtil.dbConn;
 			if (dbConn == undefined) {
-				coinbaseGDAXTradeFeedUtil.initDB();
+				this.initDB();
 			}
 			const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 			parsedData.forEach(item => {
-				coinbaseGDAXTradeFeedUtil.mysqlUtil.insertDataIntoMysql(
-					EXCHANGE_NAME,
+				this.mysqlUtil.insertDataIntoMysql(
+					CST.EXCHANGE_GDAX,
 					item.trade_id,
 					item.price,
 					item.size,
@@ -60,9 +63,9 @@ export class CoinbaseGDAXTradeFeedUtil {
 	}
 
 	startFetching() {
-		setInterval(coinbaseGDAXTradeFeedUtil.fetchETHTradesByRestfulAPI, INTERVAL_SECS * 1000);
+		setInterval(this.fetchETHTradesByRestfulAPI, INTERVAL_SECS * 1000);
 	}
 }
 
-const coinbaseGDAXTradeFeedUtil = new CoinbaseGDAXTradeFeedUtil();
-export default coinbaseGDAXTradeFeedUtil;
+const gdaxUtil = new GdaxUtil();
+export default gdaxUtil;

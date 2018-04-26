@@ -1,18 +1,19 @@
-import MysqlUtil from '../../utils/MysqlUtil';
-import * as CST from '../../constant';
+import MysqlUtil from '../MysqlUtil';
+import * as CST from '../constants';
+import ws from 'ws';
 
-const EXCHANGE_NAME = CST.EXCHANGE_GEMINI;
-const DB_HOST = CST.DB_HOST;
-const DB_USER = CST.DB_USER;
-const DB_PASSWORD = CST.DB_PASSWORD;
-const DB_PRICEFEED = CST.DB_PRICEFEED;
-const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
-
-export class GeminiTradeFeedUtil {
+export class GeminiUtil {
 	mysqlUtil: MysqlUtil;
 
 	constructor() {
-		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
+		this.mysqlUtil = new MysqlUtil(
+			CST.EXCHANGE_GEMINI,
+			CST.DB_HOST,
+			CST.DB_USER,
+			CST.DB_PASSWORD,
+			CST.DB_PRICEFEED,
+			CST.DB_TABLE_TRADE
+		);
 	}
 
 	initDB() {
@@ -21,11 +22,10 @@ export class GeminiTradeFeedUtil {
 	}
 
 	fetchETHTradesByOwnWebSocket() {
-		const ws = require('ws');
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
 		w.on('message', msg => {
-			const parsedJson: any = JSON.parse(msg);
+			const parsedJson: any = JSON.parse(msg.toString());
 
 			if (parsedJson.events[0].type == 'trade') {
 				let timestampms = parsedJson.timestampms;
@@ -36,7 +36,7 @@ export class GeminiTradeFeedUtil {
 
 				const dbConn = this.mysqlUtil.dbConn;
 				if (dbConn == undefined) {
-					geminiTradeFeedUtil.initDB();
+					this.initDB();
 				}
 
 				let trade_type = 'buy';
@@ -52,7 +52,14 @@ export class GeminiTradeFeedUtil {
 				}
 
 				// no timestamp returned by exchange so we leave empty there.
-				this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, item.tid, item.price, item.amount, trade_type, timestampms);
+				this.mysqlUtil.insertDataIntoMysql(
+					CST.EXCHANGE_GEMINI,
+					item.tid,
+					item.price,
+					item.amount,
+					trade_type,
+					timestampms
+				);
 			}
 		});
 
@@ -62,5 +69,5 @@ export class GeminiTradeFeedUtil {
 	}
 }
 
-const geminiTradeFeedUtil = new GeminiTradeFeedUtil();
-export default geminiTradeFeedUtil;
+const geminiUtil = new GeminiUtil();
+export default geminiUtil;

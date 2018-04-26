@@ -1,25 +1,25 @@
-import MysqlUtil from '../../utils/MysqlUtil';
-import * as CST from '../../constant';
+import MysqlUtil from '../MysqlUtil';
+import * as CST from '../constants';
 
 // let dbConn;
 
 const INTERVAL_SECS = 2;
 
-const EXCHANGE_NAME = CST.EXCHANGE_KRAKEN;
-const DB_HOST = CST.DB_HOST;
-const DB_USER = CST.DB_USER;
-const DB_PASSWORD = CST.DB_PASSWORD;
-const DB_PRICEFEED = CST.DB_PRICEFEED;
-const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
-
 let last = 0; // last = id to be used as since when polling for new trade data
 let requestJson: object = {};
 
-export class KrankenTradeFeedUtil {
+export class KrakenUtil {
 	mysqlUtil: MysqlUtil;
 
 	constructor() {
-		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
+		this.mysqlUtil = new MysqlUtil(
+			CST.EXCHANGE_KRAKEN,
+			CST.DB_HOST,
+			CST.DB_USER,
+			CST.DB_PASSWORD,
+			CST.DB_PRICEFEED,
+			CST.DB_TABLE_TRADE
+		);
 	}
 
 	initDB() {
@@ -45,25 +45,26 @@ export class KrankenTradeFeedUtil {
 			.then(response => {
 				// var jsonObj= JSON.parse(response);
 
-				const dbConn = krankenTradeFeedUtil.mysqlUtil.dbConn;
+				const dbConn = this.mysqlUtil.dbConn;
 
 				if (dbConn == undefined) {
-					krankenTradeFeedUtil.initDB();
+					this.initDB();
 				}
 
 				const returnFirstLevelArray = response.result.XETHZUSD;
 
 				returnFirstLevelArray.forEach(secondLevelArr => {
 					let trade_type: string = 'buy';
-					const exchange_returned_timestamp = Math.floor(Number(secondLevelArr[2]) * 1000) + '';
+					const exchange_returned_timestamp =
+						Math.floor(Number(secondLevelArr[2]) * 1000) + '';
 
 					if (secondLevelArr[3] == 'b') {
 						trade_type = 'buy';
 					} else if (secondLevelArr[3] == 's') {
 						trade_type = 'sell';
 					}
-					krankenTradeFeedUtil.mysqlUtil.insertDataIntoMysql(
-						EXCHANGE_NAME,
+					this.mysqlUtil.insertDataIntoMysql(
+						CST.EXCHANGE_KRAKEN,
 						'',
 						secondLevelArr[0],
 						secondLevelArr[1],
@@ -81,8 +82,8 @@ export class KrankenTradeFeedUtil {
 	}
 
 	startFetching() {
-		setInterval(krankenTradeFeedUtil.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
+		setInterval(this.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
 	}
 }
-const krankenTradeFeedUtil = new KrankenTradeFeedUtil();
-export default krankenTradeFeedUtil;
+const krakenUtil = new KrakenUtil();
+export default krakenUtil;

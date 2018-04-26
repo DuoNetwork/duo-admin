@@ -1,7 +1,6 @@
-import * as CST from './constant';
+import * as CST from './constants';
 import request from 'request';
 
-const addressCustodianContract = CST.addressCustodianContract;
 const ETHSCAN_API_KEY = CST.ETHSCAN_API_KEY;
 const ETHSCAN_API_KOVAN_LINK = CST.ETHSCAN_API_KOVAN_LINK;
 const KOVAN_FROM_BLOCK = CST.KOVAN_FROM_BLOCK;
@@ -34,7 +33,7 @@ export class ListenToAcceptPrice {
 			'module=logs&action=getLogs&fromBlock=' +
 			KOVAN_FROM_BLOCK +
 			'&toBlock=latest&address=' +
-			addressCustodianContract +
+			CST.CUSTODIAN_ADDR +
 			'&topic0=' +
 			ACCEPT_PRICE_EVENT +
 			'&apikey=' +

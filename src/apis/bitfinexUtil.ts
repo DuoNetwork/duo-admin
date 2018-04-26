@@ -1,18 +1,18 @@
-import MysqlUtil from '../../utils/MysqlUtil';
-import * as CST from '../../constant';
+import MysqlUtil from '../MysqlUtil';
+import * as CST from '../constants';
 
-const EXCHANGE_NAME = CST.EXCHANGE_BITFINEX;
-const DB_HOST = CST.DB_HOST;
-const DB_USER = CST.DB_USER;
-const DB_PASSWORD = CST.DB_PASSWORD;
-const DB_PRICEFEED = CST.DB_PRICEFEED;
-const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
-
-export class BitfinexTradeFeedUtil {
+export class BitfinexUtil {
 	mysqlUtil: MysqlUtil;
 
 	constructor() {
-		this.mysqlUtil = new MysqlUtil(EXCHANGE_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
+		this.mysqlUtil = new MysqlUtil(
+			CST.EXCHANGE_BITFINEX,
+			CST.DB_HOST,
+			CST.DB_USER,
+			CST.DB_PASSWORD,
+			CST.DB_PRICEFEED,
+			CST.DB_TABLE_TRADE
+		);
 	}
 
 	initDB() {
@@ -34,7 +34,11 @@ export class BitfinexTradeFeedUtil {
 			let parsedJson = JSON.parse(msg);
 			if (parsedJson != undefined) {
 				// handle the snopshot
-				if (parsedJson.event === undefined && parsedJson[1] != 'hb' && !(parsedJson[1] == 'te' || parsedJson[1] == 'tu')) {
+				if (
+					parsedJson.event === undefined &&
+					parsedJson[1] != 'hb' &&
+					!(parsedJson[1] == 'te' || parsedJson[1] == 'tu')
+				) {
 					// console.log(parsedJson);
 					const snopshotArr = parsedJson[1];
 					snopshotArr.forEach(element => {
@@ -47,7 +51,14 @@ export class BitfinexTradeFeedUtil {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, element[0], element[3] + '', Math.abs(amount) + '', trade_type, element[1]);
+						this.mysqlUtil.insertDataIntoMysql(
+							CST.EXCHANGE_BITFINEX,
+							element[0],
+							element[3] + '',
+							Math.abs(amount) + '',
+							trade_type,
+							element[1]
+						);
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					// console.log("<==="+parsedJson);
@@ -60,7 +71,14 @@ export class BitfinexTradeFeedUtil {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					this.mysqlUtil.insertDataIntoMysql(EXCHANGE_NAME, parsedJson[0], parsedJson[3] + '', Math.abs(amount) + '', trade_type, parsedJson[1]);
+					this.mysqlUtil.insertDataIntoMysql(
+						CST.EXCHANGE_BITFINEX,
+						parsedJson[0],
+						parsedJson[3] + '',
+						Math.abs(amount) + '',
+						trade_type,
+						parsedJson[1]
+					);
 				}
 			}
 		});
@@ -83,5 +101,5 @@ export class BitfinexTradeFeedUtil {
 		});
 	}
 }
-const bitfinexTradeFeedUtil = new BitfinexTradeFeedUtil();
-export default bitfinexTradeFeedUtil;
+const bitfinexUtil = new BitfinexUtil();
+export default bitfinexUtil;

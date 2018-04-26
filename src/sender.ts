@@ -1,6 +1,6 @@
 import Web3 from 'web3';
-import * as CST from '../constant';
-import calculatePrice from '../priceCalculator/priceCalculatorUtil';
+import * as CST from './constants';
+import calculatePrice from './calculator';
 const Tx = require('ethereumjs-tx');
 const schedule = require('node-schedule');
 
@@ -10,17 +10,12 @@ const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
 const CustodianABI = require('../ABI/Custodian.json'); // Custodian Contract ABI
-const addressCustodianContract = CST.addressCustodianContract;
-const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
-
-const pfAddress = CST.pfAddress;
-const privateKey = CST.privateKey;
+const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
 const gas_price = 10 * Math.pow(10, 9);
 const gas_limit = 80000;
 
 export class PriceFeed {
-
 	generateTxStrng(priceInWei: number, priceInSeconds: number, name: string): string {
 		return web3.eth.abi.encodeFunctionCall(
 			{
@@ -41,7 +36,14 @@ export class PriceFeed {
 		);
 	}
 
-	createTxCommand(nonce: number, gas_price: number, gas_limit: number, to_address: string, amount: number, data: string): object {
+	createTxCommand(
+		nonce: number,
+		gas_price: number,
+		gas_limit: number,
+		to_address: string,
+		amount: number,
+		data: string
+	): object {
 		return {
 			nonce: nonce, // web3.utils.toHex(nonce), //nonce,
 			gasPrice: web3.utils.toHex(gas_price),
@@ -76,14 +78,15 @@ export class PriceFeed {
 		const startContractFunc = () => {
 			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('start contract at ' + priceInSeconds);
-			calculatePrice.calculatePrice()
+			calculatePrice
+				.calculatePrice()
 				.then(res => {
 					priceInWei = res[0] * Math.pow(10, 18);
 					priceInSeconds = Math.floor(res[1] / 1000);
 					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {
-					web3.eth.getTransactionCount(pfAddress).then(nonce => {
+					web3.eth.getTransactionCount(CST.PF_ADDR).then(nonce => {
 						let command;
 						// console.log(nonce);
 						command = this.generateTxStrng(priceInWei, priceInSeconds, 'startContract');
@@ -92,7 +95,17 @@ export class PriceFeed {
 						web3.eth
 							.sendSignedTransaction(
 								'0x' +
-									this.signTx(this.createTxCommand(nonce, gas_price, gas_limit, addressCustodianContract, 0, command), privateKey)
+									this.signTx(
+										this.createTxCommand(
+											nonce,
+											gas_price,
+											gas_limit,
+											CST.CUSTODIAN_ADDR,
+											0,
+											command
+										),
+										CST.PF_ADDR_PK
+									)
 							)
 							.on('receipt', console.log);
 					});
@@ -102,14 +115,15 @@ export class PriceFeed {
 		const commitPriceFunc = () => {
 			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('fetch ETH price at ' + priceInSeconds);
-			calculatePrice.calculatePrice()
+			calculatePrice
+				.calculatePrice()
 				.then(res => {
 					priceInWei = res[0] * Math.pow(10, 18);
 					priceInSeconds = Math.floor(res[1] / 1000);
 					console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
 				})
 				.then(() => {
-					web3.eth.getTransactionCount(pfAddress).then(nonce => {
+					web3.eth.getTransactionCount(CST.PF_ADDR).then(nonce => {
 						let command;
 						// console.log(nonce);
 						command = this.generateTxStrng(priceInWei, priceInSeconds, 'commitPrice');
@@ -118,26 +132,41 @@ export class PriceFeed {
 						web3.eth
 							.sendSignedTransaction(
 								'0x' +
-									this.signTx(this.createTxCommand(nonce, gas_price, gas_limit, addressCustodianContract, 0, command), privateKey)
+									this.signTx(
+										this.createTxCommand(
+											nonce,
+											gas_price,
+											gas_limit,
+											CST.CUSTODIAN_ADDR,
+											0,
+											command
+										),
+										CST.PF_ADDR_PK
+									)
 							)
 							.on('receipt', console.log);
 					});
 				});
 		};
 
-		custodianContract.methods.state().call().then(res => {
-			if (Number(res) === 0) {
-				// contract is in inception state; start contract first and then commit price
-				schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, startContractFunc);
-				schedule.scheduleJob({ start: commitStart, rule: rule }, commitPriceFunc);
-			}
+		custodianContract.methods
+			.state()
+			.call()
+			.then(res => {
+				if (Number(res) === 0) {
+					// contract is in inception state; start contract first and then commit price
+					schedule.scheduleJob(
+						{ start: startTime, end: endTime, rule: rule },
+						startContractFunc
+					);
+					schedule.scheduleJob({ start: commitStart, rule: rule }, commitPriceFunc);
+				}
 
-			if (Number(res) === 1) {
-				// contract is in trading state; start commit price
-				schedule.scheduleJob({ start: startTime, rule: rule }, commitPriceFunc);
-			}
-		});
-
+				if (Number(res) === 1) {
+					// contract is in trading state; start commit price
+					schedule.scheduleJob({ start: startTime, rule: rule }, commitPriceFunc);
+				}
+			});
 	}
 }
 

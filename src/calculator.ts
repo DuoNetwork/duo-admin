@@ -1,13 +1,5 @@
-import MysqlUtil from '../utils/MysqlUtil';
-import * as CST from '../constant';
-
-const DB_HOST = CST.DB_HOST;
-const DB_USER = CST.DB_USER;
-const DB_PASSWORD = CST.DB_PASSWORD;
-const DB_PRICEFEED = CST.DB_PRICEFEED;
-const DB_TABLE_TRADE = CST.DB_TABLE_TRADE;
-const EXCHANGES = CST.EXCHANGES;
-const EXCHANGE_WEIGHTAGE_TH = CST.EXCHANGE_WEIGHTAGE_TH;
+import MysqlUtil from './MysqlUtil';
+import * as CST from './constants';
 
 export class CalculatePrice {
 	mysqlUtil: MysqlUtil;
@@ -21,7 +13,14 @@ export class CalculatePrice {
 
 	constructor() {
 		// console.log('begin');
-		this.mysqlUtil = new MysqlUtil('', DB_HOST, DB_USER, DB_PASSWORD, DB_PRICEFEED, DB_TABLE_TRADE);
+		this.mysqlUtil = new MysqlUtil(
+			'',
+			CST.DB_HOST,
+			CST.DB_USER,
+			CST.DB_PASSWORD,
+			CST.DB_PRICEFEED,
+			CST.DB_TABLE_TRADE
+		);
 	}
 
 	initDB() {
@@ -29,14 +28,21 @@ export class CalculatePrice {
 		this.mysqlUtil.initDB();
 	}
 
-	getFiveMinutesIntervalTrades(trades: any[], current_timestamp: number, interval: number): object[] {
+	getFiveMinutesIntervalTrades(
+		trades: any[],
+		current_timestamp: number,
+		interval: number
+	): object[] {
 		const subTrades: object[] = [];
 		const oneInterval = 5 * 60 * 1000;
 		const upperTime: number = current_timestamp - interval * oneInterval;
 		const lowerTime: number = upperTime - oneInterval;
 
 		trades.forEach(item => {
-			if (item.exchange_returned_timestamp <= upperTime && item.exchange_returned_timestamp > lowerTime) {
+			if (
+				item.exchange_returned_timestamp <= upperTime &&
+				item.exchange_returned_timestamp > lowerTime
+			) {
 				subTrades.push(item);
 			}
 		});
@@ -118,7 +124,7 @@ export class CalculatePrice {
 		let isValid: boolean = true;
 		const numOfValidExchanges = weightageArray.length;
 		for (let i = 0; i < weightageArray.length; i++) {
-			if (weightageArray[i] > EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
+			if (weightageArray[i] > CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
 				isValid = false;
 			}
 		}
@@ -132,16 +138,16 @@ export class CalculatePrice {
 			let sumOfCapped: number = 0;
 			let sumOfUnCapped: number = 0;
 			for (let i = 0; i < weightageArray.length; i++) {
-				if (weightageArray[i] >= EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
-					weightageArray[i] = EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i];
-					sumOfCapped += EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i];
+				if (weightageArray[i] >= CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
+					weightageArray[i] = CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i];
+					sumOfCapped += CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i];
 				} else {
 					sumOfUnCapped += weightageArray[i];
 				}
 			}
 
 			for (let i = 0; i < weightageArray.length; i++) {
-				if (weightageArray[i] < EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
+				if (weightageArray[i] < CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
 					weightageArray[i] = weightageArray[i] / sumOfUnCapped * (1 - sumOfCapped);
 				}
 			}
@@ -151,12 +157,16 @@ export class CalculatePrice {
 		return weightageArray;
 	}
 
-	consolidatePriceFix(exchangePriceVolume: Array<{ name: string; price: number; volume: number }>): number {
+	consolidatePriceFix(
+		exchangePriceVolume: Array<{ name: string; price: number; volume: number }>
+	): number {
 		// console.log(exchangePriceVolume);
 		const validExchanges: string[] = this.getValidExchanges();
 		const numOfValidExchanges = validExchanges.length;
 
-		const filterredExchanges = exchangePriceVolume.filter(item => validExchanges.indexOf(item['name']) > -1);
+		const filterredExchanges = exchangePriceVolume.filter(
+			item => validExchanges.indexOf(item['name']) > -1
+		);
 
 		// sort based on volume from large to small
 		filterredExchanges.sort(function(a, b) {
@@ -205,17 +215,25 @@ export class CalculatePrice {
 			};
 
 			res.forEach(item => {
-				if (item.exchange_source === CST.EXCHANGE_BITFINEX) EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_GEMINI) EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_GDAX) EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_KRAKEN) EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
+				if (item.exchange_source === CST.EXCHANGE_BITFINEX)
+					EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
+				else if (item.exchange_source === CST.EXCHANGE_GEMINI)
+					EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
+				else if (item.exchange_source === CST.EXCHANGE_GDAX)
+					EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
+				else if (item.exchange_source === CST.EXCHANGE_KRAKEN)
+					EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
 			});
 
 			const exchangePriceVolume: Array<{ name: string; price: number; volume: number }> = [];
 
-			for (let i = 0; i < EXCHANGES.length; i++) {
-				const exchangeName: string = EXCHANGES[i];
-				const [exchangePrice, exchangeVolume] = this.getExchangePriceFix(EXCHANGES_TRADES[exchangeName], current_timestamp, exchangeName);
+			for (let i = 0; i < CST.EXCHANGES.length; i++) {
+				const exchangeName: string = CST.EXCHANGES[i];
+				const [exchangePrice, exchangeVolume] = this.getExchangePriceFix(
+					EXCHANGES_TRADES[exchangeName],
+					current_timestamp,
+					exchangeName
+				);
 				exchangePriceVolume.push({
 					name: exchangeName,
 					price: exchangePrice,
@@ -223,27 +241,29 @@ export class CalculatePrice {
 				});
 			}
 
-			return new Promise((resolve) => {
+			return new Promise(resolve => {
 				const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
 
 				if (priceFix === 0) {
 					console.log('no priceFix found, use the last ETH price');
 					this.mysqlUtil.readLastETHpriceMysql().then(res => {
 						const lastPrice: number = res[0]['price'];
-						console.log('the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp);
+						console.log(
+							'the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp
+						);
 						// price["price"] = lastPrice;
 						// price["time"] = current_timestamp;
 						resolve([lastPrice, current_timestamp]);
 					});
 				} else {
-					console.log('the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp);
+					console.log(
+						'the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp
+					);
 					// save price into DB
 					this.mysqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
 					resolve([priceFix, current_timestamp]);
 				}
-
 			});
-
 		});
 	}
 }

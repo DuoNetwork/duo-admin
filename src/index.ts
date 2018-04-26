@@ -1,13 +1,12 @@
-import bitfinexTradeFeedUtil from './dataFetcher/bitfinex/bitfinexUtil';
-import geminiTradeFeedUtil from './dataFetcher/gemini/geminiUtil';
-import krankenTradeFeedUtil from './dataFetcher/kraken/krakenUtil';
-import coinbaseGDAXTradeFeedUtil from './dataFetcher/gdax/gdaxUtil';
-import calculatePrice from './priceCalculator/priceCalculatorUtil';
-import pf from './priceSender/priceFeed';
+import bitfinexUtil from './apis/bitfinexUtil';
+import geminiUtil from './apis/geminiUtil';
+import krakenUtil from './apis/krakenUtil';
+import gdaxUtil from './apis/gdaxUtil';
+import calculatePrice from './calculator';
+import pf from './sender';
 import listenToAcceptPrice from './listenToAcceptPrice';
-import parityAccount from './accounts/parityAccounts';
-import contractRead from './utils/contractReader';
-import decoder from './utils/inputDecoder';
+import parityAccount from './accountUtil';
+import contractUtil from './contractUtil';
 
 const tool: string = process.argv[2];
 
@@ -35,20 +34,20 @@ switch (tool) {
 		break;
 	case 'bitfinex':
 		console.log('starting fetchTrade of bitfinex');
-		bitfinexTradeFeedUtil.fetchETHTradesByOwnWebSocket();
+		bitfinexUtil.fetchETHTradesByOwnWebSocket();
 		break;
 	case 'gemini':
 		console.log('starting fetchTrade of gemini');
-		geminiTradeFeedUtil.fetchETHTradesByOwnWebSocket();
+		geminiUtil.fetchETHTradesByOwnWebSocket();
 		break;
 	case 'kraken':
 		console.log('starting fetchTrade of kraken');
-		krankenTradeFeedUtil.startFetching();
+		krakenUtil.startFetching();
 		break;
 
 	case 'gdax':
 		console.log('starting fetchTrade of gdax');
-		coinbaseGDAXTradeFeedUtil.startFetching();
+		gdaxUtil.startFetching();
 		break;
 	case 'calculatePrice':
 		console.log('starting calculate ETH price');
@@ -57,12 +56,12 @@ switch (tool) {
 	case 'readContract':
 		console.log('starting reading custodian contract state');
 		const state: string = process.argv[3];
-		contractRead.read(state);
+		contractUtil.read(state);
 		break;
 	case 'decoder':
 		console.log('starting decoding contract input');
 		const input: string = process.argv[3];
-		console.log(decoder.decode(input));
+		console.log(contractUtil.decode(input));
 		break;
 	default:
 		console.log('no such tool ' + tool);

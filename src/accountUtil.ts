@@ -4,16 +4,12 @@ It takes number of accounts to create,
 and use csv file as phrase source to create parity accounts
 */
 import request from 'request';
-import * as CST from '../constant';
-const fs = require('fs');
-const parse = require('csv-parse');
+import * as CST from './constants';
+import * as fs from 'fs';
 
-const inputFile = './src/accounts/dictionary.csv';
-const all_words: any[] = [];
+const dictFile = './src/static/dictionary.txt';
 
-const NETWORK = CST.NETWORK;
-
-export class ParityAccount {
+export class AccountUtil {
 	sendRequest(name: string, url: string, params: string[]): Promise<object> {
 		return new Promise((resolve, reject) =>
 			request(
@@ -43,11 +39,11 @@ export class ParityAccount {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
 
-	generateRandomPhrase(): string {
+	generateRandomPhrase(words: string[]): string {
 		let outString: string = '';
 		for (let i = 0; i < 12; i++) {
 			const index = this.getRandomInt(200);
-			const word = all_words[index].replace('.', '');
+			const word = words[index].replace('.', '');
 			if (i < 11) outString = outString + word + ' ';
 			else outString = outString + word;
 		}
@@ -60,41 +56,36 @@ export class ParityAccount {
 			num = 1;
 		}
 
-		fs
-			.createReadStream(inputFile)
-			.pipe(parse({ delimiter: ':' }))
-			.on('data', line => {
-				all_words.push(line[0]);
-			})
-			.on('end', function() {
-				for (let i = 0; i < num; i++) {
-					const params: string[] = [];
-					const phrases: string = parityAccount.generateRandomPhrase();
-					console.log(phrases);
-					params.push(phrases);
-					params.push('hunter2');
-					parityAccount.sendRequest('parity_newAccountFromPhrase', NETWORK, params).then(res => {
-						console.log('successfully created account: ' + res['result']);
-					});
-				}
+		const dict = fs.readFileSync(dictFile, 'utf8');
+		const words = dict.split('\n');
+
+		for (let i = 0; i < num; i++) {
+			const params: string[] = [];
+			const phrases: string = this.generateRandomPhrase(words);
+			console.log(phrases);
+			params.push(phrases);
+			params.push('hunter2');
+			this.sendRequest('parity_newAccountFromPhrase', CST.NETWORK, params).then(res => {
+				console.log('successfully created account: ' + res['result']);
 			});
+		}
 	}
 
 	removeAccount(address: string) {
 		const params: string[] = [];
 		params.push(address);
-		parityAccount.sendRequest('parity_removeAddress', NETWORK, params).then(res => {
+		this.sendRequest('parity_removeAddress', CST.NETWORK, params).then(res => {
 			console.log('successfully removed account: ' + address + ' ' + res['result']);
 		});
 	}
 
 	allAccountsInfo() {
 		const params: string[] = [];
-		parityAccount.sendRequest('parity_allAccountsInfo', NETWORK, params).then(res => {
+		this.sendRequest('parity_allAccountsInfo', CST.NETWORK, params).then(res => {
 			console.log('all accounts information: ' + res['result']);
 		});
 	}
 }
 
-const parityAccount = new ParityAccount();
-export default parityAccount;
+const accountUtil = new AccountUtil();
+export default accountUtil;
