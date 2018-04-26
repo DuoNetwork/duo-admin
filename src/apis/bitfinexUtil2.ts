@@ -3,6 +3,7 @@ import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
 
 export class BitfinexUtil {
+	// Version 2 WebSocket API ---
 	parseTrade(trade: object): string[] {
 		const amount: number = parseFloat(trade[2]);
 		let trade_type: string = 'buy';
@@ -14,18 +15,12 @@ export class BitfinexUtil {
 		return [trade[0], trade[3] + '', Math.abs(amount) + '', trade_type, trade[1]];
 	}
 
-	// Version 2 WebSocket API ---
 	fetchETHTradesByOwnWebSocket() {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', msg => {
 			let parsedJson = JSON.parse(msg.toString());
 			if (parsedJson != undefined) {
-				let tradeID: string,
-					price: string,
-					amount: string,
-					tradeType: string,
-					exchangeTimeStamp: string;
 				// handle the snopshot
 				if (
 					parsedJson.event === undefined &&
@@ -35,11 +30,18 @@ export class BitfinexUtil {
 					// console.log(parsedJson);
 					const snopshotArr = parsedJson[1];
 					snopshotArr.forEach(trade => {
+
+						let tradeID: string,
+							price: string,
+							amount: string,
+							tradeType: string,
+							exchangeTimeStamp: string;
+
 						[tradeID, price, amount, tradeType, exchangeTimeStamp] = this.parseTrade(
 							trade
 						);
 
-						sqlUtil.insertSourceData(
+						sqlUtil.insertDataIntoMysql(
 							CST.EXCHANGE_BITFINEX,
 							tradeID,
 							price,
@@ -50,24 +52,20 @@ export class BitfinexUtil {
 					});
 				} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
 					parsedJson = parsedJson[2];
-
-					// const amount: number = parseFloat(parsedJson[2]);
-					// let trade_type: string = 'buy';
-					// if (amount > 0) {
-					// 	trade_type = 'buy';
-					// } else {
-					// 	trade_type = 'sell';
-					// }
-					[tradeID, price, amount, tradeType, exchangeTimeStamp] = this.parseTrade(
-						parsedJson
-					);
-					sqlUtil.insertSourceData(
+					const amount: number = parseFloat(parsedJson[2]);
+					let trade_type: string = 'buy';
+					if (amount > 0) {
+						trade_type = 'buy';
+					} else {
+						trade_type = 'sell';
+					}
+					sqlUtil.insertDataIntoMysql(
 						CST.EXCHANGE_BITFINEX,
-						tradeID,
-						price,
-						amount,
-						tradeType,
-						exchangeTimeStamp
+						parsedJson[0],
+						parsedJson[3] + '',
+						Math.abs(amount) + '',
+						trade_type,
+						parsedJson[1]
 					);
 				}
 			}
