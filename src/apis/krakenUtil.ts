@@ -1,5 +1,6 @@
-import MysqlUtil from '../MysqlUtil';
+import mysqlUtil from '../mysqlUtil';
 import * as CST from '../constants';
+const Kraken = require('kraken-wrapper');
 
 // let dbConn;
 
@@ -9,28 +10,7 @@ let last = 0; // last = id to be used as since when polling for new trade data
 let requestJson: object = {};
 
 export class KrakenUtil {
-	mysqlUtil: MysqlUtil;
-
-	constructor() {
-		this.mysqlUtil = new MysqlUtil(
-			CST.EXCHANGE_KRAKEN,
-			CST.DB_HOST,
-			CST.DB_USER,
-			CST.DB_PASSWORD,
-			CST.DB_PRICEFEED,
-			CST.DB_TABLE_TRADE
-		);
-	}
-
-	initDB() {
-		console.log('Init the DB');
-
-		this.mysqlUtil.initDB();
-	}
-
-	fetchETHTradesByOwnWebSocket() {
-		const Kraken = require('kraken-wrapper');
-
+	async fetchETHTradesByOwnWebSocket() {
 		const kraken = new Kraken();
 
 		if (last == 0) {
@@ -40,50 +20,42 @@ export class KrakenUtil {
 		}
 		console.log('request: ' + last + 'length: ' + last.toString().split('.')[0].length);
 
-		kraken
-			.getTrades(requestJson)
-			.then(response => {
-				// var jsonObj= JSON.parse(response);
+		try {
+			const response = await kraken.getTrades(requestJson);
+			// var jsonObj= JSON.parse(response);
 
-				const dbConn = this.mysqlUtil.dbConn;
+			const returnFirstLevelArray = response.result.XETHZUSD;
+			// console.log(returnFirstLevelArray);
 
-				if (dbConn == undefined) {
-					this.initDB();
+			returnFirstLevelArray.forEach(secondLevelArr => {
+				let trade_type: string = 'buy';
+				const exchange_returned_timestamp =
+					Math.floor(Number(secondLevelArr[2]) * 1000) + '';
+
+				if (secondLevelArr[3] == 'b') {
+					trade_type = 'buy';
+				} else if (secondLevelArr[3] == 's') {
+					trade_type = 'sell';
 				}
-
-				const returnFirstLevelArray = response.result.XETHZUSD;
-				// console.log(returnFirstLevelArray);
-
-				returnFirstLevelArray.forEach(secondLevelArr => {
-					let trade_type: string = 'buy';
-					const exchange_returned_timestamp =
-						Math.floor(Number(secondLevelArr[2]) * 1000) + '';
-
-					if (secondLevelArr[3] == 'b') {
-						trade_type = 'buy';
-					} else if (secondLevelArr[3] == 's') {
-						trade_type = 'sell';
-					}
-					this.mysqlUtil.insertDataIntoMysql(
-						CST.EXCHANGE_KRAKEN,
-						'',
-						secondLevelArr[0],
-						secondLevelArr[1],
-						trade_type,
-						exchange_returned_timestamp
-					);
-				});
-
-				last = response.result.last;
-				console.log(last);
-			})
-			.catch(error => {
-				console.log(error);
+				mysqlUtil.insertDataIntoMysql(
+					CST.EXCHANGE_KRAKEN,
+					'',
+					secondLevelArr[0],
+					secondLevelArr[1],
+					trade_type,
+					exchange_returned_timestamp
+				);
 			});
+
+			last = response.result.last;
+			console.log(last);
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	startFetching() {
-		setInterval(() => this.fetchETHTradesByOwnWebSocket(), INTERVAL_SECS * 1000);
+		setInterval(this.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
 	}
 }
 const krakenUtil = new KrakenUtil();

@@ -3,28 +3,30 @@ import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
 import gdaxUtil from './apis/gdaxUtil';
 import calculatePrice from './calculator';
-import pf from './sender';
-import listenToAcceptPrice from './listenToAcceptPrice';
 import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
+import mysqlUtil from './mysqlUtil';
+import * as CST from './constants';
 
 const tool: string = process.argv[2];
+
+if (['bitfinex', 'gemini', 'kraken', 'gdax'].includes(tool))
+	mysqlUtil.initDB(CST.DB_USER, CST.DB_PASSWORD);
 
 switch (tool) {
 	case 'pf':
 		console.log('starting commitPrice process');
-		pf.startFeeding();
+		contractUtil.commitPrice();
 		break;
 	case 'acceptPrice':
 		console.log('starting listening to acceptPrice event');
-		listenToAcceptPrice.startListening();
+		contractUtil.subscribeAcceptPriceEvent();
 		break;
 	case 'createAccount':
 		console.log('starting create accounts');
 		const numOfAccounts: number = Number(process.argv[3]);
 		parityAccount.createAccount(numOfAccounts);
 		break;
-
 	case 'removeAccount':
 		const address: string = process.argv[3];
 		parityAccount.removeAccount(address);

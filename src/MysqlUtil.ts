@@ -1,37 +1,19 @@
 import * as mysql from 'mysql';
+import * as CST from './constants';
 // const math = require("mathjs");
 
-export default class MysqlUtil {
-	dbConn: mysql.Connection;
-	exchange_name: string;
-	db_host: string;
-	db_user: string;
-	db_password: string;
-	db_name: string;
-	db_table_name: string;
+export class MysqlUtil {
+	conn: mysql.Connection;
 
-	constructor(exchange_name: string, db_host: string, db_user: string, db_password: string, db_name: string, db_table_name: string) {
-		this.exchange_name = exchange_name;
-		this.db_host = db_host;
-		this.db_user = db_user;
-		this.db_password = db_password;
-		this.db_name = db_name;
-		this.db_table_name = db_table_name;
-
-		if (this.db_host == '') {
-			console.log('[Required Parameters] Please input the correct DB parameters first.');
-		}
-
-		this.dbConn = mysql.createConnection({
-			host: this.db_host,
-			user: this.db_user,
-			password: this.db_password,
-			database: this.db_name
+	initDB(user: string, pwd: string) {
+		this.conn = mysql.createConnection({
+			host: CST.DB_HOST,
+			user: user,
+			password: pwd,
+			database: CST.DB_PRICEFEED
 		});
-	}
 
-	initDB() {
-		this.dbConn.connect(function(err) {
+		this.conn.connect(function(err) {
 			if (err) {
 				console.log('err' + err);
 				// throw err;
@@ -41,50 +23,55 @@ export default class MysqlUtil {
 		});
 	}
 
+	checkConn() {
+		if (this.conn === undefined) {
+			console.log('dbConn is null. Begin to do the init().');
+			throw new Error('db connection is not initialized');
+		}
+	}
+
 	insertDataIntoMysql(
-		exchange_soucre: string,
-		trade_id: string,
+		exchangeSoucre: string,
+		tradeId: string,
 		price: string,
 		amount: string,
-		trade_type: string,
-		exchange_returned_timestamp: string
+		tradeType: string,
+		exchangeReturnedTimestamp: string
 	) {
-		if (this.dbConn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
-		}
+		this.checkConn();
 
-		const system_timestamp = Math.floor(Date.now()); // record down the MTS
-		if (!exchange_returned_timestamp) {
-			exchange_returned_timestamp = system_timestamp + '';
+		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
+		if (!exchangeReturnedTimestamp) {
+			exchangeReturnedTimestamp = systemTimestamp + '';
 		}
 
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
-		const price_str = price.split('"').join('');
-		const amount_str = amount.split('"').join('');
+		const priceStr = price.split('"').join('');
+		const amountStr = amount.split('"').join('');
 
 		const sql =
 			'INSERT INTO ' +
-			this.db_table_name +
+			this.tableName +
 			" VALUES ('" +
-			exchange_soucre +
+			exchangeSoucre +
 			"','" +
-			trade_id +
+			tradeId +
 			"','" +
-			price_str +
+			priceStr +
 			"','" +
-			amount_str +
+			amountStr +
 			"','" +
-			trade_type +
+			tradeType +
 			"','" +
-			exchange_returned_timestamp +
+			exchangeReturnedTimestamp +
 			"','" +
-			system_timestamp +
+			systemTimestamp +
 			"')";
 
 		console.log(sql);
-		this.dbConn.query(sql, function(err: any, result: any) {
+		this.conn.query(sql, function(err: any, result: any) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 				// console.log('.');
@@ -98,14 +85,19 @@ export default class MysqlUtil {
 	}
 
 	insertETHpriceMysql(timestamp: string, price: string) {
-		if (this.dbConn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
-		}
+		this.checkConn();
 
-		const sql = 'INSERT INTO ' + 'eth_historical_price' + " VALUES ('" + timestamp + "','" + price + "')";
+		const sql =
+			'INSERT INTO ' +
+			'eth_historical_price' +
+			" VALUES ('" +
+			timestamp +
+			"','" +
+			price +
+			"')";
 
 		console.log(sql);
-		this.dbConn.query(sql, function(err: any, result: any) {
+		this.conn.query(sql, function(err: any, result: any) {
 			// if (err) throw err;
 			if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 				// console.log('.');
@@ -119,15 +111,13 @@ export default class MysqlUtil {
 	}
 
 	readLastETHpriceMysql(): Promise<any> {
-		if (this.dbConn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
-		}
+		this.checkConn();
 
 		const sql = 'SELECT * FROM `eth_historical_price` order by timestamp DESC LIMIT 1';
 
 		console.log(sql);
 		return new Promise((resolve, reject) => {
-			this.dbConn.query(sql, function(err: any, result: any) {
+			this.conn.query(sql, function(err: any, result: any) {
 				// if (err) throw err;
 				if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 					// console.log('.');
@@ -142,17 +132,15 @@ export default class MysqlUtil {
 		});
 	}
 
-	readDataMysql(current_timestamp: number): Promise<any> {
-		if (this.dbConn === undefined) {
-			console.log('dbConn is null. Begin to do the init().');
-		}
+	readDataMysql(currentTimestamp: number): Promise<any> {
+		this.checkConn();
 
-		const lowerTime = current_timestamp - 3600000 + '';
-		const upperTime = current_timestamp + '';
+		const lowerTime = currentTimestamp - 3600000 + '';
+		const upperTime = currentTimestamp + '';
 		// const sql = "SELECT * FROM " + this.db_table_name + " WHERE exchange_returned_timestamp >= UNIX_TIMESTAMP(NOW()) - 3600";
 		const sql =
 			'SELECT * FROM ' +
-			this.db_table_name +
+			this.tableName +
 			' WHERE exchange_returned_timestamp >= ' +
 			lowerTime +
 			' AND exchange_returned_timestamp <= ' +
@@ -160,7 +148,7 @@ export default class MysqlUtil {
 
 		console.log(sql);
 		return new Promise((resolve, reject) => {
-			this.dbConn.query(sql, function(err: any, result: any) {
+			this.conn.query(sql, function(err: any, result: any) {
 				// if (err) throw err;
 				if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY') {
 					// console.log('.');
@@ -175,3 +163,6 @@ export default class MysqlUtil {
 		});
 	}
 }
+
+const mysqlUtil = new MysqlUtil();
+export default mysqlUtil;

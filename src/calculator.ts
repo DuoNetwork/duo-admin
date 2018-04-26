@@ -1,32 +1,13 @@
-import MysqlUtil from './MysqlUtil';
+import mysqlUtil from './mysqlUtil';
 import * as CST from './constants';
 
 export class CalculatePrice {
-	mysqlUtil: MysqlUtil;
-
 	omitted: object = {
 		BITFINEX: false,
 		GEMINI: false,
 		GDAX: false,
 		KRAKEN: false
 	};
-
-	constructor() {
-		// console.log('begin');
-		this.mysqlUtil = new MysqlUtil(
-			'',
-			CST.DB_HOST,
-			CST.DB_USER,
-			CST.DB_PASSWORD,
-			CST.DB_PRICEFEED,
-			CST.DB_TABLE_TRADE
-		);
-	}
-
-	initDB() {
-		// console.log('Init the DB');
-		this.mysqlUtil.initDB();
-	}
 
 	getFiveMinutesIntervalTrades(
 		trades: any[],
@@ -198,13 +179,8 @@ export class CalculatePrice {
 	}
 
 	calculatePrice(): Promise<any> {
-		const dbConn = this.mysqlUtil.dbConn;
-		if (dbConn == undefined) {
-			this.initDB();
-		}
-
 		const current_timestamp: number = Math.floor(Date.now());
-		return this.mysqlUtil.readDataMysql(current_timestamp).then(res => {
+		return mysqlUtil.readDataMysql(current_timestamp).then(res => {
 			let EXCHANGES_TRADES: object;
 
 			EXCHANGES_TRADES = {
@@ -246,7 +222,7 @@ export class CalculatePrice {
 
 				if (priceFix === 0) {
 					console.log('no priceFix found, use the last ETH price');
-					this.mysqlUtil.readLastETHpriceMysql().then(res => {
+					mysqlUtil.readLastETHpriceMysql().then(res => {
 						const lastPrice: number = res[0]['price'];
 						console.log(
 							'the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp
@@ -260,7 +236,7 @@ export class CalculatePrice {
 						'the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp
 					);
 					// save price into DB
-					this.mysqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
+					mysqlUtil.insertETHpriceMysql(current_timestamp + '', priceFix + '');
 					resolve([priceFix, current_timestamp]);
 				}
 			});

@@ -1,37 +1,14 @@
-import MysqlUtil from '../MysqlUtil';
+import ws from 'ws';
+import mysqlUtil from '../mysqlUtil';
 import * as CST from '../constants';
 
 export class BitfinexUtil {
-	mysqlUtil: MysqlUtil;
-
-	constructor() {
-		this.mysqlUtil = new MysqlUtil(
-			CST.EXCHANGE_BITFINEX,
-			CST.DB_HOST,
-			CST.DB_USER,
-			CST.DB_PASSWORD,
-			CST.DB_PRICEFEED,
-			CST.DB_TABLE_TRADE
-		);
-	}
-
-	initDB() {
-		console.log('Init the DB');
-		this.mysqlUtil.initDB();
-	}
-
 	// Version 2 WebSocket API ---
 	fetchETHTradesByOwnWebSocket() {
-		const ws = require('ws');
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', msg => {
-			const dbConn = this.mysqlUtil.dbConn;
-			if (dbConn === undefined) {
-				this.initDB();
-			}
-
-			let parsedJson = JSON.parse(msg);
+			let parsedJson = JSON.parse(msg.toString());
 			if (parsedJson != undefined) {
 				// handle the snopshot
 				if (
@@ -51,7 +28,7 @@ export class BitfinexUtil {
 							trade_type = 'sell';
 						}
 						// console.log("=>"+trade_type);
-						this.mysqlUtil.insertDataIntoMysql(
+						mysqlUtil.insertDataIntoMysql(
 							CST.EXCHANGE_BITFINEX,
 							element[0],
 							element[3] + '',
@@ -71,7 +48,7 @@ export class BitfinexUtil {
 						trade_type = 'sell';
 					}
 					// console.log("=>"+trade_type);
-					this.mysqlUtil.insertDataIntoMysql(
+					mysqlUtil.insertDataIntoMysql(
 						CST.EXCHANGE_BITFINEX,
 						parsedJson[0],
 						parsedJson[3] + '',

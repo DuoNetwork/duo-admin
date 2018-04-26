@@ -1,26 +1,8 @@
-import MysqlUtil from '../MysqlUtil';
+import mysqlUtil from '../mysqlUtil';
 import * as CST from '../constants';
 import ws from 'ws';
 
 export class GeminiUtil {
-	mysqlUtil: MysqlUtil;
-
-	constructor() {
-		this.mysqlUtil = new MysqlUtil(
-			CST.EXCHANGE_GEMINI,
-			CST.DB_HOST,
-			CST.DB_USER,
-			CST.DB_PASSWORD,
-			CST.DB_PRICEFEED,
-			CST.DB_TABLE_TRADE
-		);
-	}
-
-	initDB() {
-		console.log('Init the DB');
-		this.mysqlUtil.initDB();
-	}
-
 	fetchETHTradesByOwnWebSocket() {
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
@@ -33,11 +15,6 @@ export class GeminiUtil {
 				// console.log(parsedJson.events[0]);
 
 				const item = parsedJson.events[0];
-
-				const dbConn = this.mysqlUtil.dbConn;
-				if (dbConn == undefined) {
-					this.initDB();
-				}
 
 				let trade_type = 'buy';
 
@@ -52,7 +29,7 @@ export class GeminiUtil {
 				}
 
 				// no timestamp returned by exchange so we leave empty there.
-				this.mysqlUtil.insertDataIntoMysql(
+				mysqlUtil.insertDataIntoMysql(
 					CST.EXCHANGE_GEMINI,
 					item.tid,
 					item.price,
