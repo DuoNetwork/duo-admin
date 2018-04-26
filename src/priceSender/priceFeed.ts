@@ -9,15 +9,15 @@ const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 // const provider = 'http://localhost:8545';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 
-// const CustodianABI = require('../ABI/Custodian.json'); // Custodian Contract ABI
+const CustodianABI = require('../ABI/Custodian.json'); // Custodian Contract ABI
 const addressCustodianContract = CST.addressCustodianContract;
-// const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
+const custodianContract: any = new web3.eth.Contract(CustodianABI['abi'], addressCustodianContract);
 
 const pfAddress = CST.pfAddress;
 const privateKey = CST.privateKey;
 
-const gas_price = 100 * Math.pow(10, 9);
-const gas_limit = 200000;
+const gas_price = 10 * Math.pow(10, 9);
+const gas_limit = 80000;
 
 export class PriceFeed {
 
@@ -73,7 +73,7 @@ export class PriceFeed {
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = new schedule.Range(0, 59, 5);
 
-		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () => {
+		const startContractFunc = () => {
 			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('start contract at ' + priceInSeconds);
 			calculatePrice.calculatePrice()
@@ -97,8 +97,9 @@ export class PriceFeed {
 							.on('receipt', console.log);
 					});
 				});
-		});
-		schedule.scheduleJob({ start: commitStart, rule: rule }, () => {
+		};
+
+		const commitPriceFunc = () => {
 			// priceInSeconds = (new Date().getTime() / 1000).toFixed(0);
 			console.log('fetch ETH price at ' + priceInSeconds);
 			calculatePrice.calculatePrice()
@@ -122,7 +123,21 @@ export class PriceFeed {
 							.on('receipt', console.log);
 					});
 				});
+		};
+
+		custodianContract.methods.state().call().then(res => {
+			if (Number(res) === 0) {
+				// contract is in inception state; start contract first and then commit price
+				schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, startContractFunc);
+				schedule.scheduleJob({ start: commitStart, rule: rule }, commitPriceFunc);
+			}
+
+			if (Number(res) === 1) {
+				// contract is in trading state; start commit price
+				schedule.scheduleJob({ start: startTime, rule: rule }, commitPriceFunc);
+			}
 		});
+
 	}
 }
 

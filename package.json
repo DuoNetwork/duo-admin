@@ -1,54 +1,67 @@
 {
-  "name": "duo-pricefeed",
-  "version": "1.0.0",
-  "private": true,
-  "description": "DUO Price Feed",
-  "author": "FinBook Pte Ltd",
-  "scripts": {
-    "test": "ts-jest",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "readContract": "ts-node ./src/index readContract",
-    "decoder": "ts-node ./src/index decoder",
-    "calculatePrice": "ts-node ./src/index calculatePrice",
-    "pf": "ts-node ./src/index pf",
-    "acceptPrice": "ts-node ./src/index acceptPrice",
-    "createAccount": "ts-node ./src/index createAccount",
-    "removeAccount": "ts-node ./src/index removeAccount",
-    "allAccounts": "ts-node ./src/index allAccounts",
-    "bitfinex": "ts-node ./src/index bitfinex",
-    "gemini": "ts-node ./src/index gemini",
-    "kraken": "ts-node ./src/index kraken",
-    "gdax": "ts-node ./src/index gdax"
-  },
-  "jest": {
-    "globals": {
-      "__DEV__": false
-    }
-  },
-  "devDependencies": {
-    "@types/mysql": "^2.15.4",
-    "@types/request": "^2.47.0",
-    "jest": "^22.4.2",
-    "ts-jest": "^22.4.4",
-    "tslint": "^5.9.1"
-  },
-  "dependencies": {
-    "abi-decoder": "^1.1.0",
-    "bitfinex-api-node": "^2.0.0-beta",
-    "coinbase": "^2.0.7",
-    "csv": "^3.0.2",
-    "d3-dsv": "^1.0.8",
-    "d3-format": "^1.2.2",
-    "ethereumjs-tx": "^1.3.4",
-    "gdax": "^0.6.0",
-    "gemini-api": "^2.0.4",
-    "kraken-wrapper": "^1.0.1",
-    "moment": "^2.21.0",
-    "mysql": "^2.15.0",
-    "node-schedule": "^1.3.0",
-    "request": "^2.85.0",
-    "ts-node": "^6.0.0",
-    "typescript": "^2.8.3",
-    "web3": "^1.0.0-beta.33"
-  }
+	"name": "duo-pricefeed",
+	"version": "1.0.0",
+	"private": true,
+	"description": "DUO Price Feed",
+	"author": "FinBook Pte Ltd",
+	"scripts": {
+		"test": "jest",
+		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"readContract": "ts-node ./src/index readContract",
+		"decoder": "ts-node ./src/index decoder",
+		"calculatePrice": "ts-node ./src/index calculatePrice",
+		"pf": "ts-node ./src/index pf",
+		"acceptPrice": "ts-node ./src/index acceptPrice",
+		"createAccount": "ts-node ./src/index createAccount",
+		"removeAccount": "ts-node ./src/index removeAccount",
+		"allAccounts": "ts-node ./src/index allAccounts",
+		"bitfinex": "ts-node ./src/index bitfinex",
+		"gemini": "ts-node ./src/index gemini",
+		"kraken": "ts-node ./src/index kraken",
+		"gdax": "ts-node ./src/index gdax"
+	},
+	"jest": {
+		"roots": [
+			"<rootDir>/src"
+		],
+		"transform": {
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx",
+			"json",
+			"node"
+		]
+	},
+	"devDependencies": {
+		"@types/jest": "^22.2.3",
+		"@types/mysql": "^2.15.4",
+		"@types/request": "^2.47.0",
+		"jest": "^22.4.3",
+		"ts-jest": "^22.4.4",
+		"tslint": "^5.9.1"
+	},
+	"dependencies": {
+		"abi-decoder": "^1.1.0",
+		"bitfinex-api-node": "^2.0.0-beta",
+		"coinbase": "^2.0.7",
+		"csv": "^3.0.2",
+		"d3-dsv": "^1.0.8",
+		"d3-format": "^1.2.2",
+		"ethereumjs-tx": "^1.3.4",
+		"gdax": "^0.6.0",
+		"gemini-api": "^2.0.4",
+		"kraken-wrapper": "^1.0.1",
+		"moment": "^2.21.0",
+		"mysql": "^2.15.0",
+		"node-schedule": "^1.3.0",
+		"request": "^2.85.0",
+		"ts-node": "^6.0.0",
+		"typescript": "^2.8.3",
+		"web3": "^1.0.0-beta.33"
+	}
 }
