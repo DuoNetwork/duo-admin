@@ -14,12 +14,8 @@ export class SqlUtil {
 		});
 
 		this.conn.connect(function(err) {
-			if (err) {
-				console.log('err' + err);
-				// throw err;
-			}
+			if (err) throw err;
 			console.log('Connected!');
-			// dbConn.close();
 		});
 	}
 
@@ -82,20 +78,14 @@ export class SqlUtil {
 	async insertPrice(timestamp: string, price: string) {
 		console.log(
 			await this.executeQuery(
-				'INSERT INTO ' +
-					'eth_historical_price' +
-					" VALUES ('" +
-					timestamp +
-					"','" +
-					price +
-					"')"
+				'INSERT INTO eth_historical_price' + " VALUES ('" + timestamp + "','" + price + "')"
 			)
 		);
 	}
 
 	readLastPrice() {
 		return this.executeQuery(
-			'SELECT * FROM `eth_historical_price` order by timestamp DESC LIMIT 1'
+			'SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1'
 		);
 	}
 

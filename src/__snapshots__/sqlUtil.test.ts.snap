@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`connection initalization 1`] = `"db connection is not initialized"`;
+
+exports[`insertPrice 1`] = `"INSERT INTO eth_historical_price VALUES ('ts','px')"`;
+
+exports[`insertSourceData 1`] = `"INSERT INTO ETH_Trades_Table VALUES ('src','id','px','amt','type','ts','1524735853923')"`;
+
+exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
+
+exports[`readSourceData 1`] = `"SELECT * FROM ETH_Trades_Table WHERE exchange_returned_timestamp >= 1230967890 AND exchange_returned_timestamp <= 1234567890"`;
