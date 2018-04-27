@@ -1,6 +1,7 @@
 import * as mysql from 'mysql';
 import * as CST from './constants';
 // const math = require("mathjs");
+import { Price, Trade } from './types';
 
 export class SqlUtil {
 	conn: undefined | mysql.Connection = undefined;
@@ -19,7 +20,7 @@ export class SqlUtil {
 		});
 	}
 
-	executeQuery(sqlQuery) {
+	executeQuery(sqlQuery: string): any {
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
@@ -34,64 +35,63 @@ export class SqlUtil {
 		});
 	}
 
-	async insertSourceData(
-		exchangeSoucre: string,
-		tradeId: string,
-		price: string,
-		amount: string,
-		tradeType: string,
-		exchangeReturnedTimestamp: string
-	) {
+	async insertSourceData(sourceData: Trade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
-		if (!exchangeReturnedTimestamp) {
-			exchangeReturnedTimestamp = systemTimestamp + '';
-		}
 
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
-		const priceStr = price.split('"').join('');
-		const amountStr = amount.split('"').join('');
+		const priceStr = sourceData.price.split('"').join('');
+		const amountStr = sourceData.amount.split('"').join('');
 
 		const sql =
 			'REPLACE ' +
 			CST.DB_TABLE_TRADE +
 			" VALUES ('" +
-			exchangeSoucre +
+			sourceData.source +
 			"','" +
-			tradeId +
+			sourceData.tradeId +
 			"','" +
 			priceStr +
 			"','" +
 			amountStr +
 			"','" +
-			tradeType +
+			sourceData.tradeType +
 			"','" +
-			exchangeReturnedTimestamp +
+			(sourceData.sourceTimestamp || systemTimestamp + '') +
 			"','" +
 			systemTimestamp +
 			"')";
 		console.log(await this.executeQuery(sql));
 	}
 
-	async insertPrice(timestamp: string, price: string) {
+	async insertPrice(price: Price) {
 		console.log(
 			await this.executeQuery(
-				'INSERT INTO eth_historical_price' + " VALUES ('" + timestamp + "','" + price + "')"
+				'INSERT INTO eth_historical_price' +
+					" VALUES ('" +
+					price.timestamp +
+					"','" +
+					price.price +
+					"')"
 			)
 		);
 	}
 
-	readLastPrice() {
-		return this.executeQuery(
+	async readLastPrice(): Promise<Price> {
+		const res = await this.executeQuery(
 			'SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1'
 		);
+		return {
+			price: res[0][CST.DB_HISTORY_PRICE],
+			timestamp: res[0][CST.DB_HISTORY_TIMESTAMP]
+		};
 	}
 
-	readSourceData(currentTimestamp: number): Promise<any> {
+	async readSourceData(currentTimestamp: number): Promise<Trade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
-		return this.executeQuery(
+		const res: object[] = await this.executeQuery(
 			'SELECT * FROM ' +
 				CST.DB_TABLE_TRADE +
 				' WHERE exchange_returned_timestamp >= ' +
@@ -99,6 +99,14 @@ export class SqlUtil {
 				' AND exchange_returned_timestamp <= ' +
 				upperTime
 		);
+		return res.map(item => ({
+			source: item[CST.DB_TX_EXCHANGE_SRC],
+			tradeId: item[CST.DB_TX_TRADE_ID],
+			price: item[CST.DB_TX_PRICE],
+			amount: item[CST.DB_TX_AMOUNT],
+			tradeType: item[CST.DB_TX_TYPE],
+			sourceTimestamp: item[CST.DB_TX_EXCHANGE_TIME_STAMP]
+		}));
 	}
 }
 

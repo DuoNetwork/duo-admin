@@ -1,13 +1,14 @@
 import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
 import util from '../util';
+import { Trade } from '../types';
 
 const INTERVAL_SECS = 2;
 
 let last = 0; // last = id to be used as since when polling for new trade data
 
 export class KrakenUtil {
-	parseTrade(trade: object): object {
+	parseTrade(trade: object): Trade {
 		let trade_type: string = 'buy';
 		const exchange_returned_timestamp = Math.floor(Number(trade[2]) * 1000) + '';
 
@@ -18,11 +19,12 @@ export class KrakenUtil {
 		}
 
 		return {
-			[CST.TRADE_ID]: exchange_returned_timestamp,
-			[CST.PRICE]: trade[0],
-			[CST.AMOUNT]: trade[1],
-			[CST.TRADE_TYPE]: trade_type,
-			[CST.EXCHANGE_TIME_STAMP]: exchange_returned_timestamp
+			source: CST.EXCHANGE_KRAKEN,
+			tradeId: exchange_returned_timestamp,
+			price: trade[0],
+			amount: trade[1],
+			tradeType: trade_type,
+			sourceTimestamp: exchange_returned_timestamp
 		};
 	}
 
@@ -46,16 +48,9 @@ export class KrakenUtil {
 			// console.log(url);
 			returnFirstLevelArray.forEach(trade => {
 				console.log(trade);
-				const parsedTrad: object = krakenUtil.parseTrade(trade);
+				const parsedTrade: Trade = krakenUtil.parseTrade(trade);
 
-				sqlUtil.insertSourceData(
-					CST.EXCHANGE_KRAKEN,
-					parsedTrad[CST.TRADE_ID],
-					parsedTrad[CST.PRICE],
-					parsedTrad[CST.AMOUNT],
-					parsedTrad[CST.TRADE_TYPE],
-					parsedTrad[CST.EXCHANGE_TIME_STAMP]
-				);
+				sqlUtil.insertSourceData(parsedTrade);
 			});
 
 			last = jsonObj['result']['last'];

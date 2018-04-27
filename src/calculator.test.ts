@@ -1,13 +1,16 @@
 import calculateor from './calculator';
 import * as CST from './constants';
-const trades: Array<{ [key: string]: string }> = require('./samples/ETHUSDtrades.json');
+import { Trade } from './types';
+const trades: Trade[] = require('./samples/ETHUSDtrades.json');
+// console.log(trades);
 
 test('test getVolumeMedianPrice', () => {
 	CST.EXCHANGES.forEach( exchange => {
-		const exchange_trades: Array<{ [key: string]: string }> = trades.filter(item => item['exchange_source'] === exchange);
+		const exchange_trades: Trade[] = trades.filter(item => item.source === exchange);
 		let medianPrice: number;
 		let volume: number;
 		[medianPrice, volume] = calculateor.getVolumeMedianPrice(exchange_trades);
+		// console.log([medianPrice, volume]);
 		expect(medianPrice).toMatchSnapshot();
 		const volumeSum: number = exchange_trades.reduce((a, b) => a + Number(b.amount), 0 );
 		expect(volume).toBe(volumeSum / 2);
@@ -35,10 +38,9 @@ test('test modifyWeightage', () => {
 
 test('test getExchangePriceFix', () => {
 	CST.EXCHANGES.forEach( exchange => {
-		const exchange_trades: Array<{ [key: string]: string }> = trades.filter(item => item['exchange_source'] === exchange);
-		const timestamp = exchange_trades.reduce((min, p) => Number(p.exchange_returned_timestamp) < min ? Number(p.exchange_returned_timestamp) : min, Number(exchange_trades[0].exchange_returned_timestamp));
+		const exchange_trades: Trade[] = trades.filter(item => item.source === exchange);
+		const timestamp = exchange_trades.reduce((min, p) => Number(p.sourceTimestamp) < min ? Number(p.sourceTimestamp) : min, Number(exchange_trades[0].sourceTimestamp));
 		expect(calculateor.getExchangePriceFix(exchange_trades, timestamp, exchange )).toMatchSnapshot();
-		expect(calculateor.getExchangePriceFix([{}], timestamp, exchange )).toMatchSnapshot();
 	});
 
 });

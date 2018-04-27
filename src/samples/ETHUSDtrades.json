@@ -1,111 +1,99 @@
 [
 	{
-		"exchange_source": "BITFINEX",
-		"trade_id": "231224852",
+		"source": "BITFINEX",
+		"tradeId": "231224852",
 		"price": "634.7",
 		"amount": "0.4",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524453966393",
-		"system_timestamp": "1524453983383"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524453966393"
 	},
 	{
-		"exchange_source": "BITFINEX",
-		"trade_id": "231224853",
+		"source": "BITFINEX",
+		"tradeId": "231224853",
 		"price": "634.69",
 		"amount": "1.65308079",
-		"trade_type": "sell",
-		"exchange_returned_timestamp": "1524453966454",
-		"system_timestamp": "1524453983383"
+		"tradeType": "sell",
+		"sourceTimestamp": "1524453966454"
 	},
 	{
-		"exchange_source": "BITFINEX",
-		"trade_id": "231224853",
+		"source": "BITFINEX",
+		"tradeId": "231224853",
 		"price": "635.00",
 		"amount": "1.1",
-		"trade_type": "sell",
-		"exchange_returned_timestamp": "1524453966454",
-		"system_timestamp": "1524453983383"
+		"tradeType": "sell",
+		"sourceTimestamp": "1524453966454"
 	},
 	{
-		"exchange_source": "GEMINI",
-		"trade_id": "3558353197",
+		"source": "GEMINI",
+		"tradeId": "3558353197",
 		"price": "637.00",
 		"amount": "6.002117",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524465953111",
-		"system_timestamp": "1524465953111"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524465953111"
 	},
 	{
-		"exchange_source": "GEMINI",
-		"trade_id": "3558353662",
+		"source": "GEMINI",
+		"tradeId": "3558353662",
 		"price": "638.00",
 		"amount": "9.339818",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524465956869",
-		"system_timestamp": "1524465956869"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524465956869"
 	},
 	{
-		"exchange_source": "GEMINI",
-		"trade_id": "3558353662",
+		"source": "GEMINI",
+		"tradeId": "3558353662",
 		"price": "639.00",
 		"amount": "7.339818",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524465956869",
-		"system_timestamp": "1524465956869"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524465956869"
 	},
 	{
-		"exchange_source": "GDAX",
-		"trade_id": "32589198",
+		"source": "GDAX",
+		"tradeId": "32589198",
 		"price": "633.00000000",
 		"amount": "8.67000000",
-		"trade_type": "sell",
-		"exchange_returned_timestamp": "1524463065507",
-		"system_timestamp": "1524463072990"
+		"tradeType": "sell",
+		"sourceTimestamp": "1524463065507"
 	},
 	{
-		"exchange_source": "GDAX",
-		"trade_id": "32589199",
+		"source": "GDAX",
+		"tradeId": "32589199",
 		"price": "634.00000000",
 		"amount": "1.08280000",
-		"trade_type": "sell",
-		"exchange_returned_timestamp": "1524463071695",
-		"system_timestamp": "1524463072989"
+		"tradeType": "sell",
+		"sourceTimestamp": "1524463071695"
 	},
 	{
-		"exchange_source": "GDAX",
-		"trade_id": "32589199",
+		"source": "GDAX",
+		"tradeId": "32589199",
 		"price": "635.00000000",
 		"amount": "3.08280000",
-		"trade_type": "sell",
-		"exchange_returned_timestamp": "1524463071695",
-		"system_timestamp": "1524463072989"
+		"tradeType": "sell",
+		"sourceTimestamp": "1524463071695"
 	},
 	{
-		"exchange_source": "KRAKEN",
-		"trade_id": "",
+		"source": "KRAKEN",
+		"tradeId": "",
 		"price": "666.98000",
 		"amount": "0.12100000",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524547909941",
-		"system_timestamp": "1524538080279"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524547909941"
 	},
 	{
-		"exchange_source": "KRAKEN",
-		"trade_id": "",
+		"source": "KRAKEN",
+		"tradeId": "",
 		"price": "667.00000",
 		"amount": "0.02400000",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524547898561",
-		"system_timestamp": "1524538080279"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524547898561"
 	},
 	{
-		"exchange_source": "KRAKEN",
-		"trade_id": "",
+		"source": "KRAKEN",
+		"tradeId": "",
 		"price": "669.98000",
 		"amount": "0.02100000",
-		"trade_type": "buy",
-		"exchange_returned_timestamp": "1524547909941",
-		"system_timestamp": "1524538080279"
+		"tradeType": "buy",
+		"sourceTimestamp": "1524547909941"
 	}
 
 ]

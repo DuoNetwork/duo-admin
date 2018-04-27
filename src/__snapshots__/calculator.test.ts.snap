@@ -9,50 +9,22 @@ Array [
 
 exports[`test getExchangePriceFix 2`] = `
 Array [
-  0,
-  0,
-]
-`;
-
-exports[`test getExchangePriceFix 3`] = `
-Array [
   637,
   3.0010585,
 ]
 `;
 
-exports[`test getExchangePriceFix 4`] = `
-Array [
-  0,
-  0,
-]
-`;
-
-exports[`test getExchangePriceFix 5`] = `
+exports[`test getExchangePriceFix 3`] = `
 Array [
   667,
   0.012,
 ]
 `;
 
-exports[`test getExchangePriceFix 6`] = `
-Array [
-  0,
-  0,
-]
-`;
-
-exports[`test getExchangePriceFix 7`] = `
+exports[`test getExchangePriceFix 4`] = `
 Array [
   633,
   4.335,
-]
-`;
-
-exports[`test getExchangePriceFix 8`] = `
-Array [
-  0,
-  0,
 ]
 `;
 

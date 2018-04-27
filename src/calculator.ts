@@ -1,5 +1,6 @@
 import sqlUtil from './sqlUtil';
 import * as CST from './constants';
+import { Price, Trade } from './types';
 
 export class Calculateor {
 	omitted: object = {
@@ -10,19 +11,19 @@ export class Calculateor {
 	};
 
 	getFiveMinutesIntervalTrades(
-		trades: any[],
+		trades: Trade[],
 		current_timestamp: number,
 		interval: number
-	): object[] {
-		const subTrades: object[] = [];
+	): Trade[] {
+		const subTrades: Trade[] = [];
 		const oneInterval = 5 * 60 * 1000;
 		const upperTime: number = current_timestamp - interval * oneInterval;
 		const lowerTime: number = upperTime - oneInterval;
 
-		trades.forEach(item => {
+		trades.forEach((item) => {
 			if (
-				item.exchange_returned_timestamp <= upperTime &&
-				item.exchange_returned_timestamp > lowerTime
+				Number(item.sourceTimestamp) <= upperTime &&
+				Number(item.sourceTimestamp) > lowerTime
 			) {
 				subTrades.push(item);
 			}
@@ -30,9 +31,9 @@ export class Calculateor {
 		return subTrades;
 	}
 
-	getVolumeMedianPrice(subTrades: any[]): number[] {
+	getVolumeMedianPrice(subTrades: Trade[]): number[] {
 		subTrades.sort(function(a, b) {
-			return a.price - b.price;
+			return Number(a.price) - Number(b.price);
 		});
 
 		const priceList: number[] = [];
@@ -42,7 +43,6 @@ export class Calculateor {
 			priceList.push(Number(subTrades[i].price));
 			volumeList.push(Number(subTrades[i].amount));
 		}
-		// console.log(priceList);
 		// let testList: number[] = [1,2,3,4];
 		const halfVolumeSum: number = volumeList.reduce((a, b) => a + b) / 2;
 		// console.log(halfVolumeSum);
@@ -62,7 +62,8 @@ export class Calculateor {
 		return medianFixVolume;
 	}
 
-	getExchangePriceFix(trades: any[], current_timestamp: number, exchange: string): number[] {
+	getExchangePriceFix(trades: Trade[], current_timestamp: number, exchange: string): number[] {
+		// console.log(trades);
 		let i = 0;
 		let subTrades;
 		let fixFound: boolean = false;
@@ -178,69 +179,81 @@ export class Calculateor {
 		return priceFeed;
 	}
 
-	calculatePrice(): Promise<any> {
+	async calculatePrice(): Promise<Price> {
 		const current_timestamp: number = Math.floor(Date.now());
-		return sqlUtil.readSourceData(current_timestamp).then(res => {
-			let EXCHANGES_TRADES: object;
+		const trades = await sqlUtil.readSourceData(current_timestamp);
+		// console.log(trades);
+		// return sqlUtil.readSourceData(current_timestamp).then(trades => {
+		let EXCHANGES_TRADES: {[key: string]: Trade[]};
 
-			EXCHANGES_TRADES = {
-				[CST.EXCHANGE_BITFINEX]: [],
-				[CST.EXCHANGE_GEMINI]: [],
-				[CST.EXCHANGE_GDAX]: [],
-				[CST.EXCHANGE_KRAKEN]: []
-			};
+		EXCHANGES_TRADES = {
+			[CST.EXCHANGE_BITFINEX]: [],
+			[CST.EXCHANGE_GEMINI]: [],
+			[CST.EXCHANGE_GDAX]: [],
+			[CST.EXCHANGE_KRAKEN]: []
+		};
 
-			res.forEach(item => {
-				if (item.exchange_source === CST.EXCHANGE_BITFINEX)
-					EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_GEMINI)
-					EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_GDAX)
-					EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
-				else if (item.exchange_source === CST.EXCHANGE_KRAKEN)
-					EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
-			});
-
-			const exchangePriceVolume: Array<{ name: string; price: number; volume: number }> = [];
-
-			for (let i = 0; i < CST.EXCHANGES.length; i++) {
-				const exchangeName: string = CST.EXCHANGES[i];
-				const [exchangePrice, exchangeVolume] = this.getExchangePriceFix(
-					EXCHANGES_TRADES[exchangeName],
-					current_timestamp,
-					exchangeName
-				);
-				exchangePriceVolume.push({
-					name: exchangeName,
-					price: exchangePrice,
-					volume: exchangeVolume
-				});
-			}
-
-			return new Promise(resolve => {
-				const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
-
-				if (priceFix === 0) {
-					console.log('no priceFix found, use the last ETH price');
-					sqlUtil.readLastPrice().then(res => {
-						const lastPrice: number = res[0]['price'];
-						console.log(
-							'the priceFix is: ' + lastPrice + ' at timestamp ' + current_timestamp
-						);
-						// price["price"] = lastPrice;
-						// price["time"] = current_timestamp;
-						resolve([lastPrice, current_timestamp]);
-					});
-				} else {
-					console.log(
-						'the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp
-					);
-					// save price into DB
-					sqlUtil.insertPrice(current_timestamp + '', priceFix + '');
-					resolve([priceFix, current_timestamp]);
-				}
-			});
+		trades.forEach(item => {
+			if (item.source === CST.EXCHANGE_BITFINEX)
+				EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
+			else if (item.source === CST.EXCHANGE_GEMINI)
+				EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
+			else if (item.source === CST.EXCHANGE_GDAX)
+				EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
+			else if (item.source === CST.EXCHANGE_KRAKEN)
+				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
 		});
+
+		const exchangePriceVolume: Array<{ name: string; price: number; volume: number }> = [];
+
+		for (let i = 0; i < CST.EXCHANGES.length; i++) {
+			const exchangeName: string = CST.EXCHANGES[i];
+			const [exchangePrice, exchangeVolume] = this.getExchangePriceFix(
+				EXCHANGES_TRADES[exchangeName],
+				current_timestamp,
+				exchangeName
+			);
+			exchangePriceVolume.push({
+				name: exchangeName,
+				price: exchangePrice,
+				volume: exchangeVolume
+			});
+		}
+		// console.log(EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX]);
+
+		// return new Promise(resolve => {
+		const priceObj: Price = {
+			price: '0',
+			timestamp: '0'
+		};
+		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
+
+		if (priceFix === 0) {
+			console.log('no priceFix found, use the last ETH price');
+			sqlUtil.readLastPrice().then(lastPriceObj => {
+				// resolve([priceObj.price, current_timestamp]);
+				priceObj.price = lastPriceObj.price;
+				priceObj.timestamp = lastPriceObj.timestamp;
+				console.log(
+					'the priceFix is: ' + priceObj.price + ' at timestamp ' + priceObj.timestamp
+				);
+			});
+		} else {
+			console.log(
+				'the priceFix is: ' + priceFix + ' at timestamp ' + current_timestamp
+			);
+			// save price into DB
+			sqlUtil.insertPrice( {
+				price: priceFix + '',
+				timestamp: current_timestamp + ''
+			});
+
+			priceObj.price = priceFix + '';
+			priceObj.timestamp = current_timestamp + '';
+			// return priceObj;
+		}
+		return priceObj;
+
 	}
 }
 const calculateor = new Calculateor();

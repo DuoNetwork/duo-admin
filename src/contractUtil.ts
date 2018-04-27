@@ -1,10 +1,11 @@
 import Web3 from 'web3';
 import * as CST from './constants';
 import util from './util';
-import calculatePrice from './calculator';
+import calculateor from './calculator';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
+import { Price } from './types';
 
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
@@ -103,10 +104,10 @@ export class ContractUtil {
 
 	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
 
-		const res = await calculatePrice.calculatePrice();
-		const priceInWei = res[0] * Math.pow(10, 18);
-		const priceInSeconds = Math.floor(res[1] / 1000);
-		console.log('ETH price is ' + res[0] + ' at timestamp ' + res[1]);
+		const currentPrice: Price = await calculateor.calculatePrice();
+		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
+		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
+		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
 		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
 		const command = this.generateTxString(
 			priceInWei,
