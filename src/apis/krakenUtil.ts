@@ -3,7 +3,7 @@ import * as CST from '../constants';
 import util from '../util';
 import { Trade } from '../types';
 
-const INTERVAL_SECS = 2;
+const INTERVAL_SECS = 5;
 
 let last = 0; // last = id to be used as since when polling for new trade data
 
@@ -28,6 +28,22 @@ export class KrakenUtil {
 		};
 	}
 
+	parseApiResponse(response: string) {
+		const jsonObj = JSON.parse(response);
+
+			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
+			// console.log(url);
+			returnFirstLevelArray.forEach(trade => {
+				console.log(trade);
+				const parsedTrade: Trade = krakenUtil.parseTrade(trade);
+
+				sqlUtil.insertSourceData(parsedTrade);
+			});
+
+			last = jsonObj['result']['last'];
+			console.log(last);
+	}
+
 	async fetchETHTradesByOwnWebSocket() {
 		// const kraken = new Kraken();
 		const baseUrl: string = 'https://api.kraken.com/0/public/Trades?pair=ETHUSD';
@@ -42,26 +58,14 @@ export class KrakenUtil {
 
 		try {
 			const response: any = await util.get(url);
-			const jsonObj = JSON.parse(response);
-
-			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
-			// console.log(url);
-			returnFirstLevelArray.forEach(trade => {
-				console.log(trade);
-				const parsedTrade: Trade = krakenUtil.parseTrade(trade);
-
-				sqlUtil.insertSourceData(parsedTrade);
-			});
-
-			last = jsonObj['result']['last'];
-			console.log(last);
+			this.parseApiResponse(response.toString());
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
 	startFetching() {
-		setInterval(this.fetchETHTradesByOwnWebSocket, INTERVAL_SECS * 1000);
+		setInterval(() => this.fetchETHTradesByOwnWebSocket(), INTERVAL_SECS * 1000);
 	}
 }
 const krakenUtil = new KrakenUtil();

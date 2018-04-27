@@ -11,16 +11,6 @@ Object {
 }
 `;
 
-exports[`parseApiResponse 2`] = `undefined`;
-
-exports[`parseApiResponse 3`] = `undefined`;
-
-exports[`parseApiResponse 4`] = `undefined`;
-
-exports[`parseApiResponse 5`] = `undefined`;
-
-exports[`parseApiResponse 6`] = `undefined`;
-
 exports[`parseTrade 1`] = `
 Object {
   "amount": "0.00671182",

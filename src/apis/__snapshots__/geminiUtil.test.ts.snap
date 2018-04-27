@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseApiResponse 1`] = `
+Object {
+  "amount": "50",
+  "price": "654.00",
+  "source": "GEMINI",
+  "sourceTimestamp": 1524810712835,
+  "tradeId": 3590632229,
+  "tradeType": "buy",
+}
+`;
+
+exports[`parseTrade 1`] = `
+Object {
+  "amount": "0.027783",
+  "price": "629.69",
+  "source": "GEMINI",
+  "sourceTimestamp": 1524739084253,
+  "tradeId": 3584809531,
+  "tradeType": "buy",
+}
+`;
+
+exports[`parseTrade 2`] = `
+Object {
+  "amount": "0.021431",
+  "price": "629.79",
+  "source": "GEMINI",
+  "sourceTimestamp": 1524739191718,
+  "tradeId": 3584814698,
+  "tradeType": "buy",
+}
+`;

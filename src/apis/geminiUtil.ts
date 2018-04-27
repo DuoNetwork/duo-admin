@@ -31,9 +31,10 @@ export class GeminiUtil {
 
 	parseApiResponse(msg: string) {
 		const parsedJson: any = JSON.parse(msg);
+		// console.log(parsedJson);
 
 		if (parsedJson.events[0].type == 'trade') {
-			console.log(parsedJson);
+			// console.log(parsedJson);
 			const parsedTrade: Trade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.

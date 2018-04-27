@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseTrade 1`] = `
+Object {
+  "amount": "0.11980000",
+  "price": "630.17000000",
+  "source": "GDAX",
+  "sourceTimestamp": "1524739231228",
+  "tradeId": 32872596,
+  "tradeType": "sell",
+}
+`;
+
+exports[`parseTrade 2`] = `
+Object {
+  "amount": "0.98300000",
+  "price": "630.11000000",
+  "source": "GDAX",
+  "sourceTimestamp": "1524739231228",
+  "tradeId": 32872595,
+  "tradeType": "sell",
+}
+`;
+
+exports[`parseTrade 3`] = `
+Object {
+  "amount": "0.20000000",
+  "price": "630.11000000",
+  "source": "GDAX",
+  "sourceTimestamp": "1524739231228",
+  "tradeId": 32872594,
+  "tradeType": "sell",
+}
+`;

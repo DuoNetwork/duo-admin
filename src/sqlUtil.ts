@@ -62,7 +62,8 @@ export class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"')";
-		console.log(await this.executeQuery(sql));
+		// console.log(await this.executeQuery(sql));
+		await this.executeQuery(sql);
 	}
 
 	async insertPrice(price: Price) {
