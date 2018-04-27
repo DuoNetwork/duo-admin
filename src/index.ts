@@ -53,7 +53,7 @@ switch (tool) {
 		break;
 	case 'calculatePrice':
 		console.log('starting calculate ETH price');
-		calculateor.calculatePrice();
+		calculateor.getPriceFix();
 		break;
 	case 'readContract':
 		console.log('starting reading custodian contract state');

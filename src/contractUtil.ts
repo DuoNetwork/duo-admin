@@ -104,7 +104,7 @@ export class ContractUtil {
 
 	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
 
-		const currentPrice: Price = await calculateor.calculatePrice();
+		const currentPrice: Price = await calculateor.getPriceFix();
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);

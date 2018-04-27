@@ -1,42 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test getExchangePriceFix 1`] = `
-Array [
-  634.7,
-  0.2,
-]
+exports[`getExchangePriceFix 1`] = `
+Object {
+  "price": 634.7,
+  "volume": 0.4,
+}
 `;
 
-exports[`test getExchangePriceFix 2`] = `
-Array [
-  637,
-  3.0010585,
-]
+exports[`getExchangePriceFix 2`] = `
+Object {
+  "price": 637,
+  "volume": 6.002117,
+}
 `;
 
-exports[`test getExchangePriceFix 3`] = `
-Array [
-  667,
-  0.012,
-]
+exports[`getExchangePriceFix 3`] = `
+Object {
+  "price": 667,
+  "volume": 0.024,
+}
 `;
 
-exports[`test getExchangePriceFix 4`] = `
-Array [
-  633,
-  4.335,
-]
+exports[`getExchangePriceFix 4`] = `
+Object {
+  "price": 633,
+  "volume": 8.67,
+}
 `;
 
-exports[`test getVolumeMedianPrice 1`] = `634.69`;
+exports[`getVolumeMedianPrice 1`] = `
+Object {
+  "price": 634.69,
+  "volume": 3.15308079,
+}
+`;
 
-exports[`test getVolumeMedianPrice 2`] = `638`;
+exports[`getVolumeMedianPrice 2`] = `
+Object {
+  "price": 638,
+  "volume": 22.681753,
+}
+`;
 
-exports[`test getVolumeMedianPrice 3`] = `666.98`;
+exports[`getVolumeMedianPrice 3`] = `
+Object {
+  "price": 666.98,
+  "volume": 0.16599999999999998,
+}
+`;
 
-exports[`test getVolumeMedianPrice 4`] = `633`;
+exports[`getVolumeMedianPrice 4`] = `
+Object {
+  "price": 633,
+  "volume": 12.835600000000001,
+}
+`;
 
-exports[`test modifyWeightage 1`] = `
+exports[`modifyWeights 1`] = `
 Array [
   0.35,
   0.3,
@@ -45,7 +65,7 @@ Array [
 ]
 `;
 
-exports[`test modifyWeightage 2`] = `
+exports[`modifyWeights 2`] = `
 Array [
   0.55,
   0.29999999999999993,
@@ -53,18 +73,9 @@ Array [
 ]
 `;
 
-exports[`test modifyWeightage 3`] = `
+exports[`modifyWeights 3`] = `
 Array [
   0.65,
   0.35,
-]
-`;
-
-exports[`test normalizeWeightage 1`] = `
-Array [
-  0.1,
-  0.2,
-  0.3,
-  0.4,
 ]
 `;

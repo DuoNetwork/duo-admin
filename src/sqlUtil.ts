@@ -20,7 +20,7 @@ export class SqlUtil {
 		});
 	}
 
-	executeQuery(sqlQuery: string): any {
+	executeQuery(sqlQuery: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
