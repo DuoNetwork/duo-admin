@@ -1,6 +1,6 @@
 import * as mysql from 'mysql';
 import sqlUtil from './sqlUtil';
-import { Price, Trade } from './types';
+import { Price } from './types';
 
 test('connection initalization', () => {
 	return sqlUtil.executeQuery('test').catch(error => expect(error).toMatchSnapshot());

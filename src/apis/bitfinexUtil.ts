@@ -14,16 +14,17 @@ export class BitfinexUtil {
 		}
 		return {
 			source: CST.EXCHANGE_BITFINEX,
-			tradeId: trade[0],
+			tradeId: trade[0] + '',
 			price: trade[3] + '',
 			amount: Math.abs(amount) + '',
 			tradeType: trade_type,
-			sourceTimestamp: trade[1]
+			sourceTimestamp: trade[1] + ''
 		};
 	}
 
 	parseApiResponse(msg: string) {
 		let parsedJson = JSON.parse(msg.toString());
+		// console.log(parsedJson);
 		if (parsedJson != undefined) {
 			// handle the snapshot
 			if (
@@ -35,7 +36,7 @@ export class BitfinexUtil {
 				const snapshotArr = parsedJson[1];
 				snapshotArr.forEach(trade => {
 					const parsedTrade: Trade = this.parseTrade(trade);
-
+					// console.log(parsedTrade);
 					sqlUtil.insertSourceData(parsedTrade);
 				});
 			} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
