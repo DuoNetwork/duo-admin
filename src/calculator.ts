@@ -160,5 +160,5 @@ export class Calculateor {
 		return priceObj;
 	}
 }
-const calculateor = new Calculateor();
-export default calculateor;
+const calculator = new Calculateor();
+export default calculator;

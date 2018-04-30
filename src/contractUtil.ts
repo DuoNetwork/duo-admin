@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import * as CST from './constants';
 import util from './util';
-import calculateor from './calculator';
+import calculator from './calculator';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
@@ -104,7 +104,7 @@ export class ContractUtil {
 
 	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
 
-		const currentPrice: Price = await calculateor.getPriceFix();
+		const currentPrice: Price = await calculator.getPriceFix();
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);

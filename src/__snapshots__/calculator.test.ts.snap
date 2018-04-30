@@ -28,6 +28,12 @@ Object {
 }
 `;
 
+exports[`getPriceFix 1`] = `
+Array [
+  1525072378714,
+]
+`;
+
 exports[`getVolumeMedianPrice 1`] = `
 Object {
   "price": 634.69,
