@@ -11,10 +11,10 @@ export class GdaxUtil {
 		return {
 			source: CST.EXCHANGE_GDAX,
 			tradeId: trade.trade_id,
-			price: trade.price,
-			amount: trade.size,
+			price: Number(trade.price),
+			amount: Number(trade.size),
 			tradeType: trade.side,
-			sourceTimestamp: new Date(trade.time).valueOf() + ''
+			sourceTimestamp: new Date(trade.time).valueOf()
 		};
 	}
 

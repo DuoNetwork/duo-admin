@@ -41,8 +41,8 @@ export class SqlUtil {
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
-		const priceStr = sourceData.price.split('"').join('');
-		const amountStr = sourceData.amount.split('"').join('');
+		const priceStr = sourceData.price.toString();
+		const amountStr = sourceData.amount.toString();
 
 		const sql =
 			'REPLACE ' +
@@ -69,7 +69,8 @@ export class SqlUtil {
 	async insertPrice(price: Price) {
 		console.log(
 			await this.executeQuery(
-				'INSERT INTO ' + CST.DB_TABLE_HISTORY +
+				'INSERT INTO ' +
+					CST.DB_TABLE_TRADE +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -83,10 +84,13 @@ export class SqlUtil {
 		const res = await this.executeQuery(
 			'SELECT * FROM ' + CST.DB_TABLE_HISTORY + ' order by timestamp DESC LIMIT 1'
 		);
-		return {
-			price: res[0][CST.DB_HISTORY_PRICE],
-			timestamp: res[0][CST.DB_HISTORY_TIMESTAMP]
-		};
+		return res[0]
+			? {
+					price: Number(res[0][CST.DB_HISTORY_PRICE]),
+					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
+					volume: Number(res[0][CST.DB_HISTORY_VOLUME]),
+			}
+			: { price: 0, timestamp: 0, volume: 0 };
 	}
 
 	async readSourceData(currentTimestamp: number): Promise<Trade[]> {
@@ -103,10 +107,10 @@ export class SqlUtil {
 		return res.map(item => ({
 			source: item[CST.DB_TX_EXCHANGE_SRC],
 			tradeId: item[CST.DB_TX_TRADE_ID],
-			price: item[CST.DB_TX_PRICE],
-			amount: item[CST.DB_TX_AMOUNT],
+			price: Number(item[CST.DB_TX_PRICE]),
+			amount: Number(item[CST.DB_TX_AMOUNT]),
 			tradeType: item[CST.DB_TX_TYPE],
-			sourceTimestamp: item[CST.DB_TX_EXCHANGE_TIME_STAMP]
+			sourceTimestamp: Number(item[CST.DB_TX_EXCHANGE_TIME_STAMP])
 		}));
 	}
 }

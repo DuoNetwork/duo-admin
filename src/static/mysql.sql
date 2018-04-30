@@ -27,6 +27,7 @@ CREATE TABLE `priceFeedDB`.`ETH_Trades_Table` (
 CREATE TABLE `priceFeedDB`.`ETH_Historical_Price` (
   `timestamp` VARCHAR(255) NOT NULL,
   `price` VARCHAR(255) NOT NULL,
+  `volume` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`timestamp`));
 
 

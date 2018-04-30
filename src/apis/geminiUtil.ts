@@ -22,10 +22,10 @@ export class GeminiUtil {
 		return {
 			source: CST.EXCHANGE_GEMINI,
 			tradeId: trade['tid'],
-			price: trade['price'],
-			amount: trade['amount'],
+			price: Number(trade['price']),
+			amount: Number(trade['amount']),
 			tradeType: trade_type,
-			sourceTimestamp: timestampms
+			sourceTimestamp: Number(timestampms)
 		};
 	}
 

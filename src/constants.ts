@@ -45,6 +45,7 @@ export const DB_TX_EXCHANGE_TIME_STAMP = 'exchange_returned_timestamp';
 export const DB_TX_SYS_TIMESTAMP = 'system_timestamp';
 export const DB_HISTORY_PRICE = 'price';
 export const DB_HISTORY_TIMESTAMP = 'timestamp';
+export const DB_HISTORY_VOLUME = 'volume';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
 	'4': [0.35, 0.3, 0.25, 0.2],

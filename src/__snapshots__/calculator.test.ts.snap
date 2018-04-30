@@ -3,6 +3,7 @@
 exports[`getExchangePriceFix 1`] = `
 Object {
   "price": 634.7,
+  "timestamp": 1524453966393,
   "volume": 0.4,
 }
 `;
@@ -10,6 +11,7 @@ Object {
 exports[`getExchangePriceFix 2`] = `
 Object {
   "price": 637,
+  "timestamp": 1524465953111,
   "volume": 6.002117,
 }
 `;
@@ -17,6 +19,7 @@ Object {
 exports[`getExchangePriceFix 3`] = `
 Object {
   "price": 667,
+  "timestamp": 1524547898561,
   "volume": 0.024,
 }
 `;
@@ -24,19 +27,23 @@ Object {
 exports[`getExchangePriceFix 4`] = `
 Object {
   "price": 633,
+  "timestamp": 1524463065507,
   "volume": 8.67,
 }
 `;
 
 exports[`getPriceFix 1`] = `
-Array [
-  1525072378714,
-]
+Object {
+  "price": 666.98,
+  "timestamp": 1524547909941,
+  "volume": 0.16599999999999998,
+}
 `;
 
 exports[`getVolumeMedianPrice 1`] = `
 Object {
   "price": 634.69,
+  "timestamp": 1234567890,
   "volume": 3.15308079,
 }
 `;
@@ -44,6 +51,7 @@ Object {
 exports[`getVolumeMedianPrice 2`] = `
 Object {
   "price": 638,
+  "timestamp": 1234567890,
   "volume": 22.681753,
 }
 `;
@@ -51,6 +59,7 @@ Object {
 exports[`getVolumeMedianPrice 3`] = `
 Object {
   "price": 666.98,
+  "timestamp": 1234567890,
   "volume": 0.16599999999999998,
 }
 `;
@@ -58,6 +67,7 @@ Object {
 exports[`getVolumeMedianPrice 4`] = `
 Object {
   "price": 633,
+  "timestamp": 1234567890,
   "volume": 12.835600000000001,
 }
 `;

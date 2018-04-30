@@ -2,10 +2,10 @@
 
 exports[`parseTrade 1`] = `
 Object {
-  "amount": "0.11980000",
-  "price": "630.17000000",
+  "amount": 0.1198,
+  "price": 630.17,
   "source": "GDAX",
-  "sourceTimestamp": "1524739231228",
+  "sourceTimestamp": 1524739231228,
   "tradeId": 32872596,
   "tradeType": "sell",
 }
@@ -13,10 +13,10 @@ Object {
 
 exports[`parseTrade 2`] = `
 Object {
-  "amount": "0.98300000",
-  "price": "630.11000000",
+  "amount": 0.983,
+  "price": 630.11,
   "source": "GDAX",
-  "sourceTimestamp": "1524739231228",
+  "sourceTimestamp": 1524739231228,
   "tradeId": 32872595,
   "tradeType": "sell",
 }
@@ -24,10 +24,10 @@ Object {
 
 exports[`parseTrade 3`] = `
 Object {
-  "amount": "0.20000000",
-  "price": "630.11000000",
+  "amount": 0.2,
+  "price": 630.11,
   "source": "GDAX",
-  "sourceTimestamp": "1524739231228",
+  "sourceTimestamp": 1524739231228,
   "tradeId": 32872594,
   "tradeType": "sell",
 }

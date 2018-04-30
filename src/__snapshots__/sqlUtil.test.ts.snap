@@ -2,16 +2,17 @@
 
 exports[`connection initalization 1`] = `"db connection is not initialized"`;
 
-exports[`insertPrice 1`] = `"INSERT INTO eth_historical_price VALUES ('ts','px')"`;
+exports[`insertPrice 1`] = `"INSERT INTO ETH_Trades_Table VALUES ('1234567890','123')"`;
 
-exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','px','amt','type','ts','0')"`;
+exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','123','456','type','1234567890','0')"`;
 
 exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
 
 exports[`readLastPrice 2`] = `
 Object {
-  "price": "px",
-  "timestamp": "ts",
+  "price": 123,
+  "timestamp": 1234567890,
+  "volume": 456,
 }
 `;
 
@@ -20,20 +21,20 @@ exports[`readSourceData 1`] = `"SELECT * FROM ETH_Trades_Table WHERE exchange_re
 exports[`readSourceData 2`] = `
 Array [
   Object {
-    "amount": "amt1",
-    "price": "px1",
-    "source": undefined,
-    "sourceTimestamp": undefined,
-    "tradeId": undefined,
-    "tradeType": undefined,
+    "amount": 456,
+    "price": 123,
+    "source": "src1",
+    "sourceTimestamp": 1234567890,
+    "tradeId": "id1",
+    "tradeType": "type1",
   },
   Object {
-    "amount": "amt2",
-    "price": "px2",
-    "source": undefined,
-    "sourceTimestamp": undefined,
-    "tradeId": undefined,
-    "tradeType": undefined,
+    "amount": 567,
+    "price": 234,
+    "source": "src2",
+    "sourceTimestamp": 2345678901,
+    "tradeId": "id2",
+    "tradeType": "type2",
   },
 ]
 `;

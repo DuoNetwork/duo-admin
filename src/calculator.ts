@@ -15,7 +15,7 @@ export class Calculateor {
 		);
 	}
 
-	getVolumeMedianPrice(trades: Trade[]): { price: number; volume: number } {
+	getVolumeMedianPrice(trades: Trade[], timestamp: number): Price {
 		trades.sort((a, b) => Number(a.price) - Number(b.price));
 		const cumVols: number[] = [];
 		let cumVol = 0;
@@ -25,19 +25,16 @@ export class Calculateor {
 		});
 		const halfTotalVol: number = cumVol / 2;
 		const medianIndex = cumVols.findIndex(v => v >= halfTotalVol);
-		return { price: Number(trades[medianIndex].price), volume: cumVol };
+		return { price: Number(trades[medianIndex].price), volume: cumVol, timestamp: timestamp };
 	}
 
-	getExchangePriceFix(
-		trades: Trade[],
-		currentTimestamp: number
-	): { price: number; volume: number } {
+	getExchangePriceFix(trades: Trade[], currentTimestamp: number): Price {
 		for (let i = 0; i < 12; i++) {
 			const subTrades = this.getTradesForInterval(trades, currentTimestamp, i);
-			if (subTrades.length > 0) return this.getVolumeMedianPrice(subTrades);
+			if (subTrades.length > 0) return this.getVolumeMedianPrice(subTrades, currentTimestamp);
 		}
 
-		return { price: 0, volume: 0 };
+		return { price: 0, volume: 0, timestamp: currentTimestamp };
 	}
 
 	getWeights(rawVolume: number[]): number[] {
@@ -80,7 +77,7 @@ export class Calculateor {
 		return weights;
 	}
 
-	consolidatePriceFix(exchangePriceVolume: Array<{ price: number; volume: number }>): number {
+	consolidatePriceFix(exchangePriceVolume: Array<Price>): number {
 		const filterredExchanges = exchangePriceVolume.filter(item => item.volume > 0);
 
 		// sort based on volume from large to small
@@ -129,35 +126,29 @@ export class Calculateor {
 			this.getExchangePriceFix(EXCHANGES_TRADES[src], currentTimestamp)
 		);
 
-		const priceObj: Price = {
-			price: '0',
-			timestamp: '0'
-		};
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
 
 		if (priceFix === 0) {
 			console.log('no priceFix found, use the last ETH price');
-			sqlUtil.readLastPrice().then(lastPriceObj => {
-				// resolve([priceObj.price, currentTimestamp]);
-				priceObj.price = lastPriceObj.price;
-				priceObj.timestamp = lastPriceObj.timestamp;
-				console.log(
-					'the priceFix is: ' + priceObj.price + ' at timestamp ' + priceObj.timestamp
-				);
-			});
+			const lastPriceObj = await sqlUtil.readLastPrice();
+			console.log(
+				'the priceFix is: ' + lastPriceObj.price + ' at timestamp ' + lastPriceObj.timestamp
+			);
+			return lastPriceObj;
 		} else {
 			console.log('the priceFix is: ' + priceFix + ' at timestamp ' + currentTimestamp);
+			console.log(exchangePriceVolume);
+			console.log(exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0));
+			const priceObj = {
+				price: priceFix,
+				volume: exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0),
+				timestamp: currentTimestamp
+			};
 			// save price into DB
-			sqlUtil.insertPrice({
-				price: priceFix + '',
-				timestamp: currentTimestamp + ''
-			});
+			await sqlUtil.insertPrice(priceObj);
 
-			priceObj.price = priceFix + '';
-			priceObj.timestamp = currentTimestamp + '';
-			// return priceObj;
+			return priceObj;
 		}
-		return priceObj;
 	}
 }
 const calculator = new Calculateor();

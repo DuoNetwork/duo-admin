@@ -2,10 +2,10 @@
 
 exports[`parseApiResponse 1`] = `
 Object {
-  "amount": "0.70208471",
-  "price": "653.38",
+  "amount": 0.70208471,
+  "price": 653.38,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524809497543",
+  "sourceTimestamp": 1524809497543,
   "tradeId": "234509508",
   "tradeType": "buy",
 }
@@ -13,10 +13,10 @@ Object {
 
 exports[`parseTrade 1`] = `
 Object {
-  "amount": "0.00671182",
-  "price": "620.31",
+  "amount": 0.00671182,
+  "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736613727",
+  "sourceTimestamp": 1524736613727,
   "tradeId": "234055510",
   "tradeType": "buy",
 }
@@ -24,10 +24,10 @@ Object {
 
 exports[`parseTrade 2`] = `
 Object {
-  "amount": "9.99539725",
-  "price": "620.31",
+  "amount": 9.99539725,
+  "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736613725",
+  "sourceTimestamp": 1524736613725,
   "tradeId": "234055509",
   "tradeType": "buy",
 }
@@ -35,10 +35,10 @@ Object {
 
 exports[`parseTrade 3`] = `
 Object {
-  "amount": "10.00460275",
-  "price": "620.31",
+  "amount": 10.00460275,
+  "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736608714",
+  "sourceTimestamp": 1524736608714,
   "tradeId": "234055496",
   "tradeType": "buy",
 }
@@ -46,10 +46,10 @@ Object {
 
 exports[`parseTrade 4`] = `
 Object {
-  "amount": "0.0069549",
-  "price": "620.31",
+  "amount": 0.0069549,
+  "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736604753",
+  "sourceTimestamp": 1524736604753,
   "tradeId": "234055479",
   "tradeType": "buy",
 }
@@ -57,10 +57,10 @@ Object {
 
 exports[`parseTrade 5`] = `
 Object {
-  "amount": "1.17616107",
-  "price": "620.31",
+  "amount": 1.17616107,
+  "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736604751",
+  "sourceTimestamp": 1524736604751,
   "tradeId": "234055478",
   "tradeType": "buy",
 }
@@ -68,10 +68,10 @@ Object {
 
 exports[`parseTrade 6`] = `
 Object {
-  "amount": "2",
-  "price": "620.3",
+  "amount": 2,
+  "price": 620.3,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736603150",
+  "sourceTimestamp": 1524736603150,
   "tradeId": "234055474",
   "tradeType": "sell",
 }
@@ -79,10 +79,10 @@ Object {
 
 exports[`parseTrade 7`] = `
 Object {
-  "amount": "7",
-  "price": "620.3",
+  "amount": 7,
+  "price": 620.3,
   "source": "BITFINEX",
-  "sourceTimestamp": "1524736602407",
+  "sourceTimestamp": 1524736602407,
   "tradeId": "234055473",
   "tradeType": "sell",
 }

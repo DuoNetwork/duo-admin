@@ -2,10 +2,10 @@
 
 exports[`parseApiResponse 1`] = `
 Object {
-  "amount": "5.76800000",
-  "price": "655.20000",
+  "amount": 5.768,
+  "price": 655.2,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524805049034",
+  "sourceTimestamp": 1524805049034,
   "tradeId": "1524805049034",
   "tradeType": "buy",
 }
@@ -13,10 +13,10 @@ Object {
 
 exports[`parseTrade 1`] = `
 Object {
-  "amount": "1.00000000",
-  "price": "630.44000",
+  "amount": 1,
+  "price": 630.44,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740175400",
+  "sourceTimestamp": 1524740175400,
   "tradeId": "1524740175400",
   "tradeType": "sell",
 }
@@ -24,10 +24,10 @@ Object {
 
 exports[`parseTrade 2`] = `
 Object {
-  "amount": "1.73300000",
-  "price": "630.43000",
+  "amount": 1.733,
+  "price": 630.43,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740175408",
+  "sourceTimestamp": 1524740175408,
   "tradeId": "1524740175408",
   "tradeType": "sell",
 }
@@ -35,10 +35,10 @@ Object {
 
 exports[`parseTrade 3`] = `
 Object {
-  "amount": "0.13274374",
-  "price": "630.24000",
+  "amount": 0.13274374,
+  "price": 630.24,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740175412",
+  "sourceTimestamp": 1524740175412,
   "tradeId": "1524740175412",
   "tradeType": "sell",
 }
@@ -46,10 +46,10 @@ Object {
 
 exports[`parseTrade 4`] = `
 Object {
-  "amount": "0.02583083",
-  "price": "629.99000",
+  "amount": 0.02583083,
+  "price": 629.99,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740181690",
+  "sourceTimestamp": 1524740181690,
   "tradeId": "1524740181690",
   "tradeType": "buy",
 }
@@ -57,10 +57,10 @@ Object {
 
 exports[`parseTrade 5`] = `
 Object {
-  "amount": "0.34977855",
-  "price": "630.00000",
+  "amount": 0.34977855,
+  "price": 630,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740181697",
+  "sourceTimestamp": 1524740181697,
   "tradeId": "1524740181697",
   "tradeType": "buy",
 }
@@ -68,10 +68,10 @@ Object {
 
 exports[`parseTrade 6`] = `
 Object {
-  "amount": "3.62439062",
-  "price": "630.00000",
+  "amount": 3.62439062,
+  "price": 630,
   "source": "KRAKEN",
-  "sourceTimestamp": "1524740181701",
+  "sourceTimestamp": 1524740181701,
   "tradeId": "1524740181701",
   "tradeType": "buy",
 }

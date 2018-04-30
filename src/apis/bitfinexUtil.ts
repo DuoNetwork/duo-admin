@@ -5,20 +5,20 @@ import { Trade } from '../types';
 
 export class BitfinexUtil {
 	parseTrade(trade: object): Trade {
-		const amount: number = parseFloat(trade[2]);
-		let trade_type: string = 'buy';
+		const amount = Number(trade[2]);
+		let tradeType: string = 'buy';
 		if (amount > 0) {
-			trade_type = 'buy';
+			tradeType = 'buy';
 		} else {
-			trade_type = 'sell';
+			tradeType = 'sell';
 		}
 		return {
 			source: CST.EXCHANGE_BITFINEX,
 			tradeId: trade[0] + '',
-			price: trade[3] + '',
-			amount: Math.abs(amount) + '',
-			tradeType: trade_type,
-			sourceTimestamp: trade[1] + ''
+			price: Number(trade[3]),
+			amount: Math.abs(amount),
+			tradeType: tradeType,
+			sourceTimestamp: Number(trade[1])
 		};
 	}
 
