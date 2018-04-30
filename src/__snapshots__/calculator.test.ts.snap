@@ -32,11 +32,19 @@ Object {
 }
 `;
 
-exports[`getPriceFix 1`] = `
+exports[`getPriceFix case 1 1`] = `
 Object {
   "price": 666.98,
   "timestamp": 1524547909941,
   "volume": 0.16599999999999998,
+}
+`;
+
+exports[`getPriceFix case 2 1`] = `
+Object {
+  "price": 421.7950000000001,
+  "timestamp": 1524547909941,
+  "volume": 35.73263379,
 }
 `;
 

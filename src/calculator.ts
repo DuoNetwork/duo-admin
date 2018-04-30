@@ -137,8 +137,7 @@ export class Calculateor {
 			return lastPriceObj;
 		} else {
 			console.log('the priceFix is: ' + priceFix + ' at timestamp ' + currentTimestamp);
-			console.log(exchangePriceVolume);
-			console.log(exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0));
+			// console.log(exchangePriceVolume);
 			const priceObj = {
 				price: priceFix,
 				volume: exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0),

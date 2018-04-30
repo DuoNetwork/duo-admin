@@ -3,6 +3,7 @@ import * as CST from './constants';
 import { Trade } from './types';
 import sqlUtil from './sqlUtil';
 const trades: Trade[] = require('./samples/ETHUSDtrades.json');
+const trades2: Trade[] = require('./samples/ETHUSDtrades2.json');
 // console.log(trades);
 
 test('getVolumeMedianPrice', () => {
@@ -34,8 +35,17 @@ test('getExchangePriceFix', () => {
 	});
 });
 
-test('getPriceFix', async () => {
+test('getPriceFix case 1', async () => {
 	sqlUtil.readSourceData = jest.fn(() => Promise.resolve(trades));
+	sqlUtil.insertPrice = jest.fn(() => Promise.resolve());
+	Date.now = jest.fn(() => 1524547909941);
+	// console.log(sqlUtil.readSourceData);
+	await calculator.getPriceFix();
+	expect((sqlUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getPriceFix case 2', async () => {
+	sqlUtil.readSourceData = jest.fn(() => Promise.resolve(trades2));
 	sqlUtil.insertPrice = jest.fn(() => Promise.resolve());
 	Date.now = jest.fn(() => 1524547909941);
 	// console.log(sqlUtil.readSourceData);
