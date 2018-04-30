@@ -62,14 +62,14 @@ export class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"')";
-		// console.log(await this.executeQuery(sql));
-		await this.executeQuery(sql);
+		console.log(await this.executeQuery(sql));
+		// await this.executeQuery(sql);
 	}
 
 	async insertPrice(price: Price) {
 		console.log(
 			await this.executeQuery(
-				'INSERT INTO eth_historical_price' +
+				'INSERT INTO ' + CST.DB_TABLE_HISTORY +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -81,7 +81,7 @@ export class SqlUtil {
 
 	async readLastPrice(): Promise<Price> {
 		const res = await this.executeQuery(
-			'SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1'
+			'SELECT * FROM ' + CST.DB_TABLE_HISTORY + ' order by timestamp DESC LIMIT 1'
 		);
 		return {
 			price: res[0][CST.DB_HISTORY_PRICE],

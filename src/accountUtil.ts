@@ -24,14 +24,14 @@ export class AccountUtil {
 	}
 
 	generateRandomPhrase(words: string[]): string {
-		let outString: string = '';
+		let phrase = '';
 		for (let i = 0; i < 12; i++) {
-			const index = this.getRandomInt(200);
-			const word = words[index].replace('.', '');
-			if (i < 11) outString = outString + word + ' ';
-			else outString = outString + word;
+			const index = this.getRandomInt(words.length);
+			const word = words[index];
+			phrase += word + (i < 11 ? ' ' : '');
 		}
-		return outString;
+		console.log(phrase);
+		return phrase;
 	}
 
 	async createAccount(num: number) {
@@ -41,12 +41,13 @@ export class AccountUtil {
 		}
 
 		const dict = fs.readFileSync(dictFile, 'utf8');
-		const words = dict.split('\n');
+		const words = dict.includes('\r') ? dict.split('\r\n') : dict.split('\n');
+		console.log(words.length);
 
 		for (let i = 0; i < num; i++) {
 			const params: string[] = [];
 			const phrases: string = this.generateRandomPhrase(words);
-			console.log(phrases);
+			// console.log("Generated phrases: " + phrases);
 			params.push(phrases);
 			params.push('hunter2');
 			console.log(

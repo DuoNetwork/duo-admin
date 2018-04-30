@@ -15,6 +15,7 @@ export const DB_USER = 'root';
 export const DB_PASSWORD = '';
 export const DB_PRICEFEED = 'priceFeedDB';
 export const DB_TABLE_TRADE = 'ETH_Trades_Table';
+export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
 export const NETWORK = 'http://localhost:8545';
