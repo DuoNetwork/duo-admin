@@ -27,8 +27,8 @@ test('getExchangePriceFix', () => {
 	CST.EXCHANGES.forEach(exchange => {
 		const exchange_trades: Trade[] = trades.filter(item => item.source === exchange);
 		const timestamp = exchange_trades.reduce(
-			(min, p) => (Number(p.sourceTimestamp) < min ? Number(p.sourceTimestamp) : min),
-			Number(exchange_trades[0].sourceTimestamp)
+			(min, p) => (Number(p.timestamp) < min ? Number(p.timestamp) : min),
+			Number(exchange_trades[0].timestamp)
 		);
 		expect(calculator.getExchangePriceFix(exchange_trades, timestamp)).toMatchSnapshot();
 	});

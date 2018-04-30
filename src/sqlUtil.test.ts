@@ -12,11 +12,10 @@ test('insertSourceData', async () => {
 	Date.now = jest.fn(() => 0);
 	await sqlUtil.insertSourceData({
 		source: 'src',
-		tradeId: 'id',
+		id: 'id',
 		price: 123,
 		amount: 456,
-		tradeType: 'type',
-		sourceTimestamp: 1234567890
+		timestamp: 1234567890
 	});
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
@@ -54,20 +53,18 @@ test('readSourceData', async () => {
 	sqlUtil.conn = mysql.createConnection({});
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve([
 		{
-			exchange_source: 'src1',
-			trade_id: 'id1',
+			source: 'src1',
+			id: 'id1',
 			price: '123',
 			amount: '456',
-			trade_type: 'type1',
-			exchange_returned_timestamp: '1234567890'
+			timestamp: '1234567890'
 		},
 		{
-			exchange_source: 'src2',
-			trade_id: 'id2',
+			source: 'src2',
+			id: 'id2',
 			price: '234',
 			amount: '567',
-			trade_type: 'type2',
-			exchange_returned_timestamp: '2345678901'
+			timestamp: '2345678901'
 		}
 	]));
 	const trades = await sqlUtil.readSourceData(1234567890);

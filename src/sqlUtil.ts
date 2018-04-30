@@ -50,15 +50,13 @@ export class SqlUtil {
 			" VALUES ('" +
 			sourceData.source +
 			"','" +
-			sourceData.tradeId +
+			sourceData.id +
 			"','" +
 			priceStr +
 			"','" +
 			amountStr +
 			"','" +
-			sourceData.tradeType +
-			"','" +
-			(sourceData.sourceTimestamp || systemTimestamp + '') +
+			(sourceData.timestamp || systemTimestamp) +
 			"','" +
 			systemTimestamp +
 			"')";
@@ -75,6 +73,8 @@ export class SqlUtil {
 					price.timestamp +
 					"','" +
 					price.price +
+					"','" +
+					price.volume +
 					"')"
 			)
 		);
@@ -105,12 +105,11 @@ export class SqlUtil {
 				upperTime
 		);
 		return res.map(item => ({
-			source: item[CST.DB_TX_EXCHANGE_SRC],
-			tradeId: item[CST.DB_TX_TRADE_ID],
+			source: item[CST.DB_TX_SRC],
+			id: item[CST.DB_TX_ID],
 			price: Number(item[CST.DB_TX_PRICE]),
 			amount: Number(item[CST.DB_TX_AMOUNT]),
-			tradeType: item[CST.DB_TX_TYPE],
-			sourceTimestamp: Number(item[CST.DB_TX_EXCHANGE_TIME_STAMP])
+			timestamp: Number(item[CST.DB_TX_TS])
 		}));
 	}
 }

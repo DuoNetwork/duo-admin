@@ -10,11 +10,10 @@ export class GdaxUtil {
 	parseTrade(trade: {[key: string]: string}): Trade {
 		return {
 			source: CST.EXCHANGE_GDAX,
-			tradeId: trade.trade_id,
+			id: trade.trade_id,
 			price: Number(trade.price),
-			amount: Number(trade.size),
-			tradeType: trade.side,
-			sourceTimestamp: new Date(trade.time).valueOf()
+			amount: Math.abs(Number(trade.size)),
+			timestamp: new Date(trade.time).valueOf()
 		};
 	}
 

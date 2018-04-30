@@ -10,8 +10,8 @@ export class Calculateor {
 
 		return trades.filter(
 			trade =>
-				Number(trade.sourceTimestamp) <= upperTime &&
-				Number(trade.sourceTimestamp) > lowerTime
+				Number(trade.timestamp) <= upperTime &&
+				Number(trade.timestamp) > lowerTime
 		);
 	}
 

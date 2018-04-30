@@ -3,32 +3,29 @@
 exports[`parseApiResponse 1`] = `
 Object {
   "amount": 50,
+  "id": 3590632229,
   "price": 654,
   "source": "GEMINI",
-  "sourceTimestamp": 1524810712835,
-  "tradeId": 3590632229,
-  "tradeType": "buy",
+  "timestamp": 1524810712835,
 }
 `;
 
 exports[`parseTrade 1`] = `
 Object {
   "amount": 0.027783,
+  "id": 3584809531,
   "price": 629.69,
   "source": "GEMINI",
-  "sourceTimestamp": 1524739084253,
-  "tradeId": 3584809531,
-  "tradeType": "buy",
+  "timestamp": 1524739084253,
 }
 `;
 
 exports[`parseTrade 2`] = `
 Object {
   "amount": 0.021431,
+  "id": 3584814698,
   "price": 629.79,
   "source": "GEMINI",
-  "sourceTimestamp": 1524739191718,
-  "tradeId": 3584814698,
-  "tradeType": "buy",
+  "timestamp": 1524739191718,
 }
 `;

@@ -1,10 +1,9 @@
 export interface Trade {
 	source: string;
-	tradeId: string;
+	id: string;
 	price: number;
 	amount: number;
-	tradeType: string;
-	sourceTimestamp: number;
+	timestamp: number;
 }
 
 export interface Price {

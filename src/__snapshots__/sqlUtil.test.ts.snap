@@ -2,9 +2,9 @@
 
 exports[`connection initalization 1`] = `"db connection is not initialized"`;
 
-exports[`insertPrice 1`] = `"INSERT INTO ETH_Trades_Table VALUES ('1234567890','123')"`;
+exports[`insertPrice 1`] = `"INSERT INTO ETH_Trades_Table VALUES ('1234567890','123','456')"`;
 
-exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','123','456','type','1234567890','0')"`;
+exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','123','456','1234567890','0')"`;
 
 exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
 
@@ -22,19 +22,17 @@ exports[`readSourceData 2`] = `
 Array [
   Object {
     "amount": 456,
+    "id": "id1",
     "price": 123,
     "source": "src1",
-    "sourceTimestamp": 1234567890,
-    "tradeId": "id1",
-    "tradeType": "type1",
+    "timestamp": 1234567890,
   },
   Object {
     "amount": 567,
+    "id": "id2",
     "price": 234,
     "source": "src2",
-    "sourceTimestamp": 2345678901,
-    "tradeId": "id2",
-    "tradeType": "type2",
+    "timestamp": 2345678901,
   },
 ]
 `;

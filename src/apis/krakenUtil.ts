@@ -9,22 +9,13 @@ let last = 0; // last = id to be used as since when polling for new trade data
 
 export class KrakenUtil {
 	parseTrade(trade: object): Trade {
-		let trade_type: string = 'buy';
 		const exchangeReturnedTimestamp = Math.floor(Number(trade[2]) * 1000);
-
-		if (trade[3] == 'b') {
-			trade_type = 'buy';
-		} else if (trade[3] == 's') {
-			trade_type = 'sell';
-		}
-
 		return {
 			source: CST.EXCHANGE_KRAKEN,
-			tradeId: exchangeReturnedTimestamp + '',
+			id: exchangeReturnedTimestamp + '',
 			price: Number(trade[0]),
 			amount: Number(trade[1]),
-			tradeType: trade_type,
-			sourceTimestamp: exchangeReturnedTimestamp
+			timestamp: exchangeReturnedTimestamp
 		};
 	}
 

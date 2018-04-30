@@ -11,21 +11,13 @@ export class GeminiUtil {
 			timestampms = '';
 		}
 		const trade = parsedJson.events[0];
-		let trade_type: string = 'buy';
-
-		if (trade['makerSide'] == 'ask') {
-			trade_type = 'buy';
-		} else if (trade['makerSide'] == 'bid') {
-			trade_type = 'sell';
-		}
 
 		return {
 			source: CST.EXCHANGE_GEMINI,
-			tradeId: trade['tid'],
+			id: trade['tid'],
 			price: Number(trade['price']),
-			amount: Number(trade['amount']),
-			tradeType: trade_type,
-			sourceTimestamp: Number(timestampms)
+			amount: Math.abs(Number(trade['amount'])),
+			timestamp: Number(timestampms)
 		};
 	}
 

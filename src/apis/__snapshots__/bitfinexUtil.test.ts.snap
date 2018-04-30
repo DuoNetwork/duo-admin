@@ -3,87 +3,79 @@
 exports[`parseApiResponse 1`] = `
 Object {
   "amount": 0.70208471,
+  "id": "234509508",
   "price": 653.38,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524809497543,
-  "tradeId": "234509508",
-  "tradeType": "buy",
+  "timestamp": 1524809497543,
 }
 `;
 
 exports[`parseTrade 1`] = `
 Object {
   "amount": 0.00671182,
+  "id": "234055510",
   "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736613727,
-  "tradeId": "234055510",
-  "tradeType": "buy",
+  "timestamp": 1524736613727,
 }
 `;
 
 exports[`parseTrade 2`] = `
 Object {
   "amount": 9.99539725,
+  "id": "234055509",
   "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736613725,
-  "tradeId": "234055509",
-  "tradeType": "buy",
+  "timestamp": 1524736613725,
 }
 `;
 
 exports[`parseTrade 3`] = `
 Object {
   "amount": 10.00460275,
+  "id": "234055496",
   "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736608714,
-  "tradeId": "234055496",
-  "tradeType": "buy",
+  "timestamp": 1524736608714,
 }
 `;
 
 exports[`parseTrade 4`] = `
 Object {
   "amount": 0.0069549,
+  "id": "234055479",
   "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736604753,
-  "tradeId": "234055479",
-  "tradeType": "buy",
+  "timestamp": 1524736604753,
 }
 `;
 
 exports[`parseTrade 5`] = `
 Object {
   "amount": 1.17616107,
+  "id": "234055478",
   "price": 620.31,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736604751,
-  "tradeId": "234055478",
-  "tradeType": "buy",
+  "timestamp": 1524736604751,
 }
 `;
 
 exports[`parseTrade 6`] = `
 Object {
   "amount": 2,
+  "id": "234055474",
   "price": 620.3,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736603150,
-  "tradeId": "234055474",
-  "tradeType": "sell",
+  "timestamp": 1524736603150,
 }
 `;
 
 exports[`parseTrade 7`] = `
 Object {
   "amount": 7,
+  "id": "234055473",
   "price": 620.3,
   "source": "BITFINEX",
-  "sourceTimestamp": 1524736602407,
-  "tradeId": "234055473",
-  "tradeType": "sell",
+  "timestamp": 1524736602407,
 }
 `;

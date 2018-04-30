@@ -3,32 +3,29 @@
 exports[`parseTrade 1`] = `
 Object {
   "amount": 0.1198,
+  "id": 32872596,
   "price": 630.17,
   "source": "GDAX",
-  "sourceTimestamp": 1524739231228,
-  "tradeId": 32872596,
-  "tradeType": "sell",
+  "timestamp": 1524739231228,
 }
 `;
 
 exports[`parseTrade 2`] = `
 Object {
   "amount": 0.983,
+  "id": 32872595,
   "price": 630.11,
   "source": "GDAX",
-  "sourceTimestamp": 1524739231228,
-  "tradeId": 32872595,
-  "tradeType": "sell",
+  "timestamp": 1524739231228,
 }
 `;
 
 exports[`parseTrade 3`] = `
 Object {
   "amount": 0.2,
+  "id": 32872594,
   "price": 630.11,
   "source": "GDAX",
-  "sourceTimestamp": 1524739231228,
-  "tradeId": 32872594,
-  "tradeType": "sell",
+  "timestamp": 1524739231228,
 }
 `;

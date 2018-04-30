@@ -2,7 +2,7 @@ import bitfinexUtil from './apis/bitfinexUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
 import gdaxUtil from './apis/gdaxUtil';
-import calculateor from './calculator';
+import calculator from './calculator';
 import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
 import sqlUtil from './sqlUtil';
@@ -53,7 +53,7 @@ switch (tool) {
 		break;
 	case 'calculatePrice':
 		console.log('starting calculate ETH price');
-		calculateor.getPriceFix();
+		calculator.getPriceFix();
 		break;
 	case 'readContract':
 		console.log('starting reading custodian contract state');
