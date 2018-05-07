@@ -13,8 +13,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
+
 export class ContractUtil {
 	async read(name: string) {
+		// getSystemAddresses
+		// getSystemStates
 		console.log(await custodianContract.methods[name]().call());
 	}
 
@@ -23,24 +26,8 @@ export class ContractUtil {
 		return abiDecoder.decodeMethod(input);
 	}
 
-	generateTxString(priceInWei: number, priceInSeconds: number, name: string): string {
-		return web3.eth.abi.encodeFunctionCall(
-			{
-				name: name,
-				type: 'function',
-				inputs: [
-					{
-						name: 'priceInWei',
-						type: 'uint256'
-					},
-					{
-						name: 'timeInSecond',
-						type: 'uint256'
-					}
-				]
-			},
-			[priceInWei, priceInSeconds]
-		);
+	generateTxString(abi: Object, input: any[]): string {
+		return web3.eth.abi.encodeFunctionCall(abi, input);
 	}
 
 	createTxCommand(
@@ -80,7 +67,7 @@ export class ContractUtil {
 			'&toBlock=latest&address=' +
 			CST.CUSTODIAN_ADDR +
 			'&topic0=' +
-			CST.ACCEPT_PRICE_EVENT +
+			web3.utils.sha3(CST.ACCEPT_PRICE_EVENT) +
 			'&apikey=' +
 			CST.ETHSCAN_API_KEY;
 
@@ -103,17 +90,26 @@ export class ContractUtil {
 	}
 
 	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
-
 		const currentPrice: Price = await calculator.getPriceFix();
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
 		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
-		const command = this.generateTxString(
-			priceInWei,
-			priceInSeconds,
-			isInception ? 'startContract' : 'commitPrice'
-		);
+		const abi = {
+			name: isInception ? 'startContract' : 'commitPrice',
+			type: 'function',
+			inputs: [
+				{
+					name: 'priceInWei',
+					type: 'uint256'
+				},
+				{
+					name: 'timeInSecond',
+					type: 'uint256'
+				}
+			]
+		};
+		const command = this.generateTxString(abi, [priceInWei, priceInSeconds]);
 		// sending out transaction
 		web3.eth
 			.sendSignedTransaction(
@@ -161,7 +157,7 @@ export class ContractUtil {
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () =>
-				this.commitSinglePrice(true, gasPrice, gasLimit)
+				this.commitSinglePrice(true, gasPrice, gasLimit + 50000)
 			);
 		}
 

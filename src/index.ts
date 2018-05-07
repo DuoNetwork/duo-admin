@@ -6,6 +6,7 @@ import calculator from './calculator';
 import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
 import sqlUtil from './sqlUtil';
+import eventUtil from './eventUtil';
 import * as CST from './constants';
 
 const tool: string = process.argv[2];
@@ -64,6 +65,9 @@ switch (tool) {
 		console.log('starting decoding contract input');
 		const input: string = process.argv[3];
 		console.log(contractUtil.decode(input));
+		break;
+	case 'acceptPriceEvent':
+		eventUtil.subscribeToAcceptPrice();
 		break;
 	default:
 		console.log('no such tool ' + tool);

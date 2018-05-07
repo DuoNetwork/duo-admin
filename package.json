@@ -18,7 +18,8 @@
 		"bitfinex": "ts-node ./src/index bitfinex",
 		"gemini": "ts-node ./src/index gemini",
 		"kraken": "ts-node ./src/index kraken",
-		"gdax": "ts-node ./src/index gdax"
+		"gdax": "ts-node ./src/index gdax",
+		"acceptPriceEvent": "ts-node ./src/index acceptPriceEvent"
 	},
 	"jest": {
 		"roots": [
