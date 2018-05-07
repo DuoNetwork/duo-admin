@@ -42,7 +42,7 @@ Object {
 
 exports[`getPriceFix case 2 1`] = `
 Object {
-  "price": 421.7950000000001,
+  "price": 643.5865000000001,
   "timestamp": 1524547909941,
   "volume": 35.73263379,
 }

@@ -38,7 +38,7 @@ export class Calculateor {
 	}
 
 	getWeights(rawVolume: number[]): number[] {
-		const totalVol = rawVolume.reduce((a, b) => a + b);
+		const totalVol = rawVolume.reduce((a, b) => a + b, 0);
 		const weightArray = rawVolume.map(v => v / totalVol);
 		return weightArray;
 	}
@@ -92,7 +92,7 @@ export class Calculateor {
 			return filterredExchanges[0].price;
 		else {
 			console.log('there are ' + filterredExchanges.length + ' valid exchanges');
-			const totalVol = volumeList.reduce((a, b) => a + b);
+			const totalVol = volumeList.reduce((a, b) => a + b, 0);
 			const weights = volumeList.map(v => v / totalVol);
 			const finalWeights: number[] = this.modifyWeights(weights);
 			return finalWeights.reduce(
