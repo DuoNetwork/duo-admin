@@ -96,7 +96,7 @@ export class Calculateor {
 			const weights = volumeList.map(v => v / totalVol);
 			const finalWeights: number[] = this.modifyWeights(weights);
 			return finalWeights.reduce(
-				(accum, w, index) => accum + exchangePriceVolume[index].price * w
+				(accum, w, index) => accum + exchangePriceVolume[index].price * w, 0
 			);
 		}
 	}
@@ -127,6 +127,8 @@ export class Calculateor {
 		);
 
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
+		console.log('priceFix calculated is');
+		console.log(priceFix);
 
 		if (priceFix === 0) {
 			console.log('no priceFix found, use the last ETH price');
@@ -136,6 +138,7 @@ export class Calculateor {
 			);
 			return lastPriceObj;
 		} else {
+			console.log('valid exchange priceFix found');
 			console.log('the priceFix is: ' + priceFix + ' at timestamp ' + currentTimestamp);
 			// console.log(exchangePriceVolume);
 			const priceObj = {

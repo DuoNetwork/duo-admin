@@ -14,7 +14,7 @@ export class KrakenUtil {
 			source: CST.EXCHANGE_KRAKEN,
 			id: exchangeReturnedTimestamp + '',
 			price: Number(trade[0]),
-			amount: Number(trade[1]),
+			amount: Math.abs(Number(trade[1])),
 			timestamp: exchangeReturnedTimestamp
 		};
 	}
