@@ -30,6 +30,7 @@ export class GeminiUtil {
 
 			// no timestamp returned by exchange so we leave empty there.
 			sqlUtil.insertSourceData(parsedTrade);
+			console.log('one trade fetched and inserted');
 		}
 	}
 

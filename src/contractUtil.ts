@@ -13,7 +13,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider(provider));
 const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
-
 export class ContractUtil {
 	async read(name: string) {
 		const state = await custodianContract.methods[name]().call();
@@ -89,13 +88,18 @@ export class ContractUtil {
 		});
 	}
 
-	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number, price: number) {
+	async commitSinglePrice(
+		isInception: boolean,
+		gasPrice: number,
+		gasLimit: number,
+		price: number
+	) {
 		let currentPrice: Price;
 		if (price > 0) {
-			currentPrice =  {
+			currentPrice = {
 				price: price,
 				volume: 0,
-				timestamp:  Math.floor(Date.now())
+				timestamp: Math.floor(Date.now())
 			};
 		} else {
 			currentPrice = await calculator.getPriceFix();
@@ -181,8 +185,10 @@ export class ContractUtil {
 
 	async create(argv: string[]) {
 		let gasPrice = 5e9;
-		let gasLimit = 100000;
+		let gasLimit = 200000;
 		let eth = 0;
+		let address = '';
+		let privateKey = '';
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
 			switch (args[0]) {
@@ -195,17 +201,29 @@ export class ContractUtil {
 				case 'eth':
 					eth = Number(args[1]) || eth;
 					break;
+				case 'address':
+					address = args[1] || address;
+					break;
+				case 'privateKey':
+					privateKey = args[1] || privateKey;
+					break;
 				default:
 					break;
 			}
 		}
-		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
+		console.log('the account ' + address + ' is creating tokens with ' + privateKey);
+		const nonce = await web3.eth.getTransactionCount(address);
 		const abi = {
 			name: 'create',
 			type: 'function',
-			inputs: []
+			inputs: [
+				{
+					name: 'payFeeInEth',
+					type: 'bool'
+				}
+			]
 		};
-		const input = [];
+		const input = [true];
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
 		web3.eth
@@ -220,12 +238,10 @@ export class ContractUtil {
 							eth,
 							command
 						),
-						CST.PF_ADDR_PK
+						privateKey
 					)
 			)
 			.on('receipt', console.log);
-
-
 	}
 }
 

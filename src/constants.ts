@@ -19,7 +19,7 @@ export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
 export const NETWORK = 'http://localhost:8545';
-export const CUSTODIAN_ADDR = '0x183e341962f8b99592f158ca9788fe817672738f';
+export const CUSTODIAN_ADDR = '0x363b5bd6dd8e093bd6d4d45ee8ae6559a24ff937';
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const ETHSCAN_API_KEY = '8VS7KBP65Q7TQE4NGNUDEF69M6M6TH4BRS';
@@ -36,6 +36,20 @@ export const STATE_DOWN_RESET = '3';
 export const STATE_UP_RESET = '4';
 export const STATE_PERIOD_RESET = '5';
 
+export const KOVAN_ACCOUNTS = [
+	{
+		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
+		privateKey: '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285'
+	},
+	{
+		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
+		privateKey: '16ea9a15dd4381a2ea9c41531fee530e6a78dadc1a86d3e64f207c35f4be1d17'
+	},
+	{
+		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
+		privateKey: 'df2fe188d10c269022626e0260b8630562166dd310217faf137a884912420292'
+	}
+];
 
 // priceFeed
 export const DB_TX_SRC = 'source';

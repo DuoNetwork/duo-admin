@@ -3,7 +3,7 @@ import * as CST from '../constants';
 import util from '../util';
 import { Trade } from '../types';
 
-const INTERVAL_SECS = 5;
+const INTERVAL_SECS = 2;
 
 let last = 0; // last = id to be used as since when polling for new trade data
 
@@ -22,18 +22,22 @@ export class KrakenUtil {
 	parseApiResponse(response: string) {
 		const jsonObj = JSON.parse(response);
 
-			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
-			console.log(returnFirstLevelArray.length + ' trades');
-			// console.log(url);
-			returnFirstLevelArray.forEach(trade => {
-				// console.log(trade);
-				const parsedTrade: Trade = krakenUtil.parseTrade(trade);
-
+		const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
+		// console.log(url);
+		let count = 0;
+		returnFirstLevelArray.forEach(trade => {
+			// console.log(trade);
+			const parsedTrade: Trade = krakenUtil.parseTrade(trade);
+			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
 				sqlUtil.insertSourceData(parsedTrade);
-			});
+				count++;
+			}
+		});
 
-			last = jsonObj['result']['last'];
-			console.log(last);
+		console.log('inserted ' + count + ' trades of ' + returnFirstLevelArray.length + ' received');
+
+		last = jsonObj['result']['last'];
+		console.log(last);
 	}
 
 	async fetchETHTradesByOwnWebSocket() {
