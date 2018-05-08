@@ -29,6 +29,13 @@ export const ACCEPT_PRICE_EVENT = 'AcceptPrice(uint256,uint256)'; // '0x8eb94c6a
 export const START_PRE_RESET_EVENT = 'StartPreReset()'; // '0xa1f85a3680dfb51f7db8069e794f07f371ef5a545a9c915ac6315b0768a08b3f';
 export const START_RESET_EVENT = 'StartReset()'; // '0x91c286863163aa15991e5aabc5934ed57007ed7f0b1bddcde66ca789ab227ea3';
 export const START_TRADING_EVENT = 'StartTrading()'; // '0xbf6a1c0d2669c1534a4b018edab32445ffb4f4e914517f62fb885949552d7e34';
+export const STATE_INCEPTION = '0';
+export const STATE_TRADING = '1';
+export const STATE_PRERESET = '2';
+export const STATE_DOWN_RESET = '3';
+export const STATE_UP_RESET = '4';
+export const STATE_PERIOD_RESET = '5';
+
 
 // priceFeed
 export const DB_TX_SRC = 'source';

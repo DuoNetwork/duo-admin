@@ -61,6 +61,9 @@ switch (tool) {
 		const state: string = process.argv[3];
 		contractUtil.read(state);
 		break;
+	case 'create':
+		contractUtil.create(process.argv);
+		break;
 	case 'decoder':
 		console.log('starting decoding contract input');
 		const input: string = process.argv[3];
@@ -68,6 +71,12 @@ switch (tool) {
 		break;
 	case 'acceptPriceEvent':
 		eventUtil.subscribeToAcceptPrice();
+		break;
+	case 'preResetEvent':
+		eventUtil.subscribePreReset();
+		break;
+	case 'resetEvent':
+		eventUtil.subscribeReset();
 		break;
 	default:
 		console.log('no such tool ' + tool);

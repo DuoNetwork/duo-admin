@@ -96,7 +96,7 @@ export class Calculateor {
 			const weights = volumeList.map(v => v / totalVol);
 			const finalWeights: number[] = this.modifyWeights(weights);
 			return finalWeights.reduce(
-				(accum, w, index) => accum + exchangePriceVolume[index].price * w, 0
+				(accum, w, index) => accum + filterredExchanges[index].price * w, 0
 			);
 		}
 	}

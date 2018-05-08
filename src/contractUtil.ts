@@ -16,9 +16,9 @@ const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODI
 
 export class ContractUtil {
 	async read(name: string) {
-		// getSystemAddresses
-		// getSystemStates
-		console.log(await custodianContract.methods[name]().call());
+		const state = await custodianContract.methods[name]().call();
+		console.log(state);
+		return state;
 	}
 
 	decode(input) {
@@ -89,8 +89,17 @@ export class ContractUtil {
 		});
 	}
 
-	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number) {
-		const currentPrice: Price = await calculator.getPriceFix();
+	async commitSinglePrice(isInception: boolean, gasPrice: number, gasLimit: number, price: number) {
+		let currentPrice: Price;
+		if (price > 0) {
+			currentPrice =  {
+				price: price,
+				volume: 0,
+				timestamp:  Math.floor(Date.now())
+			};
+		} else {
+			currentPrice = await calculator.getPriceFix();
+		}
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
@@ -131,7 +140,8 @@ export class ContractUtil {
 
 	async commitPrice(argv: string[]) {
 		let gasPrice = 5e9;
-		let gasLimit = 60000;
+		let gasLimit = 200000;
+		let price = 0;
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
 			switch (args[0]) {
@@ -140,6 +150,9 @@ export class ContractUtil {
 					break;
 				case 'gasLimit':
 					gasLimit = Number(args[1]) || gasLimit;
+					break;
+				case 'price':
+					price = Number(args[1]) || price;
 					break;
 				default:
 					break;
@@ -157,13 +170,62 @@ export class ContractUtil {
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () =>
-				this.commitSinglePrice(true, gasPrice, gasLimit + 50000)
+				this.commitSinglePrice(true, gasPrice, gasLimit + 50000, price)
 			);
 		}
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule: rule }, () =>
-			this.commitSinglePrice(false, gasPrice, gasLimit)
+			this.commitSinglePrice(false, gasPrice, gasLimit, price)
 		);
+	}
+
+	async create(argv: string[]) {
+		let gasPrice = 5e9;
+		let gasLimit = 100000;
+		let eth = 0;
+		for (let i = 3; i < argv.length; i++) {
+			const args = argv[i].split('=');
+			switch (args[0]) {
+				case 'gasPrice':
+					gasPrice = Number(args[1]) || gasPrice;
+					break;
+				case 'gasLimit':
+					gasLimit = Number(args[1]) || gasLimit;
+					break;
+				case 'eth':
+					eth = Number(args[1]) || eth;
+					break;
+				default:
+					break;
+			}
+		}
+		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
+		const abi = {
+			name: 'create',
+			type: 'function',
+			inputs: []
+		};
+		const input = [];
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							eth,
+							command
+						),
+						CST.PF_ADDR_PK
+					)
+			)
+			.on('receipt', console.log);
+
+
 	}
 }
 

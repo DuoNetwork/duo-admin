@@ -58,9 +58,14 @@ export class BitfinexUtil {
 			console.log('subscribe trade');
 		});
 
-		w.on('close', () => {
+		w.on('close', (code: number, reason: string) => {
+			console.log(code + ': ' + reason);
 			console.log('[Bitfinex]-WebSocket is close now');
 			console.log('close DB');
+		});
+
+		w.on('error', (error: Error) => {
+			console.log(error);
 		});
 	}
 }

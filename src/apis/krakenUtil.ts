@@ -23,9 +23,10 @@ export class KrakenUtil {
 		const jsonObj = JSON.parse(response);
 
 			const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
+			console.log(returnFirstLevelArray.length + ' trades');
 			// console.log(url);
 			returnFirstLevelArray.forEach(trade => {
-				console.log(trade);
+				// console.log(trade);
 				const parsedTrade: Trade = krakenUtil.parseTrade(trade);
 
 				sqlUtil.insertSourceData(parsedTrade);

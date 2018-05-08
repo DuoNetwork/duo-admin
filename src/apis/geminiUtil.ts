@@ -4,7 +4,6 @@ import ws from 'ws';
 import { Trade } from '../types';
 
 export class GeminiUtil {
-
 	parseTrade(parsedJson: any): Trade {
 		let timestampms = parsedJson.timestampms;
 		if (timestampms == undefined) {
@@ -30,19 +29,25 @@ export class GeminiUtil {
 			const parsedTrade: Trade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
-			sqlUtil.insertSourceData(
-				parsedTrade
-			);
+			sqlUtil.insertSourceData(parsedTrade);
 		}
 	}
 
 	fetchTrades() {
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
-		w.on('message', msg => 	this.parseApiResponse(msg.toString()));
+		w.on('message', msg => this.parseApiResponse(msg.toString()));
 
 		w.on('open', () => {
 			console.log('[Gemini]-WebSocket is open');
+		});
+
+		w.on('close', (code: number, reason: string) => {
+			console.log(code + ': ' + reason);
+		});
+
+		w.on('error', (error: Error) => {
+			console.log(error);
 		});
 	}
 }

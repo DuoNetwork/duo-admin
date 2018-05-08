@@ -21,7 +21,7 @@ export class SqlUtil {
 	}
 
 	executeQuery(sqlQuery: string): Promise<any> {
-		console.log(sqlQuery);
+		// console.log(sqlQuery);
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
@@ -61,8 +61,8 @@ export class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"')";
-		console.log(await this.executeQuery(sql));
-		// await this.executeQuery(sql);
+		// console.log(await this.executeQuery(sql));
+		await this.executeQuery(sql);
 	}
 
 	async insertPrice(price: Price) {
