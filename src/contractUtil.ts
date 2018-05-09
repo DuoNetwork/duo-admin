@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import * as CST from './constants';
-import util from './util';
 import calculator from './calculator';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
@@ -62,36 +61,6 @@ export class ContractUtil {
 		const gasPrice: number = await web3.eth.getGasPrice();
 		console.log('current gasPrice is ' + gasPrice);
 		return gasPrice;
-	}
-
-	subscribeAcceptPriceEvent() {
-		const logLink =
-			CST.ETHSCAN_API_KOVAN_LINK +
-			'module=logs&action=getLogs&fromBlock=' +
-			CST.KOVAN_FROM_BLOCK +
-			'&toBlock=latest&address=' +
-			CST.CUSTODIAN_ADDR +
-			'&topic0=' +
-			web3.utils.sha3(CST.ACCEPT_PRICE_EVENT) +
-			'&apikey=' +
-			CST.ETHSCAN_API_KEY;
-
-		schedule.scheduleJob({ rule: '/2 * * * *' }, async () => {
-			console.log('making a request to etherscan');
-
-			const res = await util.get(logLink);
-			const data = JSON.parse(res);
-			const result = data['result'];
-			// console.log(result);
-			for (let i = 0; i < result.length; i++) {
-				const price = parseInt(result[i].topics[1], 16);
-				const time = parseInt(result[i].topics[2], 16);
-				console.log('new price accepted: ' + price + ' at ' + time);
-				// console.log(time);
-			}
-			// console.log(priceInWei);
-			// console.log(priceInSeconds);
-		});
 	}
 
 	async commitSinglePrice(

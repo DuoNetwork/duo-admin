@@ -24,7 +24,6 @@ export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const ETHSCAN_API_KEY = '8VS7KBP65Q7TQE4NGNUDEF69M6M6TH4BRS';
 export const ETHSCAN_API_KOVAN_LINK = 'https://api-kovan.etherscan.io/api?';
-export const KOVAN_FROM_BLOCK = '6900000';
 export const ACCEPT_PRICE_EVENT = 'AcceptPrice(uint256,uint256)'; // '0x8eb94c6a87f56bd59f4a2a7d571f32a264458ff5b910a34862b9051e5953442d';
 export const START_PRE_RESET_EVENT = 'StartPreReset()'; // '0xa1f85a3680dfb51f7db8069e794f07f371ef5a545a9c915ac6315b0768a08b3f';
 export const START_RESET_EVENT = 'StartReset()'; // '0x91c286863163aa15991e5aabc5934ed57007ed7f0b1bddcde66ca789ab227ea3';

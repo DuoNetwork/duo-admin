@@ -9,6 +9,7 @@ import sqlUtil from './sqlUtil';
 import eventUtil from './events/eventUtil';
 import localEventUtil from './events/localEventUtils';
 import infuraEventUtil from './events/infuraEventUtil';
+import etherscanUtil from './events/etherscanUtil';
 import * as CST from './constants';
 
 const tool: string = process.argv[2];
@@ -20,10 +21,6 @@ switch (tool) {
 	case 'pf':
 		console.log('starting commitPrice process');
 		contractUtil.commitPrice(process.argv);
-		break;
-	case 'acceptPrice':
-		console.log('starting listening to acceptPrice event');
-		contractUtil.subscribeAcceptPriceEvent();
 		break;
 	case 'createAccount':
 		console.log('starting create accounts');
@@ -88,6 +85,9 @@ switch (tool) {
 		break;
 	case 'infuraEvent':
 		infuraEventUtil.startSubscribing(process.argv);
+		break;
+	case 'etherscan':
+		etherscanUtil.startSubscribing(process.argv);
 		break;
 	default:
 		console.log('no such tool ' + tool);

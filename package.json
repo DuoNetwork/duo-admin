@@ -11,7 +11,6 @@
 		"decoder": "ts-node ./src/index decoder",
 		"calculatePrice": "ts-node ./src/index calculatePrice",
 		"pf": "ts-node ./src/index pf",
-		"acceptPrice": "ts-node ./src/index acceptPrice",
 		"createAccount": "ts-node ./src/index createAccount",
 		"removeAccount": "ts-node ./src/index removeAccount",
 		"allAccounts": "ts-node ./src/index allAccounts",
@@ -25,7 +24,8 @@
 		"create": "ts-node ./src/index create",
 		"gasPrice": "ts-node ./src/index gasPrice",
 		"infuraEvent": "ts-node ./src/index infuraEvent",
-		"localEvent": "ts-node ./src/index localEvent"
+		"localEvent": "ts-node ./src/index localEvent",
+		"etherscan": "ts-node ./src/index etherscan"
 	},
 	"jest": {
 		"roots": [
