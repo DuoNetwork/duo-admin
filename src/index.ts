@@ -6,9 +6,9 @@ import calculator from './calculator';
 import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
 import sqlUtil from './sqlUtil';
-import eventUtil from './eventUtil';
-import localEventUtil from './localEventUtils';
-import infuraEventUtil from './infuraEventUtil';
+import eventUtil from './events/eventUtil';
+import localEventUtil from './events/localEventUtils';
+import infuraEventUtil from './events/infuraEventUtil';
 import * as CST from './constants';
 
 const tool: string = process.argv[2];

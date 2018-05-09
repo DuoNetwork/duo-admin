@@ -1,12 +1,12 @@
 import Web3 from 'web3';
-import * as CST from './constants';
-import contractUtil from './contractUtil';
+import * as CST from '../constants';
+import contractUtil from '../contractUtil';
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 // const provider = 'ws://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 const provider = 'ws://localhost:8546';
 // const provider = 'wss://socket.etherscan.io/wshandler';
 const web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
-const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
+const CustodianABI = require('../static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
 let gasPrice: number = 5e9;

@@ -1,11 +1,11 @@
 import Web3 from 'web3';
-import * as CST from './constants';
-import contractUtil from './contractUtil';
+import * as CST from '../constants';
+import contractUtil from '../contractUtil';
 import eventUtil from './eventUtil';
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
 const web3 = new Web3(new Web3.providers.HttpProvider(provider));
-const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
+const CustodianABI = require('../static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
 export class InfuraEventUtil {
@@ -19,9 +19,9 @@ export class InfuraEventUtil {
 		const currentBlk = await web3.eth.getBlockNumber();
 		this.currentBlk = currentBlk;
 	}
-	subscribeAcceptPriceEvent() {
+	async subscribeAcceptPriceEvent() {
 		console.log('start subscribing to acceptPrice event');
-		this.setCurrentBlockNo();
+		await this.setCurrentBlockNo();
 		while (this.lastBlk < this.currentBlk) {
 			console.log(
 				'current blk is ' +
@@ -50,7 +50,7 @@ export class InfuraEventUtil {
 
 	async subscribePreResetEvent() {
 		console.log('start subscribing to preReset event');
-		this.setCurrentBlockNo();
+		await this.setCurrentBlockNo();
 		console.log('lastBlk is ' + this.lastBlk + 'currentBlk is ' + this.currentBlk);
 		const state = await contractUtil.read('state');
 		console.log('current state is ' + state);
@@ -133,19 +133,19 @@ export class InfuraEventUtil {
 		}
 		switch (event) {
 			case 'AcceptPrice':
-				setInterval(() => this.subscribeAcceptPriceEvent(), 30 * 1000);
+				setInterval(() => this.subscribeAcceptPriceEvent(), 60 * 1000);
 				break;
 			case 'PreReset':
 				await this.setCurrentBlockNo();
 				console.log('current block is ' + this.currentBlk);
 				this.lastBlk = Number(this.currentBlk) - 1;
-				setInterval(() => this.subscribePreResetEvent(), 30 * 1000);
+				setInterval(() => this.subscribePreResetEvent(), 10 * 1000);
 				break;
 			case 'Reset':
 				await this.setCurrentBlockNo();
 				console.log('current block is ' + this.currentBlk);
 				this.lastBlk = Number(this.currentBlk) - 1;
-				setInterval(() => this.subscribeResetEvent(), 30 * 1000);
+				setInterval(() => this.subscribeResetEvent(), 10 * 1000);
 				break;
 			default:
 				console.log('no such event');
