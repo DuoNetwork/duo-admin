@@ -22,7 +22,10 @@
 		"acceptPriceEvent": "ts-node ./src/index acceptPriceEvent",
 		"preResetEvent": "ts-node ./src/index preResetEvent",
 		"resetEvent": "ts-node ./src/index resetEvent",
-		"create": "ts-node ./src/index create"
+		"create": "ts-node ./src/index create",
+		"gasPrice": "ts-node ./src/index gasPrice",
+		"infuraEvent": "ts-node ./src/index infuraEvent",
+		"localEvent": "ts-node ./src/index localEvent"
 	},
 	"jest": {
 		"roots": [

@@ -58,6 +58,12 @@ export class ContractUtil {
 		}
 	}
 
+	async getGasPrice(): Promise<number> {
+		const gasPrice: number = await web3.eth.getGasPrice();
+		console.log('current gasPrice is ' + gasPrice);
+		return gasPrice;
+	}
+
 	subscribeAcceptPriceEvent() {
 		const logLink =
 			CST.ETHSCAN_API_KOVAN_LINK +
@@ -173,13 +179,22 @@ export class ContractUtil {
 		const isInception = Number(res) === 0;
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
-			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, () =>
-				this.commitSinglePrice(true, gasPrice, gasLimit + 50000, price)
-			);
+			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+				const web3GasPrice = await this.getGasPrice();
+				gasPrice = web3GasPrice || gasPrice;
+				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+				return this.commitSinglePrice(true, gasPrice, gasLimit + 50000, price);
+			});
 		}
 
-		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule: rule }, () =>
-			this.commitSinglePrice(false, gasPrice, gasLimit, price)
+		schedule.scheduleJob(
+			{ start: isInception ? commitStart : startTime, rule: rule },
+			async () => {
+				const web3GasPrice = await this.getGasPrice();
+				gasPrice = web3GasPrice || gasPrice;
+				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+				return this.commitSinglePrice(false, gasPrice, gasLimit, price);
+			}
 		);
 	}
 
@@ -226,6 +241,10 @@ export class ContractUtil {
 		const input = [true];
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
+		const web3GasPrice = await this.getGasPrice();
+		gasPrice = web3GasPrice || gasPrice;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+		// gasPrice = gasPrice || await web3.eth.
 		web3.eth
 			.sendSignedTransaction(
 				'0x' +

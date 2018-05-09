@@ -35,6 +35,7 @@ export const STATE_PRERESET = '2';
 export const STATE_DOWN_RESET = '3';
 export const STATE_UP_RESET = '4';
 export const STATE_PERIOD_RESET = '5';
+export const INCEPTION_BLK = 7171376;
 
 export const KOVAN_ACCOUNTS = [
 	{

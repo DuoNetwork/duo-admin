@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import * as CST from './constants';
 import contractUtil from './contractUtil';
+import eventUtil from './eventUtil';
 // const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
 // const provider = 'ws://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 const provider = 'ws://localhost:8546';
@@ -9,11 +10,8 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
 const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
 const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
 
-let gasPrice: number = 5e9;
-const gasLimitPreReset = 120000;
-const gasLimitReset = 7880000;
 
-export class EventUtil {
+export class LocalEventUtil {
 	subscribeToAcceptPrice() {
 		console.log('starting listening acceptPrice event');
 		custodianContract.events.AcceptPrice(
@@ -30,58 +28,10 @@ export class EventUtil {
 		);
 	}
 
-	async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
-		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
-		const command = contractUtil.generateTxString(abi, input);
-		// sending out transaction
-		web3.eth
-			.sendSignedTransaction(
-				'0x' +
-					contractUtil.signTx(
-						contractUtil.createTxCommand(
-							nonce,
-							gasPrice,
-							gasLimit,
-							CST.CUSTODIAN_ADDR,
-							0,
-							command
-						),
-						CST.PF_ADDR_PK
-					)
-			)
-			.on('receipt', console.log);
-	}
-
-	async triggerReset() {
-		const abi = {
-			name: 'startReset',
-			type: 'function',
-			inputs: []
-		};
-		const input = [];
-		const web3GasPrice = await contractUtil.getGasPrice();
-		gasPrice = web3GasPrice || gasPrice;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimitReset);
-		await this.trigger(abi, input, gasPrice, gasLimitReset);
-	}
-
-	async triggerPreReset() {
-		const abi = {
-			name: 'startPreReset',
-			type: 'function',
-			inputs: []
-		};
-		const input = [];
-		const web3GasPrice = await contractUtil.getGasPrice();
-		gasPrice = web3GasPrice || gasPrice;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimitPreReset);
-		await this.trigger(abi, input, gasPrice, gasLimitPreReset);  // 120000 for lastOne; 30000 for else
-	}
-
 	async subscribePreReset() {
 		const state = await contractUtil.read('state');
 		console.log(state);
-		if (state === CST.STATE_PRERESET) await this.triggerPreReset();
+		if (state === CST.STATE_PRERESET) await eventUtil.triggerPreReset();
 		console.log('starting listening preReset event');
 		custodianContract.events.StartPreReset(
 			{
@@ -92,7 +42,7 @@ export class EventUtil {
 					console.log(error);
 				} else {
 					console.log(event);
-					await this.triggerPreReset();
+					await eventUtil.triggerPreReset();
 				}
 			}
 		);
@@ -107,7 +57,7 @@ export class EventUtil {
 			state === CST.STATE_PERIOD_RESET
 		) {
 			console.log('start triggering reset');
-			await this.triggerReset();
+			await eventUtil.triggerReset();
 		}
 		custodianContract.events.StartReset(
 			{
@@ -118,12 +68,41 @@ export class EventUtil {
 					console.log(error);
 				} else {
 					console.log(event);
-					await this.triggerReset();
+					await eventUtil.triggerReset();
 				}
 			}
 		);
 	}
+
+	async startSubscribing(argv: string[]) {
+		let event: string = '';
+
+		for (let i = 3; i < argv.length; i++) {
+			const args = argv[i].split('=');
+			switch (args[0]) {
+				case 'event':
+					event = args[1];
+					break;
+				default:
+					break;
+			}
+		}
+		switch (event) {
+			case 'AcceptPrice':
+				this.subscribeToAcceptPrice();
+				break;
+			case 'PreReset':
+				this.subscribePreReset();
+				break;
+			case 'Reset':
+				this.subscribeReset();
+				break;
+			default:
+				console.log('no such event');
+				break;
+		}
+	}
 }
 
-const eventUtil = new EventUtil();
-export default eventUtil;
+const localEventUtil = new LocalEventUtil();
+export default localEventUtil;

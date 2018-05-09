@@ -7,6 +7,8 @@ import parityAccount from './accountUtil';
 import contractUtil from './contractUtil';
 import sqlUtil from './sqlUtil';
 import eventUtil from './eventUtil';
+import localEventUtil from './localEventUtils';
+import infuraEventUtil from './infuraEventUtil';
 import * as CST from './constants';
 
 const tool: string = process.argv[2];
@@ -77,6 +79,15 @@ switch (tool) {
 		break;
 	case 'resetEvent':
 		eventUtil.subscribeReset();
+		break;
+	case 'gasPrice':
+		contractUtil.getGasPrice();
+		break;
+	case 'localEvent':
+		localEventUtil.startSubscribing(process.argv);
+		break;
+	case 'infuraEvent':
+		infuraEventUtil.startSubscribing(process.argv);
 		break;
 	default:
 		console.log('no such tool ' + tool);

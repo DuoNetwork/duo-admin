@@ -37,6 +37,7 @@ export class BitfinexUtil {
 				const parsedTrade: Trade = this.parseTrade(parsedJson);
 				sqlUtil.insertSourceData(parsedTrade);
 			}
+			console.log('one record inserted');
 		}
 	}
 
@@ -67,6 +68,12 @@ export class BitfinexUtil {
 		w.on('error', (error: Error) => {
 			console.log(error);
 		});
+
+		setInterval(() => {
+			w.send('ping', function ack(error) {
+				console.log(error);
+			});
+		}, 20 * 1000);
 	}
 }
 const bitfinexUtil = new BitfinexUtil();
