@@ -1,5 +1,6 @@
 import moment from 'moment';
 import request from 'request';
+import { Option } from './types';
 
 export class Util {
 	log(text: any): void {
@@ -42,6 +43,56 @@ export class Util {
 				}
 			)
 		);
+	}
+
+	parseOptions(argv: string[]): Option {
+		const option = {
+			gasPrice: 5e9,
+			gasLimit: 200000,
+			eth: 0,
+			address: '',
+			privateKey: '',
+			price: 0,
+			source: '',
+			pwd: '',
+			event: ''
+		};
+		for (let i = 3; i < argv.length; i++) {
+			const args = argv[i].split('=');
+			switch (args[0]) {
+				case 'gasPrice':
+					option.gasPrice = Number(args[1]) || option.gasPrice;
+					break;
+				case 'gasLimit':
+					option.gasLimit = Number(args[1]) || option.gasLimit;
+					break;
+				case 'eth':
+					option.eth = Number(args[1]) || option.eth;
+					break;
+				case 'address':
+					option.address = args[1] || option.address;
+					break;
+				case 'privateKey':
+					option.privateKey = args[1] || option.privateKey;
+					break;
+				case 'price':
+					option.price = Number(args[1]) || option.price;
+					break;
+				case 'pwd':
+					option.pwd = args[1] || option.pwd;
+					break;
+				case 'source':
+					option.source = args[1] || option.source;
+					break;
+				case 'event':
+					option.event = args[1] || option.event;
+					break;
+				default:
+					break;
+			}
+		}
+
+		return option;
 	}
 }
 

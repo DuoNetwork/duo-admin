@@ -17,38 +17,21 @@ util.log('tool ' + tool);
 const live = process.argv.includes('live');
 util.log('using ' + (live ? 'live' : 'dev') + ' env');
 
-let source: string = '';
-let pwd: string = '';
-for (let i = 3; i < process.argv.length; i++) {
-	const args = process.argv[i].split('=');
-	switch (args[0]) {
-		case 'pwd':
-			pwd = args[1];
-			console.log('password is ' + pwd);
-			break;
-		case 'source':
-			source = args[1];
-			break;
-		default:
-			break;
-	}
-}
+const option = util.parseOptions(process.argv);
 
 let providerUrl = 'ws://localhost:8546';
-if (process.argv.includes('myether')) {
-	source = 'myether';
+if (option.source === 'myether') {
 	providerUrl = live ? 'https://api.myetherapi.com/eth' : 'https://api.myetherapi.com/rop';
-} else if (process.argv.includes('infura')) {
-	source = 'infura';
+} else if (option.source === 'infura') {
 	providerUrl = live
 		? 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP'
 		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 }
 
-util.log('using ' + (source || 'local node'));
+util.log('using ' + (option.source || 'local node'));
 
 const web3 = new Web3(
-	source
+	option.source
 		? new Web3.providers.HttpProvider(providerUrl)
 		: new Web3.providers.WebsocketProvider(providerUrl)
 );
@@ -56,12 +39,12 @@ const web3 = new Web3(
 const contractUtil = new ContractUtil(web3);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'pf', 'calculatePrice'].includes(tool))
-	sqlUtil.init(CST.DB_USER, pwd);
+	sqlUtil.init(CST.DB_USER, option.pwd);
 
 switch (tool) {
 	case 'pf':
 		util.log('starting commitPrice process');
-		contractUtil.commitPrice(process.argv);
+		contractUtil.commitPrice(option);
 		break;
 	case 'createAccount':
 		util.log('starting create accounts');
@@ -101,7 +84,7 @@ switch (tool) {
 		contractUtil.read(state);
 		break;
 	case 'create':
-		contractUtil.create(process.argv);
+		contractUtil.create(option);
 		break;
 	case 'decoder':
 		util.log('starting decoding contract input');
@@ -112,7 +95,7 @@ switch (tool) {
 		contractUtil.getGasPrice();
 		break;
 	case 'subscribe':
-		eventUtil.subscribe(process.argv, contractUtil, source);
+		eventUtil.subscribe(contractUtil, option);
 		break;
 	default:
 		util.log('no such tool ' + tool);

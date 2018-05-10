@@ -2,6 +2,7 @@ import { Contract } from 'web3/types';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import util from './util';
+import { Option } from './types';
 
 export class EventUtil {
 	async pull(
@@ -32,30 +33,22 @@ export class EventUtil {
 		} else util.log('end is less than start');
 	}
 
-	async subscribe(argv: string[], contractUtil: ContractUtil, source: string) {
-		let event: string = '';
-		for (let i = 3; i < argv.length; i++) {
-			const args = argv[i].split('=');
-			switch (args[0]) {
-				case 'event':
-					event = args[1];
-					break;
-				default:
-					break;
-			}
-		}
-		util.log('subscribing to ' + event);
+	async subscribe(contractUtil: ContractUtil, option: Option) {
+		util.log('subscribing to ' + option.event);
 
-		if (source) {
-			if (['StartPreReset', 'StartReset'].includes(event)) {
+		if (option.source) {
+			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
 				setInterval(async () => {
 					const state = await contractUtil.read('state');
 					util.log('current state is ' + state);
 
-					if (event === 'StartPreReset' && state === CST.STATE_PRERESET) {
+					if (
+						option.event === CST.EVENT_START_PRE_RESET &&
+						state === CST.STATE_PRERESET
+					) {
 						await contractUtil.triggerPreReset();
 					} else if (
-						event === 'StartReset' &&
+						option.event === CST.EVENT_START_RESET &&
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
@@ -68,16 +61,22 @@ export class EventUtil {
 				let currentBlk = startBlk;
 				setInterval(async () => {
 					currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					this.pull(contractUtil.contract, startBlk, currentBlk, event, (r: any) => {
-						util.log(r);
-						return Promise.resolve();
-					});
+					this.pull(
+						contractUtil.contract,
+						startBlk,
+						currentBlk,
+						option.event,
+						(r: any) => {
+							util.log(r);
+							return Promise.resolve();
+						}
+					);
 					startBlk = currentBlk + 1;
 				}, 15000);
 			}
 		} else {
 			let tg: (r: any) => Promise<void> = () => Promise.resolve();
-			if (event === 'AcceptPrice') {
+			if (option.event === CST.EVENT_ACCEPT_PRICE) {
 				tg = (r: any) => {
 					console.log(r);
 					return Promise.resolve();
@@ -86,10 +85,10 @@ export class EventUtil {
 				const state = await contractUtil.read('state');
 				util.log('current state is ' + state);
 
-				if (event === 'StartPreReset') {
+				if (option.event === CST.EVENT_START_PRE_RESET) {
 					tg = () => contractUtil.triggerPreReset();
 					if (state === CST.STATE_PRERESET) await contractUtil.triggerPreReset();
-				} else if (event === 'StartReset') {
+				} else if (option.event === CST.EVENT_START_RESET) {
 					tg = () => contractUtil.triggerReset();
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
@@ -101,7 +100,7 @@ export class EventUtil {
 			}
 
 			util.log('starting listening preReset event');
-			contractUtil.contract.events[event]({}, async (error, evt) => {
+			contractUtil.contract.events[option.event]({}, async (error, evt) => {
 				if (error) {
 					util.log(error);
 				} else {

@@ -5,11 +5,7 @@ import calculator from './calculator';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
-import { Price } from './types';
-
-const DEFAULT_GAS_PRICE = 5e9;
-const PRE_RESET_GAS_LIMIT = 120000;
-const RESET_GAS_LIMIT = 7880000;
+import { Price, Option } from './types';
 
 export default class ContractUtil {
 	web3: Web3;
@@ -93,7 +89,7 @@ export default class ContractUtil {
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
 		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
 		const abi = {
-			name: isInception ? 'startContract' : 'commitPrice',
+			name: isInception ? CST.FN_START_CONTRACT : CST.FN_COMMIT_PRICE,
 			type: 'function',
 			inputs: [
 				{
@@ -126,27 +122,7 @@ export default class ContractUtil {
 			.on('receipt', console.log);
 	}
 
-	async commitPrice(argv: string[]) {
-		let gasPrice = 5e9;
-		let gasLimit = 200000;
-		let price = 0;
-		for (let i = 3; i < argv.length; i++) {
-			const args = argv[i].split('=');
-			switch (args[0]) {
-				case 'gasPrice':
-					gasPrice = Number(args[1]) || gasPrice;
-					break;
-				case 'gasLimit':
-					gasLimit = Number(args[1]) || gasLimit;
-					break;
-				case 'price':
-					price = Number(args[1]) || price;
-					break;
-				default:
-					break;
-			}
-		}
-
+	async commitPrice(option: Option) {
 		const startTime = new Date(Date.now());
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
@@ -158,54 +134,25 @@ export default class ContractUtil {
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
-				const web3GasPrice = await this.getGasPrice();
-				gasPrice = web3GasPrice || gasPrice;
-				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
-				return this.commitSinglePrice(true, gasPrice, gasLimit + 50000, price);
+				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
+				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				return this.commitSinglePrice(true, gasPrice, option.gasLimit + 50000, option.price);
 			});
 		}
 
 		schedule.scheduleJob(
 			{ start: isInception ? commitStart : startTime, rule: rule },
 			async () => {
-				const web3GasPrice = await this.getGasPrice();
-				gasPrice = web3GasPrice || gasPrice;
-				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
-				return this.commitSinglePrice(false, gasPrice, gasLimit, price);
+				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
+				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				return this.commitSinglePrice(false, gasPrice, option.gasLimit, option.price);
 			}
 		);
 	}
 
-	async create(argv: string[]) {
-		let gasPrice = 5e9;
-		let gasLimit = 200000;
-		let eth = 0;
-		let address = '';
-		let privateKey = '';
-		for (let i = 3; i < argv.length; i++) {
-			const args = argv[i].split('=');
-			switch (args[0]) {
-				case 'gasPrice':
-					gasPrice = Number(args[1]) || gasPrice;
-					break;
-				case 'gasLimit':
-					gasLimit = Number(args[1]) || gasLimit;
-					break;
-				case 'eth':
-					eth = Number(args[1]) || eth;
-					break;
-				case 'address':
-					address = args[1] || address;
-					break;
-				case 'privateKey':
-					privateKey = args[1] || privateKey;
-					break;
-				default:
-					break;
-			}
-		}
-		console.log('the account ' + address + ' is creating tokens with ' + privateKey);
-		const nonce = await this.web3.eth.getTransactionCount(address);
+	async create(option: Option) {
+		console.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
+		const nonce = await this.web3.eth.getTransactionCount(option.address);
 		const abi = {
 			name: 'create',
 			type: 'function',
@@ -219,9 +166,8 @@ export default class ContractUtil {
 		const input = [true];
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
-		const web3GasPrice = await this.getGasPrice();
-		gasPrice = web3GasPrice || gasPrice;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+		const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 		// gasPrice = gasPrice || await web3.eth.
 		this.web3.eth
 			.sendSignedTransaction(
@@ -230,12 +176,12 @@ export default class ContractUtil {
 						this.createTxCommand(
 							nonce,
 							gasPrice,
-							gasLimit,
+							option.gasLimit,
 							CST.CUSTODIAN_ADDR,
-							eth,
+							option.eth,
 							command
 						),
-						privateKey
+						option.privateKey
 					)
 			)
 			.on('receipt', console.log);
@@ -270,9 +216,9 @@ export default class ContractUtil {
 			inputs: []
 		};
 		const input = [];
-		const gasPrice = (await this.getGasPrice()) || DEFAULT_GAS_PRICE;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + RESET_GAS_LIMIT);
-		await this.trigger(abi, input, gasPrice, RESET_GAS_LIMIT);
+		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
+		await this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT);
 	}
 
 	async triggerPreReset() {
@@ -282,8 +228,8 @@ export default class ContractUtil {
 			inputs: []
 		};
 		const input = [];
-		const gasPrice = (await this.getGasPrice()) || DEFAULT_GAS_PRICE;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + PRE_RESET_GAS_LIMIT);
-		await this.trigger(abi, input, gasPrice, PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
+		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
+		await this.trigger(abi, input, gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
 	}
 }
