@@ -18,6 +18,22 @@ const live = process.argv.includes('live');
 util.log('using ' + (live ? 'live' : 'dev') + ' env');
 
 let source: string = '';
+let pwd: string = '';
+for (let i = 3; i < process.argv.length; i++) {
+	const args = process.argv[i].split('=');
+	switch (args[0]) {
+		case 'pwd':
+			pwd = args[1];
+			break;
+		case 'source':
+			source = args[1];
+			break;
+		default:
+			break;
+	}
+}
+
+
 let providerUrl = 'ws://localhost:8546';
 if (process.argv.includes('myether')) {
 	source = 'myether';
@@ -42,7 +58,7 @@ const web3 = new Web3(
 const contractUtil = new ContractUtil(web3);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'pf', 'calculatePrice'].includes(tool))
-	sqlUtil.init(CST.DB_USER, CST.DB_PASSWORD);
+	sqlUtil.init(CST.DB_USER, pwd);
 
 switch (tool) {
 	case 'pf':
