@@ -1,29 +1,54 @@
+import Web3 from 'web3';
 import bitfinexUtil from './apis/bitfinexUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
 import gdaxUtil from './apis/gdaxUtil';
 import calculator from './calculator';
 import parityAccount from './accountUtil';
-import contractUtil from './contractUtil';
+import ContractUtil from './contractUtil';
+import eventUtil from './eventUtil';
 import sqlUtil from './sqlUtil';
-import eventUtil from './events/eventUtil';
-import localEventUtil from './events/localEventUtils';
-import infuraEventUtil from './events/infuraEventUtil';
-import etherscanUtil from './events/etherscanUtil';
 import * as CST from './constants';
+import util from './util';
 
-const tool: string = process.argv[2];
+const tool = process.argv[2];
+util.log('tool ' + tool);
+
+const live = process.argv.includes('live');
+util.log('using ' + (live ? 'live' : 'dev') + ' env');
+
+let source: string = '';
+let providerUrl = 'ws://localhost:8546';
+if (process.argv.includes('etherscan')) {
+	source = 'etherscan';
+	providerUrl = live
+		? 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w'
+		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
+} else if (process.argv.includes('infura')) {
+	source = 'infura';
+	providerUrl = live
+		? 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w'
+		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
+}
+
+const web3 = new Web3(
+	source
+		? new Web3.providers.HttpProvider(providerUrl)
+		: new Web3.providers.WebsocketProvider(providerUrl)
+);
+
+const contractUtil = new ContractUtil(web3);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'pf', 'calculatePrice'].includes(tool))
 	sqlUtil.init(CST.DB_USER, CST.DB_PASSWORD);
 
 switch (tool) {
 	case 'pf':
-		console.log('starting commitPrice process');
+		util.log('starting commitPrice process');
 		contractUtil.commitPrice(process.argv);
 		break;
 	case 'createAccount':
-		console.log('starting create accounts');
+		util.log('starting create accounts');
 		const numOfAccounts: number = Number(process.argv[3]);
 		parityAccount.createAccount(numOfAccounts);
 		break;
@@ -35,28 +60,27 @@ switch (tool) {
 		parityAccount.allAccountsInfo();
 		break;
 	case 'bitfinex':
-		console.log('starting fetchTrade of bitfinex');
+		util.log('starting fetchTrade of bitfinex');
 		bitfinexUtil.fetchTrades();
 		break;
 	case 'gemini':
-		console.log('starting fetchTrade of gemini');
+		util.log('starting fetchTrade of gemini');
 		geminiUtil.fetchTrades();
 		break;
 	case 'kraken':
-		console.log('starting fetchTrade of kraken');
+		util.log('starting fetchTrade of kraken');
 		krakenUtil.startFetching();
 		break;
-
 	case 'gdax':
-		console.log('starting fetchTrade of gdax');
+		util.log('starting fetchTrade of gdax');
 		gdaxUtil.startFetching();
 		break;
 	case 'calculatePrice':
-		console.log('starting calculate ETH price');
+		util.log('starting calculate ETH price');
 		calculator.getPriceFix();
 		break;
 	case 'readContract':
-		console.log('starting reading custodian contract state');
+		util.log('starting reading custodian contract state');
 		const state: string = process.argv[3];
 		contractUtil.read(state);
 		break;
@@ -64,32 +88,17 @@ switch (tool) {
 		contractUtil.create(process.argv);
 		break;
 	case 'decoder':
-		console.log('starting decoding contract input');
+		util.log('starting decoding contract input');
 		const input: string = process.argv[3];
-		console.log(contractUtil.decode(input));
-		break;
-	case 'acceptPriceEvent':
-		eventUtil.subscribeToAcceptPrice();
-		break;
-	case 'preResetEvent':
-		eventUtil.subscribePreReset();
-		break;
-	case 'resetEvent':
-		eventUtil.subscribeReset();
+		util.log(contractUtil.decode(input));
 		break;
 	case 'gasPrice':
 		contractUtil.getGasPrice();
 		break;
-	case 'localEvent':
-		localEventUtil.startSubscribing(process.argv);
-		break;
-	case 'infuraEvent':
-		infuraEventUtil.startSubscribing(process.argv);
-		break;
-	case 'etherscan':
-		etherscanUtil.startSubscribing(process.argv);
+	case 'subscribe':
+		eventUtil.subscribe(process.argv, contractUtil, source);
 		break;
 	default:
-		console.log('no such tool ' + tool);
+		util.log('no such tool ' + tool);
 		break;
 }

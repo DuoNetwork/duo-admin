@@ -18,14 +18,9 @@
 		"gemini": "ts-node ./src/index gemini",
 		"kraken": "ts-node ./src/index kraken",
 		"gdax": "ts-node ./src/index gdax",
-		"acceptPriceEvent": "ts-node ./src/index acceptPriceEvent",
-		"preResetEvent": "ts-node ./src/index preResetEvent",
-		"resetEvent": "ts-node ./src/index resetEvent",
 		"create": "ts-node ./src/index create",
 		"gasPrice": "ts-node ./src/index gasPrice",
-		"infuraEvent": "ts-node ./src/index infuraEvent",
-		"localEvent": "ts-node ./src/index localEvent",
-		"etherscan": "ts-node ./src/index etherscan"
+		"subscribe": "ts-node ./src/index subscribe"
 	},
 	"jest": {
 		"roots": [

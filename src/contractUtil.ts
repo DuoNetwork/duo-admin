@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { Contract } from 'web3/types';
 import * as CST from './constants';
 import calculator from './calculator';
 const Tx = require('ethereumjs-tx');
@@ -6,50 +7,58 @@ const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 import { Price } from './types';
 
-// const provider = 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w';
-const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
-const web3 = new Web3(new Web3.providers.HttpProvider(provider));
-const CustodianABI = require('./static/Custodian.json'); // Custodian Contract ABI
-const custodianContract = new web3.eth.Contract(CustodianABI['abi'], CST.CUSTODIAN_ADDR);
+const DEFAULT_GAS_PRICE = 5e9;
+const PRE_RESET_GAS_LIMIT = 120000;
+const RESET_GAS_LIMIT = 7880000;
 
-export class ContractUtil {
+export default class ContractUtil {
+	web3: Web3;
+	abi: any;
+	contract: Contract;
+
+	constructor(web3: Web3) {
+		this.web3 = web3;
+		this.abi = require('./static/Custodian.json');
+		this.contract = new web3.eth.Contract(this.abi['abi'], CST.CUSTODIAN_ADDR);
+	}
+
 	async read(name: string) {
-		const state = await custodianContract.methods[name]().call();
+		const state: string = await this.contract.methods[name]().call();
 		console.log(state);
 		return state;
 	}
 
-	decode(input) {
-		abiDecoder.addABI(CustodianABI['abi']);
+	decode(input: string): string {
+		abiDecoder.addABI(this.abi['abi']);
 		return abiDecoder.decodeMethod(input);
 	}
 
 	generateTxString(abi: Object, input: any[]): string {
-		return web3.eth.abi.encodeFunctionCall(abi, input);
+		return this.web3.eth.abi.encodeFunctionCall(abi, input);
 	}
 
 	createTxCommand(
 		nonce: number,
-		gas_price: number,
-		gas_limit: number,
-		to_address: string,
+		gasPrice: number,
+		gasLimit: number,
+		toAddr: string,
 		amount: number,
 		data: string
 	): object {
 		return {
 			nonce: nonce, // web3.utils.toHex(nonce), //nonce,
-			gasPrice: web3.utils.toHex(gas_price),
-			gasLimit: web3.utils.toHex(gas_limit),
-			to: to_address,
-			value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
+			gasPrice: this.web3.utils.toHex(gasPrice),
+			gasLimit: this.web3.utils.toHex(gasLimit),
+			to: toAddr,
+			value: this.web3.utils.toHex(this.web3.utils.toWei(amount.toString(), 'ether')),
 			data: data
 		};
 	}
 
-	signTx(rawTx: object, private_key: string): string {
+	signTx(rawTx: object, privateKey: string): string {
 		try {
 			const tx = new Tx(rawTx);
-			tx.sign(new Buffer(private_key, 'hex'));
+			tx.sign(new Buffer(privateKey, 'hex'));
 			return tx.serialize().toString('hex');
 		} catch (err) {
 			console.log(err);
@@ -58,7 +67,7 @@ export class ContractUtil {
 	}
 
 	async getGasPrice(): Promise<number> {
-		const gasPrice: number = await web3.eth.getGasPrice();
+		const gasPrice: number = await this.web3.eth.getGasPrice();
 		console.log('current gasPrice is ' + gasPrice);
 		return gasPrice;
 	}
@@ -82,7 +91,7 @@ export class ContractUtil {
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
 		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
-		const nonce = await web3.eth.getTransactionCount(CST.PF_ADDR);
+		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
 		const abi = {
 			name: isInception ? 'startContract' : 'commitPrice',
 			type: 'function',
@@ -99,7 +108,7 @@ export class ContractUtil {
 		};
 		const command = this.generateTxString(abi, [priceInWei, priceInSeconds]);
 		// sending out transaction
-		web3.eth
+		this.web3.eth
 			.sendSignedTransaction(
 				'0x' +
 					this.signTx(
@@ -144,7 +153,7 @@ export class ContractUtil {
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = new schedule.Range(0, 59, 5);
 
-		const res = await custodianContract.methods.state().call();
+		const res = await this.contract.methods.state().call();
 		const isInception = Number(res) === 0;
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
@@ -196,7 +205,7 @@ export class ContractUtil {
 			}
 		}
 		console.log('the account ' + address + ' is creating tokens with ' + privateKey);
-		const nonce = await web3.eth.getTransactionCount(address);
+		const nonce = await this.web3.eth.getTransactionCount(address);
 		const abi = {
 			name: 'create',
 			type: 'function',
@@ -214,7 +223,7 @@ export class ContractUtil {
 		gasPrice = web3GasPrice || gasPrice;
 		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
 		// gasPrice = gasPrice || await web3.eth.
-		web3.eth
+		this.web3.eth
 			.sendSignedTransaction(
 				'0x' +
 					this.signTx(
@@ -231,7 +240,50 @@ export class ContractUtil {
 			)
 			.on('receipt', console.log);
 	}
-}
 
-const contractUtil = new ContractUtil();
-export default contractUtil;
+	async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
+		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						CST.PF_ADDR_PK
+					)
+			)
+			.on('receipt', console.log);
+	}
+
+	async triggerReset() {
+		const abi = {
+			name: 'startReset',
+			type: 'function',
+			inputs: []
+		};
+		const input = [];
+		const gasPrice = (await this.getGasPrice()) || DEFAULT_GAS_PRICE;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + RESET_GAS_LIMIT);
+		await this.trigger(abi, input, gasPrice, RESET_GAS_LIMIT);
+	}
+
+	async triggerPreReset() {
+		const abi = {
+			name: 'startPreReset',
+			type: 'function',
+			inputs: []
+		};
+		const input = [];
+		const gasPrice = (await this.getGasPrice()) || DEFAULT_GAS_PRICE;
+		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + PRE_RESET_GAS_LIMIT);
+		await this.trigger(abi, input, gasPrice, PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
+	}
+}
