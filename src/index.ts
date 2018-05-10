@@ -24,6 +24,7 @@ for (let i = 3; i < process.argv.length; i++) {
 	switch (args[0]) {
 		case 'pwd':
 			pwd = args[1];
+			console.log('password is ' + pwd);
 			break;
 		case 'source':
 			source = args[1];
@@ -33,13 +34,10 @@ for (let i = 3; i < process.argv.length; i++) {
 	}
 }
 
-
 let providerUrl = 'ws://localhost:8546';
 if (process.argv.includes('myether')) {
 	source = 'myether';
-	providerUrl = live
-		? 'https://api.myetherapi.com/eth'
-		: 'https://api.myetherapi.com/rop';
+	providerUrl = live ? 'https://api.myetherapi.com/eth' : 'https://api.myetherapi.com/rop';
 } else if (process.argv.includes('infura')) {
 	source = 'infura';
 	providerUrl = live
