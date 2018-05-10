@@ -2,7 +2,7 @@ import moment from 'moment';
 import request from 'request';
 
 export class Util {
-	log(text: string): void {
+	log(text: any): void {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
 

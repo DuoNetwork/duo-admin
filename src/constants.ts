@@ -12,7 +12,7 @@ export const EXCHANGE_GDAX = 'GDAX';
 // db setting
 export const DB_HOST = 'localhost';
 export const DB_USER = 'root';
-export const DB_PASSWORD = '';
+export const DB_PASSWORD = '*OG=ko!Ph0hk';
 export const DB_PRICEFEED = 'priceFeedDB';
 export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 export const DB_TABLE_HISTORY = 'eth_historical_price';

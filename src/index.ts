@@ -19,17 +19,19 @@ util.log('using ' + (live ? 'live' : 'dev') + ' env');
 
 let source: string = '';
 let providerUrl = 'ws://localhost:8546';
-if (process.argv.includes('etherscan')) {
-	source = 'etherscan';
+if (process.argv.includes('myether')) {
+	source = 'myether';
 	providerUrl = live
-		? 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w'
-		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
+		? 'https://api.myetherapi.com/eth'
+		: 'https://api.myetherapi.com/rop';
 } else if (process.argv.includes('infura')) {
 	source = 'infura';
 	providerUrl = live
-		? 'https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w'
+		? 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP'
 		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 }
+
+util.log('using ' + (source || 'local node'));
 
 const web3 = new Web3(
 	source
