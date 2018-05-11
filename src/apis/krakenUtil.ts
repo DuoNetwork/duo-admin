@@ -23,10 +23,10 @@ export class KrakenUtil {
 		const jsonObj = JSON.parse(response);
 
 		const returnFirstLevelArray = jsonObj['result']['XETHZUSD'];
-		// console.log(url);
+		// util.log(url);
 		let count = 0;
 		returnFirstLevelArray.forEach(trade => {
-			// console.log(trade);
+			// util.log(trade);
 			const parsedTrade: Trade = krakenUtil.parseTrade(trade);
 			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
 				sqlUtil.insertSourceData(parsedTrade);
@@ -34,10 +34,10 @@ export class KrakenUtil {
 			}
 		});
 
-		console.log('inserted ' + count + ' trades of ' + returnFirstLevelArray.length + ' received');
+		util.log('inserted ' + count + ' trades of ' + returnFirstLevelArray.length + ' received');
 
 		last = jsonObj['result']['last'];
-		console.log(last);
+		util.log(last);
 	}
 
 	async fetchETHTradesByOwnWebSocket() {
@@ -50,13 +50,13 @@ export class KrakenUtil {
 		} else if (last != undefined) {
 			url = baseUrl + '&last=' + last + '';
 		}
-		console.log('request: ' + last + ' length: ' + last.toString().split('.')[0].length);
+		util.log('request: ' + last + ' length: ' + last.toString().split('.')[0].length);
 
 		try {
 			const response: any = await util.get(url);
 			this.parseApiResponse(response.toString());
 		} catch (error) {
-			console.log(error);
+			util.log(error);
 		}
 	}
 

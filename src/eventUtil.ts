@@ -30,7 +30,11 @@ export class EventUtil {
 					}
 				}
 			);
-		} else util.log('end is less than start');
+			return true;
+		} else {
+			util.log('end is less than start');
+			return false;
+		}
 	}
 
 	async subscribe(contractUtil: ContractUtil, option: Option) {
@@ -61,7 +65,7 @@ export class EventUtil {
 				let currentBlk = startBlk;
 				setInterval(async () => {
 					currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					this.pull(
+					const pulled = await this.pull(
 						contractUtil.contract,
 						startBlk,
 						currentBlk,
@@ -71,14 +75,15 @@ export class EventUtil {
 							return Promise.resolve();
 						}
 					);
-					startBlk = currentBlk + 1;
+					if (pulled)
+						startBlk = currentBlk + 1;
 				}, 15000);
 			}
 		} else {
 			let tg: (r: any) => Promise<void> = () => Promise.resolve();
 			if (option.event === CST.EVENT_ACCEPT_PRICE) {
 				tg = (r: any) => {
-					console.log(r);
+					util.log(r);
 					return Promise.resolve();
 				};
 			} else {

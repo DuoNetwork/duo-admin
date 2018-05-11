@@ -18,7 +18,6 @@ export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
-export const NETWORK = 'http://localhost:8545';
 export const CUSTODIAN_ADDR = '0x363b5bd6dd8e093bd6d4d45ee8ae6559a24ff937';
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
@@ -34,6 +33,14 @@ export const STATE_PERIOD_RESET = '5';
 export const INCEPTION_BLK = 7171376;
 export const FN_START_CONTRACT = 'startContract';
 export const FN_COMMIT_PRICE = 'commitPrice';
+export const SRC_MYETHER = 'myether';
+export const SRC_INFURA = 'infura';
+export const PROVIDER_LOCAL_HTTP = 'http://localhost:8545';
+export const PROVIDER_LOCAL_WS = 'ws://localhost:8546';
+export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
+export const PROVIDER_MYETHER_DEV =  'https://api.myetherapi.com/rop';
+export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
+export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 
 export const KOVAN_ACCOUNTS = [
 	{

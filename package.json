@@ -10,7 +10,7 @@
 		"readContract": "ts-node ./src/index readContract",
 		"decoder": "ts-node ./src/index decoder",
 		"calculatePrice": "ts-node ./src/index calculatePrice",
-		"pf": "ts-node ./src/index pf",
+		"commitPrice": "ts-node ./src/index commitPrice",
 		"createAccount": "ts-node ./src/index createAccount",
 		"removeAccount": "ts-node ./src/index removeAccount",
 		"allAccounts": "ts-node ./src/index allAccounts",

@@ -1,5 +1,6 @@
 import ws from 'ws';
 import sqlUtil from '../sqlUtil';
+import util from '../util';
 import * as CST from '../constants';
 import { Trade } from '../types';
 
@@ -16,7 +17,7 @@ export class BitfinexUtil {
 
 	parseApiResponse(msg: string) {
 		let parsedJson = JSON.parse(msg.toString());
-		// console.log(parsedJson);
+		// util.log(parsedJson);
 		if (parsedJson != undefined) {
 			// handle the snapshot
 			if (
@@ -24,11 +25,11 @@ export class BitfinexUtil {
 				parsedJson[1] != 'hb' &&
 				!(parsedJson[1] == 'te' || parsedJson[1] == 'tu')
 			) {
-				// console.log(parsedJson);
+				// util.log(parsedJson);
 				const snapshotArr = parsedJson[1];
 				snapshotArr.forEach(trade => {
 					const parsedTrade: Trade = this.parseTrade(trade);
-					// console.log(parsedTrade);
+					// util.log(parsedTrade);
 					sqlUtil.insertSourceData(parsedTrade);
 				});
 			} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
@@ -54,24 +55,24 @@ export class BitfinexUtil {
 		});
 
 		w.on('open', () => {
-			console.log('[Bitfinex]-WebSocket is open');
+			util.log('[Bitfinex]-WebSocket is open');
 			w.send(msg);
-			console.log('subscribe trade');
+			util.log('subscribe trade');
 		});
 
 		w.on('close', (code: number, reason: string) => {
-			console.log(code + ': ' + reason);
-			console.log('[Bitfinex]-WebSocket is close now');
-			console.log('close DB');
+			util.log(code + ': ' + reason);
+			util.log('[Bitfinex]-WebSocket is close now');
+			util.log('close DB');
 		});
 
 		w.on('error', (error: Error) => {
-			console.log(error);
+			util.log(error);
 		});
 
 		setInterval(() => {
 			w.send('ping', function ack(error) {
-				console.log(error);
+				util.log(error);
 			});
 		}, 20 * 1000);
 	}

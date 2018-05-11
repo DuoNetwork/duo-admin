@@ -1,4 +1,3 @@
-import Web3 from 'web3';
 import bitfinexUtil from './apis/bitfinexUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
@@ -13,39 +12,14 @@ import util from './util';
 
 const tool = process.argv[2];
 util.log('tool ' + tool);
-
-const live = process.argv.includes('live');
-util.log('using ' + (live ? 'live' : 'dev') + ' env');
-
 const option = util.parseOptions(process.argv);
+util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.source || 'local node'));
+const contractUtil = new ContractUtil(option);
 
-let providerUrl = 'ws://localhost:8546';
-if (option.source === 'myether') {
-	providerUrl = live ? 'https://api.myetherapi.com/eth' : 'https://api.myetherapi.com/rop';
-} else if (option.source === 'infura') {
-	providerUrl = live
-		? 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP'
-		: 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
-}
-
-util.log('using ' + (option.source || 'local node'));
-
-const web3 = new Web3(
-	option.source
-		? new Web3.providers.HttpProvider(providerUrl)
-		: new Web3.providers.WebsocketProvider(providerUrl)
-);
-
-const contractUtil = new ContractUtil(web3);
-
-if (['bitfinex', 'gemini', 'kraken', 'gdax', 'pf', 'calculatePrice'].includes(tool))
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
 	sqlUtil.init(CST.DB_USER, option.pwd);
 
 switch (tool) {
-	case 'pf':
-		util.log('starting commitPrice process');
-		contractUtil.commitPrice(option);
-		break;
 	case 'createAccount':
 		util.log('starting create accounts');
 		const numOfAccounts: number = Number(process.argv[3]);
@@ -96,6 +70,10 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
+		break;
+	case 'commitPrice':
+		util.log('starting commitPrice process');
+		contractUtil.commitPrice(option);
 		break;
 	default:
 		util.log('no such tool ' + tool);

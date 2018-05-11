@@ -30,7 +30,7 @@ export class AccountUtil {
 			const word = words[index];
 			phrase += word + (i < 11 ? ' ' : '');
 		}
-		console.log(phrase);
+		util.log(phrase);
 		return phrase;
 	}
 
@@ -42,17 +42,17 @@ export class AccountUtil {
 
 		const dict = fs.readFileSync(dictFile, 'utf8');
 		const words = dict.includes('\r') ? dict.split('\r\n') : dict.split('\n');
-		console.log(words.length);
+		util.log(words.length);
 
 		for (let i = 0; i < num; i++) {
 			const params: string[] = [];
 			const phrases: string = this.generateRandomPhrase(words);
-			// console.log("Generated phrases: " + phrases);
+			// util.log("Generated phrases: " + phrases);
 			params.push(phrases);
 			params.push('hunter2');
-			console.log(
+			util.log(
 				'successfully created account: ' +
-					(await this.sendRequest('parity_newAccountFromPhrase', CST.NETWORK, params))[
+					(await this.sendRequest('parity_newAccountFromPhrase', CST.PROVIDER_LOCAL_HTTP, params))[
 						'result'
 					]
 			);
@@ -62,19 +62,19 @@ export class AccountUtil {
 	async removeAccount(address: string) {
 		const params: string[] = [];
 		params.push(address);
-		console.log(
+		util.log(
 			'successfully removed account: ' +
 				address +
 				' ' +
-				(await this.sendRequest('parity_removeAddress', CST.NETWORK, params))['result']
+				(await this.sendRequest('parity_removeAddress', CST.PROVIDER_LOCAL_HTTP, params))['result']
 		);
 	}
 
 	async allAccountsInfo() {
 		const params: string[] = [];
-		console.log(
+		util.log(
 			'all accounts information: ' +
-				(await this.sendRequest('parity_allAccountsInfo', CST.NETWORK, params))['result']
+				(await this.sendRequest('parity_allAccountsInfo', CST.PROVIDER_LOCAL_HTTP, params))['result']
 		);
 	}
 }

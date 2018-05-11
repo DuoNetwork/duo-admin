@@ -1,5 +1,6 @@
 import moment from 'moment';
 import request from 'request';
+import * as CST from './constants';
 import { Option } from './types';
 
 export class Util {
@@ -47,6 +48,7 @@ export class Util {
 
 	parseOptions(argv: string[]): Option {
 		const option = {
+			live: false,
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
@@ -55,8 +57,10 @@ export class Util {
 			price: 0,
 			source: '',
 			pwd: '',
-			event: ''
+			event: '',
+			provider: ''
 		};
+		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
 			switch (args[0]) {
@@ -87,8 +91,24 @@ export class Util {
 				case 'event':
 					option.event = args[1] || option.event;
 					break;
+				case 'provider':
+					option.provider = args[1] || option.provider;
+					break;
 				default:
 					break;
+			}
+		}
+
+		if (!option.provider) {
+			if (option.source === CST.SRC_MYETHER) {
+				option.provider = option.live
+					? CST.PROVIDER_MYETHER_LIVE
+					: CST.PROVIDER_MYETHER_DEV;
+			} else if (option.source === CST.SRC_INFURA) {
+				option.provider = option.live ? CST.PROVIDER_INFURA_LIVE : CST.PROVIDER_INFURA_DEV;
+			} else {
+				option.provider = CST.PROVIDER_LOCAL_WS;
+				option.source = '';
 			}
 		}
 

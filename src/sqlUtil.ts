@@ -1,7 +1,7 @@
 import * as mysql from 'mysql';
 import * as CST from './constants';
-// const math = require("mathjs");
 import { Price, Trade } from './types';
+import util from './util';
 
 export class SqlUtil {
 	conn: undefined | mysql.Connection = undefined;
@@ -16,17 +16,17 @@ export class SqlUtil {
 
 		this.conn.connect(function(err) {
 			if (err) throw err;
-			console.log('Connected!');
+			util.log('Connected!');
 		});
 	}
 
 	executeQuery(sqlQuery: string): Promise<any> {
-		// console.log(sqlQuery);
+		// util.log(sqlQuery);
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
 					if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY')
-						// console.log('.');
+						// util.log('.');
 						// rocess.stdout.write(".");
 						reject(err);
 					else if (err) reject(err);
@@ -61,12 +61,12 @@ export class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"')";
-		// console.log(await this.executeQuery(sql));
+		// util.log(await this.executeQuery(sql));
 		await this.executeQuery(sql);
 	}
 
 	async insertPrice(price: Price) {
-		console.log(
+		util.log(
 			await this.executeQuery(
 				'INSERT INTO ' +
 					CST.DB_TABLE_HISTORY +

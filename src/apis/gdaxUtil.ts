@@ -22,7 +22,7 @@ export class GdaxUtil {
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 		parsedData.forEach(item => {
-			// console.log(item);
+			// util.log(item);
 			sqlUtil.insertSourceData(
 				this.parseTrade(item)
 			);

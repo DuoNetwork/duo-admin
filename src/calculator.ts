@@ -1,5 +1,6 @@
 import sqlUtil from './sqlUtil';
 import * as CST from './constants';
+import util from './util';
 import { Price, Trade } from './types';
 
 export class Calculateor {
@@ -9,9 +10,7 @@ export class Calculateor {
 		const lowerTime: number = upperTime - oneInterval;
 
 		return trades.filter(
-			trade =>
-				Number(trade.timestamp) <= upperTime &&
-				Number(trade.timestamp) > lowerTime
+			trade => Number(trade.timestamp) <= upperTime && Number(trade.timestamp) > lowerTime
 		);
 	}
 
@@ -71,7 +70,7 @@ export class Calculateor {
 					weights[i] = weights[i] / sumOfUnCapped * (1 - sumOfCapped);
 				}
 			}
-			// console.log(weights);
+			// util.log(weights);
 			isValid = this.validateWeights(weights);
 		}
 		return weights;
@@ -91,12 +90,13 @@ export class Calculateor {
 			// let finalArray: number[] = [];
 			return filterredExchanges[0].price;
 		else {
-			console.log('there are ' + filterredExchanges.length + ' valid exchanges');
+			util.log('there are ' + filterredExchanges.length + ' valid exchanges');
 			const totalVol = volumeList.reduce((a, b) => a + b, 0);
 			const weights = volumeList.map(v => v / totalVol);
 			const finalWeights: number[] = this.modifyWeights(weights);
 			return finalWeights.reduce(
-				(accum, w, index) => accum + filterredExchanges[index].price * w, 0
+				(accum, w, index) => accum + filterredExchanges[index].price * w,
+				0
 			);
 		}
 	}
@@ -127,25 +127,30 @@ export class Calculateor {
 		);
 
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
-		console.log('priceFix calculated is');
-		console.log(priceFix);
+		util.log('priceFix calculated is ' + priceFix);
 
 		if (priceFix === 0) {
-			console.log('no priceFix found, use the last ETH price');
+			util.log('no priceFix found, use the last ETH price');
 			const lastPriceObj = await sqlUtil.readLastPrice();
-			console.log(
+			util.log(
 				'the priceFix is: ' + lastPriceObj.price + ' at timestamp ' + lastPriceObj.timestamp
 			);
 			return lastPriceObj;
 		} else {
-			console.log('valid exchange priceFix found');
-			console.log('the priceFix is: ' + priceFix + ' at timestamp ' + currentTimestamp);
-			// console.log(exchangePriceVolume);
+			// util.log(exchangePriceVolume);
 			const priceObj = {
 				price: priceFix,
 				volume: exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0),
 				timestamp: currentTimestamp
 			};
+			util.log(
+				'valid exchange priceFix found: ' +
+					priceObj.price +
+					' at ' +
+					priceObj.timestamp +
+					' for volume of ' +
+					priceObj.volume
+			);
 			// save price into DB
 			await sqlUtil.insertPrice(priceObj);
 

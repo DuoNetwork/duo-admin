@@ -2,25 +2,30 @@ import Web3 from 'web3';
 import { Contract } from 'web3/types';
 import * as CST from './constants';
 import calculator from './calculator';
+import util from './util';
+import { Price, Option } from './types';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
-import { Price, Option } from './types';
 
 export default class ContractUtil {
 	web3: Web3;
 	abi: any;
 	contract: Contract;
 
-	constructor(web3: Web3) {
-		this.web3 = web3;
+	constructor(option: Option) {
+		this.web3 = new Web3(
+			option.source
+				? new Web3.providers.HttpProvider(option.provider)
+				: new Web3.providers.WebsocketProvider(option.provider)
+		);
 		this.abi = require('./static/Custodian.json');
-		this.contract = new web3.eth.Contract(this.abi['abi'], CST.CUSTODIAN_ADDR);
+		this.contract = new this.web3.eth.Contract(this.abi['abi'], CST.CUSTODIAN_ADDR);
 	}
 
 	async read(name: string) {
 		const state: string = await this.contract.methods[name]().call();
-		console.log(state);
+		util.log(state);
 		return state;
 	}
 
@@ -57,14 +62,14 @@ export default class ContractUtil {
 			tx.sign(new Buffer(privateKey, 'hex'));
 			return tx.serialize().toString('hex');
 		} catch (err) {
-			console.log(err);
+			util.log(err);
 			return '';
 		}
 	}
 
 	async getGasPrice(): Promise<number> {
 		const gasPrice: number = await this.web3.eth.getGasPrice();
-		console.log('current gasPrice is ' + gasPrice);
+		util.log('current gasPrice is ' + gasPrice);
 		return gasPrice;
 	}
 
@@ -86,7 +91,7 @@ export default class ContractUtil {
 		}
 		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
 		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
-		console.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
+		util.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
 		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
 		const abi = {
 			name: isInception ? CST.FN_START_CONTRACT : CST.FN_COMMIT_PRICE,
@@ -119,7 +124,7 @@ export default class ContractUtil {
 						CST.PF_ADDR_PK
 					)
 			)
-			.on('receipt', console.log);
+			.on('receipt', util.log);
 	}
 
 	async commitPrice(option: Option) {
@@ -135,7 +140,7 @@ export default class ContractUtil {
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
 				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
-				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return this.commitSinglePrice(true, gasPrice, option.gasLimit + 50000, option.price);
 			});
 		}
@@ -144,14 +149,14 @@ export default class ContractUtil {
 			{ start: isInception ? commitStart : startTime, rule: rule },
 			async () => {
 				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
-				console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return this.commitSinglePrice(false, gasPrice, option.gasLimit, option.price);
 			}
 		);
 	}
 
 	async create(option: Option) {
-		console.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
+		util.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
 		const nonce = await this.web3.eth.getTransactionCount(option.address);
 		const abi = {
 			name: 'create',
@@ -167,7 +172,7 @@ export default class ContractUtil {
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
 		const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 		// gasPrice = gasPrice || await web3.eth.
 		this.web3.eth
 			.sendSignedTransaction(
@@ -184,7 +189,7 @@ export default class ContractUtil {
 						option.privateKey
 					)
 			)
-			.on('receipt', console.log);
+			.on('receipt', util.log);
 	}
 
 	async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
@@ -206,7 +211,7 @@ export default class ContractUtil {
 						CST.PF_ADDR_PK
 					)
 			)
-			.on('receipt', console.log);
+			.on('receipt', util.log);
 	}
 
 	async triggerReset() {
@@ -217,7 +222,7 @@ export default class ContractUtil {
 		};
 		const input = [];
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
+		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
 		await this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT);
 	}
 
@@ -229,7 +234,7 @@ export default class ContractUtil {
 		};
 		const input = [];
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
-		console.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
+		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
 		await this.trigger(abi, input, gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
 	}
 }

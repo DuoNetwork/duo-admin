@@ -13,6 +13,7 @@ export interface Price {
 }
 
 export interface Option {
+	live: boolean;
 	gasPrice: number;
 	gasLimit: number;
 	eth: number;
@@ -22,4 +23,5 @@ export interface Option {
 	source: string;
 	pwd: string;
 	event: string;
+	provider: string;
 }

@@ -1,6 +1,7 @@
+import ws from 'ws';
 import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
-import ws from 'ws';
+import util from '../util';
 import { Trade } from '../types';
 
 export class GeminiUtil {
@@ -22,15 +23,15 @@ export class GeminiUtil {
 
 	parseApiResponse(msg: string) {
 		const parsedJson: any = JSON.parse(msg);
-		// console.log(parsedJson);
+		// util.log(parsedJson);
 
 		if (parsedJson.events[0].type == 'trade') {
-			// console.log(parsedJson);
+			// util.log(parsedJson);
 			const parsedTrade: Trade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
 			sqlUtil.insertSourceData(parsedTrade);
-			console.log('one trade fetched and inserted');
+			util.log('one trade fetched and inserted');
 		}
 	}
 
@@ -40,15 +41,15 @@ export class GeminiUtil {
 		w.on('message', msg => this.parseApiResponse(msg.toString()));
 
 		w.on('open', () => {
-			console.log('[Gemini]-WebSocket is open');
+			util.log('[Gemini]-WebSocket is open');
 		});
 
 		w.on('close', (code: number, reason: string) => {
-			console.log(code + ': ' + reason);
+			util.log(code + ': ' + reason);
 		});
 
 		w.on('error', (error: Error) => {
-			console.log(error);
+			util.log(error);
 		});
 	}
 }
