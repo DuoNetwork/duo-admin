@@ -1,10 +1,14 @@
-import sqlUtil from './sqlUtil';
 import * as CST from './constants';
+import sqlUtil from './sqlUtil';
+import { IPrice, ITrade } from './types';
 import util from './util';
-import { Price, Trade } from './types';
 
 export class Calculateor {
-	getTradesForInterval(trades: Trade[], currentTimestamp: number, interval: number): Trade[] {
+	public getTradesForInterval(
+		trades: ITrade[],
+		currentTimestamp: number,
+		interval: number
+	): ITrade[] {
 		const oneInterval = 5 * 60 * 1000;
 		const upperTime: number = currentTimestamp - interval * oneInterval;
 		const lowerTime: number = upperTime - oneInterval;
@@ -14,7 +18,7 @@ export class Calculateor {
 		);
 	}
 
-	getVolumeMedianPrice(trades: Trade[], timestamp: number): Price {
+	public getVolumeMedianPrice(trades: ITrade[], timestamp: number): IPrice {
 		trades.sort((a, b) => Number(a.price) - Number(b.price));
 		const cumVols: number[] = [];
 		let cumVol = 0;
@@ -24,32 +28,37 @@ export class Calculateor {
 		});
 		const halfTotalVol: number = cumVol / 2;
 		const medianIndex = cumVols.findIndex(v => v >= halfTotalVol);
-		return { price: Number(trades[medianIndex].price), volume: cumVol, timestamp: timestamp };
+		return { price: Number(trades[medianIndex].price), volume: cumVol, timestamp };
 	}
 
-	getExchangePriceFix(trades: Trade[], currentTimestamp: number): Price {
+	public getExchangePriceFix(trades: ITrade[], currentTimestamp: number): IPrice {
 		for (let i = 0; i < 12; i++) {
 			const subTrades = this.getTradesForInterval(trades, currentTimestamp, i);
-			if (subTrades.length > 0) return this.getVolumeMedianPrice(subTrades, currentTimestamp);
+			if (subTrades.length > 0) {
+				return this.getVolumeMedianPrice(subTrades, currentTimestamp);
+			}
 		}
 
 		return { price: 0, volume: 0, timestamp: currentTimestamp };
 	}
 
-	getWeights(rawVolume: number[]): number[] {
+	public getWeights(rawVolume: number[]): number[] {
 		const totalVol = rawVolume.reduce((a, b) => a + b, 0);
 		const weightArray = rawVolume.map(v => v / totalVol);
 		return weightArray;
 	}
 
-	validateWeights(weights: number[]): boolean {
+	public validateWeights(weights: number[]): boolean {
 		const numOfValidExchanges = weights.length;
-		for (let i = 0; i < weights.length; i++)
-			if (weights[i] > CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) return false;
+		for (let i = 0; i < weights.length; i++) {
+			if (weights[i] > CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
+				return false;
+			}
+		}
 		return true;
 	}
 
-	modifyWeights(weights: number[]): number[] {
+	public modifyWeights(weights: number[]): number[] {
 		const numOfValidExchanges = weights.length;
 		let isValid: boolean = this.validateWeights(weights);
 		while (!isValid) {
@@ -76,20 +85,20 @@ export class Calculateor {
 		return weights;
 	}
 
-	consolidatePriceFix(exchangePriceVolume: Array<Price>): number {
+	public consolidatePriceFix(exchangePriceVolume: IPrice[]): number {
 		const filterredExchanges = exchangePriceVolume.filter(item => item.volume > 0);
 
 		// sort based on volume from large to small
 		filterredExchanges.sort((a, b) => b.volume - a.volume);
 		const volumeList = filterredExchanges.map(item => item.volume);
 
-		if (filterredExchanges.length === 0)
+		if (filterredExchanges.length === 0) {
 			// use previous priceFix
 			return 0;
-		else if (filterredExchanges.length === 1)
+		} else if (filterredExchanges.length === 1) {
 			// let finalArray: number[] = [];
 			return filterredExchanges[0].price;
-		else {
+		} else {
 			util.log('there are ' + filterredExchanges.length + ' valid exchanges');
 			const totalVol = volumeList.reduce((a, b) => a + b, 0);
 			const weights = volumeList.map(v => v / totalVol);
@@ -101,10 +110,10 @@ export class Calculateor {
 		}
 	}
 
-	async getPriceFix(): Promise<Price> {
+	public async getPriceFix(): Promise<IPrice> {
 		const currentTimestamp: number = Math.floor(Date.now());
 		const trades = await sqlUtil.readSourceData(currentTimestamp);
-		const EXCHANGES_TRADES: { [key: string]: Trade[] } = {
+		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
 			[CST.EXCHANGE_BITFINEX]: [],
 			[CST.EXCHANGE_GEMINI]: [],
 			[CST.EXCHANGE_GDAX]: [],
@@ -112,14 +121,15 @@ export class Calculateor {
 		};
 
 		trades.forEach(item => {
-			if (item.source === CST.EXCHANGE_BITFINEX)
+			if (item.source === CST.EXCHANGE_BITFINEX) {
 				EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
-			else if (item.source === CST.EXCHANGE_GEMINI)
+			} else if (item.source === CST.EXCHANGE_GEMINI) {
 				EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
-			else if (item.source === CST.EXCHANGE_GDAX)
+			} else if (item.source === CST.EXCHANGE_GDAX) {
 				EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
-			else if (item.source === CST.EXCHANGE_KRAKEN)
+			} else if (item.source === CST.EXCHANGE_KRAKEN) {
 				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
+			}
 		});
 
 		const exchangePriceVolume = CST.EXCHANGES.map(src =>

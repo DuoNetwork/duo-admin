@@ -1,52 +1,60 @@
 import moment from 'moment';
 import request from 'request';
 import * as CST from './constants';
-import { Option } from './types';
+import { IOption } from './types';
 
 export class Util {
-	log(text: any): void {
+	public log(text: any): void {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
 
-	get(url: string): Promise<any> {
+	public get(url: string): Promise<any> {
 		return new Promise((resolve, reject) =>
 			request(
 				{
-					url: url,
+					url,
 					headers: {
 						'user-agent': 'node.js'
 					}
 				},
 				(error, res, body) => {
-					if (error) reject(error);
-					else if (res.statusCode === 200) resolve(body);
-					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
+					if (error) {
+						reject(error);
+					} else if (res.statusCode === 200) {
+						resolve(body);
+					} else {
+						reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
+					}
 				}
 			)
 		);
 	}
 
-	postJson(url: string, json: object): Promise<object> {
+	public postJson(url: string, json: object): Promise<object> {
 		return new Promise((resolve, reject) =>
 			request(
 				{
-					url: url,
+					url,
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					json: json
+					json
 				},
 				(error, res, body) => {
-					if (error) reject(error);
-					else if (res.statusCode === 200) resolve(body);
-					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
+					if (error) {
+						reject(error);
+					} else if (res.statusCode === 200) {
+						resolve(body);
+					} else {
+						reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
+					}
 				}
 			)
 		);
 	}
 
-	parseOptions(argv: string[]): Option {
+	public parseOptions(argv: string[]): IOption {
 		const option = {
 			live: false,
 			gasPrice: 5e9,

@@ -38,7 +38,7 @@ export const SRC_INFURA = 'infura';
 export const PROVIDER_LOCAL_HTTP = 'http://localhost:8545';
 export const PROVIDER_LOCAL_WS = 'ws://localhost:8546';
 export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
-export const PROVIDER_MYETHER_DEV =  'https://api.myetherapi.com/rop';
+export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 
@@ -69,9 +69,9 @@ export const DB_HISTORY_TIMESTAMP = 'timestamp';
 export const DB_HISTORY_VOLUME = 'volume';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
-	'4': [0.35, 0.3, 0.25, 0.2],
-	'3': [0.55, 0.45, 0.35],
-	'2': [0.65, 0.5]
+	4: [0.35, 0.3, 0.25, 0.2],
+	3: [0.55, 0.45, 0.35],
+	2: [0.65, 0.5]
 };
 
 export const DEFAULT_GAS_PRICE = 5e9;

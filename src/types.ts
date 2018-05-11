@@ -1,4 +1,4 @@
-export interface Trade {
+export interface ITrade {
 	source: string;
 	id: string;
 	price: number;
@@ -6,13 +6,13 @@ export interface Trade {
 	timestamp: number;
 }
 
-export interface Price {
+export interface IPrice {
 	price: number;
 	volume: number;
 	timestamp: number;
 }
 
-export interface Option {
+export interface IOption {
 	live: boolean;
 	gasPrice: number;
 	gasLimit: number;

@@ -1,5 +1,5 @@
-import geminiUtil from './geminiUtil';
 import sqlUtil from '../sqlUtil';
+import geminiUtil from './geminiUtil';
 const trades: Array<{ [key: string]: string }> = require('../samples/gemini.json');
 const apiResponse = JSON.stringify(require('../samples/geminiMsg.json'));
 

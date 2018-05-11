@@ -51,22 +51,24 @@ test('readLastPrice', async () => {
 
 test('readSourceData', async () => {
 	sqlUtil.conn = mysql.createConnection({});
-	sqlUtil.executeQuery = jest.fn(() => Promise.resolve([
-		{
-			source: 'src1',
-			id: 'id1',
-			price: '123',
-			amount: '456',
-			timestamp: '1234567890'
-		},
-		{
-			source: 'src2',
-			id: 'id2',
-			price: '234',
-			amount: '567',
-			timestamp: '2345678901'
-		}
-	]));
+	sqlUtil.executeQuery = jest.fn(() =>
+		Promise.resolve([
+			{
+				source: 'src1',
+				id: 'id1',
+				price: '123',
+				amount: '456',
+				timestamp: '1234567890'
+			},
+			{
+				source: 'src2',
+				id: 'id2',
+				price: '234',
+				amount: '567',
+				timestamp: '2345678901'
+			}
+		])
+	);
 	const trades = await sqlUtil.readSourceData(1234567890);
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect(trades).toMatchSnapshot();

@@ -1,33 +1,33 @@
 import ws from 'ws';
-import sqlUtil from '../sqlUtil';
 import * as CST from '../constants';
+import sqlUtil from '../sqlUtil';
+import { ITrade } from '../types';
 import util from '../util';
-import { Trade } from '../types';
 
 export class GeminiUtil {
-	parseTrade(parsedJson: any): Trade {
+	public parseTrade(parsedJson: any): ITrade {
 		let timestampms = parsedJson.timestampms;
-		if (timestampms == undefined) {
+		if (timestampms === undefined) {
 			timestampms = '';
 		}
 		const trade = parsedJson.events[0];
 
 		return {
 			source: CST.EXCHANGE_GEMINI,
-			id: trade['tid'],
-			price: Number(trade['price']),
-			amount: Math.abs(Number(trade['amount'])),
+			id: trade.tid,
+			price: Number(trade.price),
+			amount: Math.abs(Number(trade.amount)),
 			timestamp: Number(timestampms)
 		};
 	}
 
-	parseApiResponse(msg: string) {
+	public parseApiResponse(msg: string) {
 		const parsedJson: any = JSON.parse(msg);
 		// util.log(parsedJson);
 
-		if (parsedJson.events[0].type == 'trade') {
+		if (parsedJson.events[0].type === 'trade') {
 			// util.log(parsedJson);
-			const parsedTrade: Trade = this.parseTrade(parsedJson);
+			const parsedTrade: ITrade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
 			sqlUtil.insertSourceData(parsedTrade);
@@ -35,7 +35,7 @@ export class GeminiUtil {
 		}
 	}
 
-	fetchTrades() {
+	public fetchTrades() {
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
 		w.on('message', msg => this.parseApiResponse(msg.toString()));

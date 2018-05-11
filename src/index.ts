@@ -1,13 +1,13 @@
+import parityAccount from './accountUtil';
 import bitfinexUtil from './apis/bitfinexUtil';
+import gdaxUtil from './apis/gdaxUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
-import gdaxUtil from './apis/gdaxUtil';
 import calculator from './calculator';
-import parityAccount from './accountUtil';
+import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import eventUtil from './eventUtil';
 import sqlUtil from './sqlUtil';
-import * as CST from './constants';
 import util from './util';
 
 const tool = process.argv[2];
@@ -16,8 +16,9 @@ const option = util.parseOptions(process.argv);
 util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.source || 'local node'));
 const contractUtil = new ContractUtil(option);
 
-if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool)) {
 	sqlUtil.init(CST.DB_USER, option.pwd);
+}
 
 switch (tool) {
 	case 'createAccount':

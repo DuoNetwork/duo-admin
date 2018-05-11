@@ -1,11 +1,11 @@
 import ws from 'ws';
-import sqlUtil from '../sqlUtil';
-import util from '../util';
 import * as CST from '../constants';
-import { Trade } from '../types';
+import sqlUtil from '../sqlUtil';
+import { ITrade } from '../types';
+import util from '../util';
 
 export class BitfinexUtil {
-	parseTrade(trade: object): Trade {
+	public parseTrade(trade: object): ITrade {
 		return {
 			source: CST.EXCHANGE_BITFINEX,
 			id: trade[0] + '',
@@ -15,38 +15,38 @@ export class BitfinexUtil {
 		};
 	}
 
-	parseApiResponse(msg: string) {
+	public parseApiResponse(msg: string) {
 		let parsedJson = JSON.parse(msg.toString());
 		// util.log(parsedJson);
-		if (parsedJson != undefined) {
+		if (parsedJson !== undefined) {
 			// handle the snapshot
 			if (
 				parsedJson.event === undefined &&
-				parsedJson[1] != 'hb' &&
-				!(parsedJson[1] == 'te' || parsedJson[1] == 'tu')
+				parsedJson[1] !== 'hb' &&
+				!(parsedJson[1] === 'te' || parsedJson[1] === 'tu')
 			) {
 				// util.log(parsedJson);
 				const snapshotArr = parsedJson[1];
 				snapshotArr.forEach(trade => {
-					const parsedTrade: Trade = this.parseTrade(trade);
+					const parsedTrade: ITrade = this.parseTrade(trade);
 					// util.log(parsedTrade);
 					sqlUtil.insertSourceData(parsedTrade);
 				});
-			} else if (parsedJson[1] != 'hb' && parsedJson[1] == 'te') {
+			} else if (parsedJson[1] !== 'hb' && parsedJson[1] === 'te') {
 				parsedJson = parsedJson[2];
 
-				const parsedTrade: Trade = this.parseTrade(parsedJson);
+				const parsedTrade: ITrade = this.parseTrade(parsedJson);
 				sqlUtil.insertSourceData(parsedTrade);
 			}
-			console.log('one record inserted');
+			util.log('one record inserted');
 		}
 	}
 
 	// Version 2 WebSocket API ---
-	fetchTrades() {
+	public fetchTrades() {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
-		w.on('message', msg => this.parseApiResponse(msg.toString()));
+		w.on('message', m => this.parseApiResponse(m.toString()));
 
 		const msg = JSON.stringify({
 			event: 'subscribe',

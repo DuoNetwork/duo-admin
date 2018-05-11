@@ -1,44 +1,44 @@
 import Web3 from 'web3';
 import { Contract } from 'web3/types';
-import * as CST from './constants';
 import calculator from './calculator';
+import * as CST from './constants';
+import { IOption, IPrice } from './types';
 import util from './util';
-import { Price, Option } from './types';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 
 export default class ContractUtil {
-	web3: Web3;
-	abi: any;
-	contract: Contract;
+	public web3: Web3;
+	public abi: any;
+	public contract: Contract;
 
-	constructor(option: Option) {
+	constructor(option: IOption) {
 		this.web3 = new Web3(
 			option.source
 				? new Web3.providers.HttpProvider(option.provider)
 				: new Web3.providers.WebsocketProvider(option.provider)
 		);
 		this.abi = require('./static/Custodian.json');
-		this.contract = new this.web3.eth.Contract(this.abi['abi'], CST.CUSTODIAN_ADDR);
+		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
 	}
 
-	async read(name: string) {
+	public async read(name: string) {
 		const state: string = await this.contract.methods[name]().call();
 		util.log(state);
 		return state;
 	}
 
-	decode(input: string): string {
-		abiDecoder.addABI(this.abi['abi']);
+	public decode(input: string): string {
+		abiDecoder.addABI(this.abi.abi);
 		return abiDecoder.decodeMethod(input);
 	}
 
-	generateTxString(abi: Object, input: any[]): string {
+	public generateTxString(abi: object, input: any[]): string {
 		return this.web3.eth.abi.encodeFunctionCall(abi, input);
 	}
 
-	createTxCommand(
+	public createTxCommand(
 		nonce: number,
 		gasPrice: number,
 		gasLimit: number,
@@ -47,16 +47,16 @@ export default class ContractUtil {
 		data: string
 	): object {
 		return {
-			nonce: nonce, // web3.utils.toHex(nonce), //nonce,
+			nonce, // web3.utils.toHex(nonce), //nonce,
 			gasPrice: this.web3.utils.toHex(gasPrice),
 			gasLimit: this.web3.utils.toHex(gasLimit),
 			to: toAddr,
 			value: this.web3.utils.toHex(this.web3.utils.toWei(amount.toString(), 'ether')),
-			data: data
+			data
 		};
 	}
 
-	signTx(rawTx: object, privateKey: string): string {
+	public signTx(rawTx: object, privateKey: string): string {
 		try {
 			const tx = new Tx(rawTx);
 			tx.sign(new Buffer(privateKey, 'hex'));
@@ -67,22 +67,22 @@ export default class ContractUtil {
 		}
 	}
 
-	async getGasPrice(): Promise<number> {
+	public async getGasPrice(): Promise<number> {
 		const gasPrice: number = await this.web3.eth.getGasPrice();
 		util.log('current gasPrice is ' + gasPrice);
 		return gasPrice;
 	}
 
-	async commitSinglePrice(
+	public async commitSinglePrice(
 		isInception: boolean,
 		gasPrice: number,
 		gasLimit: number,
 		price: number
 	) {
-		let currentPrice: Price;
+		let currentPrice: IPrice;
 		if (price > 0) {
 			currentPrice = {
-				price: price,
+				price,
 				volume: 0,
 				timestamp: Math.floor(Date.now())
 			};
@@ -127,7 +127,7 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
-	async commitPrice(option: Option) {
+	public async commitPrice(option: IOption) {
 		const startTime = new Date(Date.now());
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
@@ -138,24 +138,26 @@ export default class ContractUtil {
 		const isInception = Number(res) === 0;
 		if (isInception) {
 			// contract is in inception state; start contract first and then commit price
-			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
-				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
+			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
+				const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return this.commitSinglePrice(true, gasPrice, option.gasLimit + 50000, option.price);
+				return this.commitSinglePrice(
+					true,
+					gasPrice,
+					option.gasLimit + 50000,
+					option.price
+				);
 			});
 		}
 
-		schedule.scheduleJob(
-			{ start: isInception ? commitStart : startTime, rule: rule },
-			async () => {
-				const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
-				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return this.commitSinglePrice(false, gasPrice, option.gasLimit, option.price);
-			}
-		);
+		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
+			const gasPrice = (await this.getGasPrice()) || option.gasPrice;
+			util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+			return this.commitSinglePrice(false, gasPrice, option.gasLimit, option.price);
+		});
 	}
 
-	async create(option: Option) {
+	public async create(option: IOption) {
 		util.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
 		const nonce = await this.web3.eth.getTransactionCount(option.address);
 		const abi = {
@@ -171,7 +173,7 @@ export default class ContractUtil {
 		const input = [true];
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
-		const gasPrice = (await this.getGasPrice()) || option.gasPrice ;
+		const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 		// gasPrice = gasPrice || await web3.eth.
 		this.web3.eth
@@ -192,7 +194,7 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
-	async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
+	public async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
 		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
@@ -214,7 +216,7 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
-	async triggerReset() {
+	public async triggerReset() {
 		const abi = {
 			name: 'startReset',
 			type: 'function',
@@ -226,7 +228,7 @@ export default class ContractUtil {
 		await this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT);
 	}
 
-	async triggerPreReset() {
+	public async triggerPreReset() {
 		const abi = {
 			name: 'startPreReset',
 			type: 'function',

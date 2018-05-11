@@ -4,13 +4,13 @@ It takes number of accounts to create,
 and use csv file as phrase source to create parity accounts
 */
 import * as fs from 'fs';
-import util from './util';
 import * as CST from './constants';
+import util from './util';
 
 const dictFile = './src/static/dictionary.txt';
 
 export class AccountUtil {
-	sendRequest(name: string, url: string, params: string[]): Promise<object> {
+	public sendRequest(name: string, url: string, params: string[]): Promise<object> {
 		return util.postJson(url, {
 			method: name,
 			params: params,
@@ -19,11 +19,11 @@ export class AccountUtil {
 		});
 	}
 
-	getRandomInt(max: number): number {
+	public getRandomInt(max: number): number {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
 
-	generateRandomPhrase(words: string[]): string {
+	public generateRandomPhrase(words: string[]): string {
 		let phrase = '';
 		for (let i = 0; i < 12; i++) {
 			const index = this.getRandomInt(words.length);
@@ -34,7 +34,7 @@ export class AccountUtil {
 		return phrase;
 	}
 
-	async createAccount(num: number) {
+	public async createAccount(num: number) {
 		// by default, only one account is created
 		if (num <= 0) {
 			num = 1;
@@ -52,29 +52,35 @@ export class AccountUtil {
 			params.push('hunter2');
 			util.log(
 				'successfully created account: ' +
-					(await this.sendRequest('parity_newAccountFromPhrase', CST.PROVIDER_LOCAL_HTTP, params))[
-						'result'
-					]
+					(await this.sendRequest(
+						'parity_newAccountFromPhrase',
+						CST.PROVIDER_LOCAL_HTTP,
+						params
+					))['result']
 			);
 		}
 	}
 
-	async removeAccount(address: string) {
+	public async removeAccount(address: string) {
 		const params: string[] = [];
 		params.push(address);
 		util.log(
 			'successfully removed account: ' +
 				address +
 				' ' +
-				(await this.sendRequest('parity_removeAddress', CST.PROVIDER_LOCAL_HTTP, params))['result']
+				(await this.sendRequest('parity_removeAddress', CST.PROVIDER_LOCAL_HTTP, params))[
+					'result'
+				]
 		);
 	}
 
-	async allAccountsInfo() {
+	public async allAccountsInfo() {
 		const params: string[] = [];
 		util.log(
 			'all accounts information: ' +
-				(await this.sendRequest('parity_allAccountsInfo', CST.PROVIDER_LOCAL_HTTP, params))['result']
+				(await this.sendRequest('parity_allAccountsInfo', CST.PROVIDER_LOCAL_HTTP, params))[
+					'result'
+				]
 		);
 	}
 }

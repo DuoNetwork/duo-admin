@@ -1,13 +1,12 @@
-import sqlUtil from '../sqlUtil';
-import util from '../util';
 import * as CST from '../constants';
-import { Trade } from '../types';
+import sqlUtil from '../sqlUtil';
+import { ITrade } from '../types';
+import util from '../util';
 
 const INTERVAL_SECS = 2;
 
 export class GdaxUtil {
-
-	parseTrade(trade: {[key: string]: string}): Trade {
+	public parseTrade(trade: { [key: string]: string }): ITrade {
 		return {
 			source: CST.EXCHANGE_GDAX,
 			id: trade.trade_id,
@@ -17,19 +16,17 @@ export class GdaxUtil {
 		};
 	}
 
-	async fetchETHTradesByRestfulAPI() {
+	public async fetchETHTradesByRestfulAPI() {
 		const data = await util.get('https://api.gdax.com:443/products/ETH-USD/trades');
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 		parsedData.forEach(item => {
 			// util.log(item);
-			sqlUtil.insertSourceData(
-				this.parseTrade(item)
-			);
+			sqlUtil.insertSourceData(this.parseTrade(item));
 		});
 	}
 
-	startFetching() {
+	public startFetching() {
 		setInterval(() => this.fetchETHTradesByRestfulAPI(), INTERVAL_SECS * 1000);
 	}
 }

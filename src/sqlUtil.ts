@@ -1,42 +1,49 @@
 import * as mysql from 'mysql';
 import * as CST from './constants';
-import { Price, Trade } from './types';
+import { IPrice, ITrade } from './types';
 import util from './util';
 
 export class SqlUtil {
-	conn: undefined | mysql.Connection = undefined;
+	public conn: undefined | mysql.Connection = undefined;
 
-	init(user: string, pwd: string) {
+	public init(user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: CST.DB_HOST,
-			user: user,
+			user,
 			password: pwd,
 			database: CST.DB_PRICEFEED
 		});
 
-		this.conn.connect(function(err) {
-			if (err) throw err;
+		this.conn.connect(err => {
+			if (err) {
+				throw err;
+			}
 			util.log('Connected!');
 		});
 	}
 
-	executeQuery(sqlQuery: string): Promise<any> {
+	public executeQuery(sqlQuery: string): Promise<any> {
 		// util.log(sqlQuery);
 		return new Promise((resolve, reject) => {
-			if (this.conn)
+			if (this.conn) {
 				this.conn.query(sqlQuery, (err, result) => {
-					if (err && err.code != undefined && err.code === 'ER_DUP_ENTRY')
+					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY') {
 						// util.log('.');
 						// rocess.stdout.write(".");
 						reject(err);
-					else if (err) reject(err);
-					else resolve(result);
+					} else if (err) {
+						reject(err);
+					} else {
+						resolve(result);
+					}
 				});
-			else reject('db connection is not initialized');
+			} else {
+				reject('db connection is not initialized');
+			}
 		});
 	}
 
-	async insertSourceData(sourceData: Trade) {
+	public async insertSourceData(sourceData: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
@@ -65,7 +72,7 @@ export class SqlUtil {
 		await this.executeQuery(sql);
 	}
 
-	async insertPrice(price: Price) {
+	public async insertPrice(price: IPrice) {
 		util.log(
 			await this.executeQuery(
 				'INSERT INTO ' +
@@ -81,7 +88,7 @@ export class SqlUtil {
 		);
 	}
 
-	async readLastPrice(): Promise<Price> {
+	public async readLastPrice(): Promise<IPrice> {
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
 				CST.DB_TABLE_HISTORY +
@@ -98,7 +105,7 @@ export class SqlUtil {
 			: { price: 0, timestamp: 0, volume: 0 };
 	}
 
-	async readSourceData(currentTimestamp: number): Promise<Trade[]> {
+	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
 		const res: object[] = await this.executeQuery(

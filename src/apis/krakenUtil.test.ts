@@ -1,5 +1,5 @@
-import krakenUtil from './krakenUtil';
 import sqlUtil from '../sqlUtil';
+import krakenUtil from './krakenUtil';
 const trades: Array<{ [key: string]: string }> = require('../samples/kraken.json');
 const apiResponse = JSON.stringify(require('../samples/krakenMsg.json'));
 

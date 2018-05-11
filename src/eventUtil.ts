@@ -1,16 +1,16 @@
 import { Contract } from 'web3/types';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
+import { IOption } from './types';
 import util from './util';
-import { Option } from './types';
 
 export class EventUtil {
-	async pull(
+	public async pull(
 		contract: Contract,
 		start: number,
 		end: number,
 		event: string,
-		trigger: (any) => Promise<void>
+		trigger: (r: any) => Promise<void>
 	) {
 		if (start <= end) {
 			util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
@@ -37,7 +37,7 @@ export class EventUtil {
 		}
 	}
 
-	async subscribe(contractUtil: ContractUtil, option: Option) {
+	public async subscribe(contractUtil: ContractUtil, option: IOption) {
 		util.log('subscribing to ' + option.event);
 
 		if (option.source) {
@@ -75,8 +75,9 @@ export class EventUtil {
 							return Promise.resolve();
 						}
 					);
-					if (pulled)
+					if (pulled) {
 						startBlk = currentBlk + 1;
+					}
 				}, 15000);
 			}
 		} else {
@@ -92,15 +93,18 @@ export class EventUtil {
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
 					tg = () => contractUtil.triggerPreReset();
-					if (state === CST.STATE_PRERESET) await contractUtil.triggerPreReset();
+					if (state === CST.STATE_PRERESET) {
+						await contractUtil.triggerPreReset();
+					}
 				} else if (option.event === CST.EVENT_START_RESET) {
 					tg = () => contractUtil.triggerReset();
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
-					)
+					) {
 						await contractUtil.triggerReset();
+					}
 				}
 			}
 

@@ -1,5 +1,5 @@
-import bitfinexUtil from './bitfinexUtil';
 import sqlUtil from '../sqlUtil';
+import bitfinexUtil from './bitfinexUtil';
 const trades: Array<{ [key: string]: string }> = require('../samples/bitfinex.json');
 const apiResponse = JSON.stringify(require('../samples/bitfinexMsg.json'));
 
