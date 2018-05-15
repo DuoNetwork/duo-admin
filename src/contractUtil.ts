@@ -24,14 +24,45 @@ export default class ContractUtil {
 	}
 
 	public async read(name: string) {
+		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
 		const state: string = await this.contract.methods[name]().call();
-		util.log(state);
+		console.log(state.valueOf());
 		return state;
+	}
+
+	public async readSysStates() {
+		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
+		const sysStates: string = await this.contract.methods.getSystemStates().call();
+		for (let i = 0; i < sysStates.length; i++) {
+			console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
+		}
+	}
+
+	public async readUserBalance() {
+		const sysStates = await this.contract.methods.getSystemStates().call();
+		const numOfUser = sysStates[18].valueOf();
+		let totalSupplyOfA = 0;
+		let totalSupplyOfB = 0;
+		if (numOfUser > 0) {
+			for (let i = 0; i < numOfUser; i++) {
+				const userAddr = await this.contract.methods.users(i).call();
+				const balanceOfA = await this.contract.methods.balanceOf(0, userAddr).call();
+				const balanceOfB = await this.contract.methods.balanceOf(1, userAddr).call();
+				console.log(
+					'user: ' + userAddr + ' balance A: ' + balanceOfA + ' balance B: ' + balanceOfB
+				);
+				totalSupplyOfA += Number(balanceOfA);
+				totalSupplyOfB += Number(balanceOfB);
+			}
+		}
+		console.log('totalSupplyOfA: ' + totalSupplyOfA + ' totalSupplyOfB: ' + totalSupplyOfB);
 	}
 
 	public decode(input: string): string {
 		abiDecoder.addABI(this.abi.abi);
-		return abiDecoder.decodeMethod(input);
+		const output: string = abiDecoder.decodeMethod(input);
+		console.log(output);
+		return output;
 	}
 
 	public generateTxString(abi: object, input: any[]): string {
@@ -82,15 +113,15 @@ export default class ContractUtil {
 		let currentPrice: IPrice;
 		if (price > 0) {
 			currentPrice = {
-				price,
+				price: price,
 				volume: 0,
 				timestamp: Math.floor(Date.now())
 			};
 		} else {
 			currentPrice = await calculator.getPriceFix();
 		}
-		const priceInWei: number = Number(currentPrice.price) * Math.pow(10, 18);
-		const priceInSeconds: number = Math.floor(Number(currentPrice.timestamp) / 1000);
+		const priceInWei: string = this.web3.utils.toWei(currentPrice.price + '', 'ether');
+		const priceInSeconds: string = Math.floor(Number(currentPrice.timestamp) / 1000) + '';
 		util.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
 		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
 		const abi = {
@@ -216,7 +247,7 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
-	public async triggerReset() {
+	public async triggerReset(count: number = 1) {
 		const abi = {
 			name: 'startReset',
 			type: 'function',
@@ -225,7 +256,12 @@ export default class ContractUtil {
 		const input = [];
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
-		await this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT);
+		const promiseList: Array<Promise<void>> = [];
+		for (let i = 0; i < count; i++) {
+			promiseList.push(this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT));
+		}
+
+		await Promise.all(promiseList);
 	}
 
 	public async triggerPreReset() {

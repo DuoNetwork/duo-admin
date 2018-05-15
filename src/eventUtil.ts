@@ -81,6 +81,7 @@ export class EventUtil {
 				}, 15000);
 			}
 		} else {
+			util.log('starting listening ' + option.event);
 			let tg: (r: any) => Promise<void> = () => Promise.resolve();
 			if (option.event === CST.EVENT_ACCEPT_PRICE) {
 				tg = (r: any) => {
@@ -97,7 +98,7 @@ export class EventUtil {
 						await contractUtil.triggerPreReset();
 					}
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => contractUtil.triggerReset();
+					tg = () => contractUtil.triggerReset(2);
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
@@ -108,12 +109,11 @@ export class EventUtil {
 				}
 			}
 
-			util.log('starting listening preReset event');
 			contractUtil.contract.events[option.event]({}, async (error, evt) => {
 				if (error) {
 					util.log(error);
 				} else {
-					util.log(evt);
+					console.log(evt);
 					await tg(evt);
 				}
 			});

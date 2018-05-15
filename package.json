@@ -12,8 +12,9 @@
 		"calculatePrice": "ts-node ./src/index calculatePrice",
 		"commitPrice": "ts-node ./src/index commitPrice",
 		"createAccount": "ts-node ./src/index createAccount",
+		"fuelAccounts": "ts-node ./src/index fuelAccounts",
 		"removeAccount": "ts-node ./src/index removeAccount",
-		"allAccounts": "ts-node ./src/index allAccounts",
+		"accountsInfo": "ts-node ./src/index accountsInfo",
 		"bitfinex": "ts-node ./src/index bitfinex",
 		"gemini": "ts-node ./src/index gemini",
 		"kraken": "ts-node ./src/index kraken",
@@ -50,6 +51,7 @@
 	},
 	"dependencies": {
 		"abi-decoder": "^1.1.0",
+		"d3-format": "^1.3.0",
 		"eth-dagger": "0.0.1-beta.3",
 		"ethereumjs-tx": "^1.3.4",
 		"moment": "^2.21.0",

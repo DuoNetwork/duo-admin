@@ -66,7 +66,11 @@ export class Util {
 			source: '',
 			pwd: '',
 			event: '',
-			provider: ''
+			provider: '',
+			contractState: '',
+			accountNum: 1,
+			saveAccount: false,
+			from: ''
 		};
 		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
@@ -101,6 +105,18 @@ export class Util {
 					break;
 				case 'provider':
 					option.provider = args[1] || option.provider;
+					break;
+				case 'contractState':
+					option.contractState = args[1] || option.contractState;
+					break;
+				case 'accountNum':
+					option.accountNum = Number(args[1]) || option.accountNum;
+					break;
+				case 'saveAccount':
+					option.saveAccount = args[1] === 'yes' || option.saveAccount;
+					break;
+				case 'from':
+					option.from = args[1] || option.from;
 					break;
 				default:
 					break;

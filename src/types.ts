@@ -24,4 +24,8 @@ export interface IOption {
 	pwd: string;
 	event: string;
 	provider: string;
+	contractState: string;
+	accountNum: number;
+	saveAccount: boolean;
+	from: string;
 }

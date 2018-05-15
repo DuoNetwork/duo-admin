@@ -23,15 +23,13 @@ if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].in
 switch (tool) {
 	case 'createAccount':
 		util.log('starting create accounts');
-		const numOfAccounts: number = Number(process.argv[3]);
-		parityAccount.createAccount(numOfAccounts);
+		parityAccount.createAccount(contractUtil, option);
 		break;
-	case 'removeAccount':
-		const address: string = process.argv[3];
-		parityAccount.removeAccount(address);
+	case 'accountsInfo':
+		parityAccount.allAccountsInfo(contractUtil);
 		break;
-	case 'allAccounts':
-		parityAccount.allAccountsInfo();
+	case 'fuelAccounts':
+		parityAccount.fuelAccounts(contractUtil, option);
 		break;
 	case 'bitfinex':
 		util.log('starting fetchTrade of bitfinex');
@@ -55,8 +53,13 @@ switch (tool) {
 		break;
 	case 'readContract':
 		util.log('starting reading custodian contract state');
-		const state: string = process.argv[3];
-		contractUtil.read(state);
+		if (option.contractState === 'userBalance') {
+			contractUtil.readUserBalance();
+		} else if (option.contractState === 'systemStates') {
+			contractUtil.readSysStates();
+		} else {
+			contractUtil.read(option.contractState);
+		}
 		break;
 	case 'create':
 		contractUtil.create(option);

@@ -18,7 +18,7 @@ export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
-export const CUSTODIAN_ADDR = '0x363b5bd6dd8e093bd6d4d45ee8ae6559a24ff937';
+export const CUSTODIAN_ADDR = '0xe9a16548c3d816311900148dea51bbc5b609b7fd';
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
@@ -30,7 +30,7 @@ export const STATE_PRERESET = '2';
 export const STATE_DOWN_RESET = '3';
 export const STATE_UP_RESET = '4';
 export const STATE_PERIOD_RESET = '5';
-export const INCEPTION_BLK = 7171376;
+export const INCEPTION_BLK = 7281874;
 export const FN_START_CONTRACT = 'startContract';
 export const FN_COMMIT_PRICE = 'commitPrice';
 export const SRC_MYETHER = 'myether';
@@ -41,15 +41,39 @@ export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
 export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
+export const SYS_STATES = {
+	0: 'alphaInBP',
+	1: 'betaInWei',
+	2: 'feeAccumulatedInWei',
+	3: 'periodCouponInWei',
+	4: 'limitPeriodicInWei',
+	5: 'limitUpperInWei',
+	6: 'limitLowerInWei',
+	7: 'commissionRateInBP',
+	8: 'period',
+	9: 'iterationGasThreshold',
+	10: 'ethDuoFeeRatio',
+	11: 'preResetWaitingBlocks',
+	12: 'priceTolInBP',
+	13: 'priceFeedTolInBP',
+	14: 'priceFeedTimeTol',
+	15: 'priceUpdateCoolDown',
+	16: 'numOfPrices',
+	17: 'nextResetAddrIndex',
+	18: 'usersLength',
+	19: 'addrPoolLength',
+	20: 'lastAdminTime',
+	21: 'adminCoolDown'
+};
 
 export const KOVAN_ACCOUNTS = [
 	{
-		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
-		privateKey: '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285'
-	},
-	{
 		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
 		privateKey: '16ea9a15dd4381a2ea9c41531fee530e6a78dadc1a86d3e64f207c35f4be1d17'
+	},
+	{
+		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
+		privateKey: '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285'
 	},
 	{
 		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
