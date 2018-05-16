@@ -8,6 +8,12 @@ export class Util {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
 
+	public truncateNum(num: number, decimal: number = 3): number {
+		let x = num.toString();
+		x = x.slice(0, x.indexOf('.') + decimal);
+		return Number(x);
+	}
+
 	public get(url: string): Promise<any> {
 		return new Promise((resolve, reject) =>
 			request(
@@ -70,7 +76,9 @@ export class Util {
 			contractState: '',
 			accountNum: 1,
 			saveAccount: false,
-			from: ''
+			from: '',
+			total: 10,
+			minEther: 0.005
 		};
 		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
@@ -117,6 +125,12 @@ export class Util {
 					break;
 				case 'from':
 					option.from = args[1] || option.from;
+					break;
+				case 'total':
+					option.total = Number(args[1]) || option.total;
+					break;
+				case 'minEther':
+					option.minEther = Number(args[1]) || option.minEther;
 					break;
 				default:
 					break;

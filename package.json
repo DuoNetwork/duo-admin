@@ -13,6 +13,7 @@
 		"commitPrice": "ts-node ./src/index commitPrice",
 		"createAccount": "ts-node ./src/index createAccount",
 		"fuelAccounts": "ts-node ./src/index fuelAccounts",
+		"collectEther": "ts-node ./src/index collectEther",
 		"removeAccount": "ts-node ./src/index removeAccount",
 		"accountsInfo": "ts-node ./src/index accountsInfo",
 		"bitfinex": "ts-node ./src/index bitfinex",

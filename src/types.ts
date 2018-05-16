@@ -12,6 +12,11 @@ export interface IPrice {
 	timestamp: number;
 }
 
+export interface IAccount {
+	address: string;
+	privateKey: string;
+}
+
 export interface IOption {
 	live: boolean;
 	gasPrice: number;
@@ -28,4 +33,6 @@ export interface IOption {
 	accountNum: number;
 	saveAccount: boolean;
 	from: string;
+	total: number;
+	minEther: number;
 }

@@ -31,6 +31,9 @@ switch (tool) {
 	case 'fuelAccounts':
 		parityAccount.fuelAccounts(contractUtil, option);
 		break;
+	case 'collectEther':
+		parityAccount.collectEther(contractUtil, option);
+		break;
 	case 'bitfinex':
 		util.log('starting fetchTrade of bitfinex');
 		bitfinexUtil.fetchTrades();
