@@ -188,9 +188,9 @@ export default class ContractUtil {
 		});
 	}
 
-	public async create(option: IOption) {
+	public async create(option: IOption, nonce: number = -1) {
 		util.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
-		const nonce = await this.web3.eth.getTransactionCount(option.address);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(option.address) : nonce;
 		const abi = {
 			name: 'create',
 			type: 'function',
@@ -205,7 +205,16 @@ export default class ContractUtil {
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
 		const gasPrice = (await this.getGasPrice()) || option.gasPrice;
-		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				option.gasLimit +
+				' nonce ' +
+				nonce +
+				' eth ' +
+				option.eth
+		);
 		// gasPrice = gasPrice || await web3.eth.
 		this.web3.eth
 			.sendSignedTransaction(
@@ -217,6 +226,65 @@ export default class ContractUtil {
 							option.gasLimit,
 							CST.CUSTODIAN_ADDR,
 							option.eth,
+							command
+						),
+						option.privateKey
+					)
+			)
+			.on('receipt', util.log);
+	}
+
+	public async redeem(option: IOption, nonce: number = -1) {
+		util.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(option.address) : nonce;
+		const balanceOfA = await this.contract.methods.balanceOf(0, option.address).call();
+		const balanceOfB = await this.contract.methods.balanceOf(1, option.address).call();
+		console.log('current balanceA: ' + balanceOfA + ' current balanceB: ' + balanceOfB);
+		const abi = {
+			name: 'redeem',
+			type: 'function',
+			inputs: [
+				{
+					name: 'amtInWeiA',
+					type: 'uint256'
+				},
+				{
+					name: 'amtInWeiB',
+					type: 'uint256'
+				},
+				{
+					name: 'payFeeInEth',
+					type: 'bool'
+				}
+			]
+		};
+		const input = [option.amtA, option.amtB, true];
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		const gasPrice = (await this.getGasPrice()) || option.gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				option.gasLimit +
+				' nonce ' +
+				nonce +
+				' amtA ' +
+				option.amtA +
+				' amtB ' +
+				option.amtB
+		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							option.gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
 							command
 						),
 						option.privateKey

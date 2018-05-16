@@ -18,7 +18,7 @@ export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
-export const CUSTODIAN_ADDR = '0xe9a16548c3d816311900148dea51bbc5b609b7fd';
+export const CUSTODIAN_ADDR = '0xb4c3648be06f889d4cf457682a8cadc422d60da4';
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
@@ -42,6 +42,7 @@ export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const TRANSFER_GAS_TH = 20000000000000000;
+export const REDEEM_GAS_TH = 2000000000000000;
 export const SYS_STATES = {
 	0: 'alphaInBP',
 	1: 'betaInWei',

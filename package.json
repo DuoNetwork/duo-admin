@@ -14,6 +14,8 @@
 		"createAccount": "ts-node ./src/index createAccount",
 		"fuelAccounts": "ts-node ./src/index fuelAccounts",
 		"collectEther": "ts-node ./src/index collectEther",
+		"makeCreation": "ts-node ./src/index makeCreation",
+		"makeRedemption": "ts-node ./src/index makeRedemption",
 		"removeAccount": "ts-node ./src/index removeAccount",
 		"accountsInfo": "ts-node ./src/index accountsInfo",
 		"bitfinex": "ts-node ./src/index bitfinex",
@@ -21,6 +23,7 @@
 		"kraken": "ts-node ./src/index kraken",
 		"gdax": "ts-node ./src/index gdax",
 		"create": "ts-node ./src/index create",
+		"redeem": "ts-node ./src/index redeem",
 		"gasPrice": "ts-node ./src/index gasPrice",
 		"subscribe": "ts-node ./src/index subscribe"
 	},

@@ -36,6 +36,15 @@ export class Util {
 		);
 	}
 
+	public generateRandomIdx(max: number, alpha: number): number[] {
+		const num = Math.floor(max * alpha);
+		const output: number[] = [];
+		for (let i = 0; i < num; i++) {
+			output.push(Math.floor(Math.random() * max));
+		}
+		return Array.from(new Set(output));
+	}
+
 	public postJson(url: string, json: object): Promise<object> {
 		return new Promise((resolve, reject) =>
 			request(
@@ -78,7 +87,10 @@ export class Util {
 			saveAccount: false,
 			from: '',
 			total: 10,
-			minEther: 0.01
+			minEther: 0.02,
+			alpha: 0.3,
+			amtA: 0,
+			amtB: 0
 		};
 		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
@@ -131,6 +143,15 @@ export class Util {
 					break;
 				case 'minEther':
 					option.minEther = Number(args[1]) || option.minEther;
+					break;
+				case 'alpha':
+					option.alpha = Number(args[1]) || option.alpha;
+					break;
+				case 'amtA':
+					option.amtA = Number(args[1]) || option.amtA;
+					break;
+				case 'amtB':
+					option.amtB = Number(args[1]) || option.amtB;
 					break;
 				default:
 					break;

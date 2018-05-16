@@ -34,6 +34,12 @@ switch (tool) {
 	case 'collectEther':
 		parityAccount.collectEther(contractUtil, option);
 		break;
+	case 'makeCreation':
+		parityAccount.makeCreation(contractUtil, option);
+		break;
+	case 'makeRedemption':
+		parityAccount.makeRedemption(contractUtil, option);
+		break;
 	case 'bitfinex':
 		util.log('starting fetchTrade of bitfinex');
 		bitfinexUtil.fetchTrades();
@@ -66,6 +72,9 @@ switch (tool) {
 		break;
 	case 'create':
 		contractUtil.create(option);
+		break;
+	case 'redeem':
+		contractUtil.redeem(option);
 		break;
 	case 'decoder':
 		util.log('starting decoding contract input');

@@ -254,6 +254,147 @@ export class AccountUtil {
 			util.log('no account to collect ether from');
 		}
 	}
+
+	public async makeCreation(contractUtil: ContractUtil, option: IOption) {
+		const data = fs.readFileSync(accountsFile, 'utf8');
+		const accountsData = JSON.parse(data);
+		const alpha = option.alpha;
+		const accountsIdxToCreate = util.generateRandomIdx(accountsData.length - 1, alpha);
+
+		const filterredAccounts: any[] = [];
+		let promiseList: any[] = [];
+		promiseList = accountsIdxToCreate.map(async idx => {
+			const currentBalance = Number(
+				await contractUtil.web3.eth.getBalance(accountsData[idx].address)
+			);
+			if (currentBalance > CST.TRANSFER_GAS_TH) {
+				return filterredAccounts.push(accountsData[idx]);
+			} else {
+				return undefined;
+			}
+		});
+		await Promise.all(promiseList);
+		console.log(filterredAccounts);
+
+		util.log('there are ' + filterredAccounts.length + ' accounts to create');
+		const sendInterval = 10;
+		const startTime = new Date(Date.now());
+		const endTime = new Date(
+			startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+		);
+		let i = 0;
+		const rule = '*/' + sendInterval + ' * * * * *';
+		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+			if (i >= filterredAccounts.length) {
+				console.log('completd creation process');
+			} else {
+				i++;
+				const account = accountsData[i - 1];
+				const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
+				const currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(account.address)
+				);
+				console.log(currentBalance - CST.TRANSFER_GAS_TH);
+				const amt: number =
+					Number(
+						contractUtil.web3.utils.fromWei(
+							currentBalance - CST.TRANSFER_GAS_TH + '',
+							'ether'
+						)
+					) * Math.random();
+				util.log(
+					'starting creating from account no ' +
+						i +
+						' address: ' +
+						account.address +
+						' ethAmt: ' +
+						amt
+				);
+				option.address = account.address;
+				option.privateKey = account.privateKey.replace('0x', '');
+				option.eth = util.truncateNum(amt);
+				option.gasLimit = 400000;
+				await contractUtil.create(option, nonce);
+			}
+		});
+	}
+
+	public async makeRedemption(contractUtil: ContractUtil, option: IOption) {
+		//
+		const data = fs.readFileSync(accountsFile, 'utf8');
+		const accountsData = JSON.parse(data);
+		const filterredAccounts: any[] = [];
+		let promiseList: any[] = [];
+		promiseList = accountsData.map(async account => {
+			const balanceOfA = Number(
+				await contractUtil.contract.methods.balanceOf(0, account.address).call()
+			);
+			const balanceOfB = Number(
+				await contractUtil.contract.methods.balanceOf(1, account.address).call()
+			);
+			const currentBalance = Number(
+				await contractUtil.web3.eth.getBalance(account.address)
+			);
+			// console.log(balanceOfA, balanceOfB);
+			if (balanceOfA > 0 && balanceOfB > 0 && currentBalance > CST.REDEEM_GAS_TH) {
+				return filterredAccounts.push(account);
+				// promiseList.push()
+			} else {
+				return undefined;
+			}
+		});
+		await Promise.all(promiseList);
+		// console.log(filterredAccounts);
+		// const alpha = option.alpha;
+		// const accountsIdxToCreate = util.generateRandomIdx(accountsData.length - 1, alpha);
+
+		util.log('there are ' + filterredAccounts.length + ' accounts to Redeem');
+		const sendInterval = 10;
+		const startTime = new Date(Date.now());
+		const endTime = new Date(
+			startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+		);
+		let i = 0;
+		const rule = '*/' + sendInterval + ' * * * * *';
+		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+			if (i >= filterredAccounts.length) {
+				console.log('completd redemption process');
+			} else {
+				i++;
+				const account = filterredAccounts[i - 1];
+				const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
+				const balanceOfA = Number(
+					(
+						(await contractUtil.contract.methods.balanceOf(0, account.address).call()) *
+						Math.random()
+					).toFixed(0)
+				);
+				const balanceOfB = Number(
+					(
+						(await contractUtil.contract.methods.balanceOf(1, account.address).call()) *
+						Math.random()
+					).toFixed(0)
+				);
+				util.log(
+					'starting redemption from account no ' +
+						i +
+						' address: ' +
+						account.address +
+						' amtA: ' +
+						balanceOfA +
+						' amtB: ' +
+						balanceOfB
+				);
+				option.address = account.address;
+				option.privateKey = account.privateKey.replace('0x', '');
+				option.amtA = balanceOfA;
+				option.amtB = balanceOfB;
+				option.gasLimit = 800000;
+				console.log(option);
+				await contractUtil.redeem(option, nonce);
+			}
+		});
+	}
 }
 
 const accountUtil = new AccountUtil();

@@ -35,4 +35,7 @@ export interface IOption {
 	from: string;
 	total: number;
 	minEther: number;
+	alpha: number;
+	amtA: number;
+	amtB: number;
 }
