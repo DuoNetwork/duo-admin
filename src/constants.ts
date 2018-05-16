@@ -41,7 +41,7 @@ export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
 export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
-export const TRANSFER_GAS_TH = 200000000000000;
+export const TRANSFER_GAS_TH = 20000000000000000;
 export const SYS_STATES = {
 	0: 'alphaInBP',
 	1: 'betaInWei',

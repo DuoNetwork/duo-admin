@@ -1,7 +1,7 @@
 /*
 This program is to create parity accounts.
-It takes number of accounts to create,
-and use csv file as phrase source to create parity accounts
+Fuel created accounts with Ether or collect ether from created accoutns
+Use created accounts to interact with smart contract
 */
 import * as fs from 'fs';
 import * as CST from './constants';
@@ -10,90 +10,9 @@ import { IAccount, IOption } from './types';
 import util from './util';
 const Tx = require('ethereumjs-tx');
 const accountsFile = './src/static/KovanAccounts.json';
+const schedule = require('node-schedule');
 
 export class AccountUtil {
-	public async createAccount(contractUtil: ContractUtil, option: IOption) {
-		// by default, only one account is created
-		const saveAccount = option.saveAccount ? 'yes' : 'no';
-		console.log('creating accounts: ' + option.accountNum + ' saveAccounts: ' + saveAccount);
-		const data = fs.readFileSync(accountsFile, 'utf8');
-		const accountsData = JSON.parse(data);
-		// console.log(accountsData);
-
-		const createdAccount = await contractUtil.web3.eth.accounts.create(
-			contractUtil.web3.utils.randomHex(32)
-		);
-		console.log(createdAccount);
-
-		if (option.saveAccount) {
-			const obj = {
-				address: createdAccount.address,
-				privateKey: createdAccount.privateKey
-			};
-			accountsData.push(obj);
-			const allAccounts = JSON.stringify(accountsData);
-			fs.writeFileSync(accountsFile, allAccounts, 'utf8');
-		}
-	}
-
-	public async allAccountsInfo(contractUtil: ContractUtil) {
-		const data = fs.readFileSync(accountsFile, 'utf8');
-		const accountsData = JSON.parse(data);
-		accountsData.forEach(async account => {
-			const balance = await contractUtil.web3.eth.getBalance(account.address);
-			console.log(
-				'account address: ' +
-					account.address +
-					' eth balance ' +
-					contractUtil.web3.utils.fromWei(balance + '', 'ether')
-			);
-		});
-	}
-
-	public async fuelAccounts(contractUtil: ContractUtil, option: IOption) {
-		const mainAccount: IAccount = this.getMainAccount(option);
-
-		let mainAccountBalance = await contractUtil.web3.eth.getBalance(mainAccount.address);
-		mainAccountBalance = Number(
-			contractUtil.web3.utils.fromWei(mainAccountBalance + '', 'ether')
-		);
-		if (mainAccountBalance < option.total) {
-			console.log(
-				'mian account balance is: ' + mainAccountBalance + ' less than 10 ether, stop'
-			);
-		} else {
-			console.log(
-				'mian account balance is: ' + mainAccountBalance + ' starting fuel other accounts'
-			);
-			const data = fs.readFileSync(accountsFile, 'utf8');
-			const accountsData = JSON.parse(data);
-			const avgEthPerAccount = option.total / accountsData.length;
-			let promiseList: any[] = [];
-			const currentNonce: number = await contractUtil.web3.eth.getTransactionCount(
-				mainAccount.address
-			);
-			promiseList = accountsData.map(async account => {
-				const amt = Math.random() * avgEthPerAccount;
-				// promiseList.push(
-				const currentBalance = Number(
-					await contractUtil.web3.eth.getBalance(account.address)
-				);
-				if (Number(contractUtil.web3.utils.fromWei(currentBalance + '', 'ether')) < option.minEther) {
-					return this.transferEth(
-						contractUtil,
-						mainAccount.address,
-						mainAccount.privateKey,
-						account.address,
-						amt,
-						currentNonce + accountsData.indexOf(account)
-					);
-				}
-				// );
-			});
-			await Promise.all(promiseList);
-		}
-	}
-
 	public async transferEth(
 		contractUtil: ContractUtil,
 		from: string,
@@ -102,9 +21,9 @@ export class AccountUtil {
 		amt: number,
 		nonce: number
 	) {
-		util.log(
-			'transfering from: ' + from + ' to: ' + to + ' amount: ' + amt + ' nonce ' + nonce
-		);
+		// util.log(
+		// 	'transfering from: ' + from + ' to: ' + to + ' amount: ' + amt + ' nonce ' + nonce
+		// );
 		const privateKey = new Buffer(privatekey.toLocaleLowerCase(), 'hex');
 		const rawTx = {
 			nonce: nonce,
@@ -142,6 +61,133 @@ export class AccountUtil {
 			privateKey: privateKey
 		};
 	}
+	public async createAccount(contractUtil: ContractUtil, option: IOption) {
+		// by default, only one account is created
+		const saveAccount = option.saveAccount ? 'yes' : 'no';
+		console.log('creating accounts: ' + option.accountNum + ' saveAccounts: ' + saveAccount);
+		const data = fs.readFileSync(accountsFile, 'utf8');
+		const accountsData = JSON.parse(data);
+		// console.log(accountsData);
+		let createdAccount;
+		for (let i = 0; i < option.accountNum; i++) {
+			console.log('creating account no: ' + i);
+			createdAccount = await contractUtil.web3.eth.accounts.create(
+				contractUtil.web3.utils.randomHex(32)
+			);
+			console.log(createdAccount);
+			if (option.saveAccount) {
+				const obj = {
+					address: createdAccount.address,
+					privateKey: createdAccount.privateKey
+				};
+				accountsData.push(obj);
+			}
+		}
+		// console.log(accountsData);
+		const allAccounts = JSON.stringify(accountsData);
+		fs.writeFileSync(accountsFile, allAccounts, 'utf8');
+	}
+
+	public async allAccountsInfo(contractUtil: ContractUtil) {
+		const data = fs.readFileSync(accountsFile, 'utf8');
+		const accountsData = JSON.parse(data);
+		console.log('there are total accounts no ' + accountsData.length);
+		accountsData.forEach(async account => {
+			const balance = await contractUtil.web3.eth.getBalance(account.address);
+			console.log(
+				'account address: ' +
+					account.address +
+					' eth balance ' +
+					contractUtil.web3.utils.fromWei(balance + '', 'ether')
+			);
+		});
+	}
+
+	public async fuelAccounts(contractUtil: ContractUtil, option: IOption) {
+		const mainAccount: IAccount = this.getMainAccount(option);
+
+		let mainAccountBalance = await contractUtil.web3.eth.getBalance(mainAccount.address);
+		mainAccountBalance = Number(
+			contractUtil.web3.utils.fromWei(mainAccountBalance + '', 'ether')
+		);
+		if (mainAccountBalance < option.total) {
+			console.log(
+				'mian account balance is: ' + mainAccountBalance + ' less than 10 ether, stop'
+			);
+		} else {
+			console.log(
+				'mian account balance is: ' + mainAccountBalance + ' starting fuel other accounts'
+			);
+			const data = fs.readFileSync(accountsFile, 'utf8');
+			const accountsData = JSON.parse(data);
+			const avgEthPerAccount = option.total / accountsData.length;
+
+			const filterredAccounts: any[] = [];
+			let promiseList: any[] = [];
+			promiseList = accountsData.map(async account => {
+				let currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(account.address)
+				);
+				currentBalance = Number(
+					contractUtil.web3.utils.fromWei(currentBalance + '', 'ether')
+				);
+				// console.log(currentBalance, option.minEther);
+
+				if (currentBalance < option.minEther) {
+					return filterredAccounts.push(account);
+					// promiseList.push()
+				} else {
+					return undefined;
+				}
+			});
+			await Promise.all(promiseList);
+
+			if (filterredAccounts.length > 0) {
+				console.log('need fuel ether to ' + filterredAccounts.length + ' address');
+				const sendInterval = 10;
+				const startTime = new Date(Date.now());
+				const endTime = new Date(
+					startTime.getTime() +
+						sendInterval * 1000 * (filterredAccounts.length + 1) +
+						1000
+				);
+				let i = 0;
+				let nonce: number = await contractUtil.web3.eth.getTransactionCount(
+					mainAccount.address
+				);
+				const rule = '*/' + sendInterval + ' * * * * *';
+				schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+					if (i >= filterredAccounts.length) {
+						console.log('completd fuel process');
+					} else {
+						i++;
+						const account = filterredAccounts[i - 1];
+						const randomAmt = Math.random() * avgEthPerAccount;
+						const amt = randomAmt < 0.01 ? 0.01 : randomAmt;
+						util.log(
+							'starting transfer ether to account no ' +
+								i +
+								' address: ' +
+								account.address +
+								' ethAmt: ' +
+								amt
+						);
+						nonce++;
+						await this.transferEth(
+							contractUtil,
+							mainAccount.address,
+							mainAccount.privateKey,
+							account.address,
+							amt,
+							nonce - 1
+						);
+					}
+				});
+			} else {
+				console.log('no need to fuel');
+			}
+		}
+	}
 
 	public async collectEther(contractUtil: ContractUtil, option: IOption) {
 		const mainAccount: IAccount = this.getMainAccount(option);
@@ -149,36 +195,64 @@ export class AccountUtil {
 		const data = fs.readFileSync(accountsFile, 'utf8');
 		const accountsData = JSON.parse(data);
 
+		const filterredAccounts: any[] = [];
 		let promiseList: any[] = [];
-
 		promiseList = accountsData.map(async account => {
 			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
-			console.log(currentBalance);
 			if (currentBalance > CST.TRANSFER_GAS_TH) {
-				const amt: number = Number(
-					contractUtil.web3.utils.fromWei(
-						currentBalance - CST.TRANSFER_GAS_TH + '',
-						'ether'
-					)
-				);
-				console.log(amt);
-				const nonce: number = await contractUtil.web3.eth.getTransactionCount(
-					account.address
-				);
-				// console.log(account);
-				// promiseList.push(
-				return this.transferEth(
-					contractUtil,
-					account.address,
-					account.privateKey.replace('0x', ''),
-					mainAccount.address,
-					amt,
-					nonce
-				);
-				// );
+				return filterredAccounts.push(account);
+				// promiseList.push()
+			} else {
+				return undefined;
 			}
 		});
 		await Promise.all(promiseList);
+		if (filterredAccounts.length > 0) {
+			util.log('need collect ether form ' + filterredAccounts.length + ' accounts');
+			const sendInterval = 10;
+			const startTime = new Date(Date.now());
+			const endTime = new Date(
+				startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+			);
+			let i = 0;
+			const rule = '*/' + sendInterval + ' * * * * *';
+			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+				if (i >= filterredAccounts.length) {
+					console.log('completd collect process');
+				} else {
+					i++;
+					const account = filterredAccounts[i - 1];
+					const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
+					const currentBalance = Number(
+						await contractUtil.web3.eth.getBalance(account.address)
+					);
+					const amt: number = Number(
+						contractUtil.web3.utils.fromWei(
+							currentBalance - CST.TRANSFER_GAS_TH + '',
+							'ether'
+						)
+					);
+					util.log(
+						'starting collect ether from account no ' +
+							i +
+							' address: ' +
+							account.address +
+							' ethAmt: ' +
+							amt
+					);
+					await this.transferEth(
+						contractUtil,
+						account.address,
+						account.privateKey.replace('0x', ''),
+						mainAccount.address,
+						amt,
+						nonce
+					);
+				}
+			});
+		} else {
+			util.log('no account to collect ether from');
+		}
 	}
 }
 

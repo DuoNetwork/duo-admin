@@ -78,7 +78,7 @@ export class Util {
 			saveAccount: false,
 			from: '',
 			total: 10,
-			minEther: 0.005
+			minEther: 0.01
 		};
 		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
