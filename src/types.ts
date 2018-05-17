@@ -33,6 +33,9 @@ export interface IOption {
 	accountNum: number;
 	saveAccount: boolean;
 	from: string;
+	to: string;
+	value: number;
+	index: number;
 	total: number;
 	minEther: number;
 	alpha: number;

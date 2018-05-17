@@ -23,6 +23,7 @@ export class GdaxUtil {
 		parsedData.forEach(item => {
 			// util.log(item);
 			sqlUtil.insertSourceData(this.parseTrade(item));
+			util.log('one record inserted');
 		});
 	}
 

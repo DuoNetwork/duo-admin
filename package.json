@@ -16,6 +16,7 @@
 		"collectEther": "ts-node ./src/index collectEther",
 		"makeCreation": "ts-node ./src/index makeCreation",
 		"makeRedemption": "ts-node ./src/index makeRedemption",
+		"makeTokenTransfer": "ts-node ./src/index makeTokenTransfer",
 		"removeAccount": "ts-node ./src/index removeAccount",
 		"accountsInfo": "ts-node ./src/index accountsInfo",
 		"bitfinex": "ts-node ./src/index bitfinex",

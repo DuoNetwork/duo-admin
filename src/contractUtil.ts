@@ -38,7 +38,22 @@ export default class ContractUtil {
 		}
 	}
 
-	public async readUserBalance() {
+	public async readUserBalance(option: IOption) {
+		if (option.address) {
+			const balanceOfEther = await this.web3.eth.getBalance(option.address);
+			const balanceOfA = await this.contract.methods.balanceOf(0, option.address).call();
+			const balanceOfB = await this.contract.methods.balanceOf(1, option.address).call();
+			console.log(
+					option.address +
+					' ethBalance: ' +
+					this.web3.utils.fromWei(balanceOfEther + '', 'ether') +
+					' balance A: ' +
+					balanceOfA +
+					' balance B: ' +
+					balanceOfB
+			);
+			return;
+		}
 		const sysStates = await this.contract.methods.getSystemStates().call();
 		const numOfUser = sysStates[18].valueOf();
 		let totalSupplyOfA = 0;
@@ -46,10 +61,17 @@ export default class ContractUtil {
 		if (numOfUser > 0) {
 			for (let i = 0; i < numOfUser; i++) {
 				const userAddr = await this.contract.methods.users(i).call();
+				const balanceOfEther = await this.web3.eth.getBalance(userAddr);
 				const balanceOfA = await this.contract.methods.balanceOf(0, userAddr).call();
 				const balanceOfB = await this.contract.methods.balanceOf(1, userAddr).call();
 				console.log(
-					'user: ' + userAddr + ' balance A: ' + balanceOfA + ' balance B: ' + balanceOfB
+						userAddr +
+						' ethBalance: ' +
+						this.web3.utils.fromWei(balanceOfEther + '', 'ether') +
+						' balance A: ' +
+						balanceOfA +
+						' balance B: ' +
+						balanceOfB
 				);
 				totalSupplyOfA += Number(balanceOfA);
 				totalSupplyOfB += Number(balanceOfB);
@@ -235,7 +257,7 @@ export default class ContractUtil {
 	}
 
 	public async redeem(option: IOption, nonce: number = -1) {
-		util.log('the account ' + option.address + ' is creating tokens with ' + option.privateKey);
+		util.log('the account ' + option.address + ' privateKey is ' + option.privateKey);
 		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(option.address) : nonce;
 		const balanceOfA = await this.contract.methods.balanceOf(0, option.address).call();
 		const balanceOfB = await this.contract.methods.balanceOf(1, option.address).call();
@@ -274,6 +296,68 @@ export default class ContractUtil {
 				' amtB ' +
 				option.amtB
 		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							option.gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						option.privateKey
+					)
+			)
+			.on('receipt', util.log);
+	}
+
+	public async transferToken(
+		option: IOption,
+		nonce: number = -1
+	) {
+		util.log(
+			'the account ' +
+				option.address +
+				' privateKey is ' +
+				option.privateKey +
+				' transfering ' +
+				option.index +
+				' to ' +
+				option.to +
+				' with amt ' +
+				option.value
+		);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(option.address) : nonce;
+		const abi = {
+			name: 'transfer',
+			type: 'function',
+			inputs: [
+				{
+					name: 'index',
+					type: 'uint256'
+				},
+				{
+					name: '_from',
+					type: 'address'
+				},
+				{
+					name: '_to',
+					type: 'address'
+				},
+				{
+					name: '_tokens',
+					type: 'uint256'
+				}
+			]
+		};
+		const input = [option.index, option.from, option.to, option.value];
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 		// gasPrice = gasPrice || await web3.eth.
 		this.web3.eth
 			.sendSignedTransaction(

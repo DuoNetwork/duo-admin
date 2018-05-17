@@ -8,11 +8,11 @@ export class Util {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
 
-	public truncateNum(num: number, decimal: number = 3): number {
-		let x = num.toString();
-		x = x.slice(0, x.indexOf('.') + decimal);
-		return Number(x);
-	}
+	// public truncateNum(num: number, decimal: number = 3): number {
+	// 	let x = num.toString();
+	// 	x = x.slice(0, x.indexOf('.') + decimal);
+	// 	return Number(x);
+	// }
 
 	public get(url: string): Promise<any> {
 		return new Promise((resolve, reject) =>
@@ -37,12 +37,23 @@ export class Util {
 	}
 
 	public generateRandomIdx(max: number, alpha: number): number[] {
-		const num = Math.floor(max * alpha);
 		const output: number[] = [];
-		for (let i = 0; i < num; i++) {
-			output.push(Math.floor(Math.random() * max));
+		if (alpha === 1) {
+			for (let i = 0; i < max; i++) {
+				output.push(i);
+			}
+		} else {
+			const num = Math.floor(max * alpha);
+
+			while (output.length < num) {
+				const item = Math.floor(Math.random() * max);
+				if (output.indexOf(item) < 0) {
+					output.push(item);
+				}
+			}
 		}
-		return Array.from(new Set(output));
+
+		return output;
 	}
 
 	public postJson(url: string, json: object): Promise<object> {
@@ -86,6 +97,9 @@ export class Util {
 			accountNum: 1,
 			saveAccount: false,
 			from: '',
+			to: '',
+			value: 0,
+			index: 0,
 			total: 10,
 			minEther: 0.02,
 			alpha: 0.3,
@@ -152,6 +166,12 @@ export class Util {
 					break;
 				case 'amtB':
 					option.amtB = Number(args[1]) || option.amtB;
+					break;
+				case 'value':
+					option.value = Number(args[1]) || option.value;
+					break;
+				case 'index':
+					option.index = Number(args[1]) || option.index;
 					break;
 				default:
 					break;

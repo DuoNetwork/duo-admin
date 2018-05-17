@@ -11,6 +11,7 @@ import util from './util';
 const Tx = require('ethereumjs-tx');
 const accountsFile = './src/static/KovanAccounts.json';
 const schedule = require('node-schedule');
+const KEY = require('./keys/privateKey.json');
 
 export class AccountUtil {
 	public async transferEth(
@@ -34,7 +35,7 @@ export class AccountUtil {
 			from: from,
 			to: to,
 			value: contractUtil.web3.utils.toHex(
-				contractUtil.web3.utils.toWei(util.truncateNum(amt, 3) + '', 'ether')
+				contractUtil.web3.utils.toWei(amt.toPrecision(3) + '', 'ether')
 			)
 		};
 		const tx = new Tx(rawTx);
@@ -50,7 +51,7 @@ export class AccountUtil {
 		let privateKey;
 		if (!option.from || !option.privateKey) {
 			mainAccount = CST.KOVAN_ACCOUNTS[0].address;
-			privateKey = CST.KOVAN_ACCOUNTS[0].privateKey;
+			privateKey = KEY[mainAccount];
 			console.log('no from account specified, use defaut account: ' + mainAccount);
 		} else {
 			mainAccount = option.from;
@@ -144,18 +145,18 @@ export class AccountUtil {
 
 			if (filterredAccounts.length > 0) {
 				console.log('need fuel ether to ' + filterredAccounts.length + ' address');
-				const sendInterval = 10;
+				// const sendInterval = 5;
 				const startTime = new Date(Date.now());
 				const endTime = new Date(
 					startTime.getTime() +
-						sendInterval * 1000 * (filterredAccounts.length + 1) +
+						CST.TRANSFER_INTERVAL * 1000 * (filterredAccounts.length + 1) +
 						1000
 				);
 				let i = 0;
 				let nonce: number = await contractUtil.web3.eth.getTransactionCount(
 					mainAccount.address
 				);
-				const rule = '*/' + sendInterval + ' * * * * *';
+				const rule = '*/' + CST.TRANSFER_INTERVAL + ' * * * * *';
 				schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
 					if (i >= filterredAccounts.length) {
 						console.log('completd fuel process');
@@ -209,13 +210,15 @@ export class AccountUtil {
 		await Promise.all(promiseList);
 		if (filterredAccounts.length > 0) {
 			util.log('need collect ether form ' + filterredAccounts.length + ' accounts');
-			const sendInterval = 10;
+			// const sendInterval = 10;
 			const startTime = new Date(Date.now());
 			const endTime = new Date(
-				startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+				startTime.getTime() +
+					CST.TRANSFER_INTERVAL * 1000 * (filterredAccounts.length + 1) +
+					1000
 			);
 			let i = 0;
-			const rule = '*/' + sendInterval + ' * * * * *';
+			const rule = '*/' + CST.TRANSFER_INTERVAL + ' * * * * *';
 			schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
 				if (i >= filterredAccounts.length) {
 					console.log('completd collect process');
@@ -258,8 +261,10 @@ export class AccountUtil {
 	public async makeCreation(contractUtil: ContractUtil, option: IOption) {
 		const data = fs.readFileSync(accountsFile, 'utf8');
 		const accountsData = JSON.parse(data);
+		util.log('there are total accounts of ' + accountsData.length);
 		const alpha = option.alpha;
-		const accountsIdxToCreate = util.generateRandomIdx(accountsData.length - 1, alpha);
+		const accountsIdxToCreate = util.generateRandomIdx(accountsData.length, alpha);
+		util.log('number of random accounts to create ' + accountsIdxToCreate.length);
 
 		const filterredAccounts: any[] = [];
 		let promiseList: any[] = [];
@@ -267,41 +272,37 @@ export class AccountUtil {
 			const currentBalance = Number(
 				await contractUtil.web3.eth.getBalance(accountsData[idx].address)
 			);
-			if (currentBalance > CST.TRANSFER_GAS_TH) {
-				return filterredAccounts.push(accountsData[idx]);
-			} else {
-				return undefined;
+			if (currentBalance > CST.CREATE_GAS_TH) {
+				filterredAccounts.push(accountsData[idx]);
 			}
+			return;
 		});
 		await Promise.all(promiseList);
-		console.log(filterredAccounts);
-
-		util.log('there are ' + filterredAccounts.length + ' accounts to create');
-		const sendInterval = 10;
+		util.log('number of accounts able to create ' + filterredAccounts.length);
 		const startTime = new Date(Date.now());
 		const endTime = new Date(
-			startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+			startTime.getTime() + CST.CREATE_INTERVAL * 1000 * (filterredAccounts.length + 1) + 1000
 		);
 		let i = 0;
-		const rule = '*/' + sendInterval + ' * * * * *';
+		const rule = '*/' + CST.CREATE_INTERVAL + ' * * * * *';
 		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
 			if (i >= filterredAccounts.length) {
 				console.log('completd creation process');
 			} else {
 				i++;
-				const account = accountsData[i - 1];
+				const account = filterredAccounts[i - 1];
 				const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
 				const currentBalance = Number(
 					await contractUtil.web3.eth.getBalance(account.address)
 				);
-				console.log(currentBalance - CST.TRANSFER_GAS_TH);
-				const amt: number =
-					Number(
-						contractUtil.web3.utils.fromWei(
-							currentBalance - CST.TRANSFER_GAS_TH + '',
-							'ether'
-						)
-					) * Math.random();
+				const amtAfterGas = Number(
+					contractUtil.web3.utils.fromWei(
+						currentBalance - CST.CREATE_GAS_TH + '',
+						'ether'
+					)
+				);
+				const ethRandom: number = amtAfterGas * Math.random();
+				const amt: number = ethRandom === 0 ? amtAfterGas : ethRandom;
 				util.log(
 					'starting creating from account no ' +
 						i +
@@ -312,17 +313,17 @@ export class AccountUtil {
 				);
 				option.address = account.address;
 				option.privateKey = account.privateKey.replace('0x', '');
-				option.eth = util.truncateNum(amt);
-				option.gasLimit = 400000;
+				option.eth = Number(Number(amt.toFixed(10)).toPrecision(3));
+				option.gasLimit = CST.CREATE_GAS;
 				await contractUtil.create(option, nonce);
 			}
 		});
 	}
 
 	public async makeRedemption(contractUtil: ContractUtil, option: IOption) {
-		//
 		const data = fs.readFileSync(accountsFile, 'utf8');
 		const accountsData = JSON.parse(data);
+		util.log('there are total accounts of ' + accountsData.length);
 		const filterredAccounts: any[] = [];
 		let promiseList: any[] = [];
 		promiseList = accountsData.map(async account => {
@@ -332,30 +333,21 @@ export class AccountUtil {
 			const balanceOfB = Number(
 				await contractUtil.contract.methods.balanceOf(1, account.address).call()
 			);
-			const currentBalance = Number(
-				await contractUtil.web3.eth.getBalance(account.address)
-			);
+			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
 			// console.log(balanceOfA, balanceOfB);
 			if (balanceOfA > 0 && balanceOfB > 0 && currentBalance > CST.REDEEM_GAS_TH) {
-				return filterredAccounts.push(account);
-				// promiseList.push()
-			} else {
-				return undefined;
+				filterredAccounts.push(account);
 			}
+			return;
 		});
 		await Promise.all(promiseList);
-		// console.log(filterredAccounts);
-		// const alpha = option.alpha;
-		// const accountsIdxToCreate = util.generateRandomIdx(accountsData.length - 1, alpha);
-
-		util.log('there are ' + filterredAccounts.length + ' accounts to Redeem');
-		const sendInterval = 10;
+		util.log('there are ' + filterredAccounts.length + ' accounts able to Redeem');
 		const startTime = new Date(Date.now());
 		const endTime = new Date(
-			startTime.getTime() + sendInterval * 1000 * (filterredAccounts.length + 1) + 1000
+			startTime.getTime() + CST.REDEEM_INTERVAL * 1000 * (filterredAccounts.length + 1) + 1000
 		);
 		let i = 0;
-		const rule = '*/' + sendInterval + ' * * * * *';
+		const rule = '*/' + CST.REDEEM_INTERVAL + ' * * * * *';
 		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
 			if (i >= filterredAccounts.length) {
 				console.log('completd redemption process');
@@ -363,35 +355,116 @@ export class AccountUtil {
 				i++;
 				const account = filterredAccounts[i - 1];
 				const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
-				const balanceOfA = Number(
-					(
-						(await contractUtil.contract.methods.balanceOf(0, account.address).call()) *
-						Math.random()
-					).toFixed(0)
-				);
-				const balanceOfB = Number(
-					(
-						(await contractUtil.contract.methods.balanceOf(1, account.address).call()) *
-						Math.random()
-					).toFixed(0)
-				);
+				const balanceA = await contractUtil.contract.methods
+					.balanceOf(0, account.address)
+					.call();
+				const balanceARandom = balanceA * Math.random();
+				const createA = balanceARandom === 0 ? balanceA : balanceARandom.toFixed(0);
+
+				const balanceB = await contractUtil.contract.methods
+					.balanceOf(1, account.address)
+					.call();
+				const balanceBRandom = balanceB * Math.random();
+				const createB = balanceBRandom === 0 ? balanceB : balanceBRandom.toFixed(0);
+
 				util.log(
 					'starting redemption from account no ' +
 						i +
 						' address: ' +
 						account.address +
 						' amtA: ' +
-						balanceOfA +
+						createA +
 						' amtB: ' +
-						balanceOfB
+						createB
 				);
 				option.address = account.address;
 				option.privateKey = account.privateKey.replace('0x', '');
-				option.amtA = balanceOfA;
-				option.amtB = balanceOfB;
-				option.gasLimit = 800000;
-				console.log(option);
+				option.amtA = createA;
+				option.amtB = createB;
+				option.gasLimit = CST.REDEEM_GAS;
 				await contractUtil.redeem(option, nonce);
+			}
+		});
+	}
+
+	public async makeTokenTransfer(contractUtil: ContractUtil, option: IOption) {
+		const data = fs.readFileSync(accountsFile, 'utf8');
+		const accountsData = JSON.parse(data);
+		util.log('there are total accounts of ' + accountsData.length);
+		const filterredAccounts: any[] = [];
+		let promiseList: any[] = [];
+		promiseList = accountsData.map(async account => {
+			const balanceOfA = Number(
+				await contractUtil.contract.methods.balanceOf(0, account.address).call()
+			);
+			const balanceOfB = Number(
+				await contractUtil.contract.methods.balanceOf(1, account.address).call()
+			);
+			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
+			// console.log(balanceOfA, balanceOfB);
+			if ((balanceOfA > 0 || balanceOfB > 0) && currentBalance > CST.TRANSFER_TOKEN_GAS_TH) {
+				filterredAccounts.push(account);
+			}
+			return;
+		});
+		await Promise.all(promiseList);
+		util.log('there are ' + filterredAccounts.length + ' accounts able to Transfer');
+		const startTime = new Date(Date.now());
+		const endTime = new Date(
+			startTime.getTime() + CST.TRANSFER_TOKEN_INTERVAL * 1000 * (filterredAccounts.length + 1) + 1000
+		);
+		let i = 0;
+		const rule = '*/' + CST.TRANSFER_TOKEN_INTERVAL + ' * * * * *';
+		schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, async () => {
+			if (i >= filterredAccounts.length) {
+				console.log('completd tokenTransfer process');
+			} else {
+				i++;
+				const account = filterredAccounts[i - 1];
+				const nonce = await contractUtil.web3.eth.getTransactionCount(account.address);
+				const balanceA = await contractUtil.contract.methods
+					.balanceOf(0, account.address)
+					.call();
+				const balanceARandom = balanceA * Math.random();
+				const transferA = balanceARandom === 0 ? balanceA : balanceARandom.toFixed(0);
+
+				const balanceB = await contractUtil.contract.methods
+					.balanceOf(1, account.address)
+					.call();
+				const balanceBRandom = balanceB * Math.random();
+				const transferB = balanceBRandom === 0 ? balanceB : balanceBRandom.toFixed(0);
+
+				const toAIdx = Math.floor(Math.random() * accountsData.length);
+				const toAaddress = accountsData[toAIdx].address;
+
+				const toBIdx = Math.floor(Math.random() * accountsData.length);
+				const toBaddress = accountsData[toBIdx].address;
+
+				util.log(
+					'starting transferingToken from account no ' +
+						i +
+						' address: ' +
+						account.address +
+						' transfer A to: ' +
+						toAaddress +
+						' with amount: ' +
+						transferA +
+						' transfer B to: ' +
+						toBaddress +
+						' with amount: ' +
+						transferB
+				);
+				option.from = account.address;
+				option.privateKey = account.privateKey.replace('0x', '');
+				option.gasLimit = 60000;
+				option.index = 0;
+				option.to = toAaddress;
+				option.value = transferA;
+				await contractUtil.transferToken(option, nonce);
+				option.index = 1;
+				option.to = toBaddress;
+				option.value = transferB;
+				await contractUtil.transferToken(option, nonce + 1);
 			}
 		});
 	}

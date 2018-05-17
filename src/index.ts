@@ -40,6 +40,9 @@ switch (tool) {
 	case 'makeRedemption':
 		parityAccount.makeRedemption(contractUtil, option);
 		break;
+	case 'makeTokenTransfer':
+		parityAccount.makeTokenTransfer(contractUtil, option);
+		break;
 	case 'bitfinex':
 		util.log('starting fetchTrade of bitfinex');
 		bitfinexUtil.fetchTrades();
@@ -63,7 +66,7 @@ switch (tool) {
 	case 'readContract':
 		util.log('starting reading custodian contract state');
 		if (option.contractState === 'userBalance') {
-			contractUtil.readUserBalance();
+			contractUtil.readUserBalance(option);
 		} else if (option.contractState === 'systemStates') {
 			contractUtil.readSysStates();
 		} else {

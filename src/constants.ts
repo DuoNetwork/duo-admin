@@ -41,8 +41,16 @@ export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
 export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
+export const TRANSFER_TOKEN_INTERVAL = 5;  // in seconds
+export const TRANSFER_TOKEN_GAS_TH = 20000000000000000;
+export const TRANSFER_INTERVAL = 5;  // in seconds
 export const TRANSFER_GAS_TH = 20000000000000000;
-export const REDEEM_GAS_TH = 2000000000000000;
+export const REDEEM_INTERVAL = 5;  // in seconds
+export const REDEEM_GAS = 80000;
+export const REDEEM_GAS_TH = 5000000000000000;
+export const CREATE_INTERVAL = 5;  // in seconds
+export const CREATE_GAS = 150000;
+export const CREATE_GAS_TH = 10000000000000000;
 export const SYS_STATES = {
 	0: 'alphaInBP',
 	1: 'betaInWei',
@@ -71,15 +79,15 @@ export const SYS_STATES = {
 export const KOVAN_ACCOUNTS = [
 	{
 		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
-		privateKey: '16ea9a15dd4381a2ea9c41531fee530e6a78dadc1a86d3e64f207c35f4be1d17'
+		name: 'creator'
 	},
 	{
 		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
-		privateKey: '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285'
+		name: 'pf1'
 	},
 	{
 		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
-		privateKey: 'df2fe188d10c269022626e0260b8630562166dd310217faf137a884912420292'
+		name: 'pf2'
 	}
 ];
 
