@@ -46,6 +46,18 @@ export class SqlUtil {
 	public async insertSourceData(sourceData: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
+
+		//To do the checking for out of boundary data.
+		// if(isNaN(sourceData.price)){
+		// 	util.log('Price is NaN!');
+		// 	return;
+		// }
+
+		// if(isNaN(sourceData.amount)){
+		// 	util.log('Amount is NaN!');
+		// 	return;
+		// }
+
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
@@ -53,7 +65,6 @@ export class SqlUtil {
 		const amountStr = sourceData.amount.toString();
 
 
-		//To do the checking for out of boundary .
 
 
 		const sql =
