@@ -52,6 +52,10 @@ export class SqlUtil {
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
+
+		//To do the checking for out of boundary .
+
+
 		const sql =
 			'REPLACE ' +
 			CST.DB_TABLE_TRADE +
