@@ -315,6 +315,30 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
+	public async transferEth(
+		from: string,
+		privatekey: string,
+		to: string,
+		amt: number,
+		nonce: number
+	) {
+		const rawTx = {
+			nonce: nonce,
+			gasPrice: this.web3.utils.toHex(
+				(await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE
+			),
+			gasLimit: this.web3.utils.toHex(23000),
+			from: from,
+			to: to,
+			value: this.web3.utils.toHex(
+				this.web3.utils.toWei(amt.toPrecision(3) + '', 'ether')
+			)
+		};
+		await this.web3.eth
+			.sendSignedTransaction('0x' + this.signTx(rawTx, privatekey))
+			.on('receipt', util.log);
+	}
+
 	public async transferToken(
 		option: IOption,
 		nonce: number = -1
