@@ -310,7 +310,7 @@ export class AccountUtil {
 		}, CST.REDEEM_INTERVAL);
 	}
 
-	public async makeTokenTransfer(contractUtil: ContractUtil, option: IOption) {
+	public async makeTokenTransfer(contractUtil: ContractUtil) {
 		util.log('there are total accounts of ' + accountsData.length);
 		const filterredAccounts: any[] = [];
 		accountsData.forEach(async account => {

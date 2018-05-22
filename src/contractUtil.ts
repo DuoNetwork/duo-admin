@@ -149,24 +149,35 @@ export default class ContractUtil {
 		const abi = {
 			name: isInception ? CST.FN_START_CONTRACT : CST.FN_COMMIT_PRICE,
 			type: 'function',
-			inputs: [
-				{
-					name: 'priceInWei',
-					type: 'uint256'
-				},
-				{
-					name: 'timeInSecond',
-					type: 'uint256'
-				},
-				{
-					name: 'aAddr',
-					type: 'address'
-				},
-				{
-					name: 'bAddr',
-					type: 'address'
-				}
-			]
+			inputs: isInception
+				? [
+						{
+							name: 'priceInWei',
+							type: 'uint256'
+						},
+						{
+							name: 'timeInSecond',
+							type: 'uint256'
+						},
+						{
+							name: 'aAddr',
+							type: 'address'
+						},
+						{
+							name: 'bAddr',
+							type: 'address'
+						}
+				]
+				: [
+						{
+							name: 'priceInWei',
+							type: 'uint256'
+						},
+						{
+							name: 'timeInSecond',
+							type: 'uint256'
+						}
+				]
 		};
 		const command = this.generateTxString(abi, [
 			priceInWei,

@@ -18,10 +18,10 @@ export const DB_TABLE_TRADE = 'ETH_Trades_Table';
 export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
-export const CUSTODIAN_ADDR = '0xb4c3648be06f889d4cf457682a8cadc422d60da4';
-export const A_CONTRACT_ADDR = '';
-export const B_CONTRACT_ADDR = '';
-export const INCEPTION_BLK = 7281874;
+export const CUSTODIAN_ADDR = '0xbfc5ba69b932DeE3C95468BcA26C257EE0eD364C';
+export const A_CONTRACT_ADDR = '0x55c7906f3647f7ec7278bdd4767d8e9a042c6e98';
+export const B_CONTRACT_ADDR = '0xa73e9241fea81b96029da6201f7f59b054528b0e';
+export const INCEPTION_BLK = 7395360;
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
