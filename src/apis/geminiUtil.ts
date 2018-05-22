@@ -35,7 +35,7 @@ export class GeminiUtil {
 		}
 	}
 
-	public fetchTrades() {
+	public fetchTradesWithoutRetry() {
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
 		w.on('message', msg => this.parseApiResponse(msg.toString()));
@@ -51,6 +51,15 @@ export class GeminiUtil {
 		w.on('error', (error: Error) => {
 			util.log(error);
 		});
+	}
+
+	public fetchTrades() {
+		try {
+			this.fetchTradesWithoutRetry();
+		} catch (err) {
+			util.log(err);
+			this.fetchTrades();
+		}
 	}
 }
 

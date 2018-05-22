@@ -43,7 +43,7 @@ export class BitfinexUtil {
 	}
 
 	// Version 2 WebSocket API ---
-	public fetchTrades() {
+	public fetchTradesWithoutRetry() {
 		const w = new ws('wss://api.bitfinex.com/ws/2');
 
 		w.on('message', m => this.parseApiResponse(m.toString()));
@@ -75,6 +75,15 @@ export class BitfinexUtil {
 				util.log(error);
 			});
 		}, 20 * 1000);
+	}
+
+	public fetchTrades() {
+		try {
+			this.fetchTradesWithoutRetry();
+		} catch (err) {
+			util.log(err);
+			this.fetchTrades();
+		}
 	}
 }
 const bitfinexUtil = new BitfinexUtil();
