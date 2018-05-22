@@ -19,6 +19,9 @@ export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
 export const CUSTODIAN_ADDR = '0xb4c3648be06f889d4cf457682a8cadc422d60da4';
+export const A_CONTRACT_ADDR = '';
+export const B_CONTRACT_ADDR = '';
+export const INCEPTION_BLK = 7281874;
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
@@ -30,7 +33,6 @@ export const STATE_PRERESET = '2';
 export const STATE_DOWN_RESET = '3';
 export const STATE_UP_RESET = '4';
 export const STATE_PERIOD_RESET = '5';
-export const INCEPTION_BLK = 7281874;
 export const FN_START_CONTRACT = 'startContract';
 export const FN_COMMIT_PRICE = 'commitPrice';
 export const SRC_MYETHER = 'myether';

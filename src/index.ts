@@ -37,9 +37,6 @@ switch (tool) {
 	case 'makeCreation':
 		parityAccount.makeCreation(contractUtil, option);
 		break;
-	case 'makeRedemption':
-		parityAccount.makeRedemption(contractUtil, option);
-		break;
 	case 'makeTokenTransfer':
 		parityAccount.makeTokenTransfer(contractUtil, option);
 		break;
@@ -74,10 +71,23 @@ switch (tool) {
 		}
 		break;
 	case 'create':
-		contractUtil.create(option);
+		contractUtil.create(
+			option.address,
+			option.privateKey,
+			option.gasPrice,
+			option.gasLimit,
+			option.eth
+		);
 		break;
 	case 'redeem':
-		contractUtil.redeem(option);
+		contractUtil.redeem(
+			option.address,
+			option.privateKey,
+			option.amtA,
+			option.amtB,
+			option.gasPrice,
+			option.gasLimit
+		);
 		break;
 	case 'decoder':
 		util.log('starting decoding contract input');

@@ -9,7 +9,7 @@ import ContractUtil from './contractUtil';
 import { IAccount, IOption } from './types';
 import util from './util';
 const accountsFile = './src/static/KovanAccounts.json';
-const accountsData: IAccount[] = require(accountsFile);
+const accountsData: IAccount[] = require('./static/KovanAccounts.json');
 const KEY = require('./keys/privateKey.json');
 
 export class AccountUtil {
@@ -105,7 +105,7 @@ export class AccountUtil {
 			});
 
 			if (filterredAccounts.length > 0) {
-				const avgEthPerAccount = option.total / accountsData.length;
+				const avgEthPerAccount = option.total / filterredAccounts.length;
 				util.log('need fuel ether to ' + filterredAccounts.length + ' address');
 				let i = 0;
 				let nonce: number = await contractUtil.web3.eth.getTransactionCount(
@@ -113,7 +113,7 @@ export class AccountUtil {
 				);
 				const interval = setInterval(async () => {
 					if (i >= filterredAccounts.length) {
-						util.log('completd fuel process');
+						util.log('complet fuel process');
 						clearInterval(interval);
 					} else {
 						const account = filterredAccounts[i++];
@@ -155,11 +155,11 @@ export class AccountUtil {
 		});
 
 		if (filterredAccounts.length > 0) {
-			util.log('need collect ether form ' + filterredAccounts.length + ' accounts');
+			util.log('need collect ether from ' + filterredAccounts.length + ' accounts');
 			let i = 0;
 			const interval = setInterval(async () => {
 				if (i >= filterredAccounts.length) {
-					util.log('completd collect process');
+					util.log('completed collect process');
 					clearInterval(interval);
 				} else {
 					const account = filterredAccounts[i++];
@@ -238,16 +238,19 @@ export class AccountUtil {
 						' ethAmt: ' +
 						amt
 				);
-				option.address = account.address;
-				option.privateKey = account.privateKey.replace('0x', '');
-				option.eth = Number(Number(amt.toFixed(10)).toPrecision(3));
-				option.gasLimit = CST.CREATE_GAS;
-				await contractUtil.create(option, nonce);
+				await contractUtil.create(
+					account.address,
+					account.privateKey.replace('0x', ''),
+					CST.DEFAULT_GAS_PRICE,
+					CST.CREATE_GAS,
+					Number(Number(amt.toFixed(10)).toPrecision(3)),
+					nonce
+				);
 			}
 		}, CST.CREATE_INTERVAL);
 	}
 
-	public async makeRedemption(contractUtil: ContractUtil, option: IOption) {
+	public async makeRedemption(contractUtil: ContractUtil) {
 		util.log('there are total accounts of ' + accountsData.length);
 		const filterredAccounts: IAccount[] = [];
 		accountsData.forEach(async account => {
@@ -294,12 +297,15 @@ export class AccountUtil {
 						' amtB: ' +
 						createB
 				);
-				option.address = account.address;
-				option.privateKey = account.privateKey.replace('0x', '');
-				option.amtA = createA;
-				option.amtB = createB;
-				option.gasLimit = CST.REDEEM_GAS;
-				await contractUtil.redeem(option, nonce);
+				await contractUtil.redeem(
+					account.address,
+					account.privateKey.replace('0x', ''),
+					createA,
+					createB,
+					CST.DEFAULT_GAS_PRICE,
+					CST.REDEEM_GAS,
+					nonce
+				);
 			}
 		}, CST.REDEEM_INTERVAL);
 	}
@@ -361,17 +367,24 @@ export class AccountUtil {
 						' with amount: ' +
 						transferB
 				);
-				option.from = account.address;
-				option.privateKey = account.privateKey.replace('0x', '');
-				option.gasLimit = 60000;
-				option.index = 0;
-				option.to = toAaddress;
-				option.value = transferA;
-				await contractUtil.transferToken(option, nonce);
-				option.index = 1;
-				option.to = toBaddress;
-				option.value = transferB;
-				await contractUtil.transferToken(option, nonce + 1);
+				await contractUtil.transferToken(
+					0,
+					account.address,
+					account.privateKey.replace('0x', ''),
+					toAaddress,
+					transferA,
+					CST.DEFAULT_GAS_PRICE,
+					60000,
+					nonce);
+				await contractUtil.transferToken(
+					0,
+					account.address,
+					account.privateKey.replace('0x', ''),
+					toBaddress,
+					transferB,
+					CST.DEFAULT_GAS_PRICE,
+					60000,
+					nonce + 1);
 			}
 		}, CST.TRANSFER_TOKEN_INTERVAL);
 	}
