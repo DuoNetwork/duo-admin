@@ -44,6 +44,7 @@ export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const TRANSFER_TOKEN_INTERVAL = 5;  // in seconds
+export const TRANSFER_TOKEN_GAS = 120000;
 export const TRANSFER_TOKEN_GAS_TH = 20000000000000000;
 export const TRANSFER_INTERVAL = 5;  // in seconds
 export const TRANSFER_GAS_TH = 20000000000000000;
@@ -51,7 +52,7 @@ export const REDEEM_INTERVAL = 5;  // in seconds
 export const REDEEM_GAS = 80000;
 export const REDEEM_GAS_TH = 5000000000000000;
 export const CREATE_INTERVAL = 5;  // in seconds
-export const CREATE_GAS = 150000;
+export const CREATE_GAS = 200000;
 export const CREATE_GAS_TH = 10000000000000000;
 export const SYS_STATES = {
 	0: 'alphaInBP',

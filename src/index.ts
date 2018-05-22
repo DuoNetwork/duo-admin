@@ -37,8 +37,11 @@ switch (tool) {
 	case 'makeCreation':
 		parityAccount.makeCreation(contractUtil, option);
 		break;
+	case 'makeRedemption':
+		parityAccount.makeRedemption(contractUtil);
+		break;
 	case 'makeTokenTransfer':
-		parityAccount.makeTokenTransfer(contractUtil, option);
+		parityAccount.makeTokenTransfer(contractUtil);
 		break;
 	case 'bitfinex':
 		util.log('starting fetchTrade of bitfinex');
