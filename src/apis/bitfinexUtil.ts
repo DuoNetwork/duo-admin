@@ -71,8 +71,8 @@ export class BitfinexUtil {
 		});
 
 		setInterval(() => {
-			w.send('ping', function ack(error) {
-				util.log(error);
+			w.send('ping', function ack() {
+				util.log('heart beat');
 			});
 		}, 20 * 1000);
 	}
