@@ -3,7 +3,7 @@
 exports[`parseTrade 1`] = `
 Object {
   "amount": 0.1198,
-  "id": 32872596,
+  "id": "32872596",
   "price": 630.17,
   "source": "GDAX",
   "timestamp": 1524739231228,
@@ -13,7 +13,7 @@ Object {
 exports[`parseTrade 2`] = `
 Object {
   "amount": 0.983,
-  "id": 32872595,
+  "id": "32872595",
   "price": 630.11,
   "source": "GDAX",
   "timestamp": 1524739231228,
@@ -23,7 +23,7 @@ Object {
 exports[`parseTrade 3`] = `
 Object {
   "amount": 0.2,
-  "id": 32872594,
+  "id": "32872594",
   "price": 630.11,
   "source": "GDAX",
   "timestamp": 1524739231228,

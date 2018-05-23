@@ -14,7 +14,7 @@ export class GeminiUtil {
 
 		return {
 			source: CST.EXCHANGE_GEMINI,
-			id: trade.tid,
+			id: trade.tid + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.amount)),
 			timestamp: Number(timestampms)

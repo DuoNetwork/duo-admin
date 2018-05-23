@@ -3,7 +3,7 @@
 exports[`parseApiResponse 1`] = `
 Object {
   "amount": 50,
-  "id": 3590632229,
+  "id": "3590632229",
   "price": 654,
   "source": "GEMINI",
   "timestamp": 1524810712835,
@@ -13,7 +13,7 @@ Object {
 exports[`parseTrade 1`] = `
 Object {
   "amount": 0.027783,
-  "id": 3584809531,
+  "id": "3584809531",
   "price": 629.69,
   "source": "GEMINI",
   "timestamp": 1524739084253,
@@ -23,7 +23,7 @@ Object {
 exports[`parseTrade 2`] = `
 Object {
   "amount": 0.021431,
-  "id": 3584814698,
+  "id": "3584814698",
   "price": 629.79,
   "source": "GEMINI",
   "timestamp": 1524739191718,
