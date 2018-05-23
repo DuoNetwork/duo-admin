@@ -1,4 +1,4 @@
-import sqlUtil from '../sqlUtil';
+import dbUtil from '../dbUtil';
 import bitfinexUtil from './bitfinexUtil';
 const trades: Array<{ [key: string]: string }> = require('../samples/bitfinex.json');
 const apiResponse = JSON.stringify(require('../samples/bitfinexMsg.json'));
@@ -11,10 +11,10 @@ test('parseTrade', () => {
 });
 
 test('parseApiResponse', async () => {
-	sqlUtil.insertSourceData = jest.fn(() => Promise.resolve());
+	dbUtil.insertSourceData = jest.fn(() => Promise.resolve());
 	await bitfinexUtil.parseApiResponse(apiResponse);
 	// for (let i = 0; i < 6; i++)
 	expect(
-		(sqlUtil.insertSourceData as jest.Mock<Promise<void>>).mock.calls[0][0]
+		(dbUtil.insertSourceData as jest.Mock<Promise<void>>).mock.calls[0][0]
 	).toMatchSnapshot();
 });

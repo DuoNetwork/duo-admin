@@ -1,5 +1,5 @@
 import * as CST from './constants';
-import sqlUtil from './sqlUtil';
+import dbUtil from './dbUtil';
 import { IPrice, ITrade } from './types';
 import util from './util';
 
@@ -112,7 +112,7 @@ export class Calculateor {
 
 	public async getPriceFix(): Promise<IPrice> {
 		const currentTimestamp: number = Math.floor(Date.now());
-		const trades = await sqlUtil.readSourceData(currentTimestamp);
+		const trades = await dbUtil.readSourceData(currentTimestamp);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
 			[CST.EXCHANGE_BITFINEX]: [],
 			[CST.EXCHANGE_GEMINI]: [],
@@ -141,7 +141,7 @@ export class Calculateor {
 
 		if (priceFix === 0) {
 			util.log('no priceFix found, use the last ETH price');
-			const lastPriceObj = await sqlUtil.readLastPrice();
+			const lastPriceObj = await dbUtil.readLastPrice();
 			util.log(
 				'the priceFix is: ' + lastPriceObj.price + ' at timestamp ' + lastPriceObj.timestamp
 			);
@@ -162,7 +162,7 @@ export class Calculateor {
 					priceObj.volume
 			);
 			// save price into DB
-			await sqlUtil.insertPrice(priceObj);
+			await dbUtil.insertPrice(priceObj);
 
 			return priceObj;
 		}

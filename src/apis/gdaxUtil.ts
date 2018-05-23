@@ -1,5 +1,5 @@
 import * as CST from '../constants';
-import sqlUtil from '../sqlUtil';
+import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
@@ -22,7 +22,7 @@ export class GdaxUtil {
 
 		parsedData.forEach(item => {
 			// util.log(item);
-			sqlUtil.insertSourceData(this.parseTrade(item));
+			dbUtil.insertSourceData(this.parseTrade(item));
 			util.log('one record inserted');
 		});
 	}

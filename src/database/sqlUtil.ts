@@ -1,7 +1,7 @@
 import * as mysql from 'mysql';
-import * as CST from './constants';
-import { IPrice, ITrade } from './types';
-import util from './util';
+import * as CST from '../constants';
+import { IPrice, ITrade } from '../types';
+import util from '../util';
 
 export class SqlUtil {
 	public conn: undefined | mysql.Connection = undefined;
@@ -46,8 +46,7 @@ export class SqlUtil {
 	public async insertSourceData(sourceData: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
-
-		//To do the checking for out of boundary data.
+		// To do the checking for out of boundary data.
 		// if(isNaN(sourceData.price)){
 		// 	util.log('Price is NaN!');
 		// 	return;
@@ -63,9 +62,6 @@ export class SqlUtil {
 
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
-
-
-
 
 		const sql =
 			'REPLACE ' +

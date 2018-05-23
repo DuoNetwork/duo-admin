@@ -19,6 +19,7 @@ export interface IAccount {
 
 export interface IOption {
 	live: boolean;
+	aws: boolean;
 	gasPrice: number;
 	gasLimit: number;
 	eth: number;

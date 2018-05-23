@@ -6,8 +6,8 @@ import krakenUtil from './apis/krakenUtil';
 import calculator from './calculator';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
+import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
-import sqlUtil from './sqlUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -17,7 +17,7 @@ util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.sourc
 const contractUtil = new ContractUtil(option);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool)) {
-	sqlUtil.init(CST.DB_USER, option.pwd);
+	dbUtil.init(option.aws, CST.DB_USER, option.pwd);
 }
 
 switch (tool) {

@@ -1,6 +1,6 @@
 import ws from 'ws';
 import * as CST from '../constants';
-import sqlUtil from '../sqlUtil';
+import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
@@ -30,13 +30,13 @@ export class BitfinexUtil {
 				snapshotArr.forEach(trade => {
 					const parsedTrade: ITrade = this.parseTrade(trade);
 					// util.log(parsedTrade);
-					sqlUtil.insertSourceData(parsedTrade);
+					dbUtil.insertSourceData(parsedTrade);
 				});
 			} else if (parsedJson[1] !== 'hb' && parsedJson[1] === 'te') {
 				parsedJson = parsedJson[2];
 
 				const parsedTrade: ITrade = this.parseTrade(parsedJson);
-				sqlUtil.insertSourceData(parsedTrade);
+				dbUtil.insertSourceData(parsedTrade);
 			}
 			util.log('one record inserted');
 		}

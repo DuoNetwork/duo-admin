@@ -82,7 +82,8 @@ export class Util {
 
 	public parseOptions(argv: string[]): IOption {
 		const option = {
-			live: false,
+			live: process.argv.includes('live'),
+			aws: process.argv.includes('aws'),
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
@@ -106,7 +107,6 @@ export class Util {
 			amtA: 0,
 			amtB: 0
 		};
-		option.live = process.argv.includes('live');
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
 			switch (args[0]) {

@@ -1,5 +1,5 @@
 import * as CST from '../constants';
-import sqlUtil from '../sqlUtil';
+import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
@@ -29,7 +29,7 @@ export class KrakenUtil {
 			// util.log(trade);
 			const parsedTrade: ITrade = krakenUtil.parseTrade(trade);
 			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
-				sqlUtil.insertSourceData(parsedTrade);
+				dbUtil.insertSourceData(parsedTrade);
 				count++;
 			}
 		});

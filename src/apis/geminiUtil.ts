@@ -1,6 +1,6 @@
 import ws from 'ws';
 import * as CST from '../constants';
-import sqlUtil from '../sqlUtil';
+import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
@@ -30,7 +30,7 @@ export class GeminiUtil {
 			const parsedTrade: ITrade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
-			sqlUtil.insertSourceData(parsedTrade);
+			dbUtil.insertSourceData(parsedTrade);
 			util.log('one trade fetched and inserted');
 		}
 	}

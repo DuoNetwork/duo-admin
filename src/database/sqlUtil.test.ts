@@ -1,6 +1,6 @@
 import * as mysql from 'mysql';
+import { IPrice } from '../types';
 import sqlUtil from './sqlUtil';
-import { Price } from './types';
 
 test('connection initalization', () => {
 	return sqlUtil.executeQuery('test').catch(error => expect(error).toMatchSnapshot());
@@ -44,7 +44,7 @@ test('readLastPrice', async () => {
 	);
 	const price = await sqlUtil.readLastPrice();
 	expect(
-		(sqlUtil.executeQuery as jest.Mock<Promise<Price[]>>).mock.calls[0][0]
+		(sqlUtil.executeQuery as jest.Mock<Promise<IPrice[]>>).mock.calls[0][0]
 	).toMatchSnapshot();
 	expect(price).toMatchSnapshot();
 });

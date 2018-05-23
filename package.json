@@ -6,7 +6,7 @@
 	"author": "FinBook Pte Ltd",
 	"scripts": {
 		"test": "jest",
-		"tslint": "tslint -c tslint.json -p tsconfig.json",
+		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
 		"readContract": "ts-node ./src/index readContract",
 		"decoder": "ts-node ./src/index decoder",
 		"calculatePrice": "ts-node ./src/index calculatePrice",
