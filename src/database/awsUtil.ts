@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import moment from 'moment';
 import * as CST from '../constants';
 import { ITrade } from '../types';
 // import util from '../util';
@@ -19,8 +20,13 @@ export class AwsUtil {
 		const params = {
 			TableName: 'trades',
 			Item: {
+				[CST.DB_TX_SRC_DATE]: {
+					S:
+						sourceData.source +
+						'|' +
+						moment.utc(sourceData.timestamp).format('YYYY-MM-DD')
+				},
 				[CST.DB_TX_ID]: { S: sourceData.id },
-				[CST.DB_TX_SRC]: { S: sourceData.source },
 				[CST.DB_TX_PRICE]: { N: priceStr },
 				[CST.DB_TX_AMOUNT]: { N: amountStr },
 				[CST.DB_TX_TS]: { N: sourceData.timestamp + '' },

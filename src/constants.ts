@@ -101,6 +101,7 @@ export const DB_TX_PRICE = 'price';
 export const DB_TX_AMOUNT = 'amount';
 export const DB_TX_TS = 'timestamp';
 export const DB_TX_SYSTIME = 'systime';
+export const DB_TX_SRC_DATE = 'sourceDate';
 export const DB_HISTORY_PRICE = 'price';
 export const DB_HISTORY_TIMESTAMP = 'timestamp';
 export const DB_HISTORY_VOLUME = 'volume';
