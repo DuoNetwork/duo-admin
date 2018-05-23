@@ -3,8 +3,8 @@ import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
-const INTERVAL_SECS = 2;
-
+const INTERVAL_SECS = 1;
+let pushedID: number[] = [];
 export class GdaxUtil {
 	public parseTrade(trade: { [key: string]: string }): ITrade {
 		return {
@@ -21,9 +21,16 @@ export class GdaxUtil {
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
 
 		parsedData.forEach(item => {
-			// util.log(item);
-			dbUtil.insertSourceData(this.parseTrade(item));
-			util.log('one record inserted');
+			// util.log(Number(item.trade_id));
+			if (pushedID.indexOf(Number(item.trade_id)) < 0) {
+				pushedID.push(Number(item.trade_id));
+				dbUtil.insertSourceData(this.parseTrade(item));
+				util.log('one record inserted: ' + item.trade_id);
+
+				if (pushedID.length > 20000) {
+					pushedID = [];
+				}
+			}
 		});
 	}
 
