@@ -210,7 +210,8 @@ export default class ContractUtil {
 						CST.PF_ADDR_PK
 					)
 			)
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
 	}
 
 	public generatePrices(time: number, length: number, s0: number): number {
@@ -310,7 +311,8 @@ export default class ContractUtil {
 						privateKey
 					)
 			)
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch((err) => util.log(err));
 	}
 
 	public async redeem(
@@ -377,7 +379,8 @@ export default class ContractUtil {
 						privateKey
 					)
 			)
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
 	}
 
 	public async transferEth(
@@ -397,7 +400,8 @@ export default class ContractUtil {
 		};
 		await this.web3.eth
 			.sendSignedTransaction('0x' + this.signTx(rawTx, privatekey))
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
 	}
 
 	public async transferToken(
@@ -465,7 +469,8 @@ export default class ContractUtil {
 						privateKey
 					)
 			)
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
 	}
 
 	public async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
@@ -487,7 +492,8 @@ export default class ContractUtil {
 						CST.PF_ADDR_PK
 					)
 			)
-			.on('receipt', util.log);
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
 	}
 
 	public async triggerReset(count: number = 1) {
