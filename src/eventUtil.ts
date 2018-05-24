@@ -21,9 +21,8 @@ export class EventUtil {
 					toBlock: end
 				},
 				async (error, events) => {
-					if (error) {
-						util.log(error);
-					} else if (events.length > 0) {
+					if (error) util.log(error);
+					else if (events.length > 0) {
 						util.log(events);
 						util.log('start preReset triggering');
 						events.forEach(async r => await trigger(r));
@@ -40,27 +39,23 @@ export class EventUtil {
 	public async subscribe(contractUtil: ContractUtil, option: IOption) {
 		util.log('subscribing to ' + option.event);
 
-		if (option.source) {
-			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
+		if (option.source)
+			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event))
 				setInterval(async () => {
 					const state = await contractUtil.read('state');
 					util.log('current state is ' + state);
 
-					if (
-						option.event === CST.EVENT_START_PRE_RESET &&
-						state === CST.STATE_PRERESET
-					) {
+					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.STATE_PRERESET)
 						await contractUtil.triggerPreReset();
-					} else if (
+					else if (
 						option.event === CST.EVENT_START_RESET &&
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
-					) {
+					)
 						await contractUtil.triggerReset();
-					}
 				}, 15000);
-			} else {
+			else {
 				let startBlk = await contractUtil.web3.eth.getBlockNumber();
 				let currentBlk = startBlk;
 				setInterval(async () => {
@@ -75,44 +70,38 @@ export class EventUtil {
 							return Promise.resolve();
 						}
 					);
-					if (pulled) {
-						startBlk = currentBlk + 1;
-					}
+					if (pulled) startBlk = currentBlk + 1;
 				}, 15000);
 			}
-		} else {
+		else {
 			util.log('starting listening ' + option.event);
 			let tg: (r: any) => Promise<void> = () => Promise.resolve();
-			if (option.event === CST.EVENT_ACCEPT_PRICE) {
+			if (option.event === CST.EVENT_ACCEPT_PRICE)
 				tg = (r: any) => {
 					util.log(r);
 					return Promise.resolve();
 				};
-			} else {
+			else {
 				const state = await contractUtil.read('state');
 				util.log('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
 					tg = () => contractUtil.triggerPreReset();
-					if (state === CST.STATE_PRERESET) {
-						await contractUtil.triggerPreReset();
-					}
+					if (state === CST.STATE_PRERESET) await contractUtil.triggerPreReset();
 				} else if (option.event === CST.EVENT_START_RESET) {
 					tg = () => contractUtil.triggerReset(2);
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
-					) {
+					)
 						await contractUtil.triggerReset();
-					}
 				}
 			}
 
 			contractUtil.contract.events[option.event]({}, async (error, evt) => {
-				if (error) {
-					util.log(error);
-				} else {
+				if (error) util.log(error);
+				else {
 					console.log(evt);
 					await tg(evt);
 				}

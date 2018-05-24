@@ -6,10 +6,7 @@ import util from '../util';
 
 export class GeminiUtil {
 	public parseTrade(parsedJson: any): ITrade {
-		let timestampms = parsedJson.timestampms;
-		if (timestampms === undefined) {
-			timestampms = '';
-		}
+		const timestampms = parsedJson.timestampms || '';
 		const trade = parsedJson.events[0];
 
 		return {

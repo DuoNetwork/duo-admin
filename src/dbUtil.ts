@@ -7,11 +7,7 @@ export class DbUtil {
 
 	public init(useAWS: boolean, user: string, pwd: string) {
 		this.aws = useAWS;
-		if (this.aws) {
-			awsUtil.init();
-		} else {
-			sqlUtil.init(user, pwd);
-		}
+		this.aws ? awsUtil.init() : sqlUtil.init(user, pwd);
 	}
 
 	public insertSourceData(sourceData: ITrade) {

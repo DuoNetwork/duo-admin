@@ -27,9 +27,7 @@ export class GdaxUtil {
 				dbUtil.insertSourceData(this.parseTrade(item));
 				util.log('one record inserted: ' + item.trade_id);
 
-				if (pushedID.length > 20000) {
-					pushedID = [];
-				}
+				if (pushedID.length > 20000) pushedID = [];
 			}
 		});
 	}

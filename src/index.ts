@@ -16,9 +16,8 @@ const option = util.parseOptions(process.argv);
 util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.source || 'local node'));
 const contractUtil = new ContractUtil(option);
 
-if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool)) {
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
 	dbUtil.init(option.aws, CST.DB_USER, option.pwd);
-}
 
 switch (tool) {
 	case 'createAccount':
@@ -65,13 +64,10 @@ switch (tool) {
 		break;
 	case 'readContract':
 		util.log('starting reading custodian contract state');
-		if (option.contractState === 'userBalance') {
-			contractUtil.readUserBalance(option);
-		} else if (option.contractState === 'systemStates') {
-			contractUtil.readSysStates();
-		} else {
-			contractUtil.read(option.contractState);
-		}
+		if (option.contractState === 'userBalance') contractUtil.readUserBalance(option);
+		else if (option.contractState === 'systemStates') contractUtil.readSysStates();
+		else contractUtil.read(option.contractState);
+
 		break;
 	case 'create':
 		contractUtil.create(

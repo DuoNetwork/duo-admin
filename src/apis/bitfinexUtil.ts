@@ -5,46 +5,37 @@ import { ITrade } from '../types';
 import util from '../util';
 
 export class BitfinexUtil {
-	public parseTrade(trade: object): ITrade {
+	public parseTrade(trade: number[]): ITrade {
 		return {
 			source: CST.EXCHANGE_BITFINEX,
 			id: trade[0] + '',
-			price: Number(trade[3]),
-			amount: Math.abs(Number(trade[2])),
-			timestamp: Number(trade[1])
+			price: Number(trade[2]),
+			amount: Math.abs(Number(trade[3])),
+			timestamp: Number(trade[1]) * 1000
 		};
 	}
 
 	public parseApiResponse(msg: string) {
-		let parsedJson = JSON.parse(msg.toString());
-		// util.log(parsedJson);
-		if (parsedJson !== undefined) {
-			// handle the snapshot
-			if (
-				parsedJson.event === undefined &&
-				parsedJson[1] !== 'hb' &&
-				!(parsedJson[1] === 'te' || parsedJson[1] === 'tu')
-			) {
-				// util.log(parsedJson);
-				const snapshotArr = parsedJson[1];
-				snapshotArr.forEach(trade => {
-					const parsedTrade: ITrade = this.parseTrade(trade);
-					// util.log(parsedTrade);
+		const parsedJson = JSON.parse(msg.toString());
+		if (Array.isArray(parsedJson)) {
+			const data = parsedJson[1];
+			if (Array.isArray(data))
+				data.forEach(trade => {
+					const parsedTrade = this.parseTrade(trade);
 					dbUtil.insertSourceData(parsedTrade);
+					util.log('record inserted ' + parsedTrade.id);
 				});
-			} else if (parsedJson[1] !== 'hb' && parsedJson[1] === 'te') {
-				parsedJson = parsedJson[2];
-
-				const parsedTrade: ITrade = this.parseTrade(parsedJson);
+			else if (data === 'hb') util.log('trade channel heartbeat');
+			else if (data === 'tu') {
+				const parsedTrade = this.parseTrade(parsedJson.slice(3));
 				dbUtil.insertSourceData(parsedTrade);
-			}
-			util.log('one record inserted');
-		}
+				util.log('record inserted ' + parsedTrade.id);
+			} else util.log(msg);
+		} else util.log(msg);
 	}
 
-	// Version 2 WebSocket API ---
 	public fetchTradesWithoutRetry() {
-		const w = new ws('wss://api.bitfinex.com/ws/2');
+		const w = new ws('wss://api.bitfinex.com/ws/');
 
 		w.on('message', m => this.parseApiResponse(m.toString()));
 

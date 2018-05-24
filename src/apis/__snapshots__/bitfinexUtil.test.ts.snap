@@ -1,81 +1,311 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`parseApiResponse 1`] = `
+exports[`parseApiResponse 2 1`] = `
 Object {
-  "amount": 0.70208471,
-  "id": "234509508",
-  "price": 653.38,
+  "amount": 1,
+  "id": "249177464",
+  "price": 603.83,
   "source": "BITFINEX",
-  "timestamp": 1524809497543,
+  "timestamp": 1527140604000,
 }
 `;
 
-exports[`parseTrade 1`] = `
+exports[`parseApiResponse 2 2`] = `
 Object {
-  "amount": 0.00671182,
-  "id": "234055510",
-  "price": 620.31,
+  "amount": 0.82868542,
+  "id": "249177453",
+  "price": 603.82,
   "source": "BITFINEX",
-  "timestamp": 1524736613727,
+  "timestamp": 1527140599000,
 }
 `;
 
-exports[`parseTrade 2`] = `
+exports[`parseApiResponse 2 3`] = `
 Object {
-  "amount": 9.99539725,
-  "id": "234055509",
-  "price": 620.31,
+  "amount": 0.31775458,
+  "id": "249177452",
+  "price": 603.82,
   "source": "BITFINEX",
-  "timestamp": 1524736613725,
+  "timestamp": 1527140599000,
 }
 `;
 
-exports[`parseTrade 3`] = `
+exports[`parseApiResponse 2 4`] = `
 Object {
-  "amount": 10.00460275,
-  "id": "234055496",
-  "price": 620.31,
+  "amount": 0.0438,
+  "id": "249177378",
+  "price": 603.82,
   "source": "BITFINEX",
-  "timestamp": 1524736608714,
+  "timestamp": 1527140567000,
 }
 `;
 
-exports[`parseTrade 4`] = `
+exports[`parseApiResponse 2 5`] = `
 Object {
-  "amount": 0.0069549,
-  "id": "234055479",
-  "price": 620.31,
+  "amount": 1.14644,
+  "id": "249177339",
+  "price": 603.82,
   "source": "BITFINEX",
-  "timestamp": 1524736604753,
+  "timestamp": 1527140560000,
 }
 `;
 
-exports[`parseTrade 5`] = `
+exports[`parseApiResponse 2 6`] = `
 Object {
-  "amount": 1.17616107,
-  "id": "234055478",
-  "price": 620.31,
+  "amount": 0.02324322,
+  "id": "249177336",
+  "price": 603.83,
   "source": "BITFINEX",
-  "timestamp": 1524736604751,
+  "timestamp": 1527140558000,
 }
 `;
 
-exports[`parseTrade 6`] = `
+exports[`parseApiResponse 2 7`] = `
+Object {
+  "amount": 1,
+  "id": "249177326",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140553000,
+}
+`;
+
+exports[`parseApiResponse 2 8`] = `
+Object {
+  "amount": 1,
+  "id": "249177325",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140553000,
+}
+`;
+
+exports[`parseApiResponse 2 9`] = `
+Object {
+  "amount": 1,
+  "id": "249177324",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140553000,
+}
+`;
+
+exports[`parseApiResponse 2 10`] = `
 Object {
   "amount": 2,
-  "id": "234055474",
-  "price": 620.3,
+  "id": "249177317",
+  "price": 603.83,
   "source": "BITFINEX",
-  "timestamp": 1524736603150,
+  "timestamp": 1527140550000,
 }
 `;
 
-exports[`parseTrade 7`] = `
+exports[`parseApiResponse 2 11`] = `
 Object {
-  "amount": 7,
-  "id": "234055473",
-  "price": 620.3,
+  "amount": 2,
+  "id": "249177305",
+  "price": 603.83,
   "source": "BITFINEX",
-  "timestamp": 1524736602407,
+  "timestamp": 1527140549000,
+}
+`;
+
+exports[`parseApiResponse 2 12`] = `
+Object {
+  "amount": 2,
+  "id": "249177302",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140547000,
+}
+`;
+
+exports[`parseApiResponse 2 13`] = `
+Object {
+  "amount": 2,
+  "id": "249177301",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140547000,
+}
+`;
+
+exports[`parseApiResponse 2 14`] = `
+Object {
+  "amount": 2,
+  "id": "249177299",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140546000,
+}
+`;
+
+exports[`parseApiResponse 2 15`] = `
+Object {
+  "amount": 5,
+  "id": "249177295",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140545000,
+}
+`;
+
+exports[`parseApiResponse 2 16`] = `
+Object {
+  "amount": 2,
+  "id": "249177287",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140544000,
+}
+`;
+
+exports[`parseApiResponse 2 17`] = `
+Object {
+  "amount": 0.2855797,
+  "id": "249177274",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140533000,
+}
+`;
+
+exports[`parseApiResponse 2 18`] = `
+Object {
+  "amount": 0.3,
+  "id": "249177272",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140532000,
+}
+`;
+
+exports[`parseApiResponse 2 19`] = `
+Object {
+  "amount": 0.19200542,
+  "id": "249177271",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140532000,
+}
+`;
+
+exports[`parseApiResponse 2 20`] = `
+Object {
+  "amount": 0.09069458,
+  "id": "249177270",
+  "price": 603.82,
+  "source": "BITFINEX",
+  "timestamp": 1527140532000,
+}
+`;
+
+exports[`parseApiResponse 2 21`] = `
+Object {
+  "amount": 6.68585664,
+  "id": "249177235",
+  "price": 604.04,
+  "source": "BITFINEX",
+  "timestamp": 1527140526000,
+}
+`;
+
+exports[`parseApiResponse 2 22`] = `
+Object {
+  "amount": 0.06985447,
+  "id": "249177234",
+  "price": 604.04,
+  "source": "BITFINEX",
+  "timestamp": 1527140526000,
+}
+`;
+
+exports[`parseApiResponse 2 23`] = `
+Object {
+  "amount": 0.06203653,
+  "id": "249177218",
+  "price": 604.06,
+  "source": "BITFINEX",
+  "timestamp": 1527140523000,
+}
+`;
+
+exports[`parseApiResponse 2 24`] = `
+Object {
+  "amount": 0.09069458,
+  "id": "249177217",
+  "price": 604.08,
+  "source": "BITFINEX",
+  "timestamp": 1527140523000,
+}
+`;
+
+exports[`parseApiResponse 2 25`] = `
+Object {
+  "amount": 0.13740087,
+  "id": "249177215",
+  "price": 604.17,
+  "source": "BITFINEX",
+  "timestamp": 1527140523000,
+}
+`;
+
+exports[`parseApiResponse 2 26`] = `
+Object {
+  "amount": 11,
+  "id": "249177214",
+  "price": 604.2,
+  "source": "BITFINEX",
+  "timestamp": 1527140523000,
+}
+`;
+
+exports[`parseApiResponse 2 27`] = `
+Object {
+  "amount": 0.1550231,
+  "id": "249177213",
+  "price": 604.18,
+  "source": "BITFINEX",
+  "timestamp": 1527140522000,
+}
+`;
+
+exports[`parseApiResponse 2 28`] = `
+Object {
+  "amount": 0.50791,
+  "id": "249177212",
+  "price": 604.19,
+  "source": "BITFINEX",
+  "timestamp": 1527140522000,
+}
+`;
+
+exports[`parseApiResponse 2 29`] = `
+Object {
+  "amount": 31.6243758,
+  "id": "249177199",
+  "price": 604.57,
+  "source": "BITFINEX",
+  "timestamp": 1527140522000,
+}
+`;
+
+exports[`parseApiResponse 2 30`] = `
+Object {
+  "amount": 1,
+  "id": "249177198",
+  "price": 604.6,
+  "source": "BITFINEX",
+  "timestamp": 1527140522000,
+}
+`;
+
+exports[`parseApiResponse 5 1`] = `
+Object {
+  "amount": 0.02238323,
+  "id": "249177529",
+  "price": 603.83,
+  "source": "BITFINEX",
+  "timestamp": 1527140620000,
 }
 `;

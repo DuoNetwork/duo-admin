@@ -24,13 +24,9 @@ export class Util {
 					}
 				},
 				(error, res, body) => {
-					if (error) {
-						reject(error);
-					} else if (res.statusCode === 200) {
-						resolve(body);
-					} else {
-						reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
-					}
+					if (error) reject(error);
+					else if (res.statusCode === 200) resolve(body);
+					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
 				}
 			)
 		);
@@ -38,18 +34,13 @@ export class Util {
 
 	public generateRandomIdx(max: number, alpha: number): number[] {
 		const output: number[] = [];
-		if (alpha === 1) {
-			for (let i = 0; i < max; i++) {
-				output.push(i);
-			}
-		} else {
+		if (alpha === 1) for (let i = 0; i < max; i++) output.push(i);
+		else {
 			const num = Math.floor(max * alpha);
 
 			while (output.length < num) {
 				const item = Math.floor(Math.random() * max);
-				if (output.indexOf(item) < 0) {
-					output.push(item);
-				}
+				if (output.indexOf(item) < 0) output.push(item);
 			}
 		}
 
@@ -68,13 +59,9 @@ export class Util {
 					json
 				},
 				(error, res, body) => {
-					if (error) {
-						reject(error);
-					} else if (res.statusCode === 200) {
-						resolve(body);
-					} else {
-						reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
-					}
+					if (error) reject(error);
+					else if (res.statusCode === 200) resolve(body);
+					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
 				}
 			)
 		);
@@ -105,7 +92,8 @@ export class Util {
 			minEther: 0.02,
 			alpha: 0.3,
 			amtA: 0,
-			amtB: 0
+			amtB: 0,
+			generator: ''
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -173,23 +161,25 @@ export class Util {
 				case 'index':
 					option.index = Number(args[1]) || option.index;
 					break;
+				case 'generator':
+					option.generator = args[1] || option.generator;
+					break;
 				default:
 					break;
 			}
 		}
 
-		if (!option.provider) {
-			if (option.source === CST.SRC_MYETHER) {
+		if (!option.provider)
+			if (option.source === CST.SRC_MYETHER)
 				option.provider = option.live
 					? CST.PROVIDER_MYETHER_LIVE
 					: CST.PROVIDER_MYETHER_DEV;
-			} else if (option.source === CST.SRC_INFURA) {
+			else if (option.source === CST.SRC_INFURA)
 				option.provider = option.live ? CST.PROVIDER_INFURA_LIVE : CST.PROVIDER_INFURA_DEV;
-			} else {
+			else {
 				option.provider = CST.PROVIDER_LOCAL_WS;
 				option.source = '';
 			}
-		}
 
 		return option;
 	}

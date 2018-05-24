@@ -15,9 +15,7 @@ export class SqlUtil {
 		});
 
 		this.conn.connect(err => {
-			if (err) {
-				throw err;
-			}
+			if (err) throw err;
 			util.log('Connected!');
 		});
 	}
@@ -25,21 +23,16 @@ export class SqlUtil {
 	public executeQuery(sqlQuery: string): Promise<any> {
 		// util.log(sqlQuery);
 		return new Promise((resolve, reject) => {
-			if (this.conn) {
+			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
-					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY') {
+					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY')
 						// util.log('.');
 						// rocess.stdout.write(".");
 						reject(err);
-					} else if (err) {
-						reject(err);
-					} else {
-						resolve(result);
-					}
+					else if (err) reject(err);
+					else resolve(result);
 				});
-			} else {
-				reject('db connection is not initialized');
-			}
+			else reject('db connection is not initialized');
 		});
 	}
 

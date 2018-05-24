@@ -77,7 +77,7 @@ export class AccountUtil {
 		mainAccountBalance = Number(
 			contractUtil.web3.utils.fromWei(mainAccountBalance + '', 'ether')
 		);
-		if (mainAccountBalance < option.total) {
+		if (mainAccountBalance < option.total)
 			util.log(
 				'mian account balance is: ' +
 					mainAccountBalance +
@@ -85,24 +85,24 @@ export class AccountUtil {
 					option.total +
 					' ether, stop'
 			);
-		} else {
+		else {
 			util.log(
 				'mian account balance is: ' + mainAccountBalance + ' starting fuel other accounts'
 			);
 
 			const filterredAccounts: IAccount[] = [];
-			await Promise.all(accountsData.map(async account => {
-				const currentBalance = Number(
-					contractUtil.web3.utils.fromWei(
-						await contractUtil.web3.eth.getBalance(account.address),
-						'ether'
-					)
-				);
-				// util.log(currentBalance, option.minEther);
-				if (currentBalance < option.minEther) {
-					filterredAccounts.push(account);
-				}
-			}));
+			await Promise.all(
+				accountsData.map(async account => {
+					const currentBalance = Number(
+						contractUtil.web3.utils.fromWei(
+							await contractUtil.web3.eth.getBalance(account.address),
+							'ether'
+						)
+					);
+					// util.log(currentBalance, option.minEther);
+					if (currentBalance < option.minEther) filterredAccounts.push(account);
+				})
+			);
 
 			if (filterredAccounts.length > 0) {
 				const avgEthPerAccount = option.total / filterredAccounts.length;
@@ -136,9 +136,7 @@ export class AccountUtil {
 						);
 					}
 				}, CST.TRANSFER_INTERVAL * 1000);
-			} else {
-				util.log('no need to fuel');
-			}
+			} else util.log('no need to fuel');
 		}
 	}
 
@@ -147,12 +145,14 @@ export class AccountUtil {
 		util.log(mainAccount);
 
 		const filterredAccounts: IAccount[] = [];
-		await Promise.all(accountsData.map(async account => {
-			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
-			if (currentBalance > CST.TRANSFER_GAS_TH) {
-				filterredAccounts.push(account);
-			}
-		}));
+		await Promise.all(
+			accountsData.map(async account => {
+				const currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(account.address)
+				);
+				if (currentBalance > CST.TRANSFER_GAS_TH) filterredAccounts.push(account);
+			})
+		);
 
 		if (filterredAccounts.length > 0) {
 			util.log('need collect ether from ' + filterredAccounts.length + ' accounts');
@@ -190,9 +190,7 @@ export class AccountUtil {
 					);
 				}
 			}, CST.TRANSFER_INTERVAL * 1000);
-		} else {
-			util.log('no account to collect ether from');
-		}
+		} else util.log('no account to collect ether from');
 	}
 
 	public async makeCreation(contractUtil: ContractUtil, option: IOption) {
@@ -202,14 +200,14 @@ export class AccountUtil {
 		util.log('number of random accounts to create ' + accountsIdxToCreate.length);
 
 		const filterredAccounts: IAccount[] = [];
-		await Promise.all(accountsIdxToCreate.map(async idx => {
-			const currentBalance = Number(
-				await contractUtil.web3.eth.getBalance(accountsData[idx].address)
-			);
-			if (currentBalance > CST.CREATE_GAS_TH) {
-				filterredAccounts.push(accountsData[idx]);
-			}
-		}));
+		await Promise.all(
+			accountsIdxToCreate.map(async idx => {
+				const currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(accountsData[idx].address)
+				);
+				if (currentBalance > CST.CREATE_GAS_TH) filterredAccounts.push(accountsData[idx]);
+			})
+		);
 		util.log('number of accounts able to create ' + filterredAccounts.length);
 		let i = 0;
 		const interval = setInterval(async () => {
@@ -253,19 +251,22 @@ export class AccountUtil {
 	public async makeRedemption(contractUtil: ContractUtil) {
 		util.log('there are total accounts of ' + accountsData.length);
 		const filterredAccounts: IAccount[] = [];
-		await Promise.all(accountsData.map(async account => {
-			const balanceOfA = Number(
-				await contractUtil.contract.methods.balanceOf(0, account.address).call()
-			);
-			const balanceOfB = Number(
-				await contractUtil.contract.methods.balanceOf(1, account.address).call()
-			);
-			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
-			// util.log(balanceOfA, balanceOfB);
-			if (balanceOfA > 0 && balanceOfB > 0 && currentBalance > CST.REDEEM_GAS_TH) {
-				filterredAccounts.push(account);
-			}
-		}));
+		await Promise.all(
+			accountsData.map(async account => {
+				const balanceOfA = Number(
+					await contractUtil.contract.methods.balanceOf(0, account.address).call()
+				);
+				const balanceOfB = Number(
+					await contractUtil.contract.methods.balanceOf(1, account.address).call()
+				);
+				const currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(account.address)
+				);
+				// util.log(balanceOfA, balanceOfB);
+				if (balanceOfA > 0 && balanceOfB > 0 && currentBalance > CST.REDEEM_GAS_TH)
+					filterredAccounts.push(account);
+			})
+		);
 		util.log('there are ' + filterredAccounts.length + ' accounts able to Redeem');
 		let i = 0;
 		const interval = setInterval(async () => {
@@ -313,19 +314,25 @@ export class AccountUtil {
 	public async makeTokenTransfer(contractUtil: ContractUtil) {
 		util.log('there are total accounts of ' + accountsData.length);
 		const filterredAccounts: any[] = [];
-		await Promise.all(accountsData.map(async account => {
-			const balanceOfA = Number(
-				await contractUtil.contract.methods.balanceOf(0, account.address).call()
-			);
-			const balanceOfB = Number(
-				await contractUtil.contract.methods.balanceOf(1, account.address).call()
-			);
-			const currentBalance = Number(await contractUtil.web3.eth.getBalance(account.address));
-			// util.log(balanceOfA, balanceOfB);
-			if ((balanceOfA > 0 || balanceOfB > 0) && currentBalance > CST.TRANSFER_TOKEN_GAS_TH) {
-				filterredAccounts.push(account);
-			}
-		}));
+		await Promise.all(
+			accountsData.map(async account => {
+				const balanceOfA = Number(
+					await contractUtil.contract.methods.balanceOf(0, account.address).call()
+				);
+				const balanceOfB = Number(
+					await contractUtil.contract.methods.balanceOf(1, account.address).call()
+				);
+				const currentBalance = Number(
+					await contractUtil.web3.eth.getBalance(account.address)
+				);
+				// util.log(balanceOfA, balanceOfB);
+				if (
+					(balanceOfA > 0 || balanceOfB > 0) &&
+					currentBalance > CST.TRANSFER_TOKEN_GAS_TH
+				)
+					filterredAccounts.push(account);
+			})
+		);
 		util.log('there are ' + filterredAccounts.length + ' accounts able to Transfer');
 		let i = 0;
 		const interval = setInterval(async () => {
@@ -375,7 +382,8 @@ export class AccountUtil {
 					transferA,
 					CST.DEFAULT_GAS_PRICE,
 					CST.TRANSFER_TOKEN_GAS,
-					nonce);
+					nonce
+				);
 				await contractUtil.transferToken(
 					0,
 					account.address,
@@ -384,7 +392,8 @@ export class AccountUtil {
 					transferB,
 					CST.DEFAULT_GAS_PRICE,
 					CST.TRANSFER_TOKEN_GAS,
-					nonce + 1);
+					nonce + 1
+				);
 			}
 		}, CST.TRANSFER_TOKEN_INTERVAL * 1000);
 	}
