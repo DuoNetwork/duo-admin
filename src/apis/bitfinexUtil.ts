@@ -23,15 +23,15 @@ export class BitfinexUtil {
 				data.forEach(trade => {
 					const parsedTrade = this.parseTrade(trade);
 					dbUtil.insertSourceData(parsedTrade);
-					util.log('record inserted ' + parsedTrade.id);
+					util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
 				});
-			else if (data === 'hb') util.log('trade channel heartbeat');
+			else if (data === 'hb') util.log(CST.EXCHANGE_BITFINEX + ': trade channel heartbeat');
 			else if (data === 'tu') {
 				const parsedTrade = this.parseTrade(parsedJson.slice(3));
 				dbUtil.insertSourceData(parsedTrade);
-				util.log('record inserted ' + parsedTrade.id);
-			} else util.log(msg);
-		} else util.log(msg);
+				util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
+			} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
+		} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
 	}
 
 	public fetchTradesWithoutRetry() {
@@ -45,28 +45,21 @@ export class BitfinexUtil {
 			symbol: 'ETHUSD'
 		});
 
-		w.on('open', () => {
-			util.log('[Bitfinex]-WebSocket is open');
-			w.send(msg);
-			util.log('subscribe trade');
-		});
+		w.on('open', () => w.send(msg));
 
 		w.on('close', (code: number, reason: string) => {
-			util.log(code + ': ' + reason);
-			util.log('[Bitfinex]-WebSocket is close now');
+			util.log(CST.EXCHANGE_BITFINEX + ': ' + code + ' ' + reason);
 			throw new Error('ws closed');
 		});
 
-		w.on('error', (error: Error) => {
-			util.log(error);
-		});
+		w.on('error', (error: Error) => util.log(CST.EXCHANGE_BITFINEX + ': ' + error));
 	}
 
 	public fetchTrades() {
 		try {
 			this.fetchTradesWithoutRetry();
 		} catch (err) {
-			util.log(err);
+			util.log(CST.EXCHANGE_BITFINEX + ': ' + err);
 			this.fetchTrades();
 		}
 	}

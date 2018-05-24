@@ -28,7 +28,7 @@ export class GeminiUtil {
 
 			// no timestamp returned by exchange so we leave empty there.
 			dbUtil.insertSourceData(parsedTrade);
-			util.log('one trade fetched and inserted');
+			util.log(CST.EXCHANGE_GEMINI + ': trade fetched and inserted ' + parsedTrade.id);
 		}
 	}
 
@@ -37,24 +37,21 @@ export class GeminiUtil {
 
 		w.on('message', msg => this.parseApiResponse(msg.toString()));
 
-		w.on('open', () => {
-			util.log('[Gemini]-WebSocket is open');
-		});
+		w.on('open', () => util.log(CST.EXCHANGE_GEMINI + ': webSocket is open'));
 
 		w.on('close', (code: number, reason: string) => {
-			util.log(code + ': ' + reason);
+			util.log(CST.EXCHANGE_GEMINI + ': ' + code + ' ' + reason);
+			throw new Error('ws closed');
 		});
 
-		w.on('error', (error: Error) => {
-			util.log(error);
-		});
+		w.on('error', (error: Error) => util.log(CST.EXCHANGE_GEMINI + ': ' + error));
 	}
 
 	public fetchTrades() {
 		try {
 			this.fetchTradesWithoutRetry();
 		} catch (err) {
-			util.log(err);
+			util.log(CST.EXCHANGE_GEMINI + ': ' + err);
 			this.fetchTrades();
 		}
 	}

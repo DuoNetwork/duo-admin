@@ -34,10 +34,17 @@ export class KrakenUtil {
 			}
 		});
 
-		util.log('inserted ' + count + ' trades of ' + returnFirstLevelArray.length + ' received');
+		util.log(
+			CST.EXCHANGE_KRAKEN +
+				': inserted ' +
+				count +
+				' trades of ' +
+				returnFirstLevelArray.length +
+				' received'
+		);
 
 		last = jsonObj.result.last;
-		util.log(last);
+		util.log(CST.EXCHANGE_KRAKEN + ': last ' + last);
 	}
 
 	public async fetchETHTradesByOwnWebSocket() {
@@ -45,18 +52,16 @@ export class KrakenUtil {
 		const baseUrl: string = 'https://api.kraken.com/0/public/Trades?pair=ETHUSD';
 		let url: string = '';
 
-		if (last === 0) {
-			url = baseUrl;
-		} else if (last !== undefined) {
-			url = baseUrl + '&last=' + last + '';
-		}
-		util.log('request: ' + last + ' length: ' + last.toString().split('.')[0].length);
+		if (last === 0) url = baseUrl;
+		else if (last !== undefined) url = baseUrl + '&last=' + last + '';
+
+		util.log(CST.EXCHANGE_KRAKEN + ': request ' + last + ' length ' + last.toString().split('.')[0].length);
 
 		try {
 			const response: any = await util.get(url);
 			this.parseApiResponse(response.toString());
 		} catch (error) {
-			util.log(error);
+			util.log(CST.EXCHANGE_KRAKEN + ': ' + error);
 		}
 	}
 
