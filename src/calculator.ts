@@ -34,9 +34,7 @@ export class Calculateor {
 	public getExchangePriceFix(trades: ITrade[], currentTimestamp: number): IPrice {
 		for (let i = 0; i < 12; i++) {
 			const subTrades = this.getTradesForInterval(trades, currentTimestamp, i);
-			if (subTrades.length > 0) {
-				return this.getVolumeMedianPrice(subTrades, currentTimestamp);
-			}
+			if (subTrades.length > 0) return this.getVolumeMedianPrice(subTrades, currentTimestamp);
 		}
 
 		return { price: 0, volume: 0, timestamp: currentTimestamp };
@@ -50,11 +48,9 @@ export class Calculateor {
 
 	public validateWeights(weights: number[]): boolean {
 		const numOfValidExchanges = weights.length;
-		for (let i = 0; i < weights.length; i++) {
-			if (weights[i] > CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) {
-				return false;
-			}
-		}
+		for (let i = 0; i < weights.length; i++)
+			if (weights[i] > CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges][i]) return false;
+
 		return true;
 	}
 
@@ -65,20 +61,16 @@ export class Calculateor {
 			let sumOfCapped: number = 0;
 			let sumOfUnCapped: number = 0;
 			const weightCaps = CST.EXCHANGE_WEIGHTAGE_TH[numOfValidExchanges];
-			for (let i = 0; i < weights.length; i++) {
+			for (let i = 0; i < weights.length; i++)
 				if (weights[i] >= weightCaps[i]) {
 					weights[i] = weightCaps[i];
 					sumOfCapped += weightCaps[i];
-				} else {
-					sumOfUnCapped += weights[i];
-				}
-			}
+				} else sumOfUnCapped += weights[i];
 
-			for (let i = 0; i < weights.length; i++) {
-				if (weights[i] < weightCaps[i]) {
+			for (let i = 0; i < weights.length; i++)
+				if (weights[i] < weightCaps[i])
 					weights[i] = weights[i] / sumOfUnCapped * (1 - sumOfCapped);
-				}
-			}
+
 			// util.log(weights);
 			isValid = this.validateWeights(weights);
 		}
@@ -92,13 +84,13 @@ export class Calculateor {
 		filterredExchanges.sort((a, b) => b.volume - a.volume);
 		const volumeList = filterredExchanges.map(item => item.volume);
 
-		if (filterredExchanges.length === 0) {
+		if (filterredExchanges.length === 0)
 			// use previous priceFix
 			return 0;
-		} else if (filterredExchanges.length === 1) {
+		else if (filterredExchanges.length === 1)
 			// let finalArray: number[] = [];
 			return filterredExchanges[0].price;
-		} else {
+		else {
 			util.log('there are ' + filterredExchanges.length + ' valid exchanges');
 			const totalVol = volumeList.reduce((a, b) => a + b, 0);
 			const weights = volumeList.map(v => v / totalVol);
@@ -121,15 +113,14 @@ export class Calculateor {
 		};
 
 		trades.forEach(item => {
-			if (item.source === CST.EXCHANGE_BITFINEX) {
+			if (item.source === CST.EXCHANGE_BITFINEX)
 				EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
-			} else if (item.source === CST.EXCHANGE_GEMINI) {
+			else if (item.source === CST.EXCHANGE_GEMINI)
 				EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
-			} else if (item.source === CST.EXCHANGE_GDAX) {
+			else if (item.source === CST.EXCHANGE_GDAX)
 				EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
-			} else if (item.source === CST.EXCHANGE_KRAKEN) {
+			else if (item.source === CST.EXCHANGE_KRAKEN)
 				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
-			}
 		});
 
 		const exchangePriceVolume = CST.EXCHANGES.map(src =>

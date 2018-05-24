@@ -7,11 +7,15 @@ import util from './util';
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
+const stoch = require('stochastic');
 
 export default class ContractUtil {
 	public web3: Web3;
 	public abi: any;
 	public contract: Contract;
+	public gbmPrices: number[];
+	public time: number = 0;
+	public lastPrice: number = 400;
 
 	constructor(option: IOption) {
 		this.web3 = new Web3(
@@ -21,6 +25,7 @@ export default class ContractUtil {
 		);
 		this.abi = require('./static/Custodian.json');
 		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
+		this.gbmPrices = [];
 	}
 
 	public async read(name: string) {
@@ -33,9 +38,8 @@ export default class ContractUtil {
 	public async readSysStates() {
 		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
 		const sysStates: string = await this.contract.methods.getSystemStates().call();
-		for (let i = 0; i < sysStates.length; i++) {
+		for (let i = 0; i < sysStates.length; i++)
 			console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
-		}
 	}
 
 	public async readUserBalance(option: IOption) {
@@ -58,7 +62,7 @@ export default class ContractUtil {
 		const numOfUser = sysStates[18].valueOf();
 		let totalSupplyOfA = 0;
 		let totalSupplyOfB = 0;
-		if (numOfUser > 0) {
+		if (numOfUser > 0)
 			for (let i = 0; i < numOfUser; i++) {
 				const userAddr = await this.contract.methods.users(i).call();
 				const balanceOfEther = await this.web3.eth.getBalance(userAddr);
@@ -76,7 +80,7 @@ export default class ContractUtil {
 				totalSupplyOfA += Number(balanceOfA);
 				totalSupplyOfB += Number(balanceOfB);
 			}
-		}
+
 		console.log('totalSupplyOfA: ' + totalSupplyOfA + ' totalSupplyOfB: ' + totalSupplyOfB);
 	}
 
@@ -130,18 +134,23 @@ export default class ContractUtil {
 		isInception: boolean,
 		gasPrice: number,
 		gasLimit: number,
-		price: number
+		option: IOption
 	) {
 		let currentPrice: IPrice;
-		if (price > 0) {
+		if (option.generator === 'gbm') {
+			option.price = this.generatePrices(this.time, 144, this.lastPrice);
+			this.time += 1;
+			this.lastPrice = option.price;
+		}
+
+		if (option.price > 0)
 			currentPrice = {
-				price: price,
+				price: option.price,
 				volume: 0,
 				timestamp: Math.floor(Date.now())
 			};
-		} else {
-			currentPrice = await calculator.getPriceFix();
-		}
+		else currentPrice = await calculator.getPriceFix();
+
 		const priceInWei: string = this.web3.utils.toWei(currentPrice.price + '', 'ether');
 		const priceInSeconds: string = Math.floor(Number(currentPrice.timestamp) / 1000) + '';
 		util.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
@@ -204,6 +213,23 @@ export default class ContractUtil {
 			.on('receipt', util.log);
 	}
 
+	public generatePrices(time: number, length: number, s0: number): number {
+		let mu: number;
+		let sigma: number;
+		const priceIndex = time % length;
+		if (priceIndex === 0) {
+			if (Math.floor(time / length) % 2 === 0) {
+				mu = 2;
+				sigma = 1.6 + Math.random() * 0.8;
+			} else {
+				mu = -2;
+				sigma = 1.2 + Math.random() * 0.6;
+			}
+			this.gbmPrices = stoch.GBM(s0, mu, sigma, 1, length, true);
+		}
+		return this.gbmPrices[priceIndex];
+	}
+
 	public async commitPrice(option: IOption) {
 		const startTime = new Date(Date.now());
 		const endTime = new Date(startTime.getTime() + 298000);
@@ -213,7 +239,8 @@ export default class ContractUtil {
 
 		const res = await this.contract.methods.state().call();
 		const isInception = Number(res) === 0;
-		if (isInception) {
+
+		if (isInception)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const gasPrice = (await this.getGasPrice()) || option.gasPrice;
@@ -222,15 +249,14 @@ export default class ContractUtil {
 					true,
 					gasPrice,
 					option.gasLimit + 50000,
-					option.price
+					option
 				);
 			});
-		}
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
 			const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 			util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-			return this.commitSinglePrice(false, gasPrice, option.gasLimit, option.price);
+			return this.commitSinglePrice(false, gasPrice, option.gasLimit, option);
 		});
 	}
 
@@ -474,9 +500,8 @@ export default class ContractUtil {
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
 		const promiseList: Array<Promise<void>> = [];
-		for (let i = 0; i < count; i++) {
+		for (let i = 0; i < count; i++)
 			promiseList.push(this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT));
-		}
 
 		await Promise.all(promiseList);
 	}

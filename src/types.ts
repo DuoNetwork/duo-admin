@@ -42,4 +42,5 @@ export interface IOption {
 	alpha: number;
 	amtA: number;
 	amtB: number;
+	generator: string;
 }
