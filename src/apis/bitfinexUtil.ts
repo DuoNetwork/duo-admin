@@ -63,18 +63,12 @@ export class BitfinexUtil {
 		w.on('close', (code: number, reason: string) => {
 			util.log(code + ': ' + reason);
 			util.log('[Bitfinex]-WebSocket is close now');
-			util.log('close DB');
+			throw new Error('ws closed');
 		});
 
 		w.on('error', (error: Error) => {
 			util.log(error);
 		});
-
-		setInterval(() => {
-			w.send('ping', function ack() {
-				util.log('heart beat');
-			});
-		}, 20 * 1000);
 	}
 
 	public fetchTrades() {
