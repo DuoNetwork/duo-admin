@@ -32,7 +32,7 @@ export class GeminiUtil {
 		}
 	}
 
-	public fetchTradesWithoutRetry() {
+	public fetchTrades() {
 		const w = new ws('wss://api.gemini.com/v1/marketdata/ETHUSD');
 
 		w.on('message', msg => this.parseApiResponse(msg.toString()));
@@ -41,19 +41,11 @@ export class GeminiUtil {
 
 		w.on('close', (code: number, reason: string) => {
 			util.log(CST.EXCHANGE_GEMINI + ': ' + code + ' ' + reason);
-			throw new Error('ws closed');
+			util.log(CST.EXCHANGE_GEMINI + ': restart');
+			this.fetchTrades();
 		});
 
 		w.on('error', (error: Error) => util.log(CST.EXCHANGE_GEMINI + ': ' + error));
-	}
-
-	public fetchTrades() {
-		try {
-			this.fetchTradesWithoutRetry();
-		} catch (err) {
-			util.log(CST.EXCHANGE_GEMINI + ': ' + err);
-			this.fetchTrades();
-		}
 	}
 }
 

@@ -34,7 +34,7 @@ export class BitfinexUtil {
 		} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
 	}
 
-	public fetchTradesWithoutRetry() {
+	public fetchTrades() {
 		const w = new ws('wss://api.bitfinex.com/ws/');
 
 		w.on('message', m => this.parseApiResponse(m.toString()));
@@ -49,19 +49,11 @@ export class BitfinexUtil {
 
 		w.on('close', (code: number, reason: string) => {
 			util.log(CST.EXCHANGE_BITFINEX + ': ' + code + ' ' + reason);
-			throw new Error('ws closed');
+			util.log(CST.EXCHANGE_BITFINEX + ': restart');
+			this.fetchTrades();
 		});
 
 		w.on('error', (error: Error) => util.log(CST.EXCHANGE_BITFINEX + ': ' + error));
-	}
-
-	public fetchTrades() {
-		try {
-			this.fetchTradesWithoutRetry();
-		} catch (err) {
-			util.log(CST.EXCHANGE_BITFINEX + ': ' + err);
-			this.fetchTrades();
-		}
 	}
 }
 const bitfinexUtil = new BitfinexUtil();
