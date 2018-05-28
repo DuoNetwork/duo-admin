@@ -8,7 +8,7 @@ const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 const stoch = require('stochastic');
-const ETHPrices = require('./samples/ETHPrices.json');
+const ETHPrices = require('./samples/ETHprices.json');
 
 export default class ContractUtil {
 	public web3: Web3;
