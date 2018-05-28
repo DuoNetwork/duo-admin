@@ -8,6 +8,7 @@ const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 const stoch = require('stochastic');
+const ETHPrices = require('./samples/ETHPrices.json');
 
 export default class ContractUtil {
 	public web3: Web3;
@@ -138,7 +139,13 @@ export default class ContractUtil {
 	) {
 		let currentPrice: IPrice;
 		if (option.generator === 'gbm') {
-			option.price = this.generatePrices(this.time, 144, this.lastPrice);
+			option.price = this.generateGBMPrices(this.time, 144, this.lastPrice);
+			this.time += 1;
+			this.lastPrice = option.price;
+		}
+
+		if (option.generator === 'preSet') {
+			option.price = this.generatePreSetPrices(this.time);
 			this.time += 1;
 			this.lastPrice = option.price;
 		}
@@ -214,7 +221,7 @@ export default class ContractUtil {
 			.catch(error => util.log(error));
 	}
 
-	public generatePrices(time: number, length: number, s0: number): number {
+	public generateGBMPrices(time: number, length: number, s0: number): number {
 		let mu: number;
 		let sigma: number;
 		const priceIndex = time % length;
@@ -229,6 +236,11 @@ export default class ContractUtil {
 			this.gbmPrices = stoch.GBM(s0, mu, sigma, 1, length, true);
 		}
 		return this.gbmPrices[priceIndex];
+	}
+
+	public generatePreSetPrices(time: number): number {
+		const priceIndex = time % ETHPrices.length;
+		return ETHPrices[priceIndex] + ETHPrices[priceIndex] * 0.05 * Math.random();
 	}
 
 	public async commitPrice(option: IOption) {
