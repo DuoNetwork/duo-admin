@@ -36,7 +36,7 @@ export class SqlUtil {
 		});
 	}
 
-	public async insertSourceData(sourceData: ITrade) {
+	public async insertSourceData(live: boolean, sourceData: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
 		// To do the checking for out of boundary data.
@@ -56,9 +56,10 @@ export class SqlUtil {
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
+		const TABLE = live ? CST.DB_TABLE_TRADE : CST.DB_TABLE_TRADE_DEV;
 		const sql =
 			'REPLACE ' +
-			CST.DB_TABLE_TRADE +
+			TABLE +
 			" VALUES ('" +
 			sourceData.source +
 			"','" +

@@ -12,13 +12,13 @@ export class AwsUtil {
 		this.ddb = new AWS.DynamoDB({ apiVersion: '2012-10-08' });
 	}
 
-	public insertSourceData(sourceData: ITrade): Promise<void> {
+	public insertSourceData(live: boolean, sourceData: ITrade): Promise<void> {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
 		const params = {
-			TableName: 'trades',
+			TableName: live ? 'trades_live' : 'trades_dev',
 			Item: {
 				[CST.DB_TX_SRC_DATE]: {
 					S:

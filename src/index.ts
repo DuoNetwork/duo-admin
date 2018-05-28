@@ -17,7 +17,7 @@ util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.sourc
 const contractUtil = new ContractUtil(option);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
-	dbUtil.init(option.aws, CST.DB_USER, option.pwd);
+	dbUtil.init(option.aws, option.live, CST.DB_USER, option.pwd);
 
 switch (tool) {
 	case 'createAccount':

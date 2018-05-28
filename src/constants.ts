@@ -15,12 +15,14 @@ export const DB_USER = 'root';
 export const DB_PASSWORD = '*OG=ko!Ph0hk';
 export const DB_PRICEFEED = 'priceFeedDB';
 export const DB_TABLE_TRADE = 'ETH_Trades_Table';
+export const DB_TABLE_TRADE_DEV = 'ETH_Trades_Table_Dev';
 export const DB_TABLE_HISTORY = 'eth_historical_price';
 
 // wallet and contract
-export const CUSTODIAN_ADDR = '0xbfc5ba69b932DeE3C95468BcA26C257EE0eD364C';
-export const A_CONTRACT_ADDR = '0x55c7906f3647f7ec7278bdd4767d8e9a042c6e98';
-export const B_CONTRACT_ADDR = '0xa73e9241fea81b96029da6201f7f59b054528b0e';
+export const DUO_CONTRACT_ADDR = '0x80235a0e621e52b4bc805d56e8c97c830c6861a3';
+export const CUSTODIAN_ADDR = '0x1f0409848b268c165d949ae92cb603b9c92bfb46';
+export const A_CONTRACT_ADDR = '0xb799783f4c5a493579d1a0dcae1f33c6e999d8cd';
+export const B_CONTRACT_ADDR = '0x4506448af660a7e071de778460c8c2dc51f24763';
 export const INCEPTION_BLK = 7395360;
 export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
 export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
