@@ -9,7 +9,7 @@ export class SqlUtil {
 	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: host,
-			user,
+			user: user,
 			password: pwd,
 			database: CST.DB_PRICEFEED
 		});
