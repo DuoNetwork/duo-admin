@@ -4,11 +4,12 @@ import gdaxUtil from './apis/gdaxUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
 import calculator from './calculator';
-import * as CST from './constants';
+// import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
 import util from './util';
+const mysqlAuthFile = require('./keys/mysql.json');
 
 const tool = process.argv[2];
 util.log('tool ' + tool);
@@ -17,7 +18,7 @@ util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.sourc
 const contractUtil = new ContractUtil(option);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
-	dbUtil.init(option.aws, option.live, CST.DB_USER, option.pwd);
+	dbUtil.init(option.aws, option.live, mysqlAuthFile.host, mysqlAuthFile.user, mysqlAuthFile.password);
 
 switch (tool) {
 	case 'createAccount':

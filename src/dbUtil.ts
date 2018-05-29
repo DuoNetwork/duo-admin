@@ -6,10 +6,10 @@ export class DbUtil {
 	private aws: boolean = false;
 	private live: boolean = false;
 
-	public init(useAWS: boolean, live: boolean, user: string, pwd: string) {
+	public init(useAWS: boolean, live: boolean, host: string, user: string, pwd: string) {
 		this.aws = useAWS;
 		this.live = live;
-		this.aws ? awsUtil.init() : sqlUtil.init(user, pwd);
+		this.aws ? awsUtil.init() : sqlUtil.init(host, user, pwd);
 	}
 
 	public insertSourceData(sourceData: ITrade) {

@@ -6,9 +6,9 @@ import util from '../util';
 export class SqlUtil {
 	public conn: undefined | mysql.Connection = undefined;
 
-	public init(user: string, pwd: string) {
+	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
-			host: CST.DB_HOST,
+			host: host,
 			user,
 			password: pwd,
 			database: CST.DB_PRICEFEED
