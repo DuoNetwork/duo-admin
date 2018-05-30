@@ -19,7 +19,10 @@ export interface IAccount {
 
 export interface IOption {
 	live: boolean;
+	dynamo: boolean;
 	aws: boolean;
+	gcp: boolean;
+	azure: boolean;
 	gasPrice: number;
 	gasLimit: number;
 	eth: number;

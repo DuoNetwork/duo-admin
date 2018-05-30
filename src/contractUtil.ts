@@ -9,6 +9,7 @@ const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 const stoch = require('stochastic');
 const ETHPrices = require('./samples/ETHprices.json');
+const privateKeyFile = require('./keys/privateKey.json');
 
 export default class ContractUtil {
 	public web3: Web3;
@@ -17,6 +18,8 @@ export default class ContractUtil {
 	public gbmPrices: number[];
 	public time: number = 0;
 	public lastPrice: number = 400;
+	public publicKey: string = '';
+	public privateKey: string = '';
 
 	constructor(option: IOption) {
 		this.web3 = new Web3(
@@ -27,6 +30,18 @@ export default class ContractUtil {
 		this.abi = require('./static/Custodian.json');
 		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
 		this.gbmPrices = [];
+
+		if (!option.live)
+			if (option.azure) {
+				this.publicKey = privateKeyFile.pf_azure.publicKey;
+				this.privateKey = privateKeyFile.pf_azure.privateKey;
+			} else if (option.gcp) {
+				this.publicKey = privateKeyFile.pf_gcp.publicKey;
+				this.privateKey = privateKeyFile.pf_gcp.privateKey;
+			} else {
+				this.publicKey = privateKeyFile.pf_aws.publicKey;
+				this.privateKey = privateKeyFile.pf_aws.privateKey;
+			}
 	}
 
 	public async read(name: string) {
@@ -161,7 +176,7 @@ export default class ContractUtil {
 		const priceInWei: string = this.web3.utils.toWei(currentPrice.price + '', 'ether');
 		const priceInSeconds: string = Math.floor(Number(currentPrice.timestamp) / 1000) + '';
 		util.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
-		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
+		const nonce = await this.web3.eth.getTransactionCount(this.publicKey);
 		const abi = {
 			name: isInception ? CST.FN_START_CONTRACT : CST.FN_COMMIT_PRICE,
 			type: 'function',
@@ -214,7 +229,7 @@ export default class ContractUtil {
 							0,
 							command
 						),
-						CST.PF_ADDR_PK
+						this.privateKey
 					)
 			)
 			.then(receipt => util.log(receipt))
@@ -258,12 +273,7 @@ export default class ContractUtil {
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return this.commitSinglePrice(
-					true,
-					gasPrice,
-					option.gasLimit + 50000,
-					option
-				);
+				return this.commitSinglePrice(true, gasPrice, option.gasLimit + 50000, option);
 			});
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
@@ -324,7 +334,7 @@ export default class ContractUtil {
 					)
 			)
 			.then(receipt => util.log(receipt))
-			.catch((err) => util.log(err));
+			.catch(err => util.log(err));
 	}
 
 	public async redeem(
@@ -486,7 +496,7 @@ export default class ContractUtil {
 	}
 
 	public async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
-		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
+		const nonce = await this.web3.eth.getTransactionCount(this.publicKey);
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
 		this.web3.eth
@@ -501,7 +511,7 @@ export default class ContractUtil {
 							0,
 							command
 						),
-						CST.PF_ADDR_PK
+						this.privateKey
 					)
 			)
 			.then(receipt => util.log(receipt))

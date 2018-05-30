@@ -1,23 +1,14 @@
 export const REDRAW_UPDATE_THRESHOLD = 10;
 
-// export const provider = "https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w";
-export const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
-// export const provider = "http://localhost:8545";
-
 export const EXCHANGE_BITFINEX = 'BITFINEX';
 export const EXCHANGE_GEMINI = 'GEMINI';
 export const EXCHANGE_KRAKEN = 'KRAKEN';
 export const EXCHANGE_GDAX = 'GDAX';
 
 // db setting
-// export const DB_HOST = 'localhost';
-// export const DB_USER = 'root';
-// export const DB_PASSWORD = '*OG=ko!Ph0hk';
 export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
 export const DB_SQL_TRADE = 'eth_trades';
-// export const DB_SQL_TRADE_DEV = 'eth_trades_dev';
 export const DB_SQL_HISTORY = 'eth_historical_price';
-// export const DB_SQL_HISTORY_DEV = 'eth_historical_price_dev';
 export const DB_AWS_TRADES = 'trades_live';
 export const DB_AWS_TRADES_DEV = 'trades_dev';
 export const DB_AWS_HOURLY = 'hourly_live';
@@ -30,8 +21,8 @@ export const CUSTODIAN_ADDR = '0x51A4025687Dbc13492AEA96054E30d4A69760131';
 export const A_CONTRACT_ADDR = '0x40d3F43551DC571F72dc5D855a715B0023C292c1';
 export const B_CONTRACT_ADDR = '0xc3d1238730304aC51E0C7c02A2A9Af02D5414990';
 export const INCEPTION_BLK = 7483518;
-export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
-export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
+// export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
+// export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
 export const EVENT_START_PRE_RESET = 'StartPreReset';
 export const EVENT_START_RESET = 'StartReset';
@@ -87,20 +78,20 @@ export const SYS_STATES = {
 	21: 'adminCoolDown'
 };
 
-export const KOVAN_ACCOUNTS = [
-	{
-		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
-		name: 'creator'
-	},
-	{
-		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
-		name: 'pf1'
-	},
-	{
-		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
-		name: 'pf2'
-	}
-];
+// export const KOVAN_ACCOUNTS = [
+// 	{
+// 		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
+// 		name: 'creator'
+// 	},
+// 	{
+// 		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
+// 		name: 'pf1'
+// 	},
+// 	{
+// 		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
+// 		name: 'pf2'
+// 	}
+// ];
 
 // priceFeed
 export const DB_TX_SRC = 'source';

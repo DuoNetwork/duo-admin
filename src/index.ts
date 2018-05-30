@@ -4,7 +4,6 @@ import gdaxUtil from './apis/gdaxUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
 import calculator from './calculator';
-// import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
@@ -19,7 +18,7 @@ const contractUtil = new ContractUtil(option);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
 	dbUtil.init(
-		option.aws,
+		option.dynamo,
 		mysqlAuthFile.host,
 		mysqlAuthFile.user,
 		mysqlAuthFile.password

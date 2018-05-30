@@ -70,7 +70,10 @@ export class Util {
 	public parseOptions(argv: string[]): IOption {
 		const option = {
 			live: process.argv.includes('live'),
+			dynamo: process.argv.includes('dynamo'),
 			aws: process.argv.includes('aws'),
+			gcp: process.argv.includes('gcp'),
+			azure: process.argv.includes('azure'),
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
