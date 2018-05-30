@@ -17,8 +17,8 @@ export class AccountUtil {
 		let mainAccount;
 		let privateKey;
 		if (!option.from || !option.privateKey) {
-			mainAccount = CST.KOVAN_ACCOUNTS[0].address;
-			privateKey = KEY[mainAccount];
+			mainAccount =	KEY.creator.publicKey;
+			privateKey = KEY.creator.privateKey;
 			util.log('no account specified, use defaut account: ' + mainAccount);
 		} else {
 			mainAccount = option.from;
