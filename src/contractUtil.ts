@@ -250,8 +250,8 @@ export default class ContractUtil {
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = new schedule.Range(0, 59, 5);
 
-		const res = await this.contract.methods.state().call();
-		const isInception = Number(res) === 0;
+		const sysStates = await this.contract.methods.getSystemStates().call();
+		const isInception = Number(sysStates[0]) === 0;
 
 		if (isInception)
 			// contract is in inception state; start contract first and then commit price
