@@ -20,10 +20,9 @@ const contractUtil = new ContractUtil(option);
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
 	dbUtil.init(
 		option.aws,
-		option.live,
-		option.live ? mysqlAuthFile.live.host : mysqlAuthFile.dev.host,
-		option.live ? mysqlAuthFile.live.user : mysqlAuthFile.dev.user,
-		option.live ? mysqlAuthFile.live.password : mysqlAuthFile.dev.password
+		mysqlAuthFile.host,
+		mysqlAuthFile.user,
+		mysqlAuthFile.password
 	);
 
 switch (tool) {

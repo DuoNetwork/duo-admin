@@ -5,9 +5,7 @@ import util from '../util';
 
 export class SqlUtil {
 	public conn: undefined | mysql.Connection = undefined;
-	public live: boolean = false;
-	public init(live: boolean, host: string, user: string, pwd: string) {
-		this.live = live;
+	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: host,
 			user: user,
@@ -57,10 +55,9 @@ export class SqlUtil {
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
-		const TABLE = this.live ? CST.DB_SQL_TRADE : CST.DB_SQL_TRADE_DEV;
 		const sql =
 			'REPLACE ' +
-			TABLE +
+			CST.DB_SQL_TRADE +
 			" VALUES ('" +
 			sourceData.source +
 			"','" +
@@ -79,11 +76,10 @@ export class SqlUtil {
 	}
 
 	public async insertPrice(price: IPrice) {
-		const TABLE = this.live ? CST.DB_SQL_HISTORY : CST.DB_SQL_HISTORY_DEV;
 		util.log(
 			await this.executeQuery(
 				'INSERT INTO ' +
-					TABLE +
+					CST.DB_SQL_HISTORY +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -96,10 +92,9 @@ export class SqlUtil {
 	}
 
 	public async readLastPrice(): Promise<IPrice> {
-		const TABLE = this.live ? CST.DB_SQL_HISTORY : CST.DB_SQL_HISTORY_DEV;
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
-				TABLE +
+				CST.DB_SQL_HISTORY +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
 				' DESC LIMIT 1'
@@ -116,10 +111,9 @@ export class SqlUtil {
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
-		const TABLE = this.live ? CST.DB_SQL_TRADE : CST.DB_SQL_TRADE_DEV;
 		const res: object[] = await this.executeQuery(
 			'SELECT * FROM ' +
-				TABLE +
+				CST.DB_SQL_TRADE +
 				' WHERE ' +
 				CST.DB_TX_TS +
 				' >= ' +

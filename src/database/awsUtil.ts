@@ -6,10 +6,8 @@ import { ITrade } from '../types';
 
 export class AwsUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
-	private live: boolean = false;
-	public init(live: boolean) {
+	public init() {
 		AWS.config.loadFromPath('./src/keys/aws.json');
-		this.live = live;
 		this.ddb = new AWS.DynamoDB({ apiVersion: '2012-10-08' });
 	}
 
@@ -19,7 +17,7 @@ export class AwsUtil {
 		const amountStr = sourceData.amount.toString();
 
 		const params = {
-			TableName: this.live ? CST.DB_AWS_TRADES : CST.DB_AWS_TRADES_DEV,
+			TableName: CST.DB_AWS_TRADES,
 			Item: {
 				[CST.DB_TX_SRC_DATE]: {
 					S:
