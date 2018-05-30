@@ -6,19 +6,20 @@ import { ITrade } from '../types';
 
 export class AwsUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
-
-	public init() {
+	private live: boolean = false;
+	public init(live: boolean) {
 		AWS.config.loadFromPath('./src/keys/aws.json');
+		this.live = live;
 		this.ddb = new AWS.DynamoDB({ apiVersion: '2012-10-08' });
 	}
 
-	public insertSourceData(live: boolean, sourceData: ITrade): Promise<void> {
+	public insertSourceData(sourceData: ITrade): Promise<void> {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
 		const params = {
-			TableName: live ? 'trades_live' : 'trades_dev',
+			TableName: this.live ? CST.DB_AWS_TRADES : CST.DB_AWS_TRADES_DEV,
 			Item: {
 				[CST.DB_TX_SRC_DATE]: {
 					S:

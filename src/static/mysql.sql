@@ -1,7 +1,7 @@
 
 CREATE SCHEMA `priceFeedDB`;
 
-CREATE TABLE `priceFeedDB`.`ETH_Trades_Table_Dev` (
+CREATE TABLE `priceFeedDB`.`ETH_Trades_Table` (
   `source` VARCHAR(255) NOT NULL,
   `id` VARCHAR(255) NOT NULL,
   `price` VARCHAR(255) NOT NULL,

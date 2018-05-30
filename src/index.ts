@@ -18,7 +18,13 @@ util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.sourc
 const contractUtil = new ContractUtil(option);
 
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice', 'calculatePrice'].includes(tool))
-	dbUtil.init(option.aws, option.live, mysqlAuthFile.host, mysqlAuthFile.user, mysqlAuthFile.password);
+	dbUtil.init(
+		option.aws,
+		option.live,
+		option.live ? mysqlAuthFile.live.host : mysqlAuthFile.dev.host,
+		option.live ? mysqlAuthFile.live.user : mysqlAuthFile.dev.user,
+		option.live ? mysqlAuthFile.live.password : mysqlAuthFile.dev.password
+	);
 
 switch (tool) {
 	case 'createAccount':

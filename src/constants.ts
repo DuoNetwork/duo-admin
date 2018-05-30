@@ -13,10 +13,16 @@ export const EXCHANGE_GDAX = 'GDAX';
 // export const DB_HOST = 'localhost';
 // export const DB_USER = 'root';
 // export const DB_PASSWORD = '*OG=ko!Ph0hk';
-export const DB_PRICEFEED = 'priceFeedDB';
-export const DB_TABLE_TRADE = 'ETH_Trades_Table';
-export const DB_TABLE_TRADE_DEV = 'ETH_Trades_Table_Dev';
-export const DB_TABLE_HISTORY = 'eth_historical_price';
+export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
+export const DB_SQL_TRADE = 'ETH_Trades_Table';
+export const DB_SQL_TRADE_DEV = 'ETH_Trades_Table_Dev';
+export const DB_SQL_HISTORY = 'eth_historical_price';
+export const DB_SQL_HISTORY_DEV = 'eth_historical_price_dev';
+export const DB_AWS_TRADES = 'trades_live';
+export const DB_AWS_TRADES_DEV = 'trades_dev';
+export const DB_AWS_HOURLY = 'hourly_live';
+export const DB_AWS_HOURLY_DEV = 'hourly_dev';
+export const AWS_DYNAMO_API_VERSION = '2012-10-08';
 
 // wallet and contract
 export const DUO_CONTRACT_ADDR = '0x0A47a845fFCDdC918223744Cad29A7b5a82e1b4c';

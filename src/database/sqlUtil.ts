@@ -5,13 +5,14 @@ import util from '../util';
 
 export class SqlUtil {
 	public conn: undefined | mysql.Connection = undefined;
-
-	public init(host: string, user: string, pwd: string) {
+	public live: boolean = false;
+	public init(live: boolean, host: string, user: string, pwd: string) {
+		this.live = live;
 		this.conn = mysql.createConnection({
 			host: host,
 			user: user,
 			password: pwd,
-			database: CST.DB_PRICEFEED
+			database: CST.DB_SQL_SCHEMA_PRICEFEED
 		});
 
 		this.conn.connect(err => {
@@ -36,7 +37,7 @@ export class SqlUtil {
 		});
 	}
 
-	public async insertSourceData(live: boolean, sourceData: ITrade) {
+	public async insertSourceData(sourceData: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
 		// To do the checking for out of boundary data.
@@ -56,7 +57,7 @@ export class SqlUtil {
 		const priceStr = sourceData.price.toString();
 		const amountStr = sourceData.amount.toString();
 
-		const TABLE = live ? CST.DB_TABLE_TRADE : CST.DB_TABLE_TRADE_DEV;
+		const TABLE = this.live ? CST.DB_SQL_TRADE : CST.DB_SQL_TRADE_DEV;
 		const sql =
 			'REPLACE ' +
 			TABLE +
@@ -78,10 +79,11 @@ export class SqlUtil {
 	}
 
 	public async insertPrice(price: IPrice) {
+		const TABLE = this.live ? CST.DB_SQL_HISTORY : CST.DB_SQL_HISTORY_DEV;
 		util.log(
 			await this.executeQuery(
 				'INSERT INTO ' +
-					CST.DB_TABLE_HISTORY +
+					TABLE +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -94,9 +96,10 @@ export class SqlUtil {
 	}
 
 	public async readLastPrice(): Promise<IPrice> {
+		const TABLE = this.live ? CST.DB_SQL_HISTORY : CST.DB_SQL_HISTORY_DEV;
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_TABLE_HISTORY +
+				TABLE +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
 				' DESC LIMIT 1'
@@ -113,9 +116,10 @@ export class SqlUtil {
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
+		const TABLE = this.live ? CST.DB_SQL_TRADE : CST.DB_SQL_TRADE_DEV;
 		const res: object[] = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_TABLE_TRADE +
+				TABLE +
 				' WHERE ' +
 				CST.DB_TX_TS +
 				' >= ' +

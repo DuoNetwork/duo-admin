@@ -4,18 +4,18 @@ import { IPrice, ITrade } from './types';
 
 export class DbUtil {
 	private aws: boolean = false;
-	private live: boolean = false;
+	// private live: boolean = false;
 
 	public init(useAWS: boolean, live: boolean, host: string, user: string, pwd: string) {
 		this.aws = useAWS;
-		this.live = live;
-		this.aws ? awsUtil.init() : sqlUtil.init(host, user, pwd);
+		// this.live = live;
+		this.aws ? awsUtil.init(live) : sqlUtil.init(live, host, user, pwd);
 	}
 
 	public insertSourceData(sourceData: ITrade) {
 		return this.aws
-			? awsUtil.insertSourceData(this.live, sourceData)
-			: sqlUtil.insertSourceData(this.live, sourceData);
+			? awsUtil.insertSourceData(sourceData)
+			: sqlUtil.insertSourceData(sourceData);
 	}
 
 	public insertPrice(price: IPrice) {
