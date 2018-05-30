@@ -1,7 +1,7 @@
 export const REDRAW_UPDATE_THRESHOLD = 10;
 
 // export const provider = "https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w";
-export const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
+export const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 // export const provider = "http://localhost:8545";
 
 export const EXCHANGE_BITFINEX = 'BITFINEX';
@@ -14,9 +14,9 @@ export const EXCHANGE_GDAX = 'GDAX';
 // export const DB_USER = 'root';
 // export const DB_PASSWORD = '*OG=ko!Ph0hk';
 export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
-export const DB_SQL_TRADE = 'ETH_Trades_Table';
-export const DB_SQL_TRADE_DEV = 'ETH_Trades_Table_Dev';
-export const DB_SQL_HISTORY = 'eth_historical_price';
+export const DB_SQL_TRADE = 'eth_trades_live';
+export const DB_SQL_TRADE_DEV = 'eth_trades_dev';
+export const DB_SQL_HISTORY = 'eth_historical_price_live';
 export const DB_SQL_HISTORY_DEV = 'eth_historical_price_dev';
 export const DB_AWS_TRADES = 'trades_live';
 export const DB_AWS_TRADES_DEV = 'trades_dev';
