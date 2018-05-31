@@ -19,13 +19,13 @@ export class GdaxUtil {
 	public async fetchETHTrades() {
 		const data = await util.get('https://api.gdax.com:443/products/ETH-USD/trades');
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
-		let needInsertStatus: boolean = true;
+		let insertStatus: boolean = true;
 		parsedData.forEach(item => {
 			// util.log(Number(item.trade_id));
 			if (pushedID.indexOf(Number(item.trade_id)) < 0) {
 				pushedID.push(Number(item.trade_id));
-				dbUtil.insertTradeData(needInsertStatus, this.parseTrade(item));
-				needInsertStatus = false;
+				dbUtil.insertTradeData(this.parseTrade(item), insertStatus);
+				insertStatus = false;
 				util.log(CST.EXCHANGE_GDAX + ': record inserted: ' + item.trade_id);
 
 				if (pushedID.length > 20000) pushedID = [];

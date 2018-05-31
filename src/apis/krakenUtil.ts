@@ -21,7 +21,7 @@ export class KrakenUtil {
 
 	public parseApiResponse(response: string) {
 		const jsonObj = JSON.parse(response);
-		let needInsertStatus: boolean = true;
+		let insertStatus: boolean = true;
 
 		const returnFirstLevelArray = jsonObj.result.XETHZUSD;
 		// util.log(url);
@@ -30,8 +30,8 @@ export class KrakenUtil {
 			// util.log(trade);
 			const parsedTrade: ITrade = krakenUtil.parseTrade(trade);
 			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
-				dbUtil.insertTradeData(needInsertStatus, parsedTrade);
-				needInsertStatus = false;
+				dbUtil.insertTradeData(parsedTrade, insertStatus);
+				insertStatus = false;
 				count++;
 			}
 		});

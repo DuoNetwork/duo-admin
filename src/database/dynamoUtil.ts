@@ -45,7 +45,7 @@ export class DynamoUtil {
 		};
 	}
 
-	public async insertTradeData(needInsertStatus: boolean, trade: ITrade): Promise<void> {
+	public async insertTradeData(trade: ITrade, insertStatus: boolean): Promise<void> {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 		const data = this.convertTradeToSchema(trade, systemTimestamp);
 
@@ -60,7 +60,7 @@ export class DynamoUtil {
 		};
 
 		await this.insertData(params);
-		if (needInsertStatus) await this.insertStatusData(data);
+		if (insertStatus) await this.insertStatusData(data);
 	}
 
 	public async insertHeartbeat(): Promise<void> {

@@ -9,10 +9,10 @@ export class DbUtil {
 		this.dynamo = useDynamo;
 	}
 
-	public insertTradeData(needInsertStatus: boolean, sourceData: ITrade) {
+	public insertTradeData(trade: ITrade, insertStatus: boolean) {
 		return this.dynamo
-			? dynamoUtil.insertTradeData(needInsertStatus, sourceData)
-			: sqlUtil.insertTradeData(needInsertStatus, sourceData);
+			? dynamoUtil.insertTradeData(trade, insertStatus)
+			: sqlUtil.insertTradeData(trade, insertStatus);
 	}
 
 	public insertPrice(price: IPrice) {
