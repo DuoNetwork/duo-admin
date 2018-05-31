@@ -21,6 +21,7 @@ export class KrakenUtil {
 
 	public parseApiResponse(response: string) {
 		const jsonObj = JSON.parse(response);
+		let needInsertStatus: boolean = true;
 
 		const returnFirstLevelArray = jsonObj.result.XETHZUSD;
 		// util.log(url);
@@ -29,7 +30,8 @@ export class KrakenUtil {
 			// util.log(trade);
 			const parsedTrade: ITrade = krakenUtil.parseTrade(trade);
 			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
-				dbUtil.insertTradeData(parsedTrade);
+				dbUtil.insertTradeData(needInsertStatus, parsedTrade);
+				needInsertStatus = false;
 				count++;
 			}
 		});
@@ -47,7 +49,7 @@ export class KrakenUtil {
 		util.log(CST.EXCHANGE_KRAKEN + ': last ' + last);
 	}
 
-	public async fetchETHTradesByOwnWebSocket() {
+	public async fetchETHTrades() {
 		// const kraken = new Kraken();
 		const baseUrl: string = 'https://api.kraken.com/0/public/Trades?pair=ETHUSD';
 		let url: string = '';
@@ -66,7 +68,7 @@ export class KrakenUtil {
 	}
 
 	public startFetching() {
-		setInterval(() => this.fetchETHTradesByOwnWebSocket(), INTERVAL_SECS * 1000);
+		setInterval(() => this.fetchETHTrades(), INTERVAL_SECS * 1000);
 	}
 }
 const krakenUtil = new KrakenUtil();

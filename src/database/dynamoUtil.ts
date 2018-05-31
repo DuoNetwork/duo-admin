@@ -14,7 +14,7 @@ export class DynamoUtil {
 		this.live = live;
 		this.process = process;
 		// this.role = role;
-		AWS.config.loadFromPath('./src/keys/' + (live ? 'live' : 'dev') + '/' + role + '.json');
+		AWS.config.loadFromPath('./src/keys/aws/' + (live ? 'live' : 'dev') + '/' + role + '.json');
 		this.ddb = new AWS.DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
 	}
 
@@ -45,7 +45,7 @@ export class DynamoUtil {
 		};
 	}
 
-	public async insertTradeData(trade: ITrade): Promise<void> {
+	public async insertTradeData(needInsertStatus: boolean, trade: ITrade): Promise<void> {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 		const data = this.convertTradeToSchema(trade, systemTimestamp);
 
@@ -60,7 +60,7 @@ export class DynamoUtil {
 		};
 
 		await this.insertData(params);
-		await this.insertStatusData(data);
+		if (needInsertStatus) await this.insertStatusData(data);
 	}
 
 	public async insertHeartbeat(): Promise<void> {

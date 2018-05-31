@@ -36,7 +36,7 @@ export class SqlUtil {
 		});
 	}
 
-	public async insertTradeData(trade: ITrade) {
+	public async insertTradeData(needInsertStatus: boolean, trade: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
 		// To do the checking for out of boundary data.
@@ -74,7 +74,10 @@ export class SqlUtil {
 			"')";
 		// util.log(await this.executeQuery(sql));
 		await this.executeQuery(sql);
-		await dynamoUtil.insertStatusData(dynamoUtil.convertTradeToSchema(trade, systemTimestamp));
+		if (needInsertStatus)
+			await dynamoUtil.insertStatusData(
+				dynamoUtil.convertTradeToSchema(trade, systemTimestamp)
+			);
 	}
 
 	public async insertPrice(price: IPrice) {
