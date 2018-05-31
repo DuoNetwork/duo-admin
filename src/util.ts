@@ -186,6 +186,54 @@ export class Util {
 
 		return option;
 	}
+
+	public getDynamoRole(tool: string, useDynamo: boolean): string {
+		switch (tool) {
+			case 'bitfinex':
+			case 'gemini':
+			case 'kraken':
+			case 'gdax':
+				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
+			case 'commitPrice':
+				return CST.AWS_DYNAMO_ROLE_STATUS;
+			case 'subscribe':
+				return CST.AWS_DYNAMO_ROLE_EVENT;
+			default:
+				return '';
+		}
+	}
+
+	public getStatusProcess(tool: string, option: IOption) {
+		let type = '';
+		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
+		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
+		let source = '';
+
+		switch (tool) {
+			case 'bitfinex':
+			case 'gemini':
+			case 'kraken':
+			case 'gdax':
+				type = 'PRICE';
+				source = '_' + tool.toUpperCase();
+				break;
+			case 'subscribe':
+				type = 'EVENT';
+				source =
+					'_' +
+					([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)
+						? option.event.toUpperCase()
+						: 'OTHERS');
+				break;
+			case 'commitPrice':
+				type = 'FEED';
+				break;
+			default:
+				return '';
+		}
+
+		return type + platform + privacy + source;
+	}
 }
 
 const util = new Util();

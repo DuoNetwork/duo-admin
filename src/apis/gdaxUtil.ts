@@ -24,7 +24,7 @@ export class GdaxUtil {
 			// util.log(Number(item.trade_id));
 			if (pushedID.indexOf(Number(item.trade_id)) < 0) {
 				pushedID.push(Number(item.trade_id));
-				dbUtil.insertSourceData(this.parseTrade(item));
+				dbUtil.insertTradeData(this.parseTrade(item));
 				util.log(CST.EXCHANGE_GDAX + ': record inserted: ' + item.trade_id);
 
 				if (pushedID.length > 20000) pushedID = [];

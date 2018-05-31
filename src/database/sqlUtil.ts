@@ -2,9 +2,10 @@ import * as mysql from 'mysql';
 import * as CST from '../constants';
 import { IPrice, ITrade } from '../types';
 import util from '../util';
+import dynamoUtil from './dynamoUtil';
 
 export class SqlUtil {
-	public conn: undefined | mysql.Connection = undefined;
+	private conn: undefined | mysql.Connection = undefined;
 	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: host,
@@ -31,20 +32,20 @@ export class SqlUtil {
 					else if (err) reject(err);
 					else resolve(result);
 				});
-			else reject('db connection is not initialized');
+			else reject('sql db connection is not initialized');
 		});
 	}
 
-	public async insertSourceData(sourceData: ITrade) {
+	public async insertTradeData(trade: ITrade) {
 		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
 
 		// To do the checking for out of boundary data.
-		// if(isNaN(sourceData.price)){
+		// if(isNaN(trade.price)){
 		// 	util.log('Price is NaN!');
 		// 	return;
 		// }
 
-		// if(isNaN(sourceData.amount)){
+		// if(isNaN(trade.amount)){
 		// 	util.log('Amount is NaN!');
 		// 	return;
 		// }
@@ -52,27 +53,28 @@ export class SqlUtil {
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
-		const priceStr = sourceData.price.toString();
-		const amountStr = sourceData.amount.toString();
+		const priceStr = trade.price.toString();
+		const amountStr = trade.amount.toString();
 
 		const sql =
 			'REPLACE ' +
 			CST.DB_SQL_TRADE +
 			" VALUES ('" +
-			sourceData.source +
+			trade.source +
 			"','" +
-			sourceData.id +
+			trade.id +
 			"','" +
 			priceStr +
 			"','" +
 			amountStr +
 			"','" +
-			(sourceData.timestamp || systemTimestamp) +
+			(trade.timestamp || systemTimestamp) +
 			"','" +
 			systemTimestamp +
 			"')";
 		// util.log(await this.executeQuery(sql));
 		await this.executeQuery(sql);
+		await dynamoUtil.insertStatusData(dynamoUtil.convertTradeToSchema(trade, systemTimestamp));
 	}
 
 	public async insertPrice(price: IPrice) {
@@ -89,6 +91,7 @@ export class SqlUtil {
 					"')"
 			)
 		);
+		await dynamoUtil.insertStatusData(dynamoUtil.convertPriceToSchema(price));
 	}
 
 	public async readLastPrice(): Promise<IPrice> {

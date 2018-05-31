@@ -29,7 +29,7 @@ export class KrakenUtil {
 			// util.log(trade);
 			const parsedTrade: ITrade = krakenUtil.parseTrade(trade);
 			if (Number(parsedTrade.id) >= Math.floor(Number(last) / 1000000)) {
-				dbUtil.insertSourceData(parsedTrade);
+				dbUtil.insertTradeData(parsedTrade);
 				count++;
 			}
 		});

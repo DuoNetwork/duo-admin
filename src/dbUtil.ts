@@ -4,18 +4,15 @@ import { IPrice, ITrade } from './types';
 
 export class DbUtil {
 	private dynamo: boolean = false;
-	// private live: boolean = false;
 
-	public init(useDynamo: boolean, host: string, user: string, pwd: string) {
+	public init(useDynamo: boolean) {
 		this.dynamo = useDynamo;
-		// this.live = live
-		this.dynamo ? dynamoUtil.init() : sqlUtil.init(host, user, pwd);
 	}
 
-	public insertSourceData(sourceData: ITrade) {
+	public insertTradeData(sourceData: ITrade) {
 		return this.dynamo
-			? dynamoUtil.insertSourceData(sourceData)
-			: sqlUtil.insertSourceData(sourceData);
+			? dynamoUtil.insertTradeData(sourceData)
+			: sqlUtil.insertTradeData(sourceData);
 	}
 
 	public insertPrice(price: IPrice) {

@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`connection initalization 1`] = `"db connection is not initialized"`;
+exports[`connection initalization 1`] = `"sql db connection is not initialized"`;
 
 exports[`insertPrice 1`] = `"INSERT INTO eth_historical_price VALUES ('1234567890','123','456')"`;
 
-exports[`insertSourceData 1`] = `"REPLACE ETH_Trades_Table VALUES ('src','id','123','456','1234567890','0')"`;
+exports[`insertTradeData 1`] = `"REPLACE eth_trades VALUES ('src','id','123','456','1234567890','0')"`;
 
 exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
 
@@ -16,7 +16,7 @@ Object {
 }
 `;
 
-exports[`readSourceData 1`] = `"SELECT * FROM ETH_Trades_Table WHERE timestamp >= 1230967890 AND timestamp <= 1234567890"`;
+exports[`readSourceData 1`] = `"SELECT * FROM eth_trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890"`;
 
 exports[`readSourceData 2`] = `
 Array [
