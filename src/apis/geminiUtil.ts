@@ -27,7 +27,7 @@ export class GeminiUtil {
 			const parsedTrade: ITrade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
-			dbUtil.insertTradeData(parsedTrade);
+			dbUtil.insertTradeData(true, parsedTrade);
 			util.log(CST.EXCHANGE_GEMINI + ': trade fetched and inserted ' + parsedTrade.id);
 		}
 	}

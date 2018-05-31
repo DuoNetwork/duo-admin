@@ -22,13 +22,13 @@ export class BitfinexUtil {
 			if (Array.isArray(data))
 				data.forEach(trade => {
 					const parsedTrade = this.parseTrade(trade);
-					dbUtil.insertTradeData(parsedTrade);
+					dbUtil.insertTradeData(true, parsedTrade);
 					util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
 				});
 			else if (data === 'hb') util.log(CST.EXCHANGE_BITFINEX + ': trade channel heartbeat');
 			else if (data === 'tu') {
 				const parsedTrade = this.parseTrade(parsedJson.slice(3));
-				dbUtil.insertTradeData(parsedTrade);
+				dbUtil.insertTradeData(true, parsedTrade);
 				util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
 			} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
 		} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
