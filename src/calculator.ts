@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as CST from './constants';
 import dbUtil from './dbUtil';
 import { IPrice, ITrade } from './types';
@@ -103,7 +104,7 @@ export class Calculateor {
 	}
 
 	public async getPriceFix(): Promise<IPrice> {
-		const currentTimestamp: number = Math.floor(Date.now());
+		const currentTimestamp: number = util.getNowTimestamp();
 		const trades = await dbUtil.readSourceData(currentTimestamp);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
 			[CST.EXCHANGE_BITFINEX]: [],

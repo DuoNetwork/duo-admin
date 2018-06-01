@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as mysql from 'mysql';
 import * as CST from '../constants';
 import { IPrice, ITrade } from '../types';
@@ -37,7 +38,7 @@ export class SqlUtil {
 	}
 
 	public async insertTradeData(trade: ITrade, insertStatus: boolean) {
-		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
+		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
 
 		// To do the checking for out of boundary data.
 		// if(isNaN(trade.price)){

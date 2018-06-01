@@ -2,6 +2,7 @@ import calculator from './calculator';
 import * as CST from './constants';
 import dbUtil from './dbUtil';
 import { ITrade } from './types';
+import util from './util';
 const trades: ITrade[] = require('./samples/ETHUSDtrades.json');
 const trades2: ITrade[] = require('./samples/ETHUSDtrades2.json');
 // console.log(trades);
@@ -38,7 +39,7 @@ test('getExchangePriceFix', () => {
 test('getPriceFix case 1', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
-	Date.now = jest.fn(() => 1524547909941);
+	util.getNowTimestamp = jest.fn(() => 1524547909941);
 	// console.log(dbUtil.readSourceData);
 	await calculator.getPriceFix();
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
@@ -47,7 +48,7 @@ test('getPriceFix case 1', async () => {
 test('getPriceFix case 2', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades2));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
-	Date.now = jest.fn(() => 1524547909941);
+	util.getNowTimestamp = jest.fn(() => 1524547909941);
 	// console.log(dbUtil.readSourceData);
 	await calculator.getPriceFix();
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();

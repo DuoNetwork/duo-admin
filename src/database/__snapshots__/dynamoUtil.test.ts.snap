@@ -2,6 +2,35 @@
 
 exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
 
+exports[`convertPriceBarToSchema 1`] = `
+Object {
+  "close": Object {
+    "N": "2",
+  },
+  "high": Object {
+    "N": "3",
+  },
+  "hour": Object {
+    "N": "1",
+  },
+  "low": Object {
+    "N": "0",
+  },
+  "open": Object {
+    "N": "1",
+  },
+  "sourceDate": Object {
+    "S": "src|YYYY-MM-DD",
+  },
+  "timestamp": Object {
+    "N": "1234567890",
+  },
+  "volume": Object {
+    "N": "123",
+  },
+}
+`;
+
 exports[`convertTradeToSchema 1`] = `
 Object {
   "amount": Object {
@@ -47,6 +76,38 @@ Object {
     },
   },
   "TableName": "status_dev",
+}
+`;
+
+exports[`insertHourlyData 1`] = `
+Object {
+  "Item": Object {
+    "close": Object {
+      "N": "2",
+    },
+    "high": Object {
+      "N": "3",
+    },
+    "hour": Object {
+      "N": "1",
+    },
+    "low": Object {
+      "N": "0",
+    },
+    "open": Object {
+      "N": "1",
+    },
+    "sourceDate": Object {
+      "S": "src|YYYY-MM-DD",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+    "volume": Object {
+      "N": "123",
+    },
+  },
+  "TableName": "hourly_dev",
 }
 `;
 

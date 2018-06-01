@@ -169,7 +169,7 @@ export default class ContractUtil {
 			currentPrice = {
 				price: option.price,
 				volume: 0,
-				timestamp: Math.floor(Date.now())
+				timestamp: util.getNowTimestamp()
 			};
 		else currentPrice = await calculator.getPriceFix();
 
@@ -259,7 +259,7 @@ export default class ContractUtil {
 	}
 
 	public async commitPrice(option: IOption) {
-		const startTime = new Date(Date.now());
+		const startTime = new Date();
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
 		const rule = new schedule.RecurrenceRule();

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as CST from '../constants';
 import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
@@ -12,7 +13,7 @@ export class GdaxUtil {
 			id: trade.trade_id + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.size)),
-			timestamp: new Date(trade.time).valueOf()
+			timestamp: moment(trade.time).valueOf()
 		};
 	}
 

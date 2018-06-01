@@ -234,6 +234,10 @@ export class Util {
 
 		return type + platform + privacy + source;
 	}
+
+	public getNowTimestamp() {
+		return moment().valueOf();
+	}
 }
 
 const util = new Util();

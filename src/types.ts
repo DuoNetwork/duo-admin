@@ -12,6 +12,18 @@ export interface IPrice {
 	timestamp: number;
 }
 
+export interface IPriceBar {
+	source: string;
+	date: string;
+	hour: number;
+	open: number;
+	high: number;
+	low: number;
+	close: number;
+	volume: number;
+	timestamp: number;
+}
+
 export interface IAccount {
 	address: string;
 	privateKey: string;
