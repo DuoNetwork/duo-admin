@@ -5,12 +5,7 @@
             true,
             "tabs"
         ],
-        "quotemark": [
-            true,
-            "single",
-            "avoid-escape"
-        ],
-        "no-null-keyword": true,
+        "quotemark": false,
         "trailing-comma": false,
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
@@ -18,6 +13,11 @@
         "no-var-requires": false,
         "arrow-parens": false,
         "no-string-literal": false,
+        "one-variable-per-declaration":false,
+        "max-line-length": false,
+        "comment-format": false,
+        "semicolon":false,
+        "member-ordering": false,
         "curly": [true, "as-needed"]
     }
 }
