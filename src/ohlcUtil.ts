@@ -75,7 +75,7 @@ class OhlcUtil {
 	}
 
 	public startProcessHour() {
-		setInterval(() => this.saveHourlyData(), 5000);
+		setInterval(() => this.saveHourlyData(), 300000);
 	}
 }
 
