@@ -64,9 +64,8 @@ switch (tool) {
 		setInterval(
 			() =>
 				contractUtil.getCurrentBlock().then(bn =>
-					dynamoUtil.insertStatusData({
-						block: { N: bn + '' },
-						timestamp: { N: util.getNowTimestamp() + '' }
+					dynamoUtil.insertHeartbeat({
+						block: { N: bn + '' }
 					})
 				),
 			30000
