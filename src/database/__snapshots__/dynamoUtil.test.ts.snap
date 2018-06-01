@@ -2,7 +2,7 @@
 
 exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
 
-exports[`convertPriceBarToSchema 1`] = `
+exports[`convertPriceBarToDynamo 1`] = `
 Object {
   "close": Object {
     "N": "2",
@@ -25,7 +25,7 @@ Object {
 }
 `;
 
-exports[`convertTradeToSchema 1`] = `
+exports[`convertTradeToDynamo 1`] = `
 Object {
   "amount": Object {
     "N": "456",
@@ -45,7 +45,7 @@ Object {
 }
 `;
 
-exports[`convertTradeToSchema 2`] = `
+exports[`convertTradeToDynamo 2`] = `
 Object {
   "price": Object {
     "N": "123",
@@ -214,6 +214,39 @@ Object {
 `;
 
 exports[`readTradeData 1`] = `
+Array [
+  Object {
+    "amount": 1.181,
+    "id": "35260767",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832447254,
+  },
+  Object {
+    "amount": 0.48160278,
+    "id": "35260768",
+    "price": 572.99,
+    "source": "GDAX",
+    "timestamp": 1527832455335,
+  },
+  Object {
+    "amount": 0.0501,
+    "id": "35260769",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832458221,
+  },
+  Object {
+    "amount": 0.2845,
+    "id": "35260770",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832490925,
+  },
+]
+`;
+
+exports[`readTradeData 2`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":sourceDateHourMinute": Object {

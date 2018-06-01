@@ -76,7 +76,7 @@ class SqlUtil {
 		await this.executeQuery(sql);
 		if (insertStatus)
 			await dynamoUtil.insertStatusData(
-				dynamoUtil.convertTradeToSchema(trade, systemTimestamp)
+				dynamoUtil.convertTradeToDynamo(trade, systemTimestamp)
 			);
 	}
 
@@ -94,7 +94,7 @@ class SqlUtil {
 					"')"
 			)
 		);
-		await dynamoUtil.insertStatusData(dynamoUtil.convertPriceToSchema(price));
+		await dynamoUtil.insertStatusData(dynamoUtil.convertPriceToDynamo(price));
 	}
 
 	public async readLastPrice(): Promise<IPrice> {

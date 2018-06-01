@@ -1,6 +1,7 @@
 // import * as CST from '../constants';
 import util from '../util';
 import dynamoUtil from './dynamoUtil';
+const sampleTrades = require('../samples/dynamoTrades.json');
 
 const trade = {
 	source: 'src',
@@ -23,24 +24,23 @@ const priceBar = {
 	timestamp: 1234567890
 };
 
-test('connection initalization', () => {
-	return dynamoUtil.insertData({} as any).catch(error => expect(error).toMatchSnapshot());
-});
+test('connection initalization', () =>
+	dynamoUtil.insertData({} as any).catch(error => expect(error).toMatchSnapshot()));
 
-test('convertTradeToSchema', () =>
-	expect(dynamoUtil.convertTradeToSchema(trade, 123)).toMatchSnapshot());
+test('convertTradeToDynamo', () =>
+	expect(dynamoUtil.convertTradeToDynamo(trade, 123)).toMatchSnapshot());
 
-test('convertTradeToSchema', () =>
+test('convertTradeToDynamo', () =>
 	expect(
-		dynamoUtil.convertPriceToSchema({
+		dynamoUtil.convertPriceToDynamo({
 			price: 123,
 			timestamp: 1234567890,
 			volume: 456
 		})
 	).toMatchSnapshot());
 
-test('convertPriceBarToSchema', () =>
-	expect(dynamoUtil.convertPriceBarToSchema(priceBar)).toMatchSnapshot());
+test('convertPriceBarToDynamo', () =>
+	expect(dynamoUtil.convertPriceBarToDynamo(priceBar)).toMatchSnapshot());
 
 test('insertTradeData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
@@ -80,14 +80,14 @@ test('insertStatusData', async () => {
 });
 
 test('readTradeData', async () => {
-	dynamoUtil.queryData = jest.fn(() => Promise.resolve({test: 'test'}));
-	await dynamoUtil.readTradeData('source', 'datetime');
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve(sampleTrades));
+	expect(await dynamoUtil.readTradeData('source', 'datetime')).toMatchSnapshot();
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
 test('readMinutelyData', async () => {
-	dynamoUtil.queryData = jest.fn(() => Promise.resolve({test: 'test'}));
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve({ test: 'test' }));
 	await dynamoUtil.readMinutelyData('source', 'datetime');
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();

@@ -50,10 +50,10 @@ switch (tool) {
 		util.log('starting commit process');
 		contractUtil.commitPrice(option);
 		break;
-	case 'hourly':
+	case 'minutely':
 		dynamoUtil
-			.readTradeData('GDAX', '2018-05-30')
-			.then(data => console.log(data));
+			.readTradeData('GDAX', '2018-06-01-05-54')
+			.then(data => console.log(JSON.stringify(data)));
 		break;
 	default:
 		util.log('no such tool ' + tool);

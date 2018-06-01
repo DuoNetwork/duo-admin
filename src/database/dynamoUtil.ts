@@ -36,7 +36,7 @@ class DynamoUtil {
 		);
 	}
 
-	public convertTradeToSchema(trade: ITrade, systime: number) {
+	public convertTradeToDynamo(trade: ITrade, systime: number) {
 		return {
 			[CST.DB_TX_ID]: { S: trade.id },
 			[CST.DB_TX_PRICE]: { N: trade.price.toString() },
@@ -46,7 +46,17 @@ class DynamoUtil {
 		};
 	}
 
-	public convertPriceToSchema(price: IPrice) {
+	public convertDynamoToTrade(data: object): ITrade {
+		return {
+			source: data[CST.DB_TX_SRC_DHM].S.split('|')[0],
+			id: data[CST.DB_TX_ID].S,
+			price: Number(data[CST.DB_TX_PRICE].N),
+			amount: Number(data[CST.DB_TX_AMOUNT].N),
+			timestamp: Number(data[CST.DB_TX_TS].N)
+		};
+	}
+
+	public convertPriceToDynamo(price: IPrice) {
 		return {
 			[CST.DB_HISTORY_PRICE]: { N: price.price + '' },
 			[CST.DB_HISTORY_TIMESTAMP]: { N: price.timestamp + '' },
@@ -54,7 +64,7 @@ class DynamoUtil {
 		};
 	}
 
-	public convertPriceBarToSchema(priceBar: IPriceBar) {
+	public convertPriceBarToDynamo(priceBar: IPriceBar) {
 		return {
 			[CST.DB_OHLC_OPEN]: { N: priceBar.open + '' },
 			[CST.DB_OHLC_HIGH]: { N: priceBar.high + '' },
@@ -67,7 +77,7 @@ class DynamoUtil {
 
 	public async insertTradeData(trade: ITrade, insertStatus: boolean): Promise<void> {
 		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
-		const data = this.convertTradeToSchema(trade, systemTimestamp);
+		const data = this.convertTradeToDynamo(trade, systemTimestamp);
 
 		const params = {
 			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
@@ -91,7 +101,7 @@ class DynamoUtil {
 					S: priceBar.source + '|' + priceBar.date + '-' + priceBar.hour
 				},
 				[CST.DB_MN_MINUTE]: { N: Number(priceBar.minute) + '' },
-				...this.convertPriceBarToSchema(priceBar)
+				...this.convertPriceBarToDynamo(priceBar)
 			}
 		});
 	}
@@ -104,7 +114,7 @@ class DynamoUtil {
 					S: priceBar.source + '|' + priceBar.date
 				},
 				[CST.DB_HR_HOUR]: { N: Number(priceBar.hour) + '' },
-				...this.convertPriceBarToSchema(priceBar)
+				...this.convertPriceBarToDynamo(priceBar)
 			}
 		});
 	}
@@ -133,7 +143,7 @@ class DynamoUtil {
 		});
 	}
 
-	public readTradeData(source: string, datetimeString: string): Promise<any> {
+	public async readTradeData(source: string, datetimeString: string): Promise<ITrade[]> {
 		const params = {
 			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
 			KeyConditionExpression: CST.DB_TX_SRC_DHM + ' = :' + CST.DB_TX_SRC_DHM,
@@ -142,7 +152,10 @@ class DynamoUtil {
 			}
 		};
 
-		return this.queryData(params);
+		const data = await this.queryData(params);
+		if (!data.Items || !data.Items.length) return [];
+
+		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
 
 	public readMinutelyData(source: string, datetimeString: string): Promise<any> {
