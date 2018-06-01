@@ -160,7 +160,7 @@ class Calculateor {
 		}
 	}
 
-	public getOHLCFromTrades(trades: ITrade[], timestamp: number): IPriceBar {
+	public getMinutelyOHLCFromTrades(trades: ITrade[], timestamp: number): IPriceBar {
 		trades.sort((a, b) => a.timestamp - b.timestamp);
 		const firstTrade = trades[0];
 		const lastTrade = trades[trades.length - 1];
@@ -180,6 +180,30 @@ class Calculateor {
 			volume: volume,
 			timestamp: timestamp
 		};
+	}
+
+	public getHourlyOHLCFromPriceBars(priceBars: IPriceBar[], timestamp: number): IPriceBar {
+		priceBars.sort((a, b) => a.minute - b.minute);
+		const firstBar = priceBars[0];
+		const lastBar = priceBars[priceBars.length - 1];
+		priceBars.sort((a, b) => b.high - a.high);
+		const highestBar = priceBars[0];
+		priceBars.sort((a, b) => a.low - b.low);
+		const lowestBar = priceBars[0];
+		const volume = priceBars.reduce((sum, p) => sum + p.volume, 0);
+		// trades.sort((a, b) => a.price - b.price);
+		return {
+			source: firstBar.source,
+			date: firstBar.date,
+			hour: firstBar.hour,
+			minute: 0,
+			open: firstBar.open,
+			high: highestBar.high,
+			low: lowestBar.low,
+			close: lastBar.close,
+			volume: volume,
+			timestamp: timestamp
+		}
 	}
 }
 const calculator = new Calculateor();

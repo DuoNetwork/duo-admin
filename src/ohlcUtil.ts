@@ -11,8 +11,10 @@ class OhlcUtil {
 		const timestamp = now.valueOf();
 
 		const datetimeToRequest: string[] = [];
-		for (let i = 0; i < numOfMinutes; i++)
-			datetimeToRequest.push(now.subtract(1, 'minutes').format('YYYY-MM-DD-HH-mm'));
+		for (let i = 0; i < numOfMinutes; i++) {
+			datetimeToRequest.push(now.format('YYYY-MM-DD-HH-mm'));
+			now.subtract(1, 'minutes');
+		}
 
 		const promiseList: Array<Promise<void>> = [];
 		CST.EXCHANGES.forEach(src =>
@@ -24,7 +26,7 @@ class OhlcUtil {
 							trades =>
 								trades.length
 									? dynamoUtil.insertMinutelyData(
-											calculator.getOHLCFromTrades(trades, timestamp)
+											calculator.getMinutelyOHLCFromTrades(trades, timestamp)
 									)
 									: Promise.resolve()
 						)
@@ -40,13 +42,41 @@ class OhlcUtil {
 		setInterval(() => this.saveMinutelyData(), 60000);
 	}
 
-	// public async saveHourlyData(numOfHours: number = 2) {
+	public async saveHourlyData(numOfHours: number = 2) {
+		util.log('processing hourly trade data');
+		const now = moment.utc();
+		const timestamp = now.valueOf();
+		const datetimeToRequest: string[] = [];
+		for (let i = 0; i < numOfHours; i++) {
+			datetimeToRequest.push(now.format('YYYY-MM-DD-HH'));
+			now.subtract(1, 'hours');
+		}
+		// console.log(datetimeToRequest);
+		const promiseList: Array<Promise<void>> = [];
+		CST.EXCHANGES.forEach(src =>
+			datetimeToRequest.forEach(dt =>
+				promiseList.push(
+					dynamoUtil
+						.readMinutelyData(src, dt)
+						.then(
+							bars =>
+								bars.length
+									? dynamoUtil.insertHourlyData(
+											calculator.getHourlyOHLCFromPriceBar(bars, timestamp)
+									)
+									: Promise.resolve()
+						)
+				)
+			)
+		);
 
-	// }
+		await Promise.all(promiseList);
+		util.log('completed processing!');
+	}
 
-	// public startProcessHour() {
-	// 	setInterval(() => this.saveHourlyData(), 300000);
-	// }
+	public startProcessHour() {
+		setInterval(() => this.saveHourlyData(), 5000);
+	}
 }
 
 const ohlcUtil = new OhlcUtil();

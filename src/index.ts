@@ -56,7 +56,8 @@ switch (tool) {
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'hourly':
-		dynamoUtil.readMinutelyData('GDAX', '2018-06-01-07').then((data) => console.log(JSON.stringify(data)));
+		ohlcUtil.startProcessHour();
+		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	default:
 		util.log('no such tool ' + tool);
