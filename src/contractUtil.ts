@@ -32,10 +32,10 @@ export default class ContractUtil {
 
 		if (!option.live) {
 			const key = option.azure
-				? require('./keys/kovan/azure.json')
+				? require('./keys/kovan/pfAzure.json')
 				: option.gcp
-					? require('./keys/kovan/gcp.json')
-					: require('./keys/kovan/aws.json');
+					? require('./keys/kovan/pfGcp.json')
+					: require('./keys/kovan/pfAws.json');
 			this.publicKey = key.publicKey;
 			this.privateKey = key.privateKey;
 		}

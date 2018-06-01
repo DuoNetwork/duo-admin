@@ -7,6 +7,7 @@ import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
+import ohlcUtil from './ohlcUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -44,16 +45,15 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
-		setInterval(dynamoUtil.insertHeartbeat, 30000);
+		setInterval( () => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'commit':
 		util.log('starting commit process');
 		contractUtil.commitPrice(option);
 		break;
 	case 'minutely':
-		dynamoUtil
-			.readTradeData('GDAX', '2018-06-01-05-54')
-			.then(data => console.log(JSON.stringify(data)));
+		ohlcUtil.startProcessMinute();
+		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	default:
 		util.log('no such tool ' + tool);
