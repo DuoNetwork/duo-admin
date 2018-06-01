@@ -200,6 +200,8 @@ export class Util {
 				return CST.AWS_DYNAMO_ROLE_EVENT;
 			case 'hourly':
 				return CST.AWS_DYNAMO_ROLE_HOURLY;
+			case 'minutely':
+				return CST.AWS_DYNAMO_ROLE_MINUTELY;
 			default:
 				return '';
 		}
@@ -232,6 +234,9 @@ export class Util {
 				break;
 			case 'hourly':
 				type = 'HOURLY';
+				break;
+			case 'minutely':
+				type = 'MINUTELY';
 				break;
 			default:
 				return '';

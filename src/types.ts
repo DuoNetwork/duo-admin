@@ -15,7 +15,8 @@ export interface IPrice {
 export interface IPriceBar {
 	source: string;
 	date: string;
-	hour: number;
+	hour: string;
+	minute: string;
 	open: number;
 	high: number;
 	low: number;

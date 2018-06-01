@@ -47,14 +47,12 @@ export class DynamoUtil {
 
 	public convertPriceBarToSchema(priceBar: IPriceBar) {
 		return {
-			[CST.DB_HR_SRC_DATE]: { S: priceBar.source + '|' + priceBar.date },
-			[CST.DB_HR_HOUR]: { N: priceBar.hour + '' },
-			[CST.DB_HR_OPEN]: { N: priceBar.open + '' },
-			[CST.DB_HR_HIGH]: { N: priceBar.high + '' },
-			[CST.DB_HR_LOW]: { N: priceBar.low + '' },
-			[CST.DB_HR_CLOSE]: { N: priceBar.close + '' },
-			[CST.DB_HR_VOLUME]: { N: priceBar.volume + '' },
-			[CST.DB_HR_TS]: { N: priceBar.timestamp + '' }
+			[CST.DB_OHLC_OPEN]: { N: priceBar.open + '' },
+			[CST.DB_OHLC_HIGH]: { N: priceBar.high + '' },
+			[CST.DB_OHLC_LOW]: { N: priceBar.low + '' },
+			[CST.DB_OHLC_CLOSE]: { N: priceBar.close + '' },
+			[CST.DB_OHLC_VOLUME]: { N: priceBar.volume + '' },
+			[CST.DB_OHLC_TS]: { N: priceBar.timestamp + '' }
 		};
 	}
 
@@ -65,8 +63,8 @@ export class DynamoUtil {
 		const params = {
 			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
 			Item: {
-				[CST.DB_TX_SRC_DATE]: {
-					S: trade.source + '|' + moment.utc(trade.timestamp).format('YYYY-MM-DD')
+				[CST.DB_TX_SRC_DHM]: {
+					S: trade.source + '|' + moment.utc(trade.timestamp).format('YYYY-MM-DD-HH-mm')
 				},
 				...data
 			}
@@ -76,10 +74,27 @@ export class DynamoUtil {
 		if (insertStatus) await this.insertStatusData(data);
 	}
 
+	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
+		return this.insertData({
+			TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
+			Item: {
+				[CST.DB_MN_SRC_DATE_HOUR]: {
+					S: priceBar.source + '|' + priceBar.date + '-' + priceBar.hour
+				},
+				[CST.DB_MN_MINUTE]: { N: Number(priceBar.minute) + '' },
+				...this.convertPriceBarToSchema(priceBar)
+			}
+		});
+	}
+
 	public async insertHourlyData(priceBar: IPriceBar): Promise<void> {
 		return this.insertData({
 			TableName: this.live ? CST.DB_AWS_HOURLY_LIVE : CST.DB_AWS_HOURLY_DEV,
 			Item: {
+				[CST.DB_HR_SRC_DATE]: {
+					S: priceBar.source + '|' + priceBar.date
+				},
+				[CST.DB_HR_HOUR]: { N: Number(priceBar.hour) + '' },
 				...this.convertPriceBarToSchema(priceBar)
 			}
 		});
@@ -109,12 +124,12 @@ export class DynamoUtil {
 		});
 	}
 
-	public readTradeData(source: string, date: string): Promise<any> {
+	public readTradeData(source: string, datetimeString: string): Promise<any> {
 		const params = {
 			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
-			KeyConditionExpression: CST.DB_TX_SRC_DATE + ' = :' + CST.DB_TX_SRC_DATE,
+			KeyConditionExpression: CST.DB_TX_SRC_DHM + ' = :' + CST.DB_TX_SRC_DHM,
 			ExpressionAttributeValues: {
-				[':' + CST.DB_TX_SRC_DATE]: { S: source + '|' + date }
+				[':' + CST.DB_TX_SRC_DHM]: { S: source + '|' + datetimeString }
 			}
 		};
 

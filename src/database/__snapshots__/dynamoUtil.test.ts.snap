@@ -10,17 +10,11 @@ Object {
   "high": Object {
     "N": "3",
   },
-  "hour": Object {
-    "N": "1",
-  },
   "low": Object {
     "N": "0",
   },
   "open": Object {
     "N": "1",
-  },
-  "sourceDate": Object {
-    "S": "src|YYYY-MM-DD",
   },
   "timestamp": Object {
     "N": "1234567890",
@@ -89,7 +83,7 @@ Object {
       "N": "3",
     },
     "hour": Object {
-      "N": "1",
+      "N": "0",
     },
     "low": Object {
       "N": "0",
@@ -99,6 +93,38 @@ Object {
     },
     "sourceDate": Object {
       "S": "src|YYYY-MM-DD",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+    "volume": Object {
+      "N": "123",
+    },
+  },
+  "TableName": "hourly_dev",
+}
+`;
+
+exports[`insertMinutelyData 1`] = `
+Object {
+  "Item": Object {
+    "close": Object {
+      "N": "2",
+    },
+    "high": Object {
+      "N": "3",
+    },
+    "low": Object {
+      "N": "0",
+    },
+    "minute": Object {
+      "N": "0",
+    },
+    "open": Object {
+      "N": "1",
+    },
+    "sourceDateHour": Object {
+      "S": "src|YYYY-MM-DD-00",
     },
     "timestamp": Object {
       "N": "1234567890",
@@ -135,8 +161,8 @@ Object {
     "price": Object {
       "N": "123",
     },
-    "sourceDate": Object {
-      "S": "src|1970-01-15",
+    "sourceDateHourMinute": Object {
+      "S": "src|1970-01-15-06-56",
     },
     "systime": Object {
       "N": "0",
