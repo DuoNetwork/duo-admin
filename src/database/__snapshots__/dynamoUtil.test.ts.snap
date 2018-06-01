@@ -200,3 +200,27 @@ Object {
   "TableName": "status_dev",
 }
 `;
+
+exports[`readMinutelyData 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHour": Object {
+      "S": "source|datetime",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHour = :sourceDateHour",
+  "TableName": "hourly_dev",
+}
+`;
+
+exports[`readTradeData 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|datetime",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "trades_dev",
+}
+`;

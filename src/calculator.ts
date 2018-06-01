@@ -3,7 +3,7 @@ import dbUtil from './dbUtil';
 import { IPrice, ITrade } from './types';
 import util from './util';
 
-export class Calculateor {
+class Calculateor {
 	public getTradesForInterval(
 		trades: ITrade[],
 		currentTimestamp: number,

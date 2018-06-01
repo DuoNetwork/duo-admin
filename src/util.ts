@@ -3,7 +3,7 @@ import request from 'request';
 import * as CST from './constants';
 import { IOption } from './types';
 
-export class Util {
+class Util {
 	public log(text: any): void {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}

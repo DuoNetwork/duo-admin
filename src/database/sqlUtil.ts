@@ -4,7 +4,7 @@ import { IPrice, ITrade } from '../types';
 import util from '../util';
 import dynamoUtil from './dynamoUtil';
 
-export class SqlUtil {
+class SqlUtil {
 	private conn: undefined | mysql.Connection = undefined;
 	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({

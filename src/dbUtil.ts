@@ -2,7 +2,7 @@ import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
 import { IPrice, ITrade } from './types';
 
-export class DbUtil {
+class DbUtil {
 	private dynamo: boolean = false;
 
 	public init(useDynamo: boolean) {

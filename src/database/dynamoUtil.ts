@@ -1,11 +1,11 @@
 import AWS from 'aws-sdk';
-import { PutItemInput } from 'aws-sdk/clients/dynamodb';
+import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../constants';
 import { IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 
-export class DynamoUtil {
+class DynamoUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
 	// private role: string = '';
 	private process: string = 'UNKNOWN';
@@ -23,6 +23,15 @@ export class DynamoUtil {
 			(resolve, reject) =>
 				this.ddb
 					? this.ddb.putItem(params, err => (err ? reject(err) : resolve()))
+					: reject('dynamo db connection is not initialized')
+		);
+	}
+
+	public queryData(params: QueryInput): Promise<QueryOutput> {
+		return new Promise(
+			(resolve, reject) =>
+				this.ddb
+					? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
 					: reject('dynamo db connection is not initialized')
 		);
 	}
@@ -133,14 +142,19 @@ export class DynamoUtil {
 			}
 		};
 
-		console.log(params);
+		return this.queryData(params);
+	}
 
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
-					: reject('dynamo db connection is not initialized')
-		);
+	public readMinutelyData(source: string, datetimeString: string): Promise<any> {
+		const params = {
+			TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
+			KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
+			ExpressionAttributeValues: {
+				[':' + CST.DB_MN_SRC_DATE_HOUR]: { S: source + '|' + datetimeString }
+			}
+		};
+
+		return this.queryData(params);
 	}
 }
 
