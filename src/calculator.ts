@@ -160,19 +160,19 @@ class Calculateor {
 		}
 	}
 
-	public getOHLC(trades: ITrade[], timestamp: number): IPriceBar {
-		trades.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
-		const firstTrade: ITrade = trades[0];
-		const lastTrade: ITrade = trades[trades.length - 1];
-		trades.sort((a, b) => Number(a.price) - Number(b.price));
-		const lowestTrade: ITrade = trades[0];
-		const highestTrade: ITrade = trades[trades.length - 1];
-		const volume: number = trades.reduce((sum, p) => sum + Number(p.amount), 0);
+	public getOHLCFromTrades(trades: ITrade[], timestamp: number): IPriceBar {
+		trades.sort((a, b) => a.timestamp - b.timestamp);
+		const firstTrade = trades[0];
+		const lastTrade = trades[trades.length - 1];
+		trades.sort((a, b) => a.price - b.price);
+		const lowestTrade = trades[0];
+		const highestTrade = trades[trades.length - 1];
+		const volume = trades.reduce((sum, p) => sum + p.amount, 0);
 		return {
 			source: firstTrade.source,
 			date: moment.utc(firstTrade.timestamp).format('YYYY-MM-DD'),
 			hour: moment.utc(firstTrade.timestamp).format('HH'),
-			minute: moment.utc(firstTrade.timestamp).format('mm'),
+			minute: Number(moment.utc(firstTrade.timestamp).format('mm')),
 			open: firstTrade.price,
 			high: highestTrade.price,
 			low: lowestTrade.price,

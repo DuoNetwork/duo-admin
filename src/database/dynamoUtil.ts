@@ -75,6 +75,23 @@ class DynamoUtil {
 		};
 	}
 
+	public convertDynamoToPriceBar(data: object, isMinutely: boolean = true): IPriceBar {
+		const sourceDatetime = data[isMinutely ? CST.DB_MN_SRC_DATE_HOUR : CST.DB_HR_SRC_DATE].S;
+		const [source, datetime] = sourceDatetime.split('|');
+		return {
+			source: source,
+			date: datetime.substring(0, 10),
+			hour: isMinutely ? datetime.substring(11, 13) : data[CST.DB_HR_HOUR].N,
+			minute: isMinutely ? Number(data[CST.DB_MN_MINUTE].N) : 0,
+			open: Number(data[CST.DB_OHLC_OPEN].N),
+			high: Number(data[CST.DB_OHLC_HIGH].N),
+			low: Number(data[CST.DB_OHLC_LOW].N),
+			close: Number(data[CST.DB_OHLC_CLOSE].N),
+			volume: Number(data[CST.DB_OHLC_VOLUME].N),
+			timestamp: Number(data[CST.DB_OHLC_TS].N)
+		};
+	}
+
 	public async insertTradeData(trade: ITrade, insertStatus: boolean): Promise<void> {
 		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
 		const data = this.convertTradeToDynamo(trade, systemTimestamp);
@@ -158,7 +175,7 @@ class DynamoUtil {
 		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
 
-	public readMinutelyData(source: string, datetimeString: string): Promise<any> {
+	public async readMinutelyData(source: string, datetimeString: string): Promise<IPriceBar[]> {
 		const params = {
 			TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
 			KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
@@ -167,7 +184,10 @@ class DynamoUtil {
 			}
 		};
 
-		return this.queryData(params);
+		const data = await this.queryData(params);
+		if (!data.Items || !data.Items.length) return [];
+
+		return data.Items.map(d => this.convertDynamoToPriceBar(d));
 	}
 }
 

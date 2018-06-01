@@ -2,10 +2,7 @@ import moment from 'moment';
 import calculator from './calculator';
 import * as CST from './constants';
 import dynamoUtil from './database/dynamoUtil';
-
-// import { ITrade } from './types';
 import util from './util';
-// import dbUtil from './dbUtil';
 
 class OhlcUtil {
 	public async saveMinutelyData(numOfMinutes: number = 2) {
@@ -15,7 +12,6 @@ class OhlcUtil {
 
 		const datetimeToRequest: string[] = [];
 		for (let i = 0; i < numOfMinutes; i++)
-			// const minute = Number(now.split('-')[4]) - i
 			datetimeToRequest.push(now.subtract(1, 'minutes').format('YYYY-MM-DD-HH-mm'));
 
 		const promiseList: Array<Promise<void>> = [];
@@ -28,7 +24,7 @@ class OhlcUtil {
 							trades =>
 								trades.length
 									? dynamoUtil.insertMinutelyData(
-											calculator.getOHLC(trades, timestamp)
+											calculator.getOHLCFromTrades(trades, timestamp)
 									)
 									: Promise.resolve()
 						)

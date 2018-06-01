@@ -13,7 +13,8 @@
 		"kraken": "ts-node ./src/index kraken",
 		"gdax": "ts-node ./src/index gdax",
 		"subscribe": "ts-node ./src/index subscribe",
-		"minutely": "ts-node ./src/index minutely dynamo"
+		"minutely": "ts-node ./src/index minutely dynamo",
+		"hourly": "ts-node ./src/index hourly dynamo"
 	},
 	"jest": {
 		"roots": [

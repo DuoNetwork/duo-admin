@@ -1,10 +1,12 @@
 import calculator from './calculator';
 import * as CST from './constants';
+import dynamoUtil from './database/dynamoUtil';
 import dbUtil from './dbUtil';
 import { ITrade } from './types';
 import util from './util';
 const trades: ITrade[] = require('./samples/ETHUSDtrades.json');
 const trades2: ITrade[] = require('./samples/ETHUSDtrades2.json');
+const sampleTrades = require('./samples/dynamoTrades.json');
 // console.log(trades);
 
 test('getVolumeMedianPrice', () => {
@@ -53,3 +55,11 @@ test('getPriceFix case 2', async () => {
 	await calculator.getPriceFix();
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
+
+test('getOHLCFromTrades', () =>
+	expect(
+		calculator.getOHLCFromTrades(
+			sampleTrades.Items.map(d => dynamoUtil.convertDynamoToTrade(d)),
+			1234567890
+		)
+	).toMatchSnapshot());

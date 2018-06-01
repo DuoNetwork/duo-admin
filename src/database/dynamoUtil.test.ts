@@ -2,6 +2,7 @@
 import util from '../util';
 import dynamoUtil from './dynamoUtil';
 const sampleTrades = require('../samples/dynamoTrades.json');
+const sampleMinutely = require('../samples/dynamoMinutely.json');
 
 const trade = {
 	source: 'src',
@@ -15,7 +16,7 @@ const priceBar = {
 	source: 'src',
 	date: 'YYYY-MM-DD',
 	hour: '00',
-	minute: '00',
+	minute: 0,
 	open: 1,
 	high: 3,
 	low: 0,
@@ -87,8 +88,8 @@ test('readTradeData', async () => {
 });
 
 test('readMinutelyData', async () => {
-	dynamoUtil.queryData = jest.fn(() => Promise.resolve({ test: 'test' }));
-	await dynamoUtil.readMinutelyData('source', 'datetime');
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve(sampleMinutely));
+	expect(await dynamoUtil.readMinutelyData('source', 'datetime')).toMatchSnapshot();
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });

@@ -133,7 +133,7 @@ Object {
       "N": "123",
     },
   },
-  "TableName": "hourly_dev",
+  "TableName": "minutely_dev",
 }
 `;
 
@@ -202,6 +202,59 @@ Object {
 `;
 
 exports[`readMinutelyData 1`] = `
+Array [
+  Object {
+    "close": 582.89,
+    "date": "2018-06-01",
+    "high": 582.89,
+    "hour": "07",
+    "low": 582.88,
+    "minute": 53,
+    "open": 582.88,
+    "source": "GDAX",
+    "timestamp": 1527839720962,
+    "volume": 12.117600000000001,
+  },
+  Object {
+    "close": 582.89,
+    "date": "2018-06-01",
+    "high": 582.89,
+    "hour": "07",
+    "low": 582.88,
+    "minute": 54,
+    "open": 582.89,
+    "source": "GDAX",
+    "timestamp": 1527839720962,
+    "volume": 6.9742,
+  },
+  Object {
+    "close": 582.37,
+    "date": "2018-06-01",
+    "high": 582.37,
+    "hour": "07",
+    "low": 582.37,
+    "minute": 57,
+    "open": 582.37,
+    "source": "GDAX",
+    "timestamp": 1527839996554,
+    "volume": 0.6640794,
+  },
+  Object {
+    "close": 582.37,
+    "date": "2018-06-01",
+    "high": 582.37,
+    "hour": "07",
+    "low": 582.37,
+    "minute": 58,
+    "open": 582.37,
+    "source": "GDAX",
+    "timestamp": 1527839996554,
+    "volume": 2.9680999999999997,
+  },
+]
+`;
+
+exports[`readMinutelyData 2`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":sourceDateHour": Object {
@@ -209,7 +262,7 @@ Object {
     },
   },
   "KeyConditionExpression": "sourceDateHour = :sourceDateHour",
-  "TableName": "hourly_dev",
+  "TableName": "minutely_dev",
 }
 `;
 

@@ -32,6 +32,21 @@ Object {
 }
 `;
 
+exports[`getOHLCFromTrades 1`] = `
+Object {
+  "close": 573,
+  "date": "2018-06-01",
+  "high": 573,
+  "hour": "05",
+  "low": 572.99,
+  "minute": 54,
+  "open": 573,
+  "source": "GDAX",
+  "timestamp": 1234567890,
+  "volume": 1.99720278,
+}
+`;
+
 exports[`getPriceFix case 1 1`] = `
 Object {
   "price": 666.98,
