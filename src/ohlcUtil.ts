@@ -62,7 +62,7 @@ class OhlcUtil {
 							bars =>
 								bars.length
 									? dynamoUtil.insertHourlyData(
-											calculator.getHourlyOHLCFromPriceBar(bars, timestamp)
+											calculator.getHourlyOHLCFromPriceBars(bars, timestamp)
 									)
 									: Promise.resolve()
 						)
