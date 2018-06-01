@@ -136,14 +136,15 @@ class DynamoUtil {
 		});
 	}
 
-	public insertHeartbeat(): Promise<void> {
+	public insertHeartbeat(data: object = {}): Promise<void> {
 		return this.insertData({
 			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
 			Item: {
 				[CST.DB_ST_PROCESS]: {
 					S: this.process
 				},
-				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' }
+				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' },
+				...data
 			}
 		});
 	}
