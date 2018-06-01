@@ -194,10 +194,12 @@ export class Util {
 			case 'kraken':
 			case 'gdax':
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
-			case 'commitPrice':
+			case 'commit':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'subscribe':
 				return CST.AWS_DYNAMO_ROLE_EVENT;
+			case 'hourly':
+				return CST.AWS_DYNAMO_ROLE_HOURLY;
 			default:
 				return '';
 		}
@@ -225,8 +227,11 @@ export class Util {
 						? option.event.toUpperCase()
 						: 'OTHERS');
 				break;
-			case 'commitPrice':
+			case 'commit':
 				type = 'FEED';
+				break;
+			case 'hourly':
+				type = 'HOURLY';
 				break;
 			default:
 				return '';

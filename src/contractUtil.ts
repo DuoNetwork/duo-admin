@@ -9,7 +9,6 @@ const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 const stoch = require('stochastic');
 const ETHPrices = require('./samples/ETHprices.json');
-const privateKeyFile = require('./keys/privateKey.json');
 
 export default class ContractUtil {
 	public web3: Web3;
@@ -31,17 +30,15 @@ export default class ContractUtil {
 		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
 		this.gbmPrices = [];
 
-		if (!option.live)
-			if (option.azure) {
-				this.publicKey = privateKeyFile.pf_azure.publicKey;
-				this.privateKey = privateKeyFile.pf_azure.privateKey;
-			} else if (option.gcp) {
-				this.publicKey = privateKeyFile.pf_gcp.publicKey;
-				this.privateKey = privateKeyFile.pf_gcp.privateKey;
-			} else {
-				this.publicKey = privateKeyFile.pf_aws.publicKey;
-				this.privateKey = privateKeyFile.pf_aws.privateKey;
-			}
+		if (!option.live) {
+			const key = option.azure
+				? require('./keys/kovan/azure.json')
+				: option.gcp
+					? require('./keys/kovan/gcp.json')
+					: require('./keys/kovan/aws.json');
+			this.publicKey = key.publicKey;
+			this.privateKey = key.privateKey;
+		}
 	}
 
 	public async read(name: string) {

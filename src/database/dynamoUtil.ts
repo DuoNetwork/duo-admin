@@ -108,6 +108,25 @@ export class DynamoUtil {
 			}
 		});
 	}
+
+	public readTradeData(source: string, date: string): Promise<any> {
+		const params = {
+			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
+			KeyConditionExpression: CST.DB_TX_SRC_DATE + ' = :' + CST.DB_TX_SRC_DATE,
+			ExpressionAttributeValues: {
+				[':' + CST.DB_TX_SRC_DATE]: { S: source + '|' + date }
+			}
+		};
+
+		console.log(params);
+
+		return new Promise(
+			(resolve, reject) =>
+				this.ddb
+					? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
+					: reject('dynamo db connection is not initialized')
+		);
+	}
 }
 
 const dynamoUtil = new DynamoUtil();

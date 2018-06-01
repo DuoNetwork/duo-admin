@@ -7,12 +7,13 @@
 	"scripts": {
 		"test": "jest",
 		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
-		"commitPrice": "ts-node ./src/index commitPrice",
+		"commit": "ts-node ./src/index commit",
 		"bitfinex": "ts-node ./src/index bitfinex",
 		"gemini": "ts-node ./src/index gemini",
 		"kraken": "ts-node ./src/index kraken",
 		"gdax": "ts-node ./src/index gdax",
-		"subscribe": "ts-node ./src/index subscribe"
+		"subscribe": "ts-node ./src/index subscribe",
+		"hourly": "ts-node ./src/index hourly dynamo"
 	},
 	"jest": {
 		"roots": [

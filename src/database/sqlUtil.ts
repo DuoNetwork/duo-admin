@@ -1,4 +1,3 @@
-import moment from 'moment';
 import * as mysql from 'mysql';
 import * as CST from '../constants';
 import { IPrice, ITrade } from '../types';

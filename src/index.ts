@@ -15,8 +15,12 @@ const option = util.parseOptions(process.argv);
 util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.source || 'local node'));
 const contractUtil = new ContractUtil(option);
 dbUtil.init(option.dynamo);
-dynamoUtil.init(option.live, util.getDynamoRole(tool, option.dynamo), util.getStatusProcess(tool, option));
-if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commitPrice'].includes(tool) && !option.dynamo) {
+dynamoUtil.init(
+	option.live,
+	util.getDynamoRole(tool, option.dynamo),
+	util.getStatusProcess(tool, option)
+);
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
 	const mysqlAuthFile = require('./keys/mysql.json');
 	sqlUtil.init(mysqlAuthFile.host, mysqlAuthFile.user, mysqlAuthFile.password);
 }
@@ -42,9 +46,14 @@ switch (tool) {
 		eventUtil.subscribe(contractUtil, option);
 		setInterval(dynamoUtil.insertHeartbeat, 30000);
 		break;
-	case 'commitPrice':
-		util.log('starting commitPrice process');
+	case 'commit':
+		util.log('starting commit process');
 		contractUtil.commitPrice(option);
+		break;
+	case 'hourly':
+		dynamoUtil
+			.readTradeData('GDAX', '2018-05-30')
+			.then(data => console.log(data));
 		break;
 	default:
 		util.log('no such tool ' + tool);
