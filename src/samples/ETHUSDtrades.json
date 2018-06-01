@@ -2,86 +2,86 @@
 	{
 		"source": "BITFINEX",
 		"id": "231224852",
-		"price": "634.7",
-		"amount": "0.4",
-		"timestamp": "1524453966393"
+		"price": 634.7,
+		"amount": 0.4,
+		"timestamp": 1524453966393
 	},
 	{
 		"source": "BITFINEX",
 		"id": "231224853",
-		"price": "634.69",
-		"amount": "1.65308079",
-		"timestamp": "1524453966454"
+		"price": 634.69,
+		"amount": 1.65308079,
+		"timestamp": 1524453966454
 	},
 	{
 		"source": "BITFINEX",
 		"id": "231224853",
-		"price": "635.00",
-		"amount": "1.1",
-		"timestamp": "1524453966454"
+		"price": 635.00,
+		"amount": 1.1,
+		"timestamp": 1524453966454
 	},
 	{
 		"source": "GEMINI",
 		"id": "3558353197",
-		"price": "637.00",
-		"amount": "6.002117",
-		"timestamp": "1524465953111"
+		"price": 637.00,
+		"amount": 6.002117,
+		"timestamp": 1524465953111
 	},
 	{
 		"source": "GEMINI",
 		"id": "3558353662",
-		"price": "638.00",
-		"amount": "9.339818",
-		"timestamp": "1524465956869"
+		"price": 638.00,
+		"amount": 9.339818,
+		"timestamp": 1524465956869
 	},
 	{
 		"source": "GEMINI",
 		"id": "3558353662",
-		"price": "639.00",
-		"amount": "7.339818",
-		"timestamp": "1524465956869"
+		"price": 639.00,
+		"amount": 7.339818,
+		"timestamp": 1524465956869
 	},
 	{
 		"source": "GDAX",
 		"id": "32589198",
-		"price": "633.00000000",
-		"amount": "8.67000000",
-		"timestamp": "1524463065507"
+		"price": 633.00000000,
+		"amount": 8.67000000,
+		"timestamp": 1524463065507
 	},
 	{
 		"source": "GDAX",
 		"id": "32589199",
-		"price": "634.00000000",
-		"amount": "1.08280000",
-		"timestamp": "1524463071695"
+		"price": 634.00000000,
+		"amount": 1.08280000,
+		"timestamp": 1524463071695
 	},
 	{
 		"source": "GDAX",
 		"id": "32589199",
-		"price": "635.00000000",
-		"amount": "3.08280000",
-		"timestamp": "1524463071695"
+		"price": 635.00000000,
+		"amount": 3.08280000,
+		"timestamp": 1524463071695
 	},
 	{
 		"source": "KRAKEN",
 		"id": "",
-		"price": "666.98000",
-		"amount": "0.12100000",
-		"timestamp": "1524547909941"
+		"price": 666.98000,
+		"amount": 0.12100000,
+		"timestamp": 1524547909941
 	},
 	{
 		"source": "KRAKEN",
 		"id": "",
-		"price": "667.00000",
-		"amount": "0.02400000",
-		"timestamp": "1524547898561"
+		"price": 667.00000,
+		"amount": 0.02400000,
+		"timestamp": 1524547898561
 	},
 	{
 		"source": "KRAKEN",
 		"id": "",
-		"price": "669.98000",
-		"amount": "0.02100000",
-		"timestamp": "1524547909941"
+		"price": 669.98000,
+		"amount": 0.02100000,
+		"timestamp": 1524547909941
 	}
 
 ]
