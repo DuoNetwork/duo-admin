@@ -542,4 +542,8 @@ export default class ContractUtil {
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
 		await this.trigger(abi, input, gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
 	}
+
+	public getCurrentBlock() {
+		return this.web3.eth.getBlockNumber();
+	}
 }

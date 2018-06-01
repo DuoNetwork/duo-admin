@@ -45,7 +45,7 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
-		setInterval( () => dynamoUtil.insertHeartbeat(), 30000);
+		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'commit':
 		util.log('starting commit process');
@@ -58,6 +58,19 @@ switch (tool) {
 	case 'hourly':
 		ohlcUtil.startProcessHour();
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
+		break;
+	case 'node':
+		util.log('starting node hear beat');
+		setInterval(
+			() =>
+				contractUtil.getCurrentBlock().then(bn =>
+					dynamoUtil.insertStatusData({
+						block: { N: bn + '' },
+						timestamp: { N: util.getNowTimestamp() + '' }
+					})
+				),
+			30000
+		);
 		break;
 	default:
 		util.log('no such tool ' + tool);

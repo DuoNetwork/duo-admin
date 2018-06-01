@@ -195,6 +195,7 @@ class Util {
 			case 'gdax':
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'commit':
+			case 'node':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'subscribe':
 				return CST.AWS_DYNAMO_ROLE_EVENT;
@@ -237,6 +238,9 @@ class Util {
 				break;
 			case 'minutely':
 				type = 'MINUTELY';
+				break;
+			case 'node':
+				type = 'CHAIN';
 				break;
 			default:
 				return '';
