@@ -1,0 +1,312 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
+
+exports[`convertPriceBarToDynamo 1`] = `
+Object {
+  "close": Object {
+    "N": "2",
+  },
+  "high": Object {
+    "N": "3",
+  },
+  "low": Object {
+    "N": "0",
+  },
+  "open": Object {
+    "N": "1",
+  },
+  "timestamp": Object {
+    "N": "1234567890",
+  },
+  "volume": Object {
+    "N": "123",
+  },
+}
+`;
+
+exports[`convertTradeToDynamo 1`] = `
+Object {
+  "amount": Object {
+    "N": "456",
+  },
+  "id": Object {
+    "S": "id",
+  },
+  "price": Object {
+    "N": "123",
+  },
+  "systime": Object {
+    "N": "123",
+  },
+  "timestamp": Object {
+    "N": "1234567890",
+  },
+}
+`;
+
+exports[`convertTradeToDynamo 2`] = `
+Object {
+  "price": Object {
+    "N": "123",
+  },
+  "timestamp": Object {
+    "N": "1234567890",
+  },
+  "volume": Object {
+    "N": "456",
+  },
+}
+`;
+
+exports[`insertHeartbeat 1`] = `
+Object {
+  "Item": Object {
+    "process": Object {
+      "S": "UNKNOWN",
+    },
+    "timestamp": Object {
+      "N": "0",
+    },
+  },
+  "TableName": "status_dev",
+}
+`;
+
+exports[`insertHourlyData 1`] = `
+Object {
+  "Item": Object {
+    "close": Object {
+      "N": "2",
+    },
+    "high": Object {
+      "N": "3",
+    },
+    "hour": Object {
+      "N": "0",
+    },
+    "low": Object {
+      "N": "0",
+    },
+    "open": Object {
+      "N": "1",
+    },
+    "sourceDate": Object {
+      "S": "src|YYYY-MM-DD",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+    "volume": Object {
+      "N": "123",
+    },
+  },
+  "TableName": "hourly_dev",
+}
+`;
+
+exports[`insertMinutelyData 1`] = `
+Object {
+  "Item": Object {
+    "close": Object {
+      "N": "2",
+    },
+    "high": Object {
+      "N": "3",
+    },
+    "low": Object {
+      "N": "0",
+    },
+    "minute": Object {
+      "N": "0",
+    },
+    "open": Object {
+      "N": "1",
+    },
+    "sourceDateHour": Object {
+      "S": "src|YYYY-MM-DD-00",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+    "volume": Object {
+      "N": "123",
+    },
+  },
+  "TableName": "minutely_dev",
+}
+`;
+
+exports[`insertStatusData 1`] = `
+Object {
+  "Item": Object {
+    "process": Object {
+      "S": "UNKNOWN",
+    },
+    "test": "test",
+  },
+  "TableName": "status_dev",
+}
+`;
+
+exports[`insertTradeData 1`] = `
+Object {
+  "Item": Object {
+    "amount": Object {
+      "N": "456",
+    },
+    "id": Object {
+      "S": "id",
+    },
+    "price": Object {
+      "N": "123",
+    },
+    "sourceDateHourMinute": Object {
+      "S": "src|1970-01-15-06-56",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+  },
+  "TableName": "trades_dev",
+}
+`;
+
+exports[`insertTradeData 2`] = `
+Object {
+  "Item": Object {
+    "amount": Object {
+      "N": "456",
+    },
+    "id": Object {
+      "S": "id",
+    },
+    "price": Object {
+      "N": "123",
+    },
+    "process": Object {
+      "S": "UNKNOWN",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+  },
+  "TableName": "status_dev",
+}
+`;
+
+exports[`readMinutelyData 1`] = `
+Array [
+  Object {
+    "close": 582.89,
+    "date": "2018-06-01",
+    "high": 582.89,
+    "hour": "07",
+    "low": 582.88,
+    "minute": 53,
+    "open": 582.88,
+    "source": "GDAX",
+    "timestamp": 1527839720962,
+    "volume": 12.117600000000001,
+  },
+  Object {
+    "close": 582.89,
+    "date": "2018-06-01",
+    "high": 582.89,
+    "hour": "07",
+    "low": 582.88,
+    "minute": 54,
+    "open": 582.89,
+    "source": "GDAX",
+    "timestamp": 1527839720962,
+    "volume": 6.9742,
+  },
+  Object {
+    "close": 582.37,
+    "date": "2018-06-01",
+    "high": 582.37,
+    "hour": "07",
+    "low": 582.37,
+    "minute": 57,
+    "open": 582.37,
+    "source": "GDAX",
+    "timestamp": 1527839996554,
+    "volume": 0.6640794,
+  },
+  Object {
+    "close": 582.37,
+    "date": "2018-06-01",
+    "high": 582.37,
+    "hour": "07",
+    "low": 582.37,
+    "minute": 58,
+    "open": 582.37,
+    "source": "GDAX",
+    "timestamp": 1527839996554,
+    "volume": 2.9680999999999997,
+  },
+]
+`;
+
+exports[`readMinutelyData 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHour": Object {
+      "S": "source|datetime",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHour = :sourceDateHour",
+  "TableName": "minutely_dev",
+}
+`;
+
+exports[`readTradeData 1`] = `
+Array [
+  Object {
+    "amount": 1.181,
+    "id": "35260767",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832447254,
+  },
+  Object {
+    "amount": 0.48160278,
+    "id": "35260768",
+    "price": 572.99,
+    "source": "GDAX",
+    "timestamp": 1527832455335,
+  },
+  Object {
+    "amount": 0.0501,
+    "id": "35260769",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832458221,
+  },
+  Object {
+    "amount": 0.2845,
+    "id": "35260770",
+    "price": 573,
+    "source": "GDAX",
+    "timestamp": 1527832490925,
+  },
+]
+`;
+
+exports[`readTradeData 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|datetime",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "trades_dev",
+}
+`;

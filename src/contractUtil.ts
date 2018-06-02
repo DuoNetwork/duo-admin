@@ -17,6 +17,8 @@ export default class ContractUtil {
 	public gbmPrices: number[];
 	public time: number = 0;
 	public lastPrice: number = 400;
+	public publicKey: string = '';
+	public privateKey: string = '';
 
 	constructor(option: IOption) {
 		this.web3 = new Web3(
@@ -27,6 +29,16 @@ export default class ContractUtil {
 		this.abi = require('./static/Custodian.json');
 		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
 		this.gbmPrices = [];
+
+		if (!option.live) {
+			const key = option.azure
+				? require('./keys/kovan/pfAzure.json')
+				: option.gcp
+					? require('./keys/kovan/pfGcp.json')
+					: require('./keys/kovan/pfAws.json');
+			this.publicKey = key.publicKey;
+			this.privateKey = key.privateKey;
+		}
 	}
 
 	public async read(name: string) {
@@ -154,14 +166,14 @@ export default class ContractUtil {
 			currentPrice = {
 				price: option.price,
 				volume: 0,
-				timestamp: Math.floor(Date.now())
+				timestamp: util.getNowTimestamp()
 			};
 		else currentPrice = await calculator.getPriceFix();
 
 		const priceInWei: string = this.web3.utils.toWei(currentPrice.price + '', 'ether');
 		const priceInSeconds: string = Math.floor(Number(currentPrice.timestamp) / 1000) + '';
 		util.log('ETH price is ' + priceInWei + ' at timestamp ' + priceInSeconds);
-		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
+		const nonce = await this.web3.eth.getTransactionCount(this.publicKey);
 		const abi = {
 			name: isInception ? CST.FN_START_CONTRACT : CST.FN_COMMIT_PRICE,
 			type: 'function',
@@ -214,7 +226,7 @@ export default class ContractUtil {
 							0,
 							command
 						),
-						CST.PF_ADDR_PK
+						this.privateKey
 					)
 			)
 			.then(receipt => util.log(receipt))
@@ -244,26 +256,21 @@ export default class ContractUtil {
 	}
 
 	public async commitPrice(option: IOption) {
-		const startTime = new Date(Date.now());
+		const startTime = new Date();
 		const endTime = new Date(startTime.getTime() + 298000);
 		const commitStart = new Date(endTime.getTime() + 1000);
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = new schedule.Range(0, 59, 5);
 
-		const res = await this.contract.methods.state().call();
-		const isInception = Number(res) === 0;
+		const sysStates = await this.contract.methods.getSystemStates().call();
+		const isInception = Number(sysStates[0]) === 0;
 
 		if (isInception)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const gasPrice = (await this.getGasPrice()) || option.gasPrice;
 				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return this.commitSinglePrice(
-					true,
-					gasPrice,
-					option.gasLimit + 50000,
-					option
-				);
+				return this.commitSinglePrice(true, gasPrice, option.gasLimit + 50000, option);
 			});
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
@@ -324,7 +331,7 @@ export default class ContractUtil {
 					)
 			)
 			.then(receipt => util.log(receipt))
-			.catch((err) => util.log(err));
+			.catch(err => util.log(err));
 	}
 
 	public async redeem(
@@ -486,7 +493,7 @@ export default class ContractUtil {
 	}
 
 	public async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
-		const nonce = await this.web3.eth.getTransactionCount(CST.PF_ADDR);
+		const nonce = await this.web3.eth.getTransactionCount(this.publicKey);
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
 		this.web3.eth
@@ -501,7 +508,7 @@ export default class ContractUtil {
 							0,
 							command
 						),
-						CST.PF_ADDR_PK
+						this.privateKey
 					)
 			)
 			.then(receipt => util.log(receipt))
@@ -534,5 +541,9 @@ export default class ContractUtil {
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
 		await this.trigger(abi, input, gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
+	}
+
+	public getCurrentBlock() {
+		return this.web3.eth.getBlockNumber();
 	}
 }

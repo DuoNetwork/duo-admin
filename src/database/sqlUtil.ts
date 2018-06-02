@@ -2,16 +2,16 @@ import * as mysql from 'mysql';
 import * as CST from '../constants';
 import { IPrice, ITrade } from '../types';
 import util from '../util';
+import dynamoUtil from './dynamoUtil';
 
-export class SqlUtil {
-	public conn: undefined | mysql.Connection = undefined;
-
+class SqlUtil {
+	private conn: undefined | mysql.Connection = undefined;
 	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: host,
 			user: user,
 			password: pwd,
-			database: CST.DB_PRICEFEED
+			database: CST.DB_SQL_SCHEMA_PRICEFEED
 		});
 
 		this.conn.connect(err => {
@@ -32,20 +32,20 @@ export class SqlUtil {
 					else if (err) reject(err);
 					else resolve(result);
 				});
-			else reject('db connection is not initialized');
+			else reject('sql db connection is not initialized');
 		});
 	}
 
-	public async insertSourceData(live: boolean, sourceData: ITrade) {
-		const systemTimestamp = Math.floor(Date.now()); // record down the MTS
+	public async insertTradeData(trade: ITrade, insertStatus: boolean) {
+		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
 
 		// To do the checking for out of boundary data.
-		// if(isNaN(sourceData.price)){
+		// if(isNaN(trade.price)){
 		// 	util.log('Price is NaN!');
 		// 	return;
 		// }
 
-		// if(isNaN(sourceData.amount)){
+		// if(isNaN(trade.amount)){
 		// 	util.log('Amount is NaN!');
 		// 	return;
 		// }
@@ -53,35 +53,38 @@ export class SqlUtil {
 		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
 		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
 
-		const priceStr = sourceData.price.toString();
-		const amountStr = sourceData.amount.toString();
+		const priceStr = trade.price.toString();
+		const amountStr = trade.amount.toString();
 
-		const TABLE = live ? CST.DB_TABLE_TRADE : CST.DB_TABLE_TRADE_DEV;
 		const sql =
 			'REPLACE ' +
-			TABLE +
+			CST.DB_SQL_TRADE +
 			" VALUES ('" +
-			sourceData.source +
+			trade.source +
 			"','" +
-			sourceData.id +
+			trade.id +
 			"','" +
 			priceStr +
 			"','" +
 			amountStr +
 			"','" +
-			(sourceData.timestamp || systemTimestamp) +
+			(trade.timestamp || systemTimestamp) +
 			"','" +
 			systemTimestamp +
 			"')";
 		// util.log(await this.executeQuery(sql));
 		await this.executeQuery(sql);
+		if (insertStatus)
+			await dynamoUtil.insertStatusData(
+				dynamoUtil.convertTradeToDynamo(trade, systemTimestamp)
+			);
 	}
 
 	public async insertPrice(price: IPrice) {
 		util.log(
 			await this.executeQuery(
 				'INSERT INTO ' +
-					CST.DB_TABLE_HISTORY +
+					CST.DB_SQL_HISTORY +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -91,12 +94,13 @@ export class SqlUtil {
 					"')"
 			)
 		);
+		await dynamoUtil.insertStatusData(dynamoUtil.convertPriceToDynamo(price));
 	}
 
 	public async readLastPrice(): Promise<IPrice> {
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_TABLE_HISTORY +
+				CST.DB_SQL_HISTORY +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
 				' DESC LIMIT 1'
@@ -115,7 +119,7 @@ export class SqlUtil {
 		const upperTime = currentTimestamp + '';
 		const res: object[] = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_TABLE_TRADE +
+				CST.DB_SQL_TRADE +
 				' WHERE ' +
 				CST.DB_TX_TS +
 				' >= ' +

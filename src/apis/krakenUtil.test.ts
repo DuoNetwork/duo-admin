@@ -11,9 +11,9 @@ test('parseTrade', () => {
 });
 
 test('parseApiResponse', async () => {
-	dbUtil.insertSourceData = jest.fn(() => Promise.resolve());
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	await krakenUtil.parseApiResponse(apiResponse);
 	expect(
-		(dbUtil.insertSourceData as jest.Mock<Promise<void>>).mock.calls[0][0]
+		(dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls[0][0]
 	).toMatchSnapshot();
 });

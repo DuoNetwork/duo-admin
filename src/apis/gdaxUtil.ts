@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as CST from '../constants';
 import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
@@ -12,19 +13,20 @@ export class GdaxUtil {
 			id: trade.trade_id + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.size)),
-			timestamp: new Date(trade.time).valueOf()
+			timestamp: moment(trade.time).valueOf()
 		};
 	}
 
-	public async fetchETHTradesByRestfulAPI() {
+	public async fetchETHTrades() {
 		const data = await util.get('https://api.gdax.com:443/products/ETH-USD/trades');
 		const parsedData: Array<{ [key: string]: string }> = JSON.parse(data);
-
+		let insertStatus: boolean = true;
 		parsedData.forEach(item => {
 			// util.log(Number(item.trade_id));
 			if (pushedID.indexOf(Number(item.trade_id)) < 0) {
 				pushedID.push(Number(item.trade_id));
-				dbUtil.insertSourceData(this.parseTrade(item));
+				dbUtil.insertTradeData(this.parseTrade(item), insertStatus);
+				insertStatus = false;
 				util.log(CST.EXCHANGE_GDAX + ': record inserted: ' + item.trade_id);
 
 				if (pushedID.length > 20000) pushedID = [];
@@ -33,7 +35,7 @@ export class GdaxUtil {
 	}
 
 	public startFetching() {
-		setInterval(() => this.fetchETHTradesByRestfulAPI(), INTERVAL_SECS * 1000);
+		setInterval(() => this.fetchETHTrades(), INTERVAL_SECS * 1000);
 	}
 }
 

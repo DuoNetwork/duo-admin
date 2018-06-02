@@ -3,7 +3,7 @@ import request from 'request';
 import * as CST from './constants';
 import { IOption } from './types';
 
-export class Util {
+class Util {
 	public log(text: any): void {
 		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
 	}
@@ -70,7 +70,10 @@ export class Util {
 	public parseOptions(argv: string[]): IOption {
 		const option = {
 			live: process.argv.includes('live'),
+			dynamo: process.argv.includes('dynamo'),
 			aws: process.argv.includes('aws'),
+			gcp: process.argv.includes('gcp'),
+			azure: process.argv.includes('azure'),
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
@@ -182,6 +185,72 @@ export class Util {
 			}
 
 		return option;
+	}
+
+	public getDynamoRole(tool: string, useDynamo: boolean): string {
+		switch (tool) {
+			case 'bitfinex':
+			case 'gemini':
+			case 'kraken':
+			case 'gdax':
+				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
+			case 'commit':
+			case 'node':
+				return CST.AWS_DYNAMO_ROLE_STATUS;
+			case 'subscribe':
+				return CST.AWS_DYNAMO_ROLE_EVENT;
+			case 'hourly':
+				return CST.AWS_DYNAMO_ROLE_HOURLY;
+			case 'minutely':
+				return CST.AWS_DYNAMO_ROLE_MINUTELY;
+			default:
+				return '';
+		}
+	}
+
+	public getStatusProcess(tool: string, option: IOption) {
+		let type = '';
+		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
+		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
+		let source = '';
+
+		switch (tool) {
+			case 'bitfinex':
+			case 'gemini':
+			case 'kraken':
+			case 'gdax':
+				type = 'PRICE';
+				source = '_' + tool.toUpperCase();
+				break;
+			case 'subscribe':
+				type = 'EVENT';
+				source =
+					'_' +
+					([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)
+						? option.event.toUpperCase()
+						: 'OTHERS');
+				break;
+			case 'commit':
+				type = 'FEED';
+				break;
+			case 'hourly':
+				type = 'HOURLY';
+				break;
+			case 'minutely':
+				type = 'MINUTELY';
+				break;
+			case 'node':
+				type = 'CHAIN';
+				break;
+			default:
+				return '';
+		}
+
+		return type + platform + privacy + source;
+	}
+
+	public getNowTimestamp() {
+		return moment().valueOf();
 	}
 }
 

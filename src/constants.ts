@@ -1,31 +1,38 @@
 export const REDRAW_UPDATE_THRESHOLD = 10;
 
-// export const provider = "https://mainnet.infura.io/Ky03pelFIxoZdAUsr82w";
-export const provider = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP ';
-// export const provider = "http://localhost:8545";
-
 export const EXCHANGE_BITFINEX = 'BITFINEX';
 export const EXCHANGE_GEMINI = 'GEMINI';
 export const EXCHANGE_KRAKEN = 'KRAKEN';
 export const EXCHANGE_GDAX = 'GDAX';
 
 // db setting
-// export const DB_HOST = 'localhost';
-// export const DB_USER = 'root';
-// export const DB_PASSWORD = '*OG=ko!Ph0hk';
-export const DB_PRICEFEED = 'priceFeedDB';
-export const DB_TABLE_TRADE = 'ETH_Trades_Table';
-export const DB_TABLE_TRADE_DEV = 'ETH_Trades_Table_Dev';
-export const DB_TABLE_HISTORY = 'eth_historical_price';
+export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
+export const DB_SQL_TRADE = 'eth_trades';
+export const DB_SQL_HISTORY = 'eth_historical_price';
+export const DB_AWS_TRADES_LIVE = 'trades_live';
+export const DB_AWS_TRADES_DEV = 'trades_dev';
+export const DB_AWS_HOURLY_LIVE = 'hourly_live';
+export const DB_AWS_HOURLY_DEV = 'hourly_dev';
+export const DB_AWS_MINUTELY_LIVE = 'minutely_live';
+export const DB_AWS_MINUTELY_DEV = 'minutely_dev';
+export const DB_AWS_EVENTS_LIVE = 'events_live';
+export const DB_AWS_EVENTS_DEV = 'events_dev';
+export const DB_AWS_STATUS_LIVE = 'status_live';
+export const DB_AWS_STATUS_DEV = 'status_dev';
+export const AWS_DYNAMO_API_VERSION = '2012-10-08';
+
+export const AWS_DYNAMO_ROLE_TRADE = 'trade';
+export const AWS_DYNAMO_ROLE_HOURLY = 'hourly';
+export const AWS_DYNAMO_ROLE_MINUTELY = 'minutely';
+export const AWS_DYNAMO_ROLE_EVENT = 'event';
+export const AWS_DYNAMO_ROLE_STATUS = 'status';
 
 // wallet and contract
-export const DUO_CONTRACT_ADDR = '0x0A47a845fFCDdC918223744Cad29A7b5a82e1b4c';
-export const CUSTODIAN_ADDR = '0x51A4025687Dbc13492AEA96054E30d4A69760131';
-export const A_CONTRACT_ADDR = '0x40d3F43551DC571F72dc5D855a715B0023C292c1';
-export const B_CONTRACT_ADDR = '0xc3d1238730304aC51E0C7c02A2A9Af02D5414990';
+export const DUO_CONTRACT_ADDR = '0xADb79BEA25451c36Ab7C3AEFEd7AAC65145ad83E';
+export const CUSTODIAN_ADDR = '0x6a99B4B73fA5B192164B867E0b54B77D91D700a9';
+export const A_CONTRACT_ADDR = '0x9385f4E72F15733A1CC9Cfd5edba1beC8A69C5ff';
+export const B_CONTRACT_ADDR = '0xC30d68E9F13A938C4B4D855dB72cf841Ce0eebBf';
 export const INCEPTION_BLK = 7483518;
-export const PF_ADDR = '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a';
-export const PF_ADDR_PK = '5e02a6a6b05fe971309cba0d0bd8f5e85f25e581d18f89eb0b6da753d18aa285';
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
 export const EVENT_START_PRE_RESET = 'StartPreReset';
 export const EVENT_START_RESET = 'StartReset';
@@ -81,21 +88,6 @@ export const SYS_STATES = {
 	21: 'adminCoolDown'
 };
 
-export const KOVAN_ACCOUNTS = [
-	{
-		address: '0x00D8d0660b243452fC2f996A892D3083A903576F',
-		name: 'creator'
-	},
-	{
-		address: '0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a',
-		name: 'pf1'
-	},
-	{
-		addrdess: '0x002002812b42601Ae5026344F0395E68527bb0F8',
-		name: 'pf2'
-	}
-];
-
 // priceFeed
 export const DB_TX_SRC = 'source';
 export const DB_TX_ID = 'id';
@@ -103,10 +95,22 @@ export const DB_TX_PRICE = 'price';
 export const DB_TX_AMOUNT = 'amount';
 export const DB_TX_TS = 'timestamp';
 export const DB_TX_SYSTIME = 'systime';
-export const DB_TX_SRC_DATE = 'sourceDate';
+export const DB_TX_SRC_DHM = 'sourceDateHourMinute';
 export const DB_HISTORY_PRICE = 'price';
 export const DB_HISTORY_TIMESTAMP = 'timestamp';
 export const DB_HISTORY_VOLUME = 'volume';
+export const DB_HR_SRC_DATE = 'sourceDate';
+export const DB_HR_HOUR = 'hour';
+export const DB_MN_SRC_DATE_HOUR = 'sourceDateHour';
+export const DB_MN_MINUTE = 'minute';
+export const DB_OHLC_OPEN = 'open';
+export const DB_OHLC_HIGH = 'high';
+export const DB_OHLC_LOW = 'low';
+export const DB_OHLC_CLOSE = 'close';
+export const DB_OHLC_VOLUME = 'volume';
+export const DB_OHLC_TS = 'timestamp';
+export const DB_ST_PROCESS = 'process';
+export const DB_ST_TS = 'timestamp';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
 	4: [0.35, 0.3, 0.25, 0.2],

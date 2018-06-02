@@ -1,7 +1,7 @@
 
 CREATE SCHEMA `priceFeedDB`;
 
-CREATE TABLE `priceFeedDB`.`ETH_Trades_Table_Dev` (
+CREATE TABLE `priceFeedDB`.`eth_trades` (
   `source` VARCHAR(255) NOT NULL,
   `id` VARCHAR(255) NOT NULL,
   `price` VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `priceFeedDB`.`ETH_Trades_Table_Dev` (
   `systime` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`timestamp`, `id`, `source`));
 
-CREATE TABLE `priceFeedDB`.`ETH_Historical_Price` (
+CREATE TABLE `priceFeedDB`.`eth_historical_price` (
   `timestamp` VARCHAR(255) NOT NULL,
   `price` VARCHAR(255) NOT NULL,
   `volume` VARCHAR(255) NOT NULL,

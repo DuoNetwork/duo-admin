@@ -1,33 +1,30 @@
-import awsUtil from './database/awsUtil';
+import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
 import { IPrice, ITrade } from './types';
 
-export class DbUtil {
-	private aws: boolean = false;
-	private live: boolean = false;
+class DbUtil {
+	private dynamo: boolean = false;
 
-	public init(useAWS: boolean, live: boolean, host: string, user: string, pwd: string) {
-		this.aws = useAWS;
-		this.live = live;
-		this.aws ? awsUtil.init() : sqlUtil.init(host, user, pwd);
+	public init(useDynamo: boolean) {
+		this.dynamo = useDynamo;
 	}
 
-	public insertSourceData(sourceData: ITrade) {
-		return this.aws
-			? awsUtil.insertSourceData(this.live, sourceData)
-			: sqlUtil.insertSourceData(this.live, sourceData);
+	public insertTradeData(trade: ITrade, insertStatus: boolean) {
+		return this.dynamo
+			? dynamoUtil.insertTradeData(trade, insertStatus)
+			: sqlUtil.insertTradeData(trade, insertStatus);
 	}
 
 	public insertPrice(price: IPrice) {
-		return this.aws ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
 	}
 
 	public readLastPrice(): Promise<IPrice> {
-		return this.aws ? Promise.reject('invalid') : sqlUtil.readLastPrice();
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice();
 	}
 
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
-		return this.aws ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp);
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp);
 	}
 }
 

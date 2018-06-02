@@ -4,7 +4,7 @@ import ContractUtil from './contractUtil';
 import { IOption } from './types';
 import util from './util';
 
-export class EventUtil {
+class EventUtil {
 	public async pull(
 		contract: Contract,
 		start: number,

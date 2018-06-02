@@ -12,6 +12,19 @@ export interface IPrice {
 	timestamp: number;
 }
 
+export interface IPriceBar {
+	source: string;
+	date: string;
+	hour: string;
+	minute: number;
+	open: number;
+	high: number;
+	low: number;
+	close: number;
+	volume: number;
+	timestamp: number;
+}
+
 export interface IAccount {
 	address: string;
 	privateKey: string;
@@ -19,7 +32,10 @@ export interface IAccount {
 
 export interface IOption {
 	live: boolean;
+	dynamo: boolean;
 	aws: boolean;
+	gcp: boolean;
+	azure: boolean;
 	gasPrice: number;
 	gasLimit: number;
 	eth: number;

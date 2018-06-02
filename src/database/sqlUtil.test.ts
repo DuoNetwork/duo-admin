@@ -1,28 +1,29 @@
-import * as mysql from 'mysql';
 import { IPrice } from '../types';
+import util from '../util';
+import dynamoUtil from './dynamoUtil';
 import sqlUtil from './sqlUtil';
 
 test('connection initalization', () => {
 	return sqlUtil.executeQuery('test').catch(error => expect(error).toMatchSnapshot());
 });
 
-test('insertSourceData', async () => {
-	sqlUtil.conn = mysql.createConnection({});
+test('insertTradeData', async () => {
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve());
-	Date.now = jest.fn(() => 0);
-	await sqlUtil.insertSourceData({
+	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
+	util.getNowTimestamp = jest.fn(() => 0);
+	await sqlUtil.insertTradeData({
 		source: 'src',
 		id: 'id',
 		price: 123,
 		amount: 456,
 		timestamp: 1234567890
-	});
+	}, true);
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
 test('insertPrice', async () => {
-	sqlUtil.conn = mysql.createConnection({});
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	await sqlUtil.insertPrice({
 		price: 123,
 		volume: 456,
@@ -32,7 +33,6 @@ test('insertPrice', async () => {
 });
 
 test('readLastPrice', async () => {
-	sqlUtil.conn = mysql.createConnection({});
 	sqlUtil.executeQuery = jest.fn(() =>
 		Promise.resolve([
 			{
@@ -50,7 +50,6 @@ test('readLastPrice', async () => {
 });
 
 test('readSourceData', async () => {
-	sqlUtil.conn = mysql.createConnection({});
 	sqlUtil.executeQuery = jest.fn(() =>
 		Promise.resolve([
 			{
