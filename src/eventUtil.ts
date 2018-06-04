@@ -36,6 +36,12 @@ class EventUtil {
 		}
 	}
 
+	private dummyTrigger(r: any) {
+		// AcceptPrice
+		util.log(r);
+		return Promise.resolve();
+	}
+
 	public async subscribe(contractUtil: ContractUtil, option: IOption) {
 		util.log('subscribing to ' + option.event);
 
@@ -66,10 +72,7 @@ class EventUtil {
 						startBlk,
 						currentBlk,
 						option.event,
-						(r: any) => {
-							util.log(r);
-							return Promise.resolve();
-						}
+						this.dummyTrigger
 					);
 					if (pulled) startBlk = currentBlk + 1;
 				}, 15000);
@@ -77,12 +80,8 @@ class EventUtil {
 		else {
 			util.log('starting listening ' + option.event);
 			let tg: (r: any) => Promise<void> = () => Promise.resolve();
-			if (option.event === CST.EVENT_ACCEPT_PRICE)
-				tg = (r: any) => {
-					util.log(r);
-					return Promise.resolve();
-				};
-			else {
+
+			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
 				const sysState = await contractUtil.readSysStates();
 				const state = sysState[0];
 				util.log('current state is ' + state);
@@ -99,7 +98,7 @@ class EventUtil {
 					)
 						await contractUtil.triggerReset();
 				}
-			}
+			} else tg = this.dummyTrigger;
 
 			contractUtil.contract.events[option.event]({}, async (error, evt) => {
 				if (error) util.log(error);

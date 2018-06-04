@@ -36,6 +36,32 @@ export const INCEPTION_BLK = 7483518;
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
 export const EVENT_START_PRE_RESET = 'StartPreReset';
 export const EVENT_START_RESET = 'StartReset';
+export const EVENT_START_TRADING = 'StartTrading';
+export const EVENT_CREATE = 'Create';
+export const EVENT_REDEEM = 'Redeem';
+export const EVENT_COMMIT_PRICE = 'CommitPrice';
+export const EVENT_TRANSFER = 'Transfer';
+export const EVENT_APPROVAL = 'Approval';
+export const EVENT_ADD_ADDRESS = 'AddAddress';
+export const EVENT_UPDATE_ADDRESS = 'UpdateAddress';
+export const EVENT_REMOVE_ADDRESS = 'RemoveAddress';
+export const EVENT_SET_VALUE = 'SetValue';
+export const EVENT_COLLECT_FEE = 'CollectFee';
+export const OTHER_EVENTS = [
+	EVENT_START_TRADING,
+	EVENT_ACCEPT_PRICE,
+	EVENT_CREATE,
+	EVENT_REDEEM,
+	EVENT_COMMIT_PRICE,
+	EVENT_TRANSFER,
+	EVENT_APPROVAL,
+	EVENT_ADD_ADDRESS,
+	EVENT_UPDATE_ADDRESS,
+	EVENT_REMOVE_ADDRESS,
+	EVENT_SET_VALUE,
+	EVENT_COLLECT_FEE
+];
+
 export const STATE_INCEPTION = '0';
 export const STATE_TRADING = '1';
 export const STATE_PRERESET = '2';
@@ -52,15 +78,15 @@ export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
 export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
-export const TRANSFER_TOKEN_INTERVAL = 5;  // in seconds
+export const TRANSFER_TOKEN_INTERVAL = 5; // in seconds
 export const TRANSFER_TOKEN_GAS = 120000;
 export const TRANSFER_TOKEN_GAS_TH = 20000000000000000;
-export const TRANSFER_INTERVAL = 5;  // in seconds
+export const TRANSFER_INTERVAL = 5; // in seconds
 export const TRANSFER_GAS_TH = 20000000000000000;
-export const REDEEM_INTERVAL = 5;  // in seconds
+export const REDEEM_INTERVAL = 5; // in seconds
 export const REDEEM_GAS = 80000;
 export const REDEEM_GAS_TH = 5000000000000000;
-export const CREATE_INTERVAL = 5;  // in seconds
+export const CREATE_INTERVAL = 5; // in seconds
 export const CREATE_GAS = 200000;
 export const CREATE_GAS_TH = 10000000000000000;
 export const SYS_STATES = {
