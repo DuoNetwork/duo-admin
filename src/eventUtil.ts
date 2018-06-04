@@ -42,7 +42,8 @@ class EventUtil {
 		if (option.source)
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event))
 				setInterval(async () => {
-					const state = await contractUtil.read('state');
+					const sysState = await contractUtil.readSysStates();
+					const state = sysState[0];
 					util.log('current state is ' + state);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.STATE_PRERESET)
@@ -82,7 +83,8 @@ class EventUtil {
 					return Promise.resolve();
 				};
 			else {
-				const state = await contractUtil.read('state');
+				const sysState = await contractUtil.readSysStates();
+				const state = sysState[0];
 				util.log('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {

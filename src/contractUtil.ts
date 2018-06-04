@@ -51,8 +51,9 @@ export default class ContractUtil {
 	public async readSysStates() {
 		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
 		const sysStates: string = await this.contract.methods.getSystemStates().call();
-		for (let i = 0; i < sysStates.length; i++)
-			console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
+		return sysStates;
+		// for (let i = 0; i < sysStates.length; i++)
+		// 	console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
 	}
 
 	public async readUserBalance(option: IOption) {

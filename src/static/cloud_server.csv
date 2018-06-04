@@ -1,4 +1,6 @@
-﻿Name,IP
+﻿Name,IP,provider
 chain_aws_public_dev,52.220.107.180
-price_aws_private_dev,13.251.98.228
+price_aws_private_dev,13.251.98.228, local
 price_aws_public_dev,52.220.94.228
+price_gcp_private_dev,35.198.216.38, infura
+price_azure_private_dev,13.67.89.100
