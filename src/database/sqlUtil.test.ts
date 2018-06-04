@@ -23,7 +23,6 @@ test('insertTradeData', async () => {
 
 test('insertPrice', async () => {
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	await sqlUtil.insertPrice({
 		price: 123,
 		volume: 456,

@@ -50,6 +50,7 @@ switch (tool) {
 	case 'commit':
 		util.log('starting commit process');
 		contractUtil.commitPrice(option);
+		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'minutely':
 		ohlcUtil.startProcessMinute();

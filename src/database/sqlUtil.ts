@@ -94,7 +94,6 @@ class SqlUtil {
 					"')"
 			)
 		);
-		await dynamoUtil.insertStatusData(dynamoUtil.convertPriceToDynamo(price));
 	}
 
 	public async readLastPrice(): Promise<IPrice> {
