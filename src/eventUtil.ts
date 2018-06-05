@@ -99,7 +99,7 @@ class EventUtil {
 								[CST.DB_ST_TS]: { N: block.timestamp + '' },
 								[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
 							});
-						});
+						}).catch(err => util.log(err));
 					}
 					startBlk = currentBlk + 1;
 				}, 15000);

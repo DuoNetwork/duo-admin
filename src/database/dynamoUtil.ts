@@ -3,7 +3,7 @@ import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb'
 import moment from 'moment';
 import * as CST from '../constants';
 import ContractUtil from '../contractUtil';
-import {ILog, IPrice, IPriceBar, ITrade } from '../types';
+import { ILog, IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 
 class DynamoUtil {
@@ -95,9 +95,17 @@ class DynamoUtil {
 
 	public async convertEventToDynamo(contractUtil: ContractUtil, log: ILog, sysTime: number) {
 		const block = await contractUtil.web3.eth.getBlock(Number(log.blockNumber));
+		let addr = '';
+		if (log.type === CST.EVENT_ACCEPT_PRICE ||
+			log.type === CST.EVENT_COMMIT_PRICE ||
+			log.type === CST.EVENT_CREATE ||
+			log.type === CST.EVENT_REDEEM
+		) addr = log.eventParas['sender'];
+		else if (log.type === CST.EVENT_TRANSFER) addr = log.eventParas['from'];
+		else if (log.type === CST.EVENT_APPROVAL) addr = log.eventParas['tokenOwner'];
 		const dbInput = {
-			[CST.DB_EVENT_TYPE_YEAR_MONTH]: {
-				S: log.type + '|' + moment.utc(block.timestamp * 1000).format('YYYY-MM')
+			[CST.DB_EVENT_KEY]: {
+				S: log.type + '|' + addr + '|' + moment.utc(block.timestamp * 1000).format('YYYY-MM-DD')
 			},
 			[CST.DB_EVENT_TIMESTAMP_ID]: { S: block.timestamp + '|' + log.id },
 			[CST.DB_EVENT_SYSTIME]: { N: sysTime + '' },
@@ -145,8 +153,8 @@ class DynamoUtil {
 						...data
 					}
 				};
-				console.log(params);
 				await this.insertData(params);
+				util.log('one event inserted');
 			});
 		});
 	}
