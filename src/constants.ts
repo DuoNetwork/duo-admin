@@ -137,6 +137,16 @@ export const DB_OHLC_VOLUME = 'volume';
 export const DB_OHLC_TS = 'timestamp';
 export const DB_ST_PROCESS = 'process';
 export const DB_ST_TS = 'timestamp';
+export const DB_ST_BLOCK = 'block';
+export const DB_ST_SYSTIME = 'systime';
+export const DB_EVENT_TYPE_YEAR_MONTH = 'typeYearMonth';
+export const DB_EVENT_TIMESTAMP_ID = 'timestampID';
+export const DB_EVENT_SYSTIME = 'systime';
+export const DB_EVENT_BLOCK_HASH = 'blockHash';
+export const DB_EVENT_BLOCK_NO = 'blockNumber';
+export const DB_EVENT_TX_HASH = 'transactionHash';
+export const DB_EVENT_LOG_STATUS = 'logStatus';
+export const DB_STATUS_EVENT_PUBLIC_OTHERS = 'EVENT_AWS_PUBLIC_OTHERS';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
 	4: [0.35, 0.3, 0.25, 0.2],

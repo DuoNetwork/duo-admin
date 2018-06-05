@@ -1,45 +1,59 @@
 import { Contract } from 'web3/types';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
+import dynamoUtil from './database/dynamoUtil';
 import { IOption } from './types';
 import util from './util';
 
 class EventUtil {
+	private parseRawEvent(log) {
+
+		const returnValue = log.returnValues;
+		const keys = Object.keys(returnValue);
+		const output = {
+			type : log.event,
+			id : log.id,
+			blockHash: log.blockHash,
+			blockNumber: log.blockNumber,
+			transactionHash: log.transactionHash,
+			logStatus: log.type,
+			eventParas: {}
+		};
+		for (let i = keys.length / 2; i < keys.length; i++) {
+			const key = keys[i];
+			output.eventParas[key] = returnValue[key];
+		}
+		return output;
+	}
+
 	public async pull(
 		contract: Contract,
 		start: number,
 		end: number,
-		event: string,
-		trigger: (r: any) => Promise<void>
+		event: string
+		// trigger: (r: any) => Promise<void>
 	) {
-		if (start <= end) {
-			util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
-			contract.getPastEvents(
+		util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
+		return new Promise((resolve, reject) => {
+			const eventsList: any[] = [];
+			return contract.getPastEvents(
 				event,
 				{
 					fromBlock: start,
 					toBlock: end
 				},
 				async (error, events) => {
-					if (error) util.log(error);
-					else if (events.length > 0) {
-						util.log(events);
-						util.log('start preReset triggering');
-						events.forEach(async r => await trigger(r));
-					}
+					if (error) reject(error);
+					else if (events.length > 0)
+						events.forEach(e => {
+							// console.log(JSON.stringify(e));
+							eventsList.push(this.parseRawEvent(e));
+						});
+					// console.log(eventsList);
+					resolve(eventsList);
 				}
 			);
-			return true;
-		} else {
-			util.log('end is less than start');
-			return false;
-		}
-	}
-
-	private dummyTrigger(r: any) {
-		// AcceptPrice
-		util.log(r);
-		return Promise.resolve();
+		});
 	}
 
 	public async subscribe(contractUtil: ContractUtil, option: IOption) {
@@ -63,18 +77,33 @@ class EventUtil {
 						await contractUtil.triggerReset();
 				}, 15000);
 			else {
-				let startBlk = await contractUtil.web3.eth.getBlockNumber();
-				let currentBlk = startBlk;
+				let startBlk = await dynamoUtil.readLastBlock() || CST.INCEPTION_BLK;
+				util.log('last block number: ' + startBlk);
 				setInterval(async () => {
-					currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					const pulled = await this.pull(
-						contractUtil.contract,
-						startBlk,
-						currentBlk,
-						option.event,
-						this.dummyTrigger
-					);
-					if (pulled) startBlk = currentBlk + 1;
+					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
+					if (startBlk <= currentBlk) {
+						const allEvents: any[] = [];
+						const promiseList = CST.OTHER_EVENTS.map(async event => {
+							const events = await this.pull(
+								contractUtil.contract,
+								startBlk,
+								currentBlk,
+								event
+							);
+							allEvents.push(events);
+						});
+
+						Promise.all(promiseList).then(async () => {
+							await dynamoUtil.insertPublicEventData(contractUtil, allEvents);
+							const block = await contractUtil.web3.eth.getBlock(currentBlk);
+							await dynamoUtil.insertStatusData({
+								[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
+								[CST.DB_ST_TS]: { N: block.timestamp + '' },
+								[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
+							});
+						});
+					}
+					startBlk = currentBlk + 1;
 				}, 15000);
 			}
 		else {
@@ -98,7 +127,7 @@ class EventUtil {
 					)
 						await contractUtil.triggerReset();
 				}
-			} else tg = this.dummyTrigger;
+			} else return Promise.resolve();
 
 			contractUtil.contract.events[option.event]({}, async (error, evt) => {
 				if (error) util.log(error);

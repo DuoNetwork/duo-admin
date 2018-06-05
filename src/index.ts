@@ -21,6 +21,8 @@ dynamoUtil.init(
 	util.getDynamoRole(tool, option.dynamo),
 	util.getStatusProcess(tool, option)
 );
+console.log(util.getDynamoRole(tool, option.dynamo));
+console.log(util.getStatusProcess(tool, option));
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
 	const mysqlAuthFile = require('./keys/mysql.json');
 	sqlUtil.init(mysqlAuthFile.host, mysqlAuthFile.user, mysqlAuthFile.password);

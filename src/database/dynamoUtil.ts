@@ -1,7 +1,9 @@
 import AWS from 'aws-sdk';
+
 import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../constants';
+// import ContractUtil from '../contractUtil';
 import { IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 
@@ -92,6 +94,26 @@ class DynamoUtil {
 		};
 	}
 
+	public async convertEventToDynamo(contractUtil, log, sysTime) {
+		const block = await contractUtil.web3.eth.getBlock(Number(log.blockNumber));
+		const dbInput = {
+			[CST.DB_EVENT_TYPE_YEAR_MONTH]: {
+				S: log.type + '|' + moment.utc(block.timestamp * 1000).format('YYYY-MM')
+			},
+			[CST.DB_EVENT_TIMESTAMP_ID]: { S: block.timestamp + '|' + log.id },
+			[CST.DB_EVENT_SYSTIME]: { N: sysTime + '' },
+			[CST.DB_EVENT_BLOCK_HASH]: { S: log.blockHash },
+			[CST.DB_EVENT_BLOCK_NO]: { N: log.blockNumber + '' },
+			[CST.DB_EVENT_TX_HASH]: { S: log.transactionHash },
+			[CST.DB_EVENT_LOG_STATUS]: { S: log.logStatus }
+		};
+		for (const key in log.eventParasect)
+			dbInput[key] = {
+				S: log.eventParasect[key]
+			};
+		return dbInput;
+	}
+
 	public async insertTradeData(trade: ITrade, insertStatus: boolean): Promise<void> {
 		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
 		const data = this.convertTradeToDynamo(trade, systemTimestamp);
@@ -108,6 +130,25 @@ class DynamoUtil {
 
 		await this.insertData(params);
 		if (insertStatus) await this.insertStatusData(data);
+	}
+
+	public async insertPublicEventData(contractUtil, logs) {
+		logs.forEach(logType => {
+			logType.forEach(async log => {
+				const data = await this.convertEventToDynamo(
+					contractUtil,
+					log,
+					util.getNowTimestamp()
+				);
+				const params = {
+					TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+					Item: {
+						...data
+					}
+				};
+				await this.insertData(params);
+			});
+		});
 	}
 
 	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
@@ -159,6 +200,20 @@ class DynamoUtil {
 				...data
 			}
 		});
+	}
+
+	public async readLastBlock(): Promise<number> {
+		const params = {
+			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
+			KeyConditionExpression: CST.DB_ST_PROCESS + ' = :' + CST.DB_ST_PROCESS,
+			ExpressionAttributeValues: {
+				[':' + CST.DB_ST_PROCESS]: { S: CST.DB_STATUS_EVENT_PUBLIC_OTHERS }
+			}
+		};
+
+		const data = await this.queryData(params);
+		if (!data.Items || !data.Items.length) return 0;
+		return Number(data.Items[0].block.N);
 	}
 
 	public async readTradeData(source: string, datetimeString: string): Promise<ITrade[]> {
