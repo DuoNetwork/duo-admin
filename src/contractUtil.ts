@@ -2,8 +2,10 @@ import Web3 from 'web3';
 import { Contract } from 'web3/types';
 import calculator from './calculator';
 import * as CST from './constants';
+import sqlUtil from './database/sqlUtil';
 import { IOption, IPrice } from './types';
 import util from './util';
+
 const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
@@ -152,12 +154,14 @@ export default class ContractUtil {
 	) {
 		let currentPrice: IPrice;
 		if (option.generator === 'gbm') {
+			await sqlUtil.readLastPrice();  // keep connection to sql db
 			option.price = this.generateGBMPrices(this.time, 144, this.lastPrice);
 			this.time += 1;
 			this.lastPrice = option.price;
 		}
 
 		if (option.generator === 'preSet') {
+			await sqlUtil.readLastPrice(); // keep connection to sql db
 			option.price = this.generatePreSetPrices(this.time);
 			this.time += 1;
 			this.lastPrice = option.price;
