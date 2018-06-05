@@ -78,6 +78,7 @@ class EventUtil {
 				}, 15000);
 			else {
 				let startBlk = await dynamoUtil.readLastBlock() || CST.INCEPTION_BLK;
+				// let startBlk = CST.INCEPTION_BLK;
 				util.log('last block number: ' + startBlk);
 				setInterval(async () => {
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();

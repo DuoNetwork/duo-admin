@@ -107,9 +107,9 @@ class DynamoUtil {
 			[CST.DB_EVENT_TX_HASH]: { S: log.transactionHash },
 			[CST.DB_EVENT_LOG_STATUS]: { S: log.logStatus }
 		};
-		for (const key in log.eventParasect)
+		for (const key in log.eventParas)
 			dbInput[key] = {
-				S: log.eventParasect[key]
+				S: log.eventParas[key]
 			};
 		return dbInput;
 	}
@@ -146,6 +146,7 @@ class DynamoUtil {
 						...data
 					}
 				};
+				console.log(params);
 				await this.insertData(params);
 			});
 		});
