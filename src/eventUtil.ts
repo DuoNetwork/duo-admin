@@ -2,11 +2,11 @@ import { Contract } from 'web3/types';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import dynamoUtil from './database/dynamoUtil';
-import { IOption } from './types';
+import {ILog,  IOption  } from './types';
 import util from './util';
 
 class EventUtil {
-	private parseRawEvent(log) {
+	private parseRawEvent(log): ILog {
 
 		const returnValue = log.returnValues;
 		const keys = Object.keys(returnValue);
@@ -31,11 +31,10 @@ class EventUtil {
 		start: number,
 		end: number,
 		event: string
-		// trigger: (r: any) => Promise<void>
 	) {
 		util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
 		return new Promise((resolve, reject) => {
-			const eventsList: any[] = [];
+			const eventsList: ILog[] = [];
 			return contract.getPastEvents(
 				event,
 				{
@@ -46,10 +45,8 @@ class EventUtil {
 					if (error) reject(error);
 					else if (events.length > 0)
 						events.forEach(e => {
-							// console.log(JSON.stringify(e));
 							eventsList.push(this.parseRawEvent(e));
 						});
-					// console.log(eventsList);
 					resolve(eventsList);
 				}
 			);

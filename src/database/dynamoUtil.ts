@@ -1,10 +1,9 @@
 import AWS from 'aws-sdk';
-
 import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../constants';
-// import ContractUtil from '../contractUtil';
-import { IPrice, IPriceBar, ITrade } from '../types';
+import ContractUtil from '../contractUtil';
+import {ILog, IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 
 class DynamoUtil {
@@ -94,7 +93,7 @@ class DynamoUtil {
 		};
 	}
 
-	public async convertEventToDynamo(contractUtil, log, sysTime) {
+	public async convertEventToDynamo(contractUtil: ContractUtil, log: ILog, sysTime: number) {
 		const block = await contractUtil.web3.eth.getBlock(Number(log.blockNumber));
 		const dbInput = {
 			[CST.DB_EVENT_TYPE_YEAR_MONTH]: {

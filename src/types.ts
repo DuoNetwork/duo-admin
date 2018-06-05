@@ -25,6 +25,16 @@ export interface IPriceBar {
 	timestamp: number;
 }
 
+export interface ILog {
+	type: string;
+	id: string;
+	blockHash: string;
+	blockNumber: string;
+	transactionHash: string;
+	logStatus: string;
+	eventParas: object;
+}
+
 export interface IAccount {
 	address: string;
 	privateKey: string;
