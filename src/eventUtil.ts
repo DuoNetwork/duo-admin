@@ -72,21 +72,19 @@ class EventUtil {
 				util.log('last block number: ' + startBlk);
 				setInterval(async () => {
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					const block = await contractUtil.web3.eth.getBlock(currentBlk);
-					if (startBlk <= currentBlk) {
+					while (startBlk <= currentBlk) {
+						const block = await contractUtil.web3.eth.getBlock(startBlk);
+
 						const allEvents: IEvent[] = [];
 						const promiseList = CST.OTHER_EVENTS.map(async event => {
 							const eventLogs: EventLog[] = await this.pull(
 								contractUtil.contract,
 								startBlk,
-								currentBlk,
+								startBlk,
 								event
 							);
-							eventLogs.forEach(async el => {
-								const timestamp = (await contractUtil.web3.eth.getBlock(
-									el.blockNumber
-								)).timestamp;
-								allEvents.push(this.parseEvent(el, timestamp));
+							eventLogs.forEach( el => {
+								allEvents.push(this.parseEvent(el, block.timestamp));
 							});
 						});
 
@@ -94,14 +92,14 @@ class EventUtil {
 							.then(async () => {
 								await dynamoUtil.insertEventData(allEvents);
 								await dynamoUtil.insertStatusData({
-									[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
+									[CST.DB_ST_BLOCK]: { N: startBlk + '' },
 									[CST.DB_ST_TS]: { N: block.timestamp + '' },
 									[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
 								});
 							})
 							.catch(err => util.log(err));
+						startBlk = startBlk + 1;
 					}
-					startBlk = currentBlk + 1;
 				}, 15000);
 			}
 		else {

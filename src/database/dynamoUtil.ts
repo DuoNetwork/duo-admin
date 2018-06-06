@@ -2,7 +2,6 @@ import AWS from 'aws-sdk';
 import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../constants';
-import ContractUtil from '../contractUtil';
 import { IEvent, IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 

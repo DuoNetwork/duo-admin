@@ -25,18 +25,32 @@ const priceBar = {
 	timestamp: 1234567890
 };
 
-const event = {
-	type: 'type',
-	id: 'id',
-	blockHash: 'blockHash',
-	blockNumber: 123,
-	transactionHash: 'txHash',
-	logStatus: 'logStatus',
-	parameters: {
-		test: 'test'
+const events = [
+	{
+		type: 'type',
+		id: 'id',
+		blockHash: 'blockHash',
+		blockNumber: 123,
+		transactionHash: 'txHash',
+		logStatus: 'logStatus',
+		parameters: {
+			test: 'test'
+		},
+		timestamp: 1234567890
 	},
-	timestamp: 1234567890,
-}
+	{
+		type: 'CommitPrice',
+		id: 'id',
+		blockHash: 'blockHash',
+		blockNumber: 123,
+		transactionHash: 'txHash',
+		logStatus: 'logStatus',
+		parameters: {
+			sender: '0x00D8d0660b243452fC2f996A892D3083A903576F'
+		},
+		timestamp: 1234567890
+	}
+];
 
 test('connection initalization', () =>
 	dynamoUtil.insertData({} as any).catch(error => expect(error).toMatchSnapshot()));
@@ -57,7 +71,9 @@ test('convertPriceBarToDynamo', () =>
 	expect(dynamoUtil.convertPriceBarToDynamo(priceBar)).toMatchSnapshot());
 
 test('convertEventToDynamo', () =>
-	expect(dynamoUtil.convertEventToDynamo(event, 9876543210)).toMatchSnapshot());
+	events.forEach(event =>
+		expect(dynamoUtil.convertEventToDynamo(event, 9876543210)).toMatchSnapshot()
+	));
 
 test('insertTradeData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
@@ -84,9 +100,14 @@ test('insertHourlyData', async () => {
 
 test('insertEventData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
-	await dynamoUtil.insertEventData([event]);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	events.forEach(async event => {
+		await dynamoUtil.insertEventData([event]);
+	});
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
+	for (let i = 0; i < 2; i++)
+		expect(
+			(dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[i][0]
+		).toMatchSnapshot();
 });
 
 test('insertHeartbeat', async () => {

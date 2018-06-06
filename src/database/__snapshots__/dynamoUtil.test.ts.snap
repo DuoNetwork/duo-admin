@@ -31,6 +31,35 @@ Object {
 }
 `;
 
+exports[`convertEventToDynamo 2`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "CommitPrice|2009-02-13|0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "sender": Object {
+    "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
 exports[`convertPriceBarToDynamo 1`] = `
 Object {
   "close": Object {
@@ -108,6 +137,38 @@ Object {
     },
     "test": Object {
       "S": "test",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "events_dev",
+}
+`;
+
+exports[`insertEventData 2`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "CommitPrice|2009-02-13|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
     },
     "timestampId": Object {
       "S": "1234567890|id",
