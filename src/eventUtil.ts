@@ -71,7 +71,7 @@ class EventUtil {
 				// let startBlk = CST.INCEPTION_BLK;
 				util.log('starting blk number: ' + startBlk);
 				let isProcessing = false;
-				setInterval(async () => {
+				const fetch = async () => {
 					if (isProcessing) return;
 
 					isProcessing = true;
@@ -79,7 +79,7 @@ class EventUtil {
 					while (startBlk <= currentBlk) {
 						const block = await contractUtil.web3.eth.getBlock(startBlk);
 						const allEvents: IEvent[] = [];
-						const end = Math.min(startBlk + 100, currentBlk);
+						const end = Math.min(startBlk + 10, currentBlk);
 						const promiseList = CST.OTHER_EVENTS.map(event =>
 							this.pull(contractUtil.contract, startBlk, end, event)
 						);
@@ -104,7 +104,9 @@ class EventUtil {
 						startBlk = end + 1;
 					}
 					isProcessing = false;
-				}, 15000);
+				};
+				fetch();
+				setInterval(() => fetch(), 120000);
 			}
 		else {
 			util.log('starting listening ' + option.event);
