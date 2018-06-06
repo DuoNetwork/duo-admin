@@ -24,14 +24,19 @@ class EventUtil {
 		return output;
 	}
 
-	public async pull(contract: Contract, blockNumber: number, event: string): Promise<EventLog[]> {
-		util.log('current blk is ' + blockNumber + ' eventName: ' + event);
+	public async pull(
+		contract: Contract,
+		start: number,
+		end: number,
+		event: string
+	): Promise<EventLog[]> {
+		util.log('from ' + start + ' to ' + end + ' eventName: ' + event);
 		return new Promise<EventLog[]>((resolve, reject) =>
 			contract.getPastEvents(
 				event,
 				{
-					fromBlock: blockNumber,
-					toBlock: blockNumber + 100
+					fromBlock: start,
+					toBlock: end
 				},
 				(error, events) => {
 					if (error) reject(error);
@@ -71,11 +76,12 @@ class EventUtil {
 
 					isProcessing = true;
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					while (startBlk <= currentBlk - 100) {
+					while (startBlk <= currentBlk) {
 						const block = await contractUtil.web3.eth.getBlock(startBlk);
 						const allEvents: IEvent[] = [];
+						const end = Math.min(startBlk + 100, currentBlk);
 						const promiseList = CST.OTHER_EVENTS.map(event =>
-							this.pull(contractUtil.contract, startBlk, event)
+							this.pull(contractUtil.contract, startBlk, end, event)
 						);
 
 						const results = await Promise.all(promiseList);
@@ -95,7 +101,7 @@ class EventUtil {
 							[CST.DB_ST_TS]: { N: block.timestamp * 1000 + '' },
 							[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
 						});
-						startBlk = startBlk + 100;
+						startBlk = end + 1;
 					}
 					isProcessing = false;
 				}, 15000);
