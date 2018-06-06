@@ -219,6 +219,7 @@ class DynamoUtil {
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return 0;
+		// console.log(JSON.stringify(data, null, 4));
 		return Number(data.Items[0].block.N);
 	}
 

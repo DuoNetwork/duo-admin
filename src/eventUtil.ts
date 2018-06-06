@@ -24,19 +24,14 @@ class EventUtil {
 		return output;
 	}
 
-	public async pull(
-		contract: Contract,
-		start: number,
-		end: number,
-		event: string
-	): Promise<EventLog[]> {
-		util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
+	public async pull(contract: Contract, blockNumber: number, event: string): Promise<EventLog[]> {
+		util.log('current blk is ' + blockNumber + ' eventName: ' + event);
 		return new Promise<EventLog[]>((resolve, reject) =>
 			contract.getPastEvents(
 				event,
 				{
-					fromBlock: start,
-					toBlock: end
+					fromBlock: blockNumber,
+					toBlock: blockNumber + 100
 				},
 				(error, events) => {
 					if (error) reject(error);
@@ -67,39 +62,42 @@ class EventUtil {
 						await contractUtil.triggerReset();
 				}, 15000);
 			else {
-				let startBlk = (await dynamoUtil.readLastBlock()) || CST.INCEPTION_BLK;
+				let startBlk = Math.max(await dynamoUtil.readLastBlock(), CST.INCEPTION_BLK);
 				// let startBlk = CST.INCEPTION_BLK;
-				util.log('last block number: ' + startBlk);
+				util.log('starting blk number: ' + startBlk);
+				let isProcessing = false;
 				setInterval(async () => {
+					if (isProcessing) return;
+
+					isProcessing = true;
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
-					while (startBlk <= currentBlk) {
+					while (startBlk <= currentBlk - 100) {
 						const block = await contractUtil.web3.eth.getBlock(startBlk);
-
 						const allEvents: IEvent[] = [];
-						const promiseList = CST.OTHER_EVENTS.map(async event => {
-							const eventLogs: EventLog[] = await this.pull(
-								contractUtil.contract,
-								startBlk,
-								startBlk,
-								event
-							);
-							eventLogs.forEach( el => {
-								allEvents.push(this.parseEvent(el, block.timestamp));
-							});
-						});
+						const promiseList = CST.OTHER_EVENTS.map(event =>
+							this.pull(contractUtil.contract, startBlk, event)
+						);
 
-						Promise.all(promiseList)
-							.then(async () => {
-								await dynamoUtil.insertEventData(allEvents);
-								await dynamoUtil.insertStatusData({
-									[CST.DB_ST_BLOCK]: { N: startBlk + '' },
-									[CST.DB_ST_TS]: { N: block.timestamp + '' },
-									[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
-								});
-							})
-							.catch(err => util.log(err));
-						startBlk = startBlk + 1;
+						const results = await Promise.all(promiseList);
+						// console.log(JSON.stringify(results, null, 4));
+
+						results.forEach(result =>
+							result.forEach(el =>
+								allEvents.push(this.parseEvent(el, block.timestamp))
+							)
+						);
+
+						// console.log(JSON.stringify(allEvents));
+
+						await dynamoUtil.insertEventData(allEvents);
+						await dynamoUtil.insertStatusData({
+							[CST.DB_ST_BLOCK]: { N: startBlk + '' },
+							[CST.DB_ST_TS]: { N: block.timestamp * 1000 + '' },
+							[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
+						});
+						startBlk = startBlk + 100;
 					}
+					isProcessing = false;
 				}, 15000);
 			}
 		else {
