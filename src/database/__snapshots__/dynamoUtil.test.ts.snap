@@ -2,6 +2,35 @@
 
 exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
 
+exports[`convertEventToDynamo 1`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "type|2009-02-13",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "test": Object {
+    "S": "test",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
 exports[`convertPriceBarToDynamo 1`] = `
 Object {
   "close": Object {
@@ -56,6 +85,38 @@ Object {
   "volume": Object {
     "N": "456",
   },
+}
+`;
+
+exports[`insertEventData 1`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "type|2009-02-13",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "test": Object {
+      "S": "test",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "events_dev",
 }
 `;
 

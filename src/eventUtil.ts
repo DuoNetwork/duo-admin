@@ -1,28 +1,26 @@
-import { Contract } from 'web3/types';
+import { Contract, EventLog } from 'web3/types';
 import * as CST from './constants';
 import ContractUtil from './contractUtil';
 import dynamoUtil from './database/dynamoUtil';
-import {ILog,  IOption  } from './types';
+import { IEvent, IOption } from './types';
 import util from './util';
 
 class EventUtil {
-	private parseRawEvent(log): ILog {
-
-		const returnValue = log.returnValues;
-		const keys = Object.keys(returnValue);
+	public parseEvent(eventLog: EventLog, timestamp: number): IEvent {
+		const returnValue = eventLog.returnValues;
 		const output = {
-			type : log.event,
-			id : log.id,
-			blockHash: log.blockHash,
-			blockNumber: log.blockNumber,
-			transactionHash: log.transactionHash,
-			logStatus: log.type,
-			eventParas: {}
+			type: eventLog.event,
+			id: eventLog['id'],
+			blockHash: eventLog.blockHash,
+			blockNumber: eventLog.blockNumber,
+			transactionHash: eventLog.transactionHash,
+			logStatus: eventLog['type'],
+			parameters: {},
+			timestamp: timestamp
 		};
-		for (let i = keys.length / 2; i < keys.length; i++) {
-			const key = keys[i];
-			output.eventParas[key] = returnValue[key];
-		}
+		for (const key in returnValue)
+			if (!util.isNumber(key)) output.parameters[key] = returnValue[key];
+
 		return output;
 	}
 
@@ -31,26 +29,21 @@ class EventUtil {
 		start: number,
 		end: number,
 		event: string
-	) {
+	): Promise<EventLog[]> {
 		util.log('current blk is ' + end + ' last blk is ' + start + ' do subscription');
-		return new Promise((resolve, reject) => {
-			const eventsList: ILog[] = [];
-			return contract.getPastEvents(
+		return new Promise<EventLog[]>((resolve, reject) =>
+			contract.getPastEvents(
 				event,
 				{
 					fromBlock: start,
 					toBlock: end
 				},
-				async (error, events) => {
+				(error, events) => {
 					if (error) reject(error);
-					else if (events.length > 0)
-						events.forEach(e => {
-							eventsList.push(this.parseRawEvent(e));
-						});
-					resolve(eventsList);
+					else resolve(events);
 				}
-			);
-		});
+			)
+		);
 	}
 
 	public async subscribe(contractUtil: ContractUtil, option: IOption) {
@@ -74,32 +67,39 @@ class EventUtil {
 						await contractUtil.triggerReset();
 				}, 15000);
 			else {
-				let startBlk = await dynamoUtil.readLastBlock() || CST.INCEPTION_BLK;
+				let startBlk = (await dynamoUtil.readLastBlock()) || CST.INCEPTION_BLK;
 				// let startBlk = CST.INCEPTION_BLK;
 				util.log('last block number: ' + startBlk);
 				setInterval(async () => {
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
+					const block = await contractUtil.web3.eth.getBlock(currentBlk);
 					if (startBlk <= currentBlk) {
-						const allEvents: any[] = [];
+						const allEvents: IEvent[] = [];
 						const promiseList = CST.OTHER_EVENTS.map(async event => {
-							const events = await this.pull(
+							const eventLogs: EventLog[] = await this.pull(
 								contractUtil.contract,
 								startBlk,
 								currentBlk,
 								event
 							);
-							allEvents.push(events);
+							eventLogs.forEach(async el => {
+								const timestamp = (await contractUtil.web3.eth.getBlock(
+									el.blockNumber
+								)).timestamp;
+								allEvents.push(this.parseEvent(el, timestamp));
+							});
 						});
 
-						Promise.all(promiseList).then(async () => {
-							await dynamoUtil.insertPublicEventData(contractUtil, allEvents);
-							const block = await contractUtil.web3.eth.getBlock(currentBlk);
-							await dynamoUtil.insertStatusData({
-								[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
-								[CST.DB_ST_TS]: { N: block.timestamp + '' },
-								[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
-							});
-						}).catch(err => util.log(err));
+						Promise.all(promiseList)
+							.then(async () => {
+								await dynamoUtil.insertEventData(allEvents);
+								await dynamoUtil.insertStatusData({
+									[CST.DB_ST_BLOCK]: { N: currentBlk + '' },
+									[CST.DB_ST_TS]: { N: block.timestamp + '' },
+									[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
+								});
+							})
+							.catch(err => util.log(err));
 					}
 					startBlk = currentBlk + 1;
 				}, 15000);

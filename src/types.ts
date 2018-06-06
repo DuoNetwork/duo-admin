@@ -25,14 +25,15 @@ export interface IPriceBar {
 	timestamp: number;
 }
 
-export interface ILog {
+export interface IEvent {
 	type: string;
 	id: string;
 	blockHash: string;
-	blockNumber: string;
+	blockNumber: number;
 	transactionHash: string;
 	logStatus: string;
-	eventParas: object;
+	parameters: object;
+	timestamp: number;
 }
 
 export interface IAccount {

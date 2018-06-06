@@ -252,6 +252,11 @@ class Util {
 	public getNowTimestamp() {
 		return moment().valueOf();
 	}
+
+	public isNumber(input: any): boolean {
+		const num = Number(input);
+		return isFinite(num) && !isNaN(num);
+	}
 }
 
 const util = new Util();

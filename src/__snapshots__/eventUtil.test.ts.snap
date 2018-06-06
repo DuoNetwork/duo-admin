@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseEvent 1`] = `
+Object {
+  "blockHash": "0xb236fabff690963c1e38ba2bc0ed8fff6f24d2c2a06d3437e587858a343e1562",
+  "blockNumber": 7584187,
+  "id": "log_fdade6f4",
+  "logStatus": "mined",
+  "parameters": Object {
+    "ethAmtInWei": "94090000000000000",
+    "redeemedTokenAInWei": "12472699044214333750",
+    "redeemedTokenBInWei": "12472699044214333750",
+    "sender": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    "totalSupplyA": "0",
+    "totalSupplyB": "0",
+  },
+  "timestamp": 1234567890,
+  "transactionHash": "0xab624432b3cc6b1d8ada365be7899617f5ffa095b0e68bc054fdc02e309dc76e",
+  "type": "Redeem",
+}
+`;
+
+exports[`parseEvent 2`] = `
+Object {
+  "blockHash": "0xc018d11ef3c8ecd69376c555cf52b3b8323e9f5793cd1a2653fe25b58cd3fbff",
+  "blockNumber": 7583611,
+  "id": "log_fbe8fbfd",
+  "logStatus": "mined",
+  "parameters": Object {
+    "navAInWei": "1000002000000000000",
+    "navBInWei": "1085147861640112792",
+    "priceInWei": "175481866396422670000",
+    "sender": "0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a",
+    "timeInSecond": "1528174500",
+  },
+  "timestamp": 1234567890,
+  "transactionHash": "0x657c4d19de5efd60265f03059507fc801dec7795da7f80f8f4a31813a3e8cdfb",
+  "type": "AcceptPrice",
+}
+`;
+
+exports[`parseEvent 3`] = `
+Object {
+  "blockHash": "0x2faf54a3e08816dc4d13d651a3aaedadc3860353797ac62bc2b52eaaf4f05852",
+  "blockNumber": 7583652,
+  "id": "log_5a9a1166",
+  "logStatus": "mined",
+  "parameters": Object {
+    "index": "0",
+    "priceInWei": "200032406268784400000",
+    "sender": "0x0022BFd6AFaD3408A1714fa8F9371ad5Ce8A0F1a",
+    "timeInSecond": "1528174800",
+  },
+  "timestamp": 1234567890,
+  "transactionHash": "0x2c8f0f87de5b1a08b8725c1dd33ffd6847920dfd29c3c6767fb9fe025f678914",
+  "type": "CommitPrice",
+}
+`;
+
+exports[`parseEvent 4`] = `
+Object {
+  "blockHash": "0x27c822696c709975f9aa01270ca037c265afa5cfb4dcb62e8dd1d16605afcc49",
+  "blockNumber": 7583579,
+  "id": "log_1ab4180f",
+  "logStatus": "mined",
+  "parameters": Object {
+    "navAInWei": "1000000000000000000",
+    "navBInWei": "1000000000000000000",
+  },
+  "timestamp": 1234567890,
+  "transactionHash": "0xb5f7ddfeb52fc8680d4c9f6e24739b091732219602cecc679da63af485824d7b",
+  "type": "StartTrading",
+}
+`;
+
+exports[`parseEvent 5`] = `
+Object {
+  "blockHash": "0x3aedb0c0fb29d50e590f062a3fd708e8e043cd916760b316b2d6c56e0fd07750",
+  "blockNumber": 7584181,
+  "id": "log_d796919c",
+  "logStatus": "mined",
+  "parameters": Object {
+    "createdTokenAInWei": "12472699044214333750",
+    "createdTokenBInWei": "12472699044214333750",
+    "sender": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    "totalSupplyA": "12472699044214333750",
+    "totalSupplyB": "12472699044214333750",
+  },
+  "timestamp": 1234567890,
+  "transactionHash": "0x863d368faffe95427d36a3fe59ef6e83fc93b8e106d28df8f0cff023eadf4cdf",
+  "type": "Create",
+}
+`;

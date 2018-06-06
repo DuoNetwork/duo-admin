@@ -25,6 +25,19 @@ const priceBar = {
 	timestamp: 1234567890
 };
 
+const event = {
+	type: 'type',
+	id: 'id',
+	blockHash: 'blockHash',
+	blockNumber: 123,
+	transactionHash: 'txHash',
+	logStatus: 'logStatus',
+	parameters: {
+		test: 'test'
+	},
+	timestamp: 1234567890,
+}
+
 test('connection initalization', () =>
 	dynamoUtil.insertData({} as any).catch(error => expect(error).toMatchSnapshot()));
 
@@ -42,6 +55,9 @@ test('convertTradeToDynamo', () =>
 
 test('convertPriceBarToDynamo', () =>
 	expect(dynamoUtil.convertPriceBarToDynamo(priceBar)).toMatchSnapshot());
+
+test('convertEventToDynamo', () =>
+	expect(dynamoUtil.convertEventToDynamo(event, 9876543210)).toMatchSnapshot());
 
 test('insertTradeData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
@@ -62,6 +78,13 @@ test('insertMinutelyData', async () => {
 test('insertHourlyData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	await dynamoUtil.insertHourlyData(priceBar);
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('insertEventData', async () => {
+	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
+	await dynamoUtil.insertEventData([event]);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });

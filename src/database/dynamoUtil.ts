@@ -3,7 +3,7 @@ import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb'
 import moment from 'moment';
 import * as CST from '../constants';
 import ContractUtil from '../contractUtil';
-import { ILog, IPrice, IPriceBar, ITrade } from '../types';
+import { IEvent, IPrice, IPriceBar, ITrade } from '../types';
 import util from '../util';
 
 class DynamoUtil {
@@ -93,30 +93,35 @@ class DynamoUtil {
 		};
 	}
 
-	public async convertEventToDynamo(contractUtil: ContractUtil, log: ILog, sysTime: number) {
-		const block = await contractUtil.web3.eth.getBlock(Number(log.blockNumber));
+	public convertEventToDynamo(event: IEvent, sysTime: number) {
 		let addr = '';
-		if (log.type === CST.EVENT_ACCEPT_PRICE ||
-			log.type === CST.EVENT_COMMIT_PRICE ||
-			log.type === CST.EVENT_CREATE ||
-			log.type === CST.EVENT_REDEEM
-		) addr = log.eventParas['sender'];
-		else if (log.type === CST.EVENT_TRANSFER) addr = log.eventParas['from'];
-		else if (log.type === CST.EVENT_APPROVAL) addr = log.eventParas['tokenOwner'];
+		if (
+			event.type === CST.EVENT_ACCEPT_PRICE ||
+			event.type === CST.EVENT_COMMIT_PRICE ||
+			event.type === CST.EVENT_CREATE ||
+			event.type === CST.EVENT_REDEEM
+		)
+			addr = event.parameters['sender'];
+		else if (event.type === CST.EVENT_TRANSFER) addr = event.parameters['from'];
+		else if (event.type === CST.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
 		const dbInput = {
 			[CST.DB_EVENT_KEY]: {
-				S: log.type + '|' + addr + '|' + moment.utc(block.timestamp * 1000).format('YYYY-MM-DD')
+				S:
+					event.type +
+					'|' +
+					moment.utc(event.timestamp * 1000).format('YYYY-MM-DD') +
+					(addr ? '|' + addr : '')
 			},
-			[CST.DB_EVENT_TIMESTAMP_ID]: { S: block.timestamp + '|' + log.id },
+			[CST.DB_EVENT_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
 			[CST.DB_EVENT_SYSTIME]: { N: sysTime + '' },
-			[CST.DB_EVENT_BLOCK_HASH]: { S: log.blockHash },
-			[CST.DB_EVENT_BLOCK_NO]: { N: log.blockNumber + '' },
-			[CST.DB_EVENT_TX_HASH]: { S: log.transactionHash },
-			[CST.DB_EVENT_LOG_STATUS]: { S: log.logStatus }
+			[CST.DB_EVENT_BLOCK_HASH]: { S: event.blockHash },
+			[CST.DB_EVENT_BLOCK_NO]: { N: event.blockNumber + '' },
+			[CST.DB_EVENT_TX_HASH]: { S: event.transactionHash },
+			[CST.DB_EVENT_LOG_STATUS]: { S: event.logStatus }
 		};
-		for (const key in log.eventParas)
+		for (const key in event.parameters)
 			dbInput[key] = {
-				S: log.eventParas[key]
+				S: event.parameters[key]
 			};
 		return dbInput;
 	}
@@ -139,23 +144,17 @@ class DynamoUtil {
 		if (insertStatus) await this.insertStatusData(data);
 	}
 
-	public async insertPublicEventData(contractUtil, logs) {
-		logs.forEach(logType => {
-			logType.forEach(async log => {
-				const data = await this.convertEventToDynamo(
-					contractUtil,
-					log,
-					util.getNowTimestamp()
-				);
-				const params = {
-					TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
-					Item: {
-						...data
-					}
-				};
-				await this.insertData(params);
-				util.log('one event inserted');
-			});
+	public async insertEventData(events: IEvent[]) {
+		const systime = util.getNowTimestamp();
+		events.forEach(async event => {
+			const data = this.convertEventToDynamo(event, systime);
+			const params = {
+				TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+				Item: {
+					...data
+				}
+			};
+			await this.insertData(params);
 		});
 	}
 
