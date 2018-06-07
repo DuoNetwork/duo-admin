@@ -35,11 +35,11 @@
 		]
 	},
 	"devDependencies": {
-		"@types/jest": "^22.2.3",
+		"@types/jest": "^23.0.0",
 		"@types/mysql": "^2.15.5",
 		"@types/request": "^2.47.0",
 		"@types/ws": "^5.1.1",
-		"jest": "^22.4.3",
+		"jest": "^23.1.0",
 		"ts-jest": "^22.4.6",
 		"tslint": "^5.10.0"
 	},
@@ -54,7 +54,7 @@
 		"request": "^2.87.0",
 		"stochastic": "0.0.14",
 		"ts-node": "^6.1.0",
-		"typescript": "^2.8.3",
+		"typescript": "^2.9.1",
 		"web3": "^1.0.0-beta.34",
 		"ws": "^5.2.0"
 	}

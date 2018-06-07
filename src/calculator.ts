@@ -70,7 +70,7 @@ class Calculateor {
 
 			for (let i = 0; i < weights.length; i++)
 				if (weights[i] < weightCaps[i])
-					weights[i] = weights[i] / sumOfUnCapped * (1 - sumOfCapped);
+					weights[i] = (weights[i] / sumOfUnCapped) * (1 - sumOfCapped);
 
 			// util.log(weights);
 			isValid = this.validateWeights(weights);
@@ -124,9 +124,12 @@ class Calculateor {
 				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
 		});
 
-		const exchangePriceVolume = CST.EXCHANGES.map(src =>
-			this.getExchangePriceFix(EXCHANGES_TRADES[src], currentTimestamp)
-		);
+		const exchangePriceVolume: IPrice[] = [];
+		for (let i = 0; i < CST.EXCHANGES.length; i++)
+			exchangePriceVolume[i] = this.getExchangePriceFix(
+				EXCHANGES_TRADES[CST.EXCHANGES[i]],
+				currentTimestamp
+			);
 
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
 		util.log('priceFix calculated is ' + priceFix);
@@ -203,7 +206,7 @@ class Calculateor {
 			close: lastBar.close,
 			volume: volume,
 			timestamp: timestamp
-		}
+		};
 	}
 }
 const calculator = new Calculateor();
