@@ -47,6 +47,7 @@ export interface IOption {
 	aws: boolean;
 	gcp: boolean;
 	azure: boolean;
+	force: boolean;
 	gasPrice: number;
 	gasLimit: number;
 	eth: number;

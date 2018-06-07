@@ -74,6 +74,7 @@ class Util {
 			aws: process.argv.includes('aws'),
 			gcp: process.argv.includes('gcp'),
 			azure: process.argv.includes('azure'),
+			force: process.argv.includes('force'),
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
@@ -256,6 +257,14 @@ class Util {
 	public isNumber(input: any): boolean {
 		const num = Number(input);
 		return isFinite(num) && !isNaN(num);
+	}
+
+	public isEmptyObject(obj: object | undefined | null): boolean {
+		if (!obj) return true;
+
+		for (const prop in obj) if (obj.hasOwnProperty(prop)) return false;
+
+		return true;
 	}
 }
 

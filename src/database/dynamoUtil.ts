@@ -1,5 +1,11 @@
 import AWS from 'aws-sdk';
-import { PutItemInput, QueryInput, QueryOutput } from 'aws-sdk/clients/dynamodb';
+import {
+	BatchWriteItemInput,
+	BatchWriteItemOutput,
+	PutItemInput,
+	QueryInput,
+	QueryOutput
+} from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../constants';
 import { IEvent, IPrice, IPriceBar, ITrade } from '../types';
@@ -23,6 +29,18 @@ class DynamoUtil {
 			(resolve, reject) =>
 				this.ddb
 					? this.ddb.putItem(params, err => (err ? reject(err) : resolve()))
+					: reject('dynamo db connection is not initialized')
+		);
+	}
+
+	public batchInsertData(params: BatchWriteItemInput): Promise<BatchWriteItemOutput> {
+		return new Promise(
+			(resolve, reject) =>
+				this.ddb
+					? this.ddb.batchWriteItem(
+							params,
+							(err, data) => (err ? reject(err) : resolve(data))
+					)
 					: reject('dynamo db connection is not initialized')
 		);
 	}
@@ -94,12 +112,7 @@ class DynamoUtil {
 
 	public convertEventToDynamo(event: IEvent, sysTime: number) {
 		let addr = '';
-		if (
-			event.type === CST.EVENT_ACCEPT_PRICE ||
-			event.type === CST.EVENT_COMMIT_PRICE ||
-			event.type === CST.EVENT_CREATE ||
-			event.type === CST.EVENT_REDEEM
-		)
+		if (event.type === CST.EVENT_CREATE || event.type === CST.EVENT_REDEEM)
 			addr = event.parameters['sender'];
 		else if (event.type === CST.EVENT_TRANSFER) addr = event.parameters['from'];
 		else if (event.type === CST.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
@@ -108,7 +121,7 @@ class DynamoUtil {
 				S:
 					event.type +
 					'|' +
-					moment.utc(event.timestamp * 1000).format('YYYY-MM-DD') +
+					moment.utc(event.timestamp).format('YYYY-MM-DD') +
 					(addr ? '|' + addr : '')
 			},
 			[CST.DB_EVENT_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
@@ -143,18 +156,31 @@ class DynamoUtil {
 		if (insertStatus) await this.insertStatusData(data);
 	}
 
-	public async insertEventData(events: IEvent[]) {
+	public async batchInsertEventData(events: IEvent[]) {
 		const systime = util.getNowTimestamp();
+		const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
+		const putItems: any[] = [];
 		events.forEach(async event => {
-			const data = this.convertEventToDynamo(event, systime);
-			const params = {
-				TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
-				Item: {
-					...data
+			putItems.push({
+				PutRequest: {
+					Item: {
+						...this.convertEventToDynamo(event, systime)
+					}
 				}
-			};
-			await this.insertData(params);
+			});
 		});
+
+		const params = {
+			RequestItems: {
+				[TableName]: putItems
+			}
+		};
+		// console.log(JSON.stringify(params, null, 4));
+		let data = await this.batchInsertData(params);
+		while (data.UnprocessedItems && !util.isEmptyObject(data.UnprocessedItems))
+			data = await this.batchInsertData({
+				RequestItems: data.UnprocessedItems
+			});
 	}
 
 	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {

@@ -98,16 +98,11 @@ test('insertHourlyData', async () => {
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
-test('insertEventData', async () => {
-	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
-	events.forEach(async event => {
-		await dynamoUtil.insertEventData([event]);
-	});
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	for (let i = 0; i < 2; i++)
-		expect(
-			(dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[i][0]
-		).toMatchSnapshot();
+test('batchInsertEventData', async () => {
+	dynamoUtil.batchInsertData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.batchInsertEventData(events);
+	expect((dynamoUtil.batchInsertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+	expect((dynamoUtil.batchInsertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
 test('insertHeartbeat', async () => {

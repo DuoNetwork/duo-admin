@@ -30,7 +30,6 @@ class EventUtil {
 		end: number,
 		event: string
 	): Promise<EventLog[]> {
-		util.log('from ' + start + ' to ' + end + ' eventName: ' + event);
 		return new Promise<EventLog[]>((resolve, reject) =>
 			contract.getPastEvents(
 				event,
@@ -67,8 +66,9 @@ class EventUtil {
 						await contractUtil.triggerReset();
 				}, 15000);
 			else {
-				let startBlk = Math.max(await dynamoUtil.readLastBlock(), CST.INCEPTION_BLK);
-				// let startBlk = CST.INCEPTION_BLK;
+				let startBlk = option.force
+					? CST.INCEPTION_BLK
+					: Math.max(await dynamoUtil.readLastBlock(), CST.INCEPTION_BLK);
 				util.log('starting blk number: ' + startBlk);
 				let isProcessing = false;
 				const fetch = async () => {
@@ -77,36 +77,41 @@ class EventUtil {
 					isProcessing = true;
 					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
 					while (startBlk <= currentBlk) {
-						const block = await contractUtil.web3.eth.getBlock(startBlk);
+						// const block = await contractUtil.web3.eth.getBlock(startBlk);
+						// let timestamp = block.timestamp * 1000;
 						const allEvents: IEvent[] = [];
-						const end = Math.min(startBlk + 10, currentBlk);
+						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 						const promiseList = CST.OTHER_EVENTS.map(event =>
 							this.pull(contractUtil.contract, startBlk, end, event)
 						);
 
 						const results = await Promise.all(promiseList);
-						// console.log(JSON.stringify(results, null, 4));
+						for (const result of results)
+							for (const el of result) {
+								const block = await contractUtil.web3.eth.getBlock(el.blockNumber);
+								allEvents.push(this.parseEvent(el, block.timestamp * 1000));
+							}
 
-						results.forEach(result =>
-							result.forEach(el =>
-								allEvents.push(this.parseEvent(el, block.timestamp))
-							)
+						util.log(
+							'total ' +
+								allEvents.length +
+								' events from block ' +
+								startBlk +
+								' to ' +
+								end
 						);
-
-						// console.log(JSON.stringify(allEvents));
-
-						await dynamoUtil.insertEventData(allEvents);
+						if (allEvents.length > 0) await dynamoUtil.batchInsertEventData(allEvents);
 						await dynamoUtil.insertStatusData({
-							[CST.DB_ST_BLOCK]: { N: startBlk + '' },
-							[CST.DB_ST_TS]: { N: block.timestamp * 1000 + '' },
-							[CST.DB_ST_SYSTIME]: { N: util.getNowTimestamp() + '' }
+							[CST.DB_ST_BLOCK]: { N: end + '' },
+							// [CST.DB_ST_TS]: { N: timestamp + '' },
+							[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' }
 						});
 						startBlk = end + 1;
 					}
 					isProcessing = false;
 				};
 				fetch();
-				setInterval(() => fetch(), 120000);
+				setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
 			}
 		else {
 			util.log('starting listening ' + option.event);

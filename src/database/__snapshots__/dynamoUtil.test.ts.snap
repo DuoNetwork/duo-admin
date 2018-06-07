@@ -1,5 +1,74 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`batchInsertEventData 1`] = `
+Object {
+  "RequestItems": Object {
+    "events_dev": Array [
+      Object {
+        "PutRequest": Object {
+          "Item": Object {
+            "blockHash": Object {
+              "S": "blockHash",
+            },
+            "blockNumber": Object {
+              "N": "123",
+            },
+            "eventKey": Object {
+              "S": "type|1970-01-15",
+            },
+            "logStatus": Object {
+              "S": "logStatus",
+            },
+            "systime": Object {
+              "N": "0",
+            },
+            "test": Object {
+              "S": "test",
+            },
+            "timestampId": Object {
+              "S": "1234567890|id",
+            },
+            "transactionHash": Object {
+              "S": "txHash",
+            },
+          },
+        },
+      },
+      Object {
+        "PutRequest": Object {
+          "Item": Object {
+            "blockHash": Object {
+              "S": "blockHash",
+            },
+            "blockNumber": Object {
+              "N": "123",
+            },
+            "eventKey": Object {
+              "S": "CommitPrice|1970-01-15",
+            },
+            "logStatus": Object {
+              "S": "logStatus",
+            },
+            "sender": Object {
+              "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+            },
+            "systime": Object {
+              "N": "0",
+            },
+            "timestampId": Object {
+              "S": "1234567890|id",
+            },
+            "transactionHash": Object {
+              "S": "txHash",
+            },
+          },
+        },
+      },
+    ],
+  },
+}
+`;
+
 exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
 
 exports[`convertEventToDynamo 1`] = `
@@ -11,7 +80,7 @@ Object {
     "N": "123",
   },
   "eventKey": Object {
-    "S": "type|2009-02-13",
+    "S": "type|1970-01-15",
   },
   "logStatus": Object {
     "S": "logStatus",
@@ -40,7 +109,7 @@ Object {
     "N": "123",
   },
   "eventKey": Object {
-    "S": "CommitPrice|2009-02-13|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    "S": "CommitPrice|1970-01-15",
   },
   "logStatus": Object {
     "S": "logStatus",
@@ -114,70 +183,6 @@ Object {
   "volume": Object {
     "N": "456",
   },
-}
-`;
-
-exports[`insertEventData 1`] = `
-Object {
-  "Item": Object {
-    "blockHash": Object {
-      "S": "blockHash",
-    },
-    "blockNumber": Object {
-      "N": "123",
-    },
-    "eventKey": Object {
-      "S": "type|2009-02-13",
-    },
-    "logStatus": Object {
-      "S": "logStatus",
-    },
-    "systime": Object {
-      "N": "0",
-    },
-    "test": Object {
-      "S": "test",
-    },
-    "timestampId": Object {
-      "S": "1234567890|id",
-    },
-    "transactionHash": Object {
-      "S": "txHash",
-    },
-  },
-  "TableName": "events_dev",
-}
-`;
-
-exports[`insertEventData 2`] = `
-Object {
-  "Item": Object {
-    "blockHash": Object {
-      "S": "blockHash",
-    },
-    "blockNumber": Object {
-      "N": "123",
-    },
-    "eventKey": Object {
-      "S": "CommitPrice|2009-02-13|0x00D8d0660b243452fC2f996A892D3083A903576F",
-    },
-    "logStatus": Object {
-      "S": "logStatus",
-    },
-    "sender": Object {
-      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
-    },
-    "systime": Object {
-      "N": "0",
-    },
-    "timestampId": Object {
-      "S": "1234567890|id",
-    },
-    "transactionHash": Object {
-      "S": "txHash",
-    },
-  },
-  "TableName": "events_dev",
 }
 `;
 

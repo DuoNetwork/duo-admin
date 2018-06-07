@@ -157,3 +157,5 @@ export const EXCHANGE_WEIGHTAGE_TH = {
 export const DEFAULT_GAS_PRICE = 5e9;
 export const PRE_RESET_GAS_LIMIT = 120000;
 export const RESET_GAS_LIMIT = 7880000;
+export const EVENT_FETCH_BLOCK_INTERVAL = 100;
+export const EVENT_FETCH_TIME_INVERVAL = 1200000;

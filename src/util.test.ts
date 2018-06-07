@@ -26,3 +26,13 @@ test('isNumber() return false for undefined, infinity, NaN', () => {
 	expect(util.isNumber(Infinity)).toBe(false);
 	expect(util.isNumber(NaN)).toBe(false);
 });
+
+test('{}, null, undefined is empty', () => {
+	expect(util.isEmptyObject({})).toBe(true);
+	expect(util.isEmptyObject(null)).toBe(true);
+	expect(util.isEmptyObject(undefined)).toBe(true);
+});
+
+test('{test: true} is not empty', () => {
+	expect(util.isEmptyObject({ test: true })).toBe(false);
+});
