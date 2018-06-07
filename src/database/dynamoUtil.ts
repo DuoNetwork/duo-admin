@@ -261,7 +261,10 @@ class DynamoUtil {
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
 
-		return data.Items.map(d => this.convertDynamoToTrade(d));
+		const output: ITrade[] = [];
+		for (let i = 0; i < data.Items.length; i++)
+			output[i] = this.convertDynamoToTrade(data.Items[i]);
+		return output;
 	}
 
 	public async readMinutelyData(source: string, datetimeString: string): Promise<IPriceBar[]> {
@@ -276,7 +279,10 @@ class DynamoUtil {
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
 
-		return data.Items.map(d => this.convertDynamoToPriceBar(d));
+		const output: IPriceBar[] = [];
+		for (let i = 0; i < data.Items.length; i++)
+			output[i] = this.convertDynamoToPriceBar(data.Items[i]);
+		return output;
 	}
 }
 
