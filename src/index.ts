@@ -47,7 +47,6 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
-		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'commit':
 		util.log('starting commit process');

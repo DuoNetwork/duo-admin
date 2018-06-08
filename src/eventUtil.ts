@@ -64,6 +64,8 @@ class EventUtil {
 						)
 					)
 						await contractUtil.triggerReset();
+
+					dynamoUtil.insertHeartbeat();
 				}, 15000);
 			else {
 				let startBlk = option.force
@@ -101,10 +103,8 @@ class EventUtil {
 								end
 						);
 						if (allEvents.length > 0) await dynamoUtil.batchInsertEventData(allEvents);
-						await dynamoUtil.insertStatusData({
-							[CST.DB_ST_BLOCK]: { N: end + '' },
-							// [CST.DB_ST_TS]: { N: timestamp + '' },
-							[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' }
+						await dynamoUtil.insertHeartbeat({
+							[CST.DB_ST_BLOCK]: { N: end + '' }
 						});
 						startBlk = end + 1;
 					}
@@ -143,6 +143,8 @@ class EventUtil {
 					await tg(evt);
 				}
 			});
+
+			setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		}
 	}
 }
