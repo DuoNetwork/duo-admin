@@ -14,14 +14,18 @@ class Util {
 	// 	return Number(x);
 	// }
 
-	public get(url: string): Promise<any> {
+	public get(url: string, headerOthers?: object): Promise<any> {
 		return new Promise((resolve, reject) =>
 			request(
 				{
 					url,
-					headers: {
-						'user-agent': 'node.js'
-					}
+					headers: Object.assign(
+						{
+							'user-agent': 'node.js'
+						},
+						headerOthers || {}
+
+					)
 				},
 				(error, res, body) => {
 					if (error) reject(error);

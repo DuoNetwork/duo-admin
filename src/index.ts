@@ -8,6 +8,7 @@ import sqlUtil from './database/sqlUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
 import ohlcUtil from './ohlcUtil';
+import storageUtil from './storageUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -47,6 +48,7 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
+		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'commit':
 		util.log('starting commit process');
@@ -60,6 +62,24 @@ switch (tool) {
 	case 'hourly':
 		ohlcUtil.startProcessHour();
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
+		break;
+	case 'getKey':
+		if (option.aws)
+			storageUtil.getAWSKey().then(data => {
+				const pk = JSON.parse(data.object.Parameter.Value);
+				util.log('aws pk ' + pk['privateKey']);
+			});
+		else if (option.azure)
+			storageUtil.getAZUREKey().then(data => {
+				const pk =  JSON.parse(data);
+				util.log('azure pk ' + pk['privateKey']);
+			});
+		else if (option.gcp)
+			storageUtil.getGoogleKey().then(data => {
+				const pk =  JSON.parse(data);
+				util.log('gcp pk ' + pk['privateKey']);
+			});
+
 		break;
 	case 'node':
 		util.log('starting node hear beat');

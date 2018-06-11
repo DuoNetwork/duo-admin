@@ -3,6 +3,7 @@ import { Contract } from 'web3/types';
 import calculator from './calculator';
 import * as CST from './constants';
 import sqlUtil from './database/sqlUtil';
+import storageUtil from './storageUtil';
 import { IOption, IPrice } from './types';
 import util from './util';
 
@@ -40,7 +41,24 @@ export default class ContractUtil {
 					: require('./keys/kovan/pfAws.json');
 			this.publicKey = key.publicKey;
 			this.privateKey = key.privateKey;
-		}
+		} else if (option.aws)
+			storageUtil.getAWSKey().then(data => {
+				const key = JSON.parse(data.object.Parameter.Value);
+				this.publicKey = key['"publicKey'];
+				this.privateKey = key['"privateKey'];
+			});
+		else if (option.azure)
+			storageUtil.getAZUREKey().then(data => {
+				const key =  JSON.parse(data);
+				this.publicKey = key['"publicKey'];
+				this.privateKey = key['"privateKey'];
+			});
+		else if (option.gcp)
+			storageUtil.getGoogleKey().then(data => {
+				const key =  JSON.parse(data);
+				this.publicKey = key['"publicKey'];
+				this.privateKey = key['"privateKey'];
+			});
 	}
 
 	public async read(name: string) {
@@ -154,7 +172,7 @@ export default class ContractUtil {
 	) {
 		let currentPrice: IPrice;
 		if (option.generator === 'gbm') {
-			await sqlUtil.readLastPrice();  // keep connection to sql db
+			await sqlUtil.readLastPrice(); // keep connection to sql db
 			option.price = this.generateGBMPrices(this.time, 144, this.lastPrice);
 			this.time += 1;
 			this.lastPrice = option.price;
