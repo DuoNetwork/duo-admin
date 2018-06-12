@@ -80,25 +80,30 @@ export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7Tv
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const TRANSFER_TOKEN_INTERVAL = 30; // in seconds
 export const TRANSFER_TOKEN_GAS = 120000;
-export const TRANSFER_TOKEN_GAS_TH = 20000000000000000;
+export const TRANSFER_TOKEN_GAS_TH = 0.01; // in ether
 export const SET_VALUE_GAS = 50000;
-export const SET_VALUE_GAS_PRICE = 3000000000;
+export const SET_VALUE_GAS_PRICE = 3; // in Gwei
 export const COLLECT_FEE_GAS = 40000;
-export const COLLECT_FEE_GAS_PRICE = 50000;
+export const COLLECT_FEE_GAS_PRICE = 4; // in Gwei
 export const ADD_ADDR_GAS = 40000;
-export const ADD_ADDR_GAS_PRICE = 50000;
+export const ADD_ADDR_GAS_PRICE = 5; // in Gwei
 export const REMOVE_ADDR_GAS = 40000;
-export const REMOVE_ADDR_GAS_PRICE = 50000;
+export const REMOVE_ADDR_GAS_PRICE = 5; // in Gwei
 export const UPDATE_ADDR_GAS = 40000;
-export const UPDATE_ADDR_GAS_PRICE = 50000;
+export const UPDATE_ADDR_GAS_PRICE = 5; // in Gwei
 export const TRANSFER_INTERVAL = 30; // in seconds
-export const TRANSFER_GAS_TH = 20000000000000000;
+export const TRANSFER_GAS_TH = 0.01;
 export const REDEEM_INTERVAL = 30; // in seconds
 export const REDEEM_GAS = 80000;
-export const REDEEM_GAS_TH = 5000000000000000;
+export const REDEEM_GAS_TH = 0.005;
 export const CREATE_INTERVAL = 30; // in seconds
 export const CREATE_GAS = 500000;
-export const CREATE_GAS_TH = 10000000000000000;
+export const CREATE_GAS_TH = 0.01;
+export const DEFAULT_GAS_PRICE = 5;
+export const PRE_RESET_GAS_LIMIT = 120000;
+export const RESET_GAS_LIMIT = 7880000;
+export const EVENT_FETCH_BLOCK_INTERVAL = 100;
+export const EVENT_FETCH_TIME_INVERVAL = 1200000;
 export const SYS_STATES = {
 	0: 'state',
 	1: 'navAInWei',
@@ -168,9 +173,3 @@ export const EXCHANGE_WEIGHTAGE_TH = {
 	3: [0.55, 0.45, 0.35],
 	2: [0.65, 0.5]
 };
-
-export const DEFAULT_GAS_PRICE = 5e9;
-export const PRE_RESET_GAS_LIMIT = 120000;
-export const RESET_GAS_LIMIT = 7880000;
-export const EVENT_FETCH_BLOCK_INTERVAL = 100;
-export const EVENT_FETCH_TIME_INVERVAL = 1200000;
