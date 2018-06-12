@@ -28,11 +28,11 @@ export const AWS_DYNAMO_ROLE_EVENT = 'event';
 export const AWS_DYNAMO_ROLE_STATUS = 'status';
 
 // wallet and contract
-export const DUO_CONTRACT_ADDR = '0x7f43B2Dcb3835F137bAc46DC51847a22893B5D9b';
-export const CUSTODIAN_ADDR = '0xe5B47c9B13c31aF3EcbbD06AF743bD1ef91617Ea';
-export const A_CONTRACT_ADDR = '0x58f498d914F76327017061147DdDE616C7409214';
-export const B_CONTRACT_ADDR = '0xaC12aB42E36FE1F48F514419ca13c90911BD0305';
-export const INCEPTION_BLK = 7601741;
+export const DUO_CONTRACT_ADDR = '0xd2CeAB06e482d709AFB45F845FE67d306F1b412c';
+export const CUSTODIAN_ADDR = '0xfc387c663e13C12EED4A5a39716b50c86189091C';
+export const A_CONTRACT_ADDR = '0x65DEb4996E559aCc99f2a6818040CBc351D5aFE5';
+export const B_CONTRACT_ADDR = '0x5a62975B9B2d23c16ce8AAB057B248E04510Aa32';
+export const INCEPTION_BLK = 7642265;
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
 export const EVENT_START_PRE_RESET = 'StartPreReset';
 export const EVENT_START_RESET = 'StartReset';
@@ -78,40 +78,47 @@ export const PROVIDER_MYETHER_LIVE = 'https://api.myetherapi.com/eth';
 export const PROVIDER_MYETHER_DEV = 'https://api.myetherapi.com/rop';
 export const PROVIDER_INFURA_LIVE = 'https://mainnet.infura.io/WSDscoNUvMiL1M7TvMNP';
 export const PROVIDER_INFURA_DEV = 'https://kovan.infura.io/WSDscoNUvMiL1M7TvMNP';
-export const TRANSFER_TOKEN_INTERVAL = 5; // in seconds
+export const TRANSFER_TOKEN_INTERVAL = 30; // in seconds
 export const TRANSFER_TOKEN_GAS = 120000;
 export const TRANSFER_TOKEN_GAS_TH = 20000000000000000;
-export const TRANSFER_INTERVAL = 5; // in seconds
+export const SET_VALUE_GAS = 50000;
+export const SET_VALUE_GAS_PRICE = 3000000000;
+export const TRANSFER_INTERVAL = 30; // in seconds
 export const TRANSFER_GAS_TH = 20000000000000000;
-export const REDEEM_INTERVAL = 5; // in seconds
+export const REDEEM_INTERVAL = 30; // in seconds
 export const REDEEM_GAS = 80000;
 export const REDEEM_GAS_TH = 5000000000000000;
-export const CREATE_INTERVAL = 5; // in seconds
-export const CREATE_GAS = 200000;
+export const CREATE_INTERVAL = 30; // in seconds
+export const CREATE_GAS = 500000;
 export const CREATE_GAS_TH = 10000000000000000;
 export const SYS_STATES = {
-	0: 'alphaInBP',
-	1: 'betaInWei',
-	2: 'feeAccumulatedInWei',
-	3: 'periodCouponInWei',
-	4: 'limitPeriodicInWei',
-	5: 'limitUpperInWei',
-	6: 'limitLowerInWei',
-	7: 'commissionRateInBP',
-	8: 'period',
-	9: 'iterationGasThreshold',
-	10: 'ethDuoFeeRatio',
-	11: 'preResetWaitingBlocks',
-	12: 'priceTolInBP',
-	13: 'priceFeedTolInBP',
-	14: 'priceFeedTimeTol',
-	15: 'priceUpdateCoolDown',
-	16: 'numOfPrices',
-	17: 'nextResetAddrIndex',
-	18: 'usersLength',
-	19: 'addrPoolLength',
-	20: 'lastAdminTime',
-	21: 'adminCoolDown'
+	0: 'state',
+	1: 'navAInWei',
+	2: 'navBInWei',
+	3: 'totalSupplyA',
+	4: 'totalSupplyB',
+	5: 'alphaInBP',
+	6: 'betaInWei',
+	7: 'feeAccumulatedInWei',
+	8: 'periodCouponInWei',
+	9: 'limitPeriodicInWei',
+	10: 'limitUpperInWei',
+	11: 'limitLowerInWei',
+	12: 'commissionRateInBP',
+	13: 'period',
+	14: 'iterationGasThreshold',
+	15: 'ethDuoFeeRatio',
+	16: 'preResetWaitingBlocks',
+	17: 'priceTolInBP',
+	18: 'priceFeedTolInBP',
+	19: 'priceFeedTimeTol',
+	20: 'priceUpdateCoolDown',
+	21: 'numOfPrices',
+	22: 'nextResetAddrIndex',
+	23: 'lastAdminTime',
+	24: 'adminCoolDown',
+	25: 'usersLength',
+	26: 'addrPoolLength'
 };
 
 // priceFeed

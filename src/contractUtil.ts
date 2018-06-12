@@ -49,13 +49,13 @@ export default class ContractUtil {
 			});
 		else if (option.azure)
 			storageUtil.getAZUREKey().then(data => {
-				const key =  JSON.parse(data);
+				const key = JSON.parse(data);
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];
 			});
 		else if (option.gcp)
 			storageUtil.getGoogleKey().then(data => {
-				const key =  JSON.parse(data);
+				const key = JSON.parse(data);
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];
 			});
@@ -71,9 +71,9 @@ export default class ContractUtil {
 	public async readSysStates() {
 		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
 		const sysStates: string = await this.contract.methods.getSystemStates().call();
+		for (let i = 0; i < sysStates.length; i++)
+			console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
 		return sysStates;
-		// for (let i = 0; i < sysStates.length; i++)
-		// 	console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
 	}
 
 	public async readUserBalance(option: IOption) {
@@ -442,6 +442,65 @@ export default class ContractUtil {
 		};
 		await this.web3.eth
 			.sendSignedTransaction('0x' + this.signTx(rawTx, privatekey))
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
+	}
+
+	public async setValue(
+		from: string,
+		privatekey: string,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number,
+		index: number,
+		newValue: number
+	) {
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(from) : nonce;
+		const abi = {
+			name: 'setValue',
+			type: 'function',
+			inputs: [
+				{
+					name: 'idx',
+					type: 'uint256'
+				},
+				{
+					name: 'newValue',
+					type: 'uint256'
+				}
+			]
+		};
+		const input = [index, newValue];
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				gasLimit +
+				' nonce ' +
+				nonce +
+				' index is ' +
+				index +
+				' newValue is ' +
+				newValue
+		);
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						privatekey
+					)
+			)
 			.then(receipt => util.log(receipt))
 			.catch(error => util.log(error));
 	}
