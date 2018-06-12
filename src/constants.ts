@@ -28,11 +28,11 @@ export const AWS_DYNAMO_ROLE_EVENT = 'event';
 export const AWS_DYNAMO_ROLE_STATUS = 'status';
 
 // wallet and contract
-export const DUO_CONTRACT_ADDR = '0xd2CeAB06e482d709AFB45F845FE67d306F1b412c';
-export const CUSTODIAN_ADDR = '0xfc387c663e13C12EED4A5a39716b50c86189091C';
-export const A_CONTRACT_ADDR = '0x65DEb4996E559aCc99f2a6818040CBc351D5aFE5';
-export const B_CONTRACT_ADDR = '0x5a62975B9B2d23c16ce8AAB057B248E04510Aa32';
-export const INCEPTION_BLK = 7642265;
+export const DUO_CONTRACT_ADDR = '0xc40361AB508Fc9412F571AC794a18DeC54bc1f83';
+export const CUSTODIAN_ADDR = '0x7Fb33dd305B8C9bC95FBF148024FA2837f5a99FB'; //'0x94cd7640E663F875eEF53730BA2F9B854E540b29';
+export const A_CONTRACT_ADDR = '0xc5e59F698AdB2E3dB6355Eb51A4f50C0f63DD583';
+export const B_CONTRACT_ADDR = '0x4B96b8B9A83Cd346a782C1a9C18645BeB54B0Bff';
+export const INCEPTION_BLK = 	7644185;
 export const EVENT_ACCEPT_PRICE = 'AcceptPrice';
 export const EVENT_START_PRE_RESET = 'StartPreReset';
 export const EVENT_START_RESET = 'StartReset';
@@ -65,8 +65,8 @@ export const OTHER_EVENTS = [
 export const STATE_INCEPTION = '0';
 export const STATE_TRADING = '1';
 export const STATE_PRERESET = '2';
-export const STATE_DOWN_RESET = '3';
-export const STATE_UP_RESET = '4';
+export const STATE_UP_RESET = '3';
+export const STATE_DOWN_RESET = '4';
 export const STATE_PERIOD_RESET = '5';
 export const FN_START_CONTRACT = 'startContract';
 export const FN_COMMIT_PRICE = 'commitPrice';

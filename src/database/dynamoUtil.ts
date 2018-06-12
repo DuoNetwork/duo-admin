@@ -156,32 +156,52 @@ class DynamoUtil {
 		if (insertStatus) await this.insertStatusData(data);
 	}
 
-	public async batchInsertEventData(events: IEvent[]) {
+	public async insertEventsData(events: IEvent[]) {
 		const systime = util.getNowTimestamp();
 		const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
-		const putItems: any[] = [];
-		events.forEach(async event => {
-			putItems.push({
-				PutRequest: {
-					Item: {
-						...this.convertEventToDynamo(event, systime)
-					}
+		// const putItem: any;
+
+		events.forEach( async event => {
+			const data = this.convertEventToDynamo(event, systime);
+			const params = {
+				TableName: TableName,
+				Item: {
+					...data
 				}
-			});
+			};
+
+			await this.insertData(params);
 		});
 
-		const params = {
-			RequestItems: {
-				[TableName]: putItems
-			}
-		};
-		// console.log(JSON.stringify(params, null, 4));
-		let data = await this.batchInsertData(params);
-		while (data.UnprocessedItems && !util.isEmptyObject(data.UnprocessedItems))
-			data = await this.batchInsertData({
-				RequestItems: data.UnprocessedItems
-			});
 	}
+
+	// public async batchInsertEventData(events: IEvent[]) {
+	// 	const systime = util.getNowTimestamp();
+	// 	const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
+	// 	const putItems: any[] = [];
+	// 	events.forEach(async event => {
+	// 		putItems.push({
+	// 			PutRequest: {
+	// 				Item: {
+	// 					...this.convertEventToDynamo(event, systime)
+	// 				}
+	// 			}
+	// 		});
+	// 	});
+
+	// 	const params = {
+	// 		RequestItems: {
+	// 			[TableName]: putItems
+	// 		}
+	// 	};
+	// 	console.log(JSON.stringify(params, null, 4));
+	// 	let data = await this.batchInsertData(params);
+	// 	while (data.UnprocessedItems && !util.isEmptyObject(data.UnprocessedItems) && data.UnprocessedItems.length)
+	// 		data = await this.batchInsertData({
+	// 			RequestItems: data.UnprocessedItems
+	// 		});
+	// 	console.log('done');
+	// }
 
 	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
 		return this.insertData({

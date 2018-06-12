@@ -48,7 +48,6 @@ switch (tool) {
 		break;
 	case 'subscribe':
 		eventUtil.subscribe(contractUtil, option);
-		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'commit':
 		util.log('starting commit process');
@@ -63,6 +62,15 @@ switch (tool) {
 		ohlcUtil.startProcessHour();
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
+	// case 'redeem':
+	// 	contractUtil.create(
+	// 		option.address,
+	// 		option.privateKey,
+	// 		optiongasPrice,
+	// 		gasLimit: number,
+	// 		eth: number,
+	// 		nonce: number = -1
+	// 	)
 	case 'getKey':
 		if (option.aws)
 			storageUtil.getAWSKey().then(data => {

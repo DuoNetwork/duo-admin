@@ -93,7 +93,7 @@ export default class ContractUtil {
 			return;
 		}
 		const sysStates = await this.contract.methods.getSystemStates().call();
-		const numOfUser = sysStates[18].valueOf();
+		const numOfUser = sysStates[25].valueOf();
 		let totalSupplyOfA = 0;
 		let totalSupplyOfB = 0;
 		if (numOfUser > 0)
@@ -107,15 +107,17 @@ export default class ContractUtil {
 						' ethBalance: ' +
 						this.web3.utils.fromWei(balanceOfEther + '', 'ether') +
 						' balance A: ' +
-						balanceOfA +
+						this.web3.utils.fromWei(balanceOfA + '', 'ether') +
 						' balance B: ' +
-						balanceOfB
+						this.web3.utils.fromWei(balanceOfB + '', 'ether')
 				);
 				totalSupplyOfA += Number(balanceOfA);
 				totalSupplyOfB += Number(balanceOfB);
 			}
 
-		console.log('totalSupplyOfA: ' + totalSupplyOfA + ' totalSupplyOfB: ' + totalSupplyOfB);
+		console.log(
+			'totalSupplyOfA: ' + totalSupplyOfA / 1e18 + ' totalSupplyOfB: ' + totalSupplyOfB / 1e18
+		);
 	}
 
 	public decode(input: string): string {
@@ -218,7 +220,7 @@ export default class ContractUtil {
 							name: 'bAddr',
 							type: 'address'
 						}
-				]
+				  ]
 				: [
 						{
 							name: 'priceInWei',
@@ -228,7 +230,7 @@ export default class ContractUtil {
 							name: 'timeInSecond',
 							type: 'uint256'
 						}
-				]
+				  ]
 		};
 		const command = this.generateTxString(abi, [
 			priceInWei,

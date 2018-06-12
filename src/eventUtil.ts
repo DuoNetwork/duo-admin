@@ -102,7 +102,7 @@ class EventUtil {
 								' to ' +
 								end
 						);
-						if (allEvents.length > 0) await dynamoUtil.batchInsertEventData(allEvents);
+						if (allEvents.length > 0) await dynamoUtil.insertEventsData(allEvents);
 						await dynamoUtil.insertHeartbeat({
 							[CST.DB_ST_BLOCK]: { N: end + '' }
 						});
