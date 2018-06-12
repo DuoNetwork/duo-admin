@@ -574,6 +574,225 @@ export default class ContractUtil {
 			.catch(error => util.log(error));
 	}
 
+	public async collectFee(
+		address: string,
+		privateKey: string,
+		amountInWei: number,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number = -1
+	) {
+		util.log('the account ' + address + ' privateKey is ' + privateKey);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(address) : nonce;
+		const abi = {
+			name: 'collectFee',
+			type: 'function',
+			inputs: [
+				{
+					name: 'amountInWei',
+					type: 'uint256'
+				}
+			]
+		};
+		const input = [amountInWei];
+		const command = this.generateTxString(abi, input);
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				gasLimit +
+				' nonce ' +
+				nonce +
+				' amountInWei ' +
+				amountInWei
+		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						privateKey
+					)
+			)
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
+	}
+
+	public async addAddress(
+		address: string,
+		privateKey: string,
+		addr1: string,
+		addr2: string,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number
+	) {
+		util.log('the account ' + address + ' privateKey is ' + privateKey);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(address) : nonce;
+		const abi = {
+			name: 'addAddress',
+			type: 'function',
+			inputs: [
+				{
+					name: 'addr1',
+					type: 'address'
+				},
+				{
+					name: 'addr2',
+					type: 'address'
+				}
+			]
+		};
+		const input = [addr1, addr2];
+		const command = this.generateTxString(abi, input);
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				gasLimit +
+				' nonce ' +
+				nonce +
+				' address1 ' +
+				addr1 +
+				' address2 ' +
+				addr2
+		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						privateKey
+					)
+			)
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
+	}
+
+	public async updateAddress(
+		address: string,
+		privateKey: string,
+		current: string,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number
+	) {
+		util.log('the account ' + address + ' privateKey is ' + privateKey);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(address) : nonce;
+		const abi = {
+			name: 'updateAddress',
+			type: 'function',
+			inputs: [
+				{
+					name: 'current',
+					type: 'address'
+				}
+			]
+		};
+		const input = [current];
+		const command = this.generateTxString(abi, input);
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				gasLimit +
+				' nonce ' +
+				nonce +
+				' currentAddress ' +
+				current
+		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						privateKey
+					)
+			)
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
+	}
+
+	public async removeAddress(
+		address: string,
+		privateKey: string,
+		addr: string,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number
+	) {
+		util.log('the account ' + address + ' privateKey is ' + privateKey);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(address) : nonce;
+		const abi = {
+			name: 'removeAddress',
+			type: 'function',
+			inputs: [
+				{
+					name: 'addr',
+					type: 'address'
+				}
+			]
+		};
+		const input = [addr];
+		const command = this.generateTxString(abi, input);
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		util.log(
+			'gasPrice price ' +
+				gasPrice +
+				' gasLimit is ' +
+				gasLimit +
+				' nonce ' +
+				nonce +
+				' address ' +
+				addr
+		);
+		// gasPrice = gasPrice || await web3.eth.
+		this.web3.eth
+			.sendSignedTransaction(
+				'0x' +
+					this.signTx(
+						this.createTxCommand(
+							nonce,
+							gasPrice,
+							gasLimit,
+							CST.CUSTODIAN_ADDR,
+							0,
+							command
+						),
+						privateKey
+					)
+			)
+			.then(receipt => util.log(receipt))
+			.catch(error => util.log(error));
+	}
+
 	public async trigger(abi: object, input: any[], gasPrice: number, gasLimit: number) {
 		const nonce = await this.web3.eth.getTransactionCount(this.publicKey);
 		const command = this.generateTxString(abi, input);

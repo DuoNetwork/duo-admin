@@ -83,6 +83,8 @@ class Util {
 			gasLimit: 200000,
 			eth: 0,
 			address: '',
+			addr1: '',
+			addr2: '',
 			privateKey: '',
 			price: 0,
 			source: '',
@@ -117,6 +119,12 @@ class Util {
 					break;
 				case 'address':
 					option.address = args[1] || option.address;
+					break;
+				case 'addr1':
+					option.addr1 = args[1] || option.addr1;
+					break;
+				case 'addr2':
+					option.addr2 = args[1] || option.addr2;
 					break;
 				case 'privateKey':
 					option.privateKey = args[1] || option.privateKey;

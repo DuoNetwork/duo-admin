@@ -52,6 +52,8 @@ export interface IOption {
 	gasLimit: number;
 	eth: number;
 	address: string;
+	addr1: string;
+	addr2: string;
 	privateKey: string;
 	price: number;
 	source: string;
