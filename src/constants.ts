@@ -107,7 +107,7 @@ export const DEFAULT_GAS_PRICE = 5;
 export const PRE_RESET_GAS_LIMIT = 120000;
 export const RESET_GAS_LIMIT = 7880000;
 export const EVENT_FETCH_BLOCK_INTERVAL = 100;
-export const EVENT_FETCH_TIME_INVERVAL = 1200000;
+export const EVENT_FETCH_TIME_INVERVAL = 600000;
 export const SYS_STATES = {
 	0: 'state',
 	1: 'navAInWei',
