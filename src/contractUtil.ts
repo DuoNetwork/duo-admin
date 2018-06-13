@@ -220,7 +220,7 @@ export default class ContractUtil {
 							name: 'bAddr',
 							type: 'address'
 						}
-				  ]
+				]
 				: [
 						{
 							name: 'priceInWei',
@@ -230,7 +230,7 @@ export default class ContractUtil {
 							name: 'timeInSecond',
 							type: 'uint256'
 						}
-				  ]
+				]
 		};
 		const command = this.generateTxString(abi, [
 			priceInWei,
