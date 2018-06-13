@@ -55,11 +55,11 @@ switch (tool) {
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'minutely':
-		ohlcUtil.startProcessMinute();
+		ohlcUtil.startProcessMinute(option);
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'hourly':
-		ohlcUtil.startProcessHour();
+		ohlcUtil.startProcessHour(option);
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	// case 'redeem':
