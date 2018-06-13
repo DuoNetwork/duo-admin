@@ -121,7 +121,7 @@ class DynamoUtil {
 				S:
 					event.type +
 					'|' +
-					moment.utc(event.timestamp).format('YYYY-MM-DD') +
+					moment.utc(event.timestamp).format('YYYY-MM-DD-HH') +
 					(addr ? '|' + addr : '')
 			},
 			[CST.DB_EV_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
