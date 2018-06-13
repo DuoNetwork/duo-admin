@@ -117,19 +117,19 @@ class DynamoUtil {
 		else if (event.type === CST.EVENT_TRANSFER) addr = event.parameters['from'];
 		else if (event.type === CST.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
 		const dbInput = {
-			[CST.DB_EVENT_KEY]: {
+			[CST.DB_EV_KEY]: {
 				S:
 					event.type +
 					'|' +
 					moment.utc(event.timestamp).format('YYYY-MM-DD') +
 					(addr ? '|' + addr : '')
 			},
-			[CST.DB_EVENT_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
-			[CST.DB_EVENT_SYSTIME]: { N: sysTime + '' },
-			[CST.DB_EVENT_BLOCK_HASH]: { S: event.blockHash },
-			[CST.DB_EVENT_BLOCK_NO]: { N: event.blockNumber + '' },
-			[CST.DB_EVENT_TX_HASH]: { S: event.transactionHash },
-			[CST.DB_EVENT_LOG_STATUS]: { S: event.logStatus }
+			[CST.DB_EV_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
+			[CST.DB_EV_SYSTIME]: { N: sysTime + '' },
+			[CST.DB_EV_BLOCK_HASH]: { S: event.blockHash },
+			[CST.DB_EV_BLOCK_NO]: { N: event.blockNumber + '' },
+			[CST.DB_EV_TX_HASH]: { S: event.transactionHash },
+			[CST.DB_EV_LOG_STATUS]: { S: event.logStatus }
 		};
 		for (const key in event.parameters)
 			dbInput[key] = {
