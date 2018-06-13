@@ -47,6 +47,7 @@ export const EVENT_UPDATE_ADDRESS = 'UpdateAddress';
 export const EVENT_REMOVE_ADDRESS = 'RemoveAddress';
 export const EVENT_SET_VALUE = 'SetValue';
 export const EVENT_COLLECT_FEE = 'CollectFee';
+export const EVENT_TOTAL_SUPPLY = 'TotalSupply';
 export const OTHER_EVENTS = [
 	EVENT_START_TRADING,
 	EVENT_ACCEPT_PRICE,
@@ -59,7 +60,8 @@ export const OTHER_EVENTS = [
 	EVENT_UPDATE_ADDRESS,
 	EVENT_REMOVE_ADDRESS,
 	EVENT_SET_VALUE,
-	EVENT_COLLECT_FEE
+	EVENT_COLLECT_FEE,
+	EVENT_TOTAL_SUPPLY
 ];
 
 export const STATE_INCEPTION = '0';
@@ -173,6 +175,8 @@ export const DB_EV_NAV_B = 'navBInWei';
 export const DB_EV_TOKEN_A = 'tokenAInWei';
 export const DB_EV_TOKEN_B = 'tokenBInWei';
 export const DB_EV_ETH = 'ethAmtInWei';
+export const DB_EV_TOTAL_SUPPLY_A = 'totalSupplyA';
+export const DB_EV_TOTAL_SUPPLY_B = 'totalSupplyB';
 export const DB_STATUS_EVENT_PUBLIC_OTHERS = 'EVENT_AWS_PUBLIC_OTHERS';
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH = {
