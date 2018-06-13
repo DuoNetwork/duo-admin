@@ -103,7 +103,9 @@ class Util {
 			alpha: 0.3,
 			amtA: 0,
 			amtB: 0,
-			generator: ''
+			generator: '',
+			numOfMinutes: 2,
+			numOfHours: 2
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -179,6 +181,12 @@ class Util {
 					break;
 				case 'generator':
 					option.generator = args[1] || option.generator;
+					break;
+				case 'numOfMinutes':
+					option.numOfMinutes = Number(args[1]) || option.numOfMinutes;
+					break;
+				case 'numOfHours':
+					option.numOfHours = Number(args[1]) || option.numOfHours;
 					break;
 				default:
 					break;

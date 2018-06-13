@@ -73,4 +73,6 @@ export interface IOption {
 	amtA: number;
 	amtB: number;
 	generator: string;
+	numOfMinutes: number;
+	numOfHours: number;
 }

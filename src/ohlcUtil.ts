@@ -2,10 +2,11 @@ import moment from 'moment';
 import calculator from './calculator';
 import * as CST from './constants';
 import dynamoUtil from './database/dynamoUtil';
+import { IOption } from './types';
 import util from './util';
 
 class OhlcUtil {
-	public async saveMinutelyData(numOfMinutes: number = 2) {
+	public async saveMinutelyData(numOfMinutes: number) {
 		util.log('processing minute trade data');
 		const now = moment.utc();
 		const timestamp = now.valueOf();
@@ -38,11 +39,12 @@ class OhlcUtil {
 		util.log('completed processing!');
 	}
 
-	public startProcessMinute() {
-		setInterval(() => this.saveMinutelyData(), 60000);
+	public startProcessMinute(option: IOption) {
+		const numOfMinutes = option.numOfMinutes > 2 ? option.numOfMinutes : 2;
+		setInterval(() => this.saveMinutelyData(numOfMinutes), 60000);
 	}
 
-	public async saveHourlyData(numOfHours: number = 2) {
+	public async saveHourlyData(numOfHours: number) {
 		util.log('processing hourly trade data');
 		const now = moment.utc();
 		const timestamp = now.valueOf();
@@ -74,8 +76,9 @@ class OhlcUtil {
 		util.log('completed processing!');
 	}
 
-	public startProcessHour() {
-		setInterval(() => this.saveHourlyData(), 300000);
+	public startProcessHour(option: IOption) {
+		const numOfHours: number = option.numOfHours > 2 ? option.numOfHours : 2;
+		setInterval(() => this.saveHourlyData(numOfHours), 300000);
 	}
 }
 
