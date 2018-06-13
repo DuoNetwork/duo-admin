@@ -83,7 +83,7 @@ class EventUtil {
 						// let timestamp = block.timestamp * 1000;
 						const allEvents: IEvent[] = [];
 						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
-						const promiseList = CST.OTHER_EVENTS.map(event =>
+						const promiseList = CST.EVENTS.map(event =>
 							this.pull(contractUtil.contract, startBlk, end, event)
 						);
 
