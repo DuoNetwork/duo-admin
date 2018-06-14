@@ -121,7 +121,11 @@ class DynamoUtil {
 				S:
 					event.type +
 					'|' +
-					moment.utc(event.timestamp).format('YYYY-MM-DD-HH') +
+					moment
+						.utc(event.timestamp)
+						.format(
+							event.type === CST.EVENT_TOTAL_SUPPLY ? 'YYYY-MM-HH' : 'YYYY-MM-DD'
+						) +
 					(addr ? '|' + addr : '')
 			},
 			[CST.DB_EV_TIMESTAMP_ID]: { S: event.timestamp + '|' + event.id },
@@ -161,7 +165,7 @@ class DynamoUtil {
 		const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
 		// const putItem: any;
 
-		events.forEach( async event => {
+		events.forEach(async event => {
 			const data = this.convertEventToDynamo(event, systime);
 			const params = {
 				TableName: TableName,
@@ -172,7 +176,6 @@ class DynamoUtil {
 
 			await this.insertData(params);
 		});
-
 	}
 
 	// public async batchInsertEventData(events: IEvent[]) {
