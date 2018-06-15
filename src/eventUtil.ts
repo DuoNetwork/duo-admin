@@ -126,7 +126,7 @@ class EventUtil {
 					tg = () => contractUtil.triggerPreReset();
 					if (state === CST.STATE_PRERESET) await contractUtil.triggerPreReset();
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => contractUtil.triggerReset(2);
+					tg = () => contractUtil.triggerReset();
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
