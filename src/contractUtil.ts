@@ -22,6 +22,9 @@ export default class ContractUtil {
 	public lastPrice: number = 400;
 	public publicKey: string = '';
 	public privateKey: string = '';
+	private readonly custodianAddr: string;
+	private readonly aContractAddr: string;
+	private readonly bContractAddr: string;
 
 	constructor(option: IOption) {
 		this.web3 = new Web3(
@@ -30,7 +33,10 @@ export default class ContractUtil {
 				: new Web3.providers.WebsocketProvider(option.provider)
 		);
 		this.abi = require('./static/Custodian.json');
-		this.contract = new this.web3.eth.Contract(this.abi.abi, CST.CUSTODIAN_ADDR);
+		this.custodianAddr = option.live ? CST.CUSTODIAN_ADDR_MAIN : CST.CUSTODIAN_ADDR_KOVAN;
+		this.aContractAddr = option.live ? CST.A_CONTRACT_ADDR_MAIN : CST.A_CONTRACT_ADDR_KOVAN;
+		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
+		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
 		this.gbmPrices = [];
 
 		if (!option.live) {
@@ -235,8 +241,8 @@ export default class ContractUtil {
 		const command = this.generateTxString(abi, [
 			priceInWei,
 			priceInSeconds,
-			this.web3.utils.toChecksumAddress(CST.A_CONTRACT_ADDR),
-			this.web3.utils.toChecksumAddress(CST.B_CONTRACT_ADDR)
+			this.web3.utils.toChecksumAddress(this.aContractAddr),
+			this.web3.utils.toChecksumAddress(this.bContractAddr)
 		]);
 		// sending out transaction
 		this.web3.eth
@@ -247,7 +253,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -348,7 +354,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							eth,
 							command
 						),
@@ -416,7 +422,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -496,7 +502,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -565,7 +571,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -618,7 +624,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -678,7 +684,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -731,7 +737,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -784,7 +790,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),
@@ -807,7 +813,7 @@ export default class ContractUtil {
 							nonce,
 							gasPrice,
 							gasLimit,
-							CST.CUSTODIAN_ADDR,
+							this.custodianAddr,
 							0,
 							command
 						),

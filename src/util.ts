@@ -24,7 +24,6 @@ class Util {
 							'user-agent': 'node.js'
 						},
 						headerOthers || {}
-
 					)
 				},
 				(error, res, body) => {
@@ -196,10 +195,12 @@ class Util {
 		if (!option.provider)
 			if (option.source === CST.SRC_MYETHER)
 				option.provider = option.live
-					? CST.PROVIDER_MYETHER_LIVE
-					: CST.PROVIDER_MYETHER_DEV;
+					? CST.PROVIDER_MYETHER_MAIN
+					: CST.PROVIDER_INFURA_KOVAN;
 			else if (option.source === CST.SRC_INFURA)
-				option.provider = option.live ? CST.PROVIDER_INFURA_LIVE : CST.PROVIDER_INFURA_DEV;
+				option.provider = option.live
+					? CST.PROVIDER_INFURA_MAIN
+					: CST.PROVIDER_INFURA_KOVAN;
 			else {
 				option.provider = CST.PROVIDER_LOCAL_WS;
 				option.source = '';
