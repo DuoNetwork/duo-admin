@@ -23,7 +23,7 @@ class KeyUtil {
 		const url =
 			name === 'price-feed-private'
 				? 'https://price-dev-test.vault.azure.net/secrets/price-feed-private?api-version=2016-10-01'
-				: 'https://price-dev-test.vault.azure.net/secrets/MySQL-DB-Dev/653497bb15104ba8aa0eccfa4a90b612';
+				: 'https://price-dev-test.vault.azure.net/secrets/MySQL-DB-Dev?api-version=2016-10-01';
 		const bodyKey: any = await util.get(url, { Authorization: savedAccessToken });
 
 		const responseKeyJson = JSON.parse(bodyKey);
