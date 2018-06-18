@@ -226,6 +226,7 @@ class Util {
 			case 'commit':
 			case 'node':
 			case 'getKey':
+			case 'getSqlAuth':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'subscribe':
 				return CST.AWS_DYNAMO_ROLE_EVENT;
