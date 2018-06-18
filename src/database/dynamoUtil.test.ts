@@ -1,8 +1,7 @@
-// import * as CST from '../constants';
+import sampleMinutely from '../samples/dynamoMinutely.json';
+import sampleTrades from '../samples/dynamoTrades.json';
 import util from '../util';
 import dynamoUtil from './dynamoUtil';
-const sampleTrades = require('../samples/dynamoTrades.json');
-const sampleMinutely = require('../samples/dynamoMinutely.json');
 
 const trade = {
 	source: 'src',

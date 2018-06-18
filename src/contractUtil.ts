@@ -3,6 +3,7 @@ import { Contract } from 'web3/types';
 import calculator from './calculator';
 import * as CST from './constants';
 import sqlUtil from './database/sqlUtil';
+import ETHPrices from './samples/ETHprices.json';
 import storageUtil from './storageUtil';
 import { IOption, IPrice } from './types';
 import util from './util';
@@ -11,7 +12,6 @@ const Tx = require('ethereumjs-tx');
 const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
 const stoch = require('stochastic');
-const ETHPrices = require('./samples/ETHprices.json');
 
 export default class ContractUtil {
 	public web3: Web3;

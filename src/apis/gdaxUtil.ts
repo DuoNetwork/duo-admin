@@ -7,7 +7,7 @@ import util from '../util';
 const INTERVAL_SECS = 1;
 let pushedID: number[] = [];
 export class GdaxUtil {
-	public parseTrade(trade: { [key: string]: string }): ITrade {
+	public parseTrade(trade: { [key: string]: string | number }): ITrade {
 		return {
 			source: CST.EXCHANGE_GDAX,
 			id: trade.trade_id + '',

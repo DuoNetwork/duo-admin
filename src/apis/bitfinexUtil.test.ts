@@ -1,6 +1,6 @@
 import dbUtil from '../dbUtil';
+import messages from '../samples/bitfinex.json';
 import bitfinexUtil from './bitfinexUtil';
-const messages: string[] = require('../samples/bitfinex.json');
 
 messages.forEach((msg, i) =>
 	test('parseApiResponse ' + i, async () => {
