@@ -4,7 +4,6 @@ import calculator from './calculator';
 import * as CST from './constants';
 import sqlUtil from './database/sqlUtil';
 import ETHPrices from './samples/ETHprices.json';
-import storageUtil from './storageUtil';
 import {IKey, IOption, IPrice } from './types';
 import util from './util';
 
