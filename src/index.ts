@@ -85,19 +85,9 @@ switch (tool) {
 	// 		nonce: number = -1
 	// 	)
 	case 'getKey':
-		if (option.aws)
-			keyUtil.getAwsKey(option.key).then(data => {
-				console.log(JSON.parse(data.object.Parameter.Value));
-			});
-		else if (option.azure)
-			keyUtil.getAzureKey(option.key).then(data => {
-				console.log(JSON.parse(data));
-			});
-		else if (option.gcp)
-			keyUtil.getGcpKey(option.key).then(data => {
-				console.log(JSON.parse(data));
-			});
-
+		keyUtil.getKey(option).then(data => {
+			console.log(data);
+		});
 		break;
 	case 'node':
 		util.log('starting node hear beat');
