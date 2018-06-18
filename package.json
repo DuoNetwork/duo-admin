@@ -15,7 +15,8 @@
 		"subscribe": "ts-node ./src/index subscribe",
 		"minutely": "ts-node ./src/index minutely dynamo",
 		"hourly": "ts-node ./src/index hourly dynamo",
-		"node": "ts-node ./src/index node"
+		"node": "ts-node ./src/index node",
+		"getKey": "ts-node ./src/index getKey"
 	},
 	"jest": {
 		"roots": [
