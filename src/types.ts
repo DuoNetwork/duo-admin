@@ -43,6 +43,7 @@ export interface IAccount {
 
 export interface IOption {
 	live: boolean;
+	server: boolean;
 	dynamo: boolean;
 	aws: boolean;
 	gcp: boolean;

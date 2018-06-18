@@ -39,7 +39,7 @@ export default class ContractUtil {
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
 		this.gbmPrices = [];
 
-		if (!option.live) {
+		if (!option.live && !option.server) {
 			const key = option.azure
 				? require('./keys/kovan/pfAzure.json')
 				: option.gcp
@@ -47,24 +47,24 @@ export default class ContractUtil {
 					: require('./keys/kovan/pfAws.json');
 			this.publicKey = key.publicKey;
 			this.privateKey = key.privateKey;
-		} else if (option.aws)
-			storageUtil.getAWSkey('price-feed-private').then(data => {
-				const key = JSON.parse(data.object.Parameter.Value);
-				this.publicKey = key['"publicKey'];
-				this.privateKey = key['"privateKey'];
-			});
-		else if (option.azure)
-			storageUtil.getAZUREkey('price-feed-private').then(data => {
-				const key = JSON.parse(data);
-				this.publicKey = key['"publicKey'];
-				this.privateKey = key['"privateKey'];
-			});
-		else if (option.gcp)
-			storageUtil.getGCPkey('price-feed-private').then(data => {
-				const key = JSON.parse(data);
-				this.publicKey = key['"publicKey'];
-				this.privateKey = key['"privateKey'];
-			});
+		} else {
+			let key;
+			if (option.aws)
+				storageUtil.getAWSkey('price-feed-private').then(data => {
+					key = JSON.parse(data.object.Parameter.Value);
+				});
+
+			if (option.azure)
+				storageUtil.getAZUREkey('price-feed-private').then(data => {
+					key = JSON.parse(data);
+				});
+			if (option.gcp)
+				storageUtil.getGCPkey('price-feed-private').then(data => {
+					key = JSON.parse(data);
+				});
+			this.publicKey = key['"publicKey'];
+			this.privateKey = key['"privateKey'];
+		}
 	}
 
 	public async read(name: string) {

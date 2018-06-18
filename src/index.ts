@@ -14,7 +14,14 @@ import util from './util';
 const tool = process.argv[2];
 util.log('tool ' + tool);
 const option = util.parseOptions(process.argv);
-util.log('using ' + (option.live ? 'live' : 'dev') + ' env and ' + (option.source || 'local node'));
+util.log(
+	'using ' +
+		(option.live ? 'live' : 'dev') +
+		'running on ' +
+		(option.server ? 'server' : 'local') +
+		' env and ' +
+		(option.source || 'local node')
+);
 const contractUtil = new ContractUtil(option);
 dbUtil.init(option.dynamo);
 dynamoUtil.init(
@@ -27,7 +34,12 @@ console.log(util.getStatusProcess(tool, option));
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
 	let host, user, pwd;
 	let key;
-	if (option.live) {
+	if (!option.live && !option.server) {
+		const mysqlAuthFile = require('./keys/mysql.json');
+		host = mysqlAuthFile.host;
+		user = mysqlAuthFile.user;
+		pwd = mysqlAuthFile.password;
+	} else {
 		if (option.aws)
 			storageUtil.getAWSkey('MySQL_DB_Dev').then(data => {
 				key = JSON.parse(data.object.Parameter.Value);
@@ -43,11 +55,6 @@ if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option
 		host = key['host'];
 		user = key['user'];
 		pwd = key['password'];
-	} else {
-		const mysqlAuthFile = require('./keys/mysql.json');
-		host = mysqlAuthFile.host;
-		user = mysqlAuthFile.user;
-		pwd = mysqlAuthFile.password;
 	}
 	sqlUtil.init(host, user, pwd);
 }
