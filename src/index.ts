@@ -22,7 +22,7 @@ util.log(
 		' env and ' +
 		(option.source || 'local node')
 );
-const contractUtil = new ContractUtil(option);
+
 dbUtil.init(option.dynamo);
 dynamoUtil.init(
 	option.live,
@@ -31,33 +31,10 @@ dynamoUtil.init(
 );
 console.log(util.getDynamoRole(tool, option.dynamo));
 console.log(util.getStatusProcess(tool, option));
-if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
-	let host, user, pwd;
-	let key;
-	if (!option.live && !option.server) {
-		const mysqlAuthFile = require('./keys/mysql.json');
-		host = mysqlAuthFile.host;
-		user = mysqlAuthFile.user;
-		pwd = mysqlAuthFile.password;
-	} else {
-		if (option.aws)
-			storageUtil.getAWSkey('MySQL_DB_Dev').then(data => {
-				key = JSON.parse(data.object.Parameter.Value);
-			});
-		else if (option.azure)
-			storageUtil.getAZUREkey('MySQL_DB_Dev').then(data => {
-				key = JSON.parse(data.object.Parameter.Value);
-			});
-		else
-			storageUtil.getGCPkey('MySQL_DB_Dev').then(data => {
-				key = JSON.parse(data.object.Parameter.Value);
-			});
-		host = key['host'];
-		user = key['user'];
-		pwd = key['password'];
-	}
-	sqlUtil.init(host, user, pwd);
-}
+if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo)
+	storageUtil
+		.getSqlAuth(option)
+		.then(sqlAuth => sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password));
 
 switch (tool) {
 	case 'bitfinex':
@@ -77,11 +54,17 @@ switch (tool) {
 		gdaxUtil.startFetching();
 		break;
 	case 'subscribe':
-		eventUtil.subscribe(contractUtil, option);
+		storageUtil.getKey(option).then(key => {
+			const contractUtil = new ContractUtil(option, key);
+			eventUtil.subscribe(contractUtil, option);
+		});
 		break;
 	case 'commit':
 		util.log('starting commit process');
-		contractUtil.commitPrice(option);
+		storageUtil.getKey(option).then(key => {
+			const contractUtil = new ContractUtil(option, key);
+			contractUtil.commitPrice(option);
+		});
 		setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		break;
 	case 'minutely':
@@ -118,15 +101,18 @@ switch (tool) {
 		break;
 	case 'node':
 		util.log('starting node hear beat');
-		setInterval(
-			() =>
-				contractUtil.getCurrentBlock().then(bn =>
-					dynamoUtil.insertHeartbeat({
-						block: { N: bn + '' }
-					})
-				),
-			30000
-		);
+		storageUtil.getKey(option).then(key => {
+			const contractUtil = new ContractUtil(option, key);
+			setInterval(
+				() =>
+					contractUtil.getCurrentBlock().then(bn =>
+						dynamoUtil.insertHeartbeat({
+							block: { N: bn + '' }
+						})
+					),
+				30000
+			);
+		});
 		break;
 	default:
 		util.log('no such tool ' + tool);

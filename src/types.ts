@@ -41,6 +41,17 @@ export interface IAccount {
 	privateKey: string;
 }
 
+export interface IKey {
+	publicKey: string;
+	privateKey: string;
+}
+
+export interface ISqlAuth {
+	host: string;
+	user: string;
+	password: string;
+}
+
 export interface IOption {
 	live: boolean;
 	server: boolean;

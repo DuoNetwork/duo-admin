@@ -1,6 +1,8 @@
 import { Aws } from 'aws-cli-js';
+import { IKey, IOption, ISqlAuth } from './types';
 import util from './util';
 const Storage = require('@google-cloud/storage');
+const fs = require('fs');
 
 class StorageUtil {
 	public async getAWSkey(name: string) {
@@ -43,6 +45,65 @@ class StorageUtil {
 				.then(data => resolve(data.toString('utf-8')))
 				.catch(err => reject(err));
 		});
+	}
+	public async getKey(option: IOption): Promise<IKey> {
+		if (!option.live && !option.server) {
+			const key = option.azure
+				? JSON.parse(fs.readFileSync('./keys/kovan/pfAzure.json'))
+				: option.gcp
+					? JSON.parse(fs.readFileSync('./keys/kovan/pfGcp.json'))
+					: JSON.parse(fs.readFileSync('./keys/kovan/pfAws.json'));
+			return {
+				publicKey: key.publicKey,
+				privateKey: key.privateKey
+			};
+		} else {
+			let key;
+			if (option.aws) {
+				const keyData = await this.getAWSkey('price-feed-private');
+				key = JSON.parse(keyData.object.Parameter.Value);
+			}
+			if (option.azure) {
+				const keyData = await this.getAZUREkey('price-feed-private');
+				key = JSON.parse(keyData);
+			}
+			if (option.gcp) {
+				const keyData = await this.getGCPkey('price-feed-private');
+				key = JSON.parse(keyData);
+			}
+			return {
+				publicKey: key['publicKey'],
+				privateKey: key['privateKey']
+			};
+		}
+	}
+
+	public async getSqlAuth(option: IOption): Promise<ISqlAuth> {
+		let key;
+		if (!option.live && !option.server) {
+			const mysqlAuthFile = JSON.parse(fs.readFileSync('./keys/mysql.json'));
+			return {
+				host: mysqlAuthFile.host,
+				user: mysqlAuthFile.user,
+				password: mysqlAuthFile.password
+			};
+		} else {
+			if (option.aws) {
+				const keyData = await this.getAWSkey('MySQL_DB_Dev');
+				key = JSON.parse(keyData.object.Parameter.Value);
+			} else if (option.azure) {
+				const keyData = await this.getAZUREkey('MySQL_DB_Dev');
+				key = JSON.parse(keyData);
+			} else {
+				const keyData = await this.getGCPkey('MySQL_DB_Dev');
+				key = JSON.parse(keyData);
+			}
+			return {
+				host: key['host'],
+				user: key['user'],
+				password: key['password']
+			};
+		}
 	}
 }
 

@@ -5,7 +5,7 @@ import * as CST from './constants';
 import sqlUtil from './database/sqlUtil';
 import ETHPrices from './samples/ETHprices.json';
 import storageUtil from './storageUtil';
-import { IOption, IPrice } from './types';
+import {IKey, IOption, IPrice } from './types';
 import util from './util';
 
 const Tx = require('ethereumjs-tx');
@@ -26,7 +26,7 @@ export default class ContractUtil {
 	private readonly aContractAddr: string;
 	private readonly bContractAddr: string;
 
-	constructor(option: IOption) {
+	constructor(option: IOption, key: IKey) {
 		this.web3 = new Web3(
 			option.source
 				? new Web3.providers.HttpProvider(option.provider)
@@ -38,33 +38,8 @@ export default class ContractUtil {
 		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
 		this.gbmPrices = [];
-
-		if (!option.live && !option.server) {
-			const key = option.azure
-				? require('./keys/kovan/pfAzure.json')
-				: option.gcp
-					? require('./keys/kovan/pfGcp.json')
-					: require('./keys/kovan/pfAws.json');
-			this.publicKey = key.publicKey;
-			this.privateKey = key.privateKey;
-		} else {
-			let key;
-			if (option.aws)
-				storageUtil.getAWSkey('price-feed-private').then(data => {
-					key = JSON.parse(data.object.Parameter.Value);
-				});
-
-			if (option.azure)
-				storageUtil.getAZUREkey('price-feed-private').then(data => {
-					key = JSON.parse(data);
-				});
-			if (option.gcp)
-				storageUtil.getGCPkey('price-feed-private').then(data => {
-					key = JSON.parse(data);
-				});
-			this.publicKey = key['publicKey'];
-			this.privateKey = key['"privateKey'];
-		}
+		this.publicKey = key.publicKey;
+		this.privateKey = key.privateKey;
 	}
 
 	public async read(name: string) {
