@@ -1,7 +1,7 @@
-npm run bitfinex gcp &>> bitfinex.log &
-npm run gdax gcp &>> gdax.log &
-npm run gemini gcp &>> gemini.log &
-npm run kraken gcp &>> kraken.log &
-npm run subscribe gcp event=StartPreReset source=infura &>> preReset.log &
-npm run subscribe gcp event=StartReset source=infura &>> reset.log &
-npm run commit gcp source=infura generator=preSet &>> commit.log &
+npm run bitfinex server gcp &>> bitfinex.log &
+npm run gdax gcp server &>> gdax.log &
+npm run gemini gcp server &>> gemini.log &
+npm run kraken gcp server &>> kraken.log &
+npm run subscribe server gcp event=StartPreReset source=infura &>> preReset.log &
+npm run subscribe server gcp event=StartReset source=infura &>> reset.log &
+npm run commit server gcp source=infura generator=preSet &>> commit.log &

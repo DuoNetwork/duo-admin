@@ -1,8 +1,8 @@
-npm run bitfinex aws &>> bitfinex.log &
-npm run gdax aws &>> gdax.log &
-npm run gemini aws &>> gemini.log &
-npm run kraken aws &>> kraken.log &
-npm run subscribe aws event=StartPreReset &>> preReset.log &
-npm run subscribe aws event=StartReset &>> reset.log &
-npm run commit aws generator=preSet &>> commit.log &
-npm run node aws &>> node.log &
+npm run bitfinex server aws &>> bitfinex.log &
+npm run gdax server aws &>> gdax.log &
+npm run gemini server aws &>> gemini.log &
+npm run kraken server aws &>> kraken.log &
+npm run subscribe server aws event=StartPreReset &>> preReset.log &
+npm run subscribe server aws event=StartReset &>> reset.log &
+npm run commit server aws generator=preSet &>> commit.log &
+npm run node server aws &>> node.log &

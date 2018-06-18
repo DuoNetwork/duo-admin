@@ -1,7 +1,7 @@
-npm run bitfinex dynamo &>> bitfinex.log &
-npm run gdax dynamo &>> gdax.log &
-npm run gemini dynamo &>> gemini.log &
-npm run kraken dynamo &>> kraken.log &
-npm run hourly dynamo &>> node.log &
-npm run minutely dynamo &>> node.log &
-npm run subscribe event=others source=infura dynamo &>> others.log &
+npm run bitfinex server dynamo &>> bitfinex.log &
+npm run gdax server dynamo &>> gdax.log &
+npm run gemini server dynamo &>> gemini.log &
+npm run kraken server dynamo &>> kraken.log &
+npm run hourly server dynamo &>> node.log &
+npm run minutely server dynamo &>> node.log &
+npm run subscribe server event=others source=infura dynamo &>> others.log &
