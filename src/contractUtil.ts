@@ -62,7 +62,7 @@ export default class ContractUtil {
 				storageUtil.getGCPkey('price-feed-private').then(data => {
 					key = JSON.parse(data);
 				});
-			this.publicKey = key['"publicKey'];
+			this.publicKey = key['publicKey'];
 			this.privateKey = key['"privateKey'];
 		}
 	}
