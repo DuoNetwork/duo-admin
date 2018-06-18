@@ -1,18 +1,19 @@
+import Storage from '@google-cloud/storage';
 import { Aws } from 'aws-cli-js';
+import * as fs from 'fs';
 import { IKey, IOption, ISqlAuth } from './types';
 import util from './util';
-const Storage = require('@google-cloud/storage');
-const fs = require('fs');
+//const Storage = require('@google-cloud/storage');
 
-class StorageUtil {
-	public async getAWSkey(name: string) {
+class KeyUtil {
+	public async getAwsKey(name: string) {
 		const aws = new Aws();
 		return aws.command(
 			'ssm get-parameter --name ' + name + ' --region ap-southeast-1 --with-decryption'
 		);
 	}
 
-	public async getAZUREkey(name: string) {
+	public async getAzureKey(name: string) {
 		const baseUrl =
 			'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net';
 
@@ -30,8 +31,8 @@ class StorageUtil {
 		return responseKeyJson.value;
 	}
 
-	public async getGCPkey(name: string): Promise<any> {
-		const storage = new Storage({
+	public async getGcpKey(name: string): Promise<any> {
+		const storage = Storage({
 			projectId: 'duo-network'
 		});
 
@@ -42,17 +43,17 @@ class StorageUtil {
 				.bucket(bucketName)
 				.file(fileName)
 				.download()
-				.then(data => resolve(data.toString('utf-8')))
+				.then(data => resolve(data.toString()))
 				.catch(err => reject(err));
 		});
 	}
 	public async getKey(option: IOption): Promise<IKey> {
 		if (!option.live && !option.server) {
 			const key = option.azure
-				? JSON.parse(fs.readFileSync('./keys/kovan/pfAzure.json'))
+				? JSON.parse(fs.readFileSync('./keys/kovan/pfAzure.json').toString())
 				: option.gcp
-					? JSON.parse(fs.readFileSync('./keys/kovan/pfGcp.json'))
-					: JSON.parse(fs.readFileSync('./keys/kovan/pfAws.json'));
+					? JSON.parse(fs.readFileSync('./keys/kovan/pfGcp.json').toString())
+					: JSON.parse(fs.readFileSync('./keys/kovan/pfAws.json').toString());
 			return {
 				publicKey: key.publicKey,
 				privateKey: key.privateKey
@@ -60,15 +61,15 @@ class StorageUtil {
 		} else {
 			let key;
 			if (option.aws) {
-				const keyData = await this.getAWSkey('price-feed-private');
+				const keyData = await this.getAwsKey('price-feed-private');
 				key = JSON.parse(keyData.object.Parameter.Value);
 			}
 			if (option.azure) {
-				const keyData = await this.getAZUREkey('price-feed-private');
+				const keyData = await this.getAzureKey('price-feed-private');
 				key = JSON.parse(keyData);
 			}
 			if (option.gcp) {
-				const keyData = await this.getGCPkey('price-feed-private');
+				const keyData = await this.getGcpKey('price-feed-private');
 				key = JSON.parse(keyData);
 			}
 			return {
@@ -81,7 +82,7 @@ class StorageUtil {
 	public async getSqlAuth(option: IOption): Promise<ISqlAuth> {
 		let key;
 		if (!option.live && !option.server) {
-			const mysqlAuthFile = JSON.parse(fs.readFileSync('./keys/mysql.json'));
+			const mysqlAuthFile = JSON.parse(fs.readFileSync('./keys/mysql.json').toString());
 			return {
 				host: mysqlAuthFile.host,
 				user: mysqlAuthFile.user,
@@ -89,13 +90,13 @@ class StorageUtil {
 			};
 		} else {
 			if (option.aws) {
-				const keyData = await this.getAWSkey('MySQL_DB_Dev');
+				const keyData = await this.getAwsKey('MySQL_DB_Dev');
 				key = JSON.parse(keyData.object.Parameter.Value);
 			} else if (option.azure) {
-				const keyData = await this.getAZUREkey('MySQL_DB_Dev');
+				const keyData = await this.getAzureKey('MySQL_DB_Dev');
 				key = JSON.parse(keyData);
 			} else {
-				const keyData = await this.getGCPkey('MySQL_DB_Dev');
+				const keyData = await this.getGcpKey('MySQL_DB_Dev');
 				key = JSON.parse(keyData);
 			}
 			return {
@@ -107,5 +108,5 @@ class StorageUtil {
 	}
 }
 
-const storageUtil = new StorageUtil();
-export default storageUtil;
+const keyUtil = new KeyUtil();
+export default keyUtil;

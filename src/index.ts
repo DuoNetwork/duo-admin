@@ -7,8 +7,8 @@ import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
+import keyUtil from './keyUtil';
 import ohlcUtil from './ohlcUtil';
-import storageUtil from './storageUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -32,7 +32,7 @@ dynamoUtil.init(
 console.log(util.getDynamoRole(tool, option.dynamo));
 console.log(util.getStatusProcess(tool, option));
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo)
-	storageUtil
+	keyUtil
 		.getSqlAuth(option)
 		.then(sqlAuth => sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password));
 
@@ -54,14 +54,14 @@ switch (tool) {
 		gdaxUtil.startFetching();
 		break;
 	case 'subscribe':
-		storageUtil.getKey(option).then(key => {
+		keyUtil.getKey(option).then(key => {
 			const contractUtil = new ContractUtil(option, key);
 			eventUtil.subscribe(contractUtil, option);
 		});
 		break;
 	case 'commit':
 		util.log('starting commit process');
-		storageUtil.getKey(option).then(key => {
+		keyUtil.getKey(option).then(key => {
 			const contractUtil = new ContractUtil(option, key);
 			contractUtil.commitPrice(option);
 		});
@@ -86,22 +86,22 @@ switch (tool) {
 	// 	)
 	case 'getKey':
 		if (option.aws)
-			storageUtil.getAWSkey(option.key).then(data => {
+			keyUtil.getAwsKey(option.key).then(data => {
 				console.log(JSON.parse(data.object.Parameter.Value));
 			});
 		else if (option.azure)
-			storageUtil.getAZUREkey(option.key).then(data => {
+			keyUtil.getAzureKey(option.key).then(data => {
 				console.log(JSON.parse(data));
 			});
 		else if (option.gcp)
-			storageUtil.getGCPkey(option.key).then(data => {
+			keyUtil.getGcpKey(option.key).then(data => {
 				console.log(JSON.parse(data));
 			});
 
 		break;
 	case 'node':
 		util.log('starting node hear beat');
-		storageUtil.getKey(option).then(key => {
+		keyUtil.getKey(option).then(key => {
 			const contractUtil = new ContractUtil(option, key);
 			setInterval(
 				() =>
