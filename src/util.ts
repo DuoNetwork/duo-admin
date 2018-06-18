@@ -202,11 +202,11 @@ class Util {
 			if (option.source === CST.SRC_MYETHER)
 				option.provider = option.live
 					? CST.PROVIDER_MYETHER_MAIN
-					: CST.PROVIDER_INFURA_KOVAN_LINK + '/' + INFURA_TOKEN_DEV['infuraToken'];
+					: CST.PROVIDER_INFURA_KOVAN + '/' + INFURA_TOKEN_DEV['infuraToken'];
 			else if (option.source === CST.SRC_INFURA)
 				option.provider = option.live
-					? CST.PROVIDER_INFURA_MAIN_LINK + '/' + INFURA_TOKEN_LIVE['infuraToken']
-					: CST.PROVIDER_INFURA_KOVAN_LINK + '/' + INFURA_TOKEN_DEV['infuraToken'];
+					? CST.PROVIDER_INFURA_MAIN + '/' + INFURA_TOKEN_LIVE['infuraToken']
+					: CST.PROVIDER_INFURA_KOVAN + '/' + INFURA_TOKEN_DEV['infuraToken'];
 			else {
 				option.provider = CST.PROVIDER_LOCAL_WS;
 				option.source = '';
