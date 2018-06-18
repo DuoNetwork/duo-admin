@@ -89,6 +89,11 @@ switch (tool) {
 			console.log(data);
 		});
 		break;
+	case 'getSqlAuth':
+		keyUtil.getSqlAuth(option).then(data => {
+			console.log(data);
+		});
+		break;
 	case 'node':
 		util.log('starting node hear beat');
 		keyUtil.getKey(option).then(key => {
