@@ -2,6 +2,8 @@ import moment from 'moment';
 import request from 'request';
 import * as CST from './constants';
 import { IOption } from './types';
+const INFURA_TOKEN_LIVE = require('./keys/infura/live/token.json');
+const INFURA_TOKEN_DEV = require('./keys/infura/dev/token.json');
 
 class Util {
 	public log(text: any): void {
@@ -104,7 +106,8 @@ class Util {
 			amtB: 0,
 			generator: '',
 			numOfMinutes: 2,
-			numOfHours: 2
+			numOfHours: 2,
+			key: ''
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -187,6 +190,9 @@ class Util {
 				case 'numOfHours':
 					option.numOfHours = Number(args[1]) || option.numOfHours;
 					break;
+				case 'key':
+					option.key = args[1] || option.key;
+					break;
 				default:
 					break;
 			}
@@ -196,11 +202,11 @@ class Util {
 			if (option.source === CST.SRC_MYETHER)
 				option.provider = option.live
 					? CST.PROVIDER_MYETHER_MAIN
-					: CST.PROVIDER_INFURA_KOVAN;
+					: CST.PROVIDER_INFURA_KOVAN_LINK + '/' + INFURA_TOKEN_DEV['infuraToken'];
 			else if (option.source === CST.SRC_INFURA)
 				option.provider = option.live
-					? CST.PROVIDER_INFURA_MAIN
-					: CST.PROVIDER_INFURA_KOVAN;
+					? CST.PROVIDER_INFURA_MAIN_LINK + '/' + INFURA_TOKEN_LIVE['infuraToken']
+					: CST.PROVIDER_INFURA_KOVAN_LINK + '/' + INFURA_TOKEN_DEV['infuraToken'];
 			else {
 				option.provider = CST.PROVIDER_LOCAL_WS;
 				option.source = '';

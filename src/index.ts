@@ -25,8 +25,31 @@ dynamoUtil.init(
 console.log(util.getDynamoRole(tool, option.dynamo));
 console.log(util.getStatusProcess(tool, option));
 if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
-	const mysqlAuthFile = require('./keys/mysql.json');
-	sqlUtil.init(mysqlAuthFile.host, mysqlAuthFile.user, mysqlAuthFile.password);
+	let host, user, pwd;
+	let key;
+	if (option.live) {
+		if (option.aws)
+			storageUtil.getAWSkey('MySQL_DB_Dev').then(data => {
+				key = JSON.parse(data.object.Parameter.Value);
+			});
+		else if (option.azure)
+			storageUtil.getAZUREkey('MySQL_DB_Dev').then(data => {
+				key = JSON.parse(data.object.Parameter.Value);
+			});
+		else
+			storageUtil.getGCPkey('MySQL_DB_Dev').then(data => {
+				key = JSON.parse(data.object.Parameter.Value);
+			});
+		host = key['host'];
+		user = key['user'];
+		pwd = key['password'];
+	} else {
+		const mysqlAuthFile = require('./keys/mysql.json');
+		host = mysqlAuthFile.host;
+		user = mysqlAuthFile.user;
+		pwd = mysqlAuthFile.password;
+	}
+	sqlUtil.init(host, user, pwd);
 }
 
 switch (tool) {
@@ -73,19 +96,16 @@ switch (tool) {
 	// 	)
 	case 'getKey':
 		if (option.aws)
-			storageUtil.getAWSKey().then(data => {
-				const pk = JSON.parse(data.object.Parameter.Value);
-				util.log('aws pk ' + pk['privateKey']);
+			storageUtil.getAWSkey(option.key).then(data => {
+				console.log(JSON.parse(data.object.Parameter.Value));
 			});
 		else if (option.azure)
-			storageUtil.getAZUREKey().then(data => {
-				const pk =  JSON.parse(data);
-				util.log('azure pk ' + pk['privateKey']);
+			storageUtil.getAZUREkey(option.key).then(data => {
+				console.log(JSON.parse(data));
 			});
 		else if (option.gcp)
-			storageUtil.getGoogleKey().then(data => {
-				const pk =  JSON.parse(data);
-				util.log('gcp pk ' + pk['privateKey']);
+			storageUtil.getGCPkey(option.key).then(data => {
+				console.log(JSON.parse(data));
 			});
 
 		break;

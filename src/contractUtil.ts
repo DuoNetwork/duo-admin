@@ -48,19 +48,19 @@ export default class ContractUtil {
 			this.publicKey = key.publicKey;
 			this.privateKey = key.privateKey;
 		} else if (option.aws)
-			storageUtil.getAWSKey().then(data => {
+			storageUtil.getAWSkey('price-feed-private').then(data => {
 				const key = JSON.parse(data.object.Parameter.Value);
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];
 			});
 		else if (option.azure)
-			storageUtil.getAZUREKey().then(data => {
+			storageUtil.getAZUREkey('price-feed-private').then(data => {
 				const key = JSON.parse(data);
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];
 			});
 		else if (option.gcp)
-			storageUtil.getGoogleKey().then(data => {
+			storageUtil.getGCPkey('price-feed-private').then(data => {
 				const key = JSON.parse(data);
 				this.publicKey = key['"publicKey'];
 				this.privateKey = key['"privateKey'];

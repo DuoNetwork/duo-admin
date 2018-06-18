@@ -75,4 +75,5 @@ export interface IOption {
 	generator: string;
 	numOfMinutes: number;
 	numOfHours: number;
+	key: string;
 }
