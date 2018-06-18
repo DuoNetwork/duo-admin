@@ -224,6 +224,7 @@ class Util {
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'commit':
 			case 'node':
+			case 'getKey':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'subscribe':
 				return CST.AWS_DYNAMO_ROLE_EVENT;
