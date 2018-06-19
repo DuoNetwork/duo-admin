@@ -65,11 +65,14 @@ dbUtil.init(tool, option).then(() => {
 			util.log('starting node hear beat');
 			setInterval(
 				() =>
-					contractUtil.getCurrentBlock().then(bn =>
-						dbUtil.insertHeartbeat({
-							block: { N: bn + '' }
-						})
-					),
+					contractUtil
+						.getCurrentBlock()
+						.then(bn =>
+							dbUtil.insertHeartbeat({
+								block: { N: bn + '' }
+							})
+						)
+						.catch(error => util.log(error)),
 				30000
 			);
 			break;
