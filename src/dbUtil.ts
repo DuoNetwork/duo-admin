@@ -1,12 +1,24 @@
 import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
-import { IPrice, ITrade } from './types';
+import keyUtil from './keyUtil';
+import { IOption, IPrice, ITrade } from './types';
+import util from './util';
 
 class DbUtil {
 	private dynamo: boolean = false;
 
-	public init(useDynamo: boolean) {
-		this.dynamo = useDynamo;
+	public async init(tool: string, option: IOption) {
+		this.dynamo = option.dynamo;
+		const role = util.getDynamoRole(tool, option.dynamo);
+		const process = util.getStatusProcess(tool, option);
+		util.log('role: ' + role);
+		util.log('process: ' + process);
+
+		dynamoUtil.init(option.live, role, process);
+		if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
+			const sqlAuth = await keyUtil.getSqlAuth(option);
+			sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
+		}
 	}
 
 	public insertTradeData(trade: ITrade, insertStatus: boolean) {
@@ -23,8 +35,12 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice();
 	}
 
-	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
+	public readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp);
+	}
+
+	public insertHeartbeat(data: object = {}): Promise<void> {
+		return dynamoUtil.insertHeartbeat(data);
 	}
 }
 

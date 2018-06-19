@@ -4,7 +4,7 @@ import calculator from './calculator';
 import * as CST from './constants';
 import sqlUtil from './database/sqlUtil';
 import ETHPrices from './samples/ETHprices.json';
-import {IKey, IOption, IPrice } from './types';
+import { IKey, IOption, IPrice } from './types';
 import util from './util';
 
 const Tx = require('ethereumjs-tx');
@@ -25,7 +25,7 @@ export default class ContractUtil {
 	private readonly aContractAddr: string;
 	private readonly bContractAddr: string;
 
-	constructor(option: IOption, key: IKey) {
+	constructor(option: IOption) {
 		this.web3 = new Web3(
 			option.source
 				? new Web3.providers.HttpProvider(option.provider)
@@ -37,6 +37,9 @@ export default class ContractUtil {
 		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
 		this.gbmPrices = [];
+	}
+
+	public initKey(key: IKey) {
 		this.publicKey = key.publicKey;
 		this.privateKey = key.privateKey;
 	}
