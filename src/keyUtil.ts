@@ -59,16 +59,14 @@ class KeyUtil {
 				privateKey: key.privateKey
 			};
 		} else {
-			let key;
+			let key = {};
 			if (option.aws) {
 				const keyData = await this.getAwsKey('price-feed-private');
 				key = JSON.parse(keyData.object.Parameter.Value);
-			}
-			if (option.azure) {
+			} else if (option.azure) {
 				const keyData = await this.getAzureKey('price-feed-private');
 				key = JSON.parse(keyData);
-			}
-			if (option.gcp) {
+			} else if (option.gcp) {
 				const keyData = await this.getGcpKey('price-feed-private');
 				key = JSON.parse(keyData);
 			}
