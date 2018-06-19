@@ -82,13 +82,13 @@ class KeyUtil {
 		} else {
 			let key = {};
 			if (option.aws) {
-				const keyData = await this.getAwsKey('MySQL_DB_Dev');
+				const keyData = await this.getAwsKey('MySQL-DB-Dev');
 				key = JSON.parse(keyData.object.Parameter.Value);
 			} else if (option.azure) {
-				const keyData = await this.getAzureKey('MySQL_DB_Dev');
+				const keyData = await this.getAzureKey('MySQL-DB-Dev');
 				key = JSON.parse(keyData);
 			} else if (option.gcp) {
-				const keyData = await this.getGcpKey('MySQL_DB_Dev');
+				const keyData = await this.getGcpKey('MySQL-DB-Dev');
 				key = JSON.parse(keyData);
 			}
 			return {
