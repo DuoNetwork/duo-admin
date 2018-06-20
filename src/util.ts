@@ -104,7 +104,6 @@ class Util {
 			alpha: 0.3,
 			amtA: 0,
 			amtB: 0,
-			generator: '',
 			numOfMinutes: 2,
 			numOfHours: 2,
 			key: ''
@@ -180,9 +179,6 @@ class Util {
 					break;
 				case 'index':
 					option.index = Number(args[1]) || option.index;
-					break;
-				case 'generator':
-					option.generator = args[1] || option.generator;
 					break;
 				case 'numOfMinutes':
 					option.numOfMinutes = Number(args[1]) || option.numOfMinutes;

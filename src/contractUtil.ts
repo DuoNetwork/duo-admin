@@ -2,21 +2,16 @@ import Web3 from 'web3';
 import { Contract } from 'web3/types';
 import calculator from './calculator';
 import * as CST from './constants';
-import sqlUtil from './database/sqlUtil';
-import ETHPrices from './samples/ETHprices.json';
 import { IKey, IOption, IPrice } from './types';
 import util from './util';
 
 const Tx = require('ethereumjs-tx');
-const abiDecoder = require('abi-decoder');
 const schedule = require('node-schedule');
-const stoch = require('stochastic');
 
 export default class ContractUtil {
 	public web3: Web3;
 	public abi: any;
 	public contract: Contract;
-	public gbmPrices: number[];
 	public time: number = 0;
 	public lastPrice: number = 400;
 	public publicKey: string = '';
@@ -36,7 +31,6 @@ export default class ContractUtil {
 		this.aContractAddr = option.live ? CST.A_CONTRACT_ADDR_MAIN : CST.A_CONTRACT_ADDR_KOVAN;
 		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
-		this.gbmPrices = [];
 	}
 
 	public initKey(key: IKey) {
@@ -44,70 +38,8 @@ export default class ContractUtil {
 		this.privateKey = key.privateKey;
 	}
 
-	public async read(name: string) {
-		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
-		const state: string = await this.contract.methods[name]().call();
-		console.log(state.valueOf());
-		return state;
-	}
-
-	public async readSysStates() {
-		// state, resetPrice, lastPrice, navAInWei, navBInWei, totalSupplyA, totalSupplyB
-		const sysStates: string = await this.contract.methods.getSystemStates().call();
-		for (let i = 0; i < sysStates.length; i++)
-			console.log(CST.SYS_STATES[i] + ' : ' + sysStates[i].valueOf());
-		return sysStates;
-	}
-
-	public async readUserBalance(option: IOption) {
-		if (option.address) {
-			const balanceOfEther = await this.web3.eth.getBalance(option.address);
-			const balanceOfA = await this.contract.methods.balanceOf(0, option.address).call();
-			const balanceOfB = await this.contract.methods.balanceOf(1, option.address).call();
-			console.log(
-				option.address +
-					' ethBalance: ' +
-					this.web3.utils.fromWei(balanceOfEther + '', 'ether') +
-					' balance A: ' +
-					balanceOfA +
-					' balance B: ' +
-					balanceOfB
-			);
-			return;
-		}
-		const sysStates = await this.contract.methods.getSystemStates().call();
-		const numOfUser = sysStates[25].valueOf();
-		let totalSupplyOfA = 0;
-		let totalSupplyOfB = 0;
-		if (numOfUser > 0)
-			for (let i = 0; i < numOfUser; i++) {
-				const userAddr = await this.contract.methods.users(i).call();
-				const balanceOfEther = await this.web3.eth.getBalance(userAddr);
-				const balanceOfA = await this.contract.methods.balanceOf(0, userAddr).call();
-				const balanceOfB = await this.contract.methods.balanceOf(1, userAddr).call();
-				console.log(
-					userAddr +
-						' ethBalance: ' +
-						this.web3.utils.fromWei(balanceOfEther + '', 'ether') +
-						' balance A: ' +
-						this.web3.utils.fromWei(balanceOfA + '', 'ether') +
-						' balance B: ' +
-						this.web3.utils.fromWei(balanceOfB + '', 'ether')
-				);
-				totalSupplyOfA += Number(balanceOfA);
-				totalSupplyOfB += Number(balanceOfB);
-			}
-
-		console.log(
-			'totalSupplyOfA: ' + totalSupplyOfA / 1e18 + ' totalSupplyOfB: ' + totalSupplyOfB / 1e18
-		);
-	}
-
-	public decode(input: string): string {
-		abiDecoder.addABI(this.abi.abi);
-		const output: string = abiDecoder.decodeMethod(input);
-		console.log(output);
-		return output;
+	public readSysStates() {
+		return this.contract.methods.getSystemStates().call();
 	}
 
 	public generateTxString(abi: object, input: any[]): string {
@@ -156,19 +88,6 @@ export default class ContractUtil {
 		option: IOption
 	) {
 		let currentPrice: IPrice;
-		if (option.generator === 'gbm') {
-			await sqlUtil.readLastPrice(); // keep connection to sql db
-			option.price = this.generateGBMPrices(this.time, 144, this.lastPrice);
-			this.time += 1;
-			this.lastPrice = option.price;
-		}
-
-		if (option.generator === 'preSet') {
-			await sqlUtil.readLastPrice(); // keep connection to sql db
-			option.price = this.generatePreSetPrices(this.time);
-			this.time += 1;
-			this.lastPrice = option.price;
-		}
 
 		if (option.price > 0)
 			currentPrice = {
@@ -239,28 +158,6 @@ export default class ContractUtil {
 			)
 			.then(receipt => util.log(receipt))
 			.catch(error => util.log(error));
-	}
-
-	public generateGBMPrices(time: number, length: number, s0: number): number {
-		let mu: number;
-		let sigma: number;
-		const priceIndex = time % length;
-		if (priceIndex === 0) {
-			if (Math.floor(time / length) % 2 === 0) {
-				mu = 2;
-				sigma = 1.6 + Math.random() * 0.8;
-			} else {
-				mu = -2;
-				sigma = 1.2 + Math.random() * 0.6;
-			}
-			this.gbmPrices = stoch.GBM(s0, mu, sigma, 1, length, true);
-		}
-		return this.gbmPrices[priceIndex];
-	}
-
-	public generatePreSetPrices(time: number): number {
-		const priceIndex = time % ETHPrices.length;
-		return ETHPrices[priceIndex] + ETHPrices[priceIndex] * 0.05 * Math.random();
 	}
 
 	public async commitPrice(option: IOption) {
