@@ -162,10 +162,10 @@ export default class ContractUtil {
 
 	public async commitPrice(option: IOption) {
 		const startTime = new Date();
-		const endTime = new Date(startTime.getTime() + 298000);
-		const commitStart = new Date(endTime.getTime() + 1000);
+		const endTime = new Date(startTime.getTime() + 3500000);
+		const commitStart = new Date(endTime.getTime() + 50000);
 		const rule = new schedule.RecurrenceRule();
-		rule.minute = new schedule.Range(0, 59, 5);
+		rule.hour = new schedule.Range(0, 23, 1);
 
 		const sysStates = await this.contract.methods.getSystemStates().call();
 		const isInception = Number(sysStates[0]) === 0;
