@@ -124,12 +124,9 @@ class Calculateor {
 				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
 		});
 
-		const exchangePriceVolume: IPrice[] = [];
-		for (let i = 0; i < CST.EXCHANGES.length; i++)
-			exchangePriceVolume[i] = this.getExchangePriceFix(
-				EXCHANGES_TRADES[CST.EXCHANGES[i]],
-				currentTimestamp
-			);
+		const exchangePriceVolume = CST.EXCHANGES.map(src =>
+			this.getExchangePriceFix(EXCHANGES_TRADES[src], currentTimestamp)
+		);
 
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
 		util.log('priceFix calculated is ' + priceFix);
