@@ -165,7 +165,8 @@ export default class ContractUtil {
 		const endTime = new Date(startTime.getTime() + 3500000);
 		const commitStart = new Date(endTime.getTime() + 50000);
 		const rule = new schedule.RecurrenceRule();
-		rule.hour = new schedule.Range(0, 23, 1);
+		// rule.hour = new schedule.Range(0, 23, 1);
+		rule.minute = 0;
 
 		const sysStates = await this.contract.methods.getSystemStates().call();
 		const isInception = Number(sysStates[0]) === 0;
