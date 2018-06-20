@@ -33,7 +33,7 @@ class KeyUtil {
 		});
 
 		const bucketName = 'eth-test';
-		const fileName = name === 'price-feed-private' ? 'testkey.txt' : 'MySQL_DB_Dev.txt';
+		const fileName = name + '.txt';
 		return storage
 			.bucket(bucketName)
 			.file(fileName)
