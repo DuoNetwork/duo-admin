@@ -60,10 +60,14 @@ export const DB_EV_NAV_B = 'navBInWei';
 export const DB_EV_TOKEN_A = 'tokenAInWei';
 export const DB_EV_TOKEN_B = 'tokenBInWei';
 export const DB_EV_ETH = 'ethAmtInWei';
+export const DB_EV_ETH_FEE = 'ethFeeInWei';
+export const DB_EV_DUO_FEE = 'duoFeeInWei';
 export const DB_EV_TOTAL_SUPPLY_A = 'totalSupplyA';
 export const DB_EV_TOTAL_SUPPLY_B = 'totalSupplyB';
 export const DB_EV_UI_ETH = 'eth';
 export const DB_EV_UI_AB = 'ab';
+export const DB_EV_UI_ETH_FEE = 'ethFee';
+export const DB_EV_UI_DUO_FEE = 'duoFee';
 export const DB_STATUS_EVENT_PUBLIC_OTHERS = 'EVENT_AWS_PUBLIC_OTHERS';
 
 export const AWS_DYNAMO_ROLE_TRADE = 'trade';
