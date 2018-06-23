@@ -1,3 +1,4 @@
+pkill npm
 npm run bitfinex server azure &>> bitfinex.log &
 npm run gdax server azure &>> gdax.log &
 npm run gemini server azure &>> gemini.log &

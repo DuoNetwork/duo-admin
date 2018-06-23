@@ -1,3 +1,4 @@
+pkill npm
 npm run bitfinex server gcp &>> bitfinex.log &
 npm run gdax gcp server &>> gdax.log &
 npm run gemini gcp server &>> gemini.log &
