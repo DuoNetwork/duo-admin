@@ -18,6 +18,14 @@ class SqlUtil {
 			if (err) throw err;
 			util.log('Connected!');
 		});
+
+		this.conn.on('error', (err) => {
+			if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+				util.log('ERROR: Server Disconnects. Reconnecting');
+				this.init(host, user, pwd);
+			} else
+				throw err;
+		})
 	}
 
 	public executeQuery(sqlQuery: string): Promise<any> {
