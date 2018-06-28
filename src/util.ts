@@ -220,6 +220,7 @@ class Util {
 			case 'gdax':
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'commit':
+			case 'cleanDB':
 			case 'node':
 			case 'getKey':
 			case 'getSqlAuth':

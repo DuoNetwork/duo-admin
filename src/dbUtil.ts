@@ -3,6 +3,7 @@ import sqlUtil from './database/sqlUtil';
 import keyUtil from './keyUtil';
 import { IOption, IPrice, ITrade } from './types';
 import util from './util';
+const localSQLauth = require('./keys/mysql.json');
 
 class DbUtil {
 	private dynamo: boolean = false;
@@ -18,7 +19,8 @@ class DbUtil {
 		if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
 			const sqlAuth = await keyUtil.getSqlAuth(option);
 			sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
-		}
+		} else
+			sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
 	}
 
 	public insertTradeData(trade: ITrade, insertStatus: boolean) {

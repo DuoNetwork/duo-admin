@@ -149,7 +149,7 @@ class SqlUtil {
 		await this.executeQuery(
 			'DELETE FROM ' +
 				CST.DB_SQL_TRADE +
-				' WHERE timestamp < DATEADD(day, -7, GETDATE());'
+				' WHERE timestamp < now() - interval 7 day'
 		);
 	}
 
