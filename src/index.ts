@@ -76,6 +76,9 @@ dbUtil.init(tool, option).then(() => {
 				30000
 			);
 			break;
+		case 'cleanDB':
+			dbUtil.cleanDB();
+			break;
 		default:
 			util.log('no such tool ' + tool);
 			break;

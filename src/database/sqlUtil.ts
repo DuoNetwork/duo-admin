@@ -144,6 +144,15 @@ class SqlUtil {
 			timestamp: Number(item[CST.DB_TX_TS])
 		}));
 	}
+
+	public async cleanDB(): Promise<void> {
+		await this.executeQuery(
+			'DELETE FROM ' +
+				CST.DB_SQL_TRADE +
+				' WHERE timestamp < DATEADD(day, -7, GETDATE());'
+		);
+	}
+
 }
 
 const sqlUtil = new SqlUtil();

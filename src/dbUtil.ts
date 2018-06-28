@@ -39,6 +39,10 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp);
 	}
 
+	public cleanDB(): Promise<void> {
+		return this.dynamo ? Promise.reject() : sqlUtil.cleanDB();
+	}
+
 	public insertHeartbeat(data: object = {}): Promise<void> {
 		return dynamoUtil.insertHeartbeat(data);
 	}
