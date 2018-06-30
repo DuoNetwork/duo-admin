@@ -16,7 +16,7 @@ class DbUtil {
 		util.log('process: ' + process);
 
 		dynamoUtil.init(option.live, role, process);
-		if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) {
+		if ((['bitfinex', 'gemini', 'kraken', 'gdax', 'commit'].includes(tool) && !option.dynamo) || option.server) {
 			const sqlAuth = await keyUtil.getSqlAuth(option);
 			sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
 		} else
