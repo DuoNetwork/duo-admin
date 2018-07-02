@@ -242,7 +242,7 @@ class DynamoUtil {
 				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' },
 				...data
 			}
-		});
+		}).catch((error) => util.log('Error insert heartbeat: ' + error));
 	}
 
 	public insertStatusData(data: object): Promise<void> {
@@ -254,7 +254,7 @@ class DynamoUtil {
 				},
 				...data
 			}
-		});
+		}).catch((error) => util.log('Error insert status: ' + error));
 	}
 
 	public async readLastBlock(): Promise<number> {
