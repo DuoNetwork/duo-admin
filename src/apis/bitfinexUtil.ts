@@ -4,6 +4,7 @@ import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
+let last: number = 0;
 export class BitfinexUtil {
 	public parseTrade(trade: number[]): ITrade {
 		return {
@@ -22,13 +23,19 @@ export class BitfinexUtil {
 			if (Array.isArray(data))
 				data.forEach(trade => {
 					const parsedTrade = this.parseTrade(trade);
-					dbUtil.insertTradeData(parsedTrade, true);
+					if (parsedTrade.timestamp - last >= 1000) {
+						last = parsedTrade.timestamp;
+						dbUtil.insertTradeData(parsedTrade, true);
+					} else dbUtil.insertTradeData(parsedTrade, false);
 					util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
 				});
 			else if (data === 'hb') util.log(CST.EXCHANGE_BITFINEX + ': trade channel heartbeat');
 			else if (data === 'tu') {
 				const parsedTrade = this.parseTrade(parsedJson.slice(3));
-				dbUtil.insertTradeData(parsedTrade, true);
+				if (parsedTrade.timestamp - last >= 1000) {
+					last = parsedTrade.timestamp;
+					dbUtil.insertTradeData(parsedTrade, true);
+				} else dbUtil.insertTradeData(parsedTrade, false);
 				util.log(CST.EXCHANGE_BITFINEX + ': record inserted ' + parsedTrade.id);
 			} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);
 		} else util.log(CST.EXCHANGE_BITFINEX + ': ' + msg);

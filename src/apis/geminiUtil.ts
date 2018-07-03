@@ -4,6 +4,7 @@ import dbUtil from '../dbUtil';
 import { ITrade } from '../types';
 import util from '../util';
 
+let last: number = 0;
 export class GeminiUtil {
 	public parseTrade(parsedJson: any): ITrade {
 		const timestampms = parsedJson.timestampms || '';
@@ -27,7 +28,11 @@ export class GeminiUtil {
 			const parsedTrade: ITrade = this.parseTrade(parsedJson);
 
 			// no timestamp returned by exchange so we leave empty there.
-			dbUtil.insertTradeData(parsedTrade, true);
+			if (parsedTrade.timestamp - last >= 1000) {
+				last = parsedTrade.timestamp;
+				dbUtil.insertTradeData(parsedTrade, true);
+			} else dbUtil.insertTradeData(parsedTrade, false);
+
 			util.log(CST.EXCHANGE_GEMINI + ': trade fetched and inserted ' + parsedTrade.id);
 		}
 	}
