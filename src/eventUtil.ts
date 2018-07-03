@@ -10,11 +10,11 @@ class EventUtil {
 		const returnValue = eventLog.returnValues;
 		const output: IEvent = {
 			type: eventLog.event,
-			id: eventLog['id'],
+			id: (eventLog as any)['id'],
 			blockHash: eventLog.blockHash,
 			blockNumber: eventLog.blockNumber,
 			transactionHash: eventLog.transactionHash,
-			logStatus: eventLog['type'],
+			logStatus: (eventLog as any)['type'],
 			parameters: {},
 			timestamp: timestamp
 		};
