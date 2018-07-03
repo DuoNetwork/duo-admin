@@ -8,7 +8,7 @@ const INTERVAL_SECS = 2;
 let last = 0; // last = id to be used as since when polling for new trade data
 
 export class KrakenUtil {
-	public parseTrade(trade: object): ITrade {
+	public parseTrade(trade: Array<string|number>): ITrade {
 		const exchangeReturnedTimestamp = Math.floor(Number(trade[2]) * 1000);
 		return {
 			source: CST.EXCHANGE_KRAKEN,
@@ -23,7 +23,7 @@ export class KrakenUtil {
 		const jsonObj = JSON.parse(response);
 		let insertStatus: boolean = true;
 
-		const returnFirstLevelArray = jsonObj.result.XETHZUSD;
+		const returnFirstLevelArray: Array<Array<string|number>> = jsonObj.result.XETHZUSD;
 		// util.log(url);
 		let count = 0;
 		returnFirstLevelArray.forEach(trade => {

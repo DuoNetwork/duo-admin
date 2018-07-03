@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 import {
+	AttributeMap,
 	BatchWriteItemInput,
 	BatchWriteItemOutput,
 	PutItemInput,
@@ -64,10 +65,10 @@ class DynamoUtil {
 		};
 	}
 
-	public convertDynamoToTrade(data: object): ITrade {
+	public convertDynamoToTrade(data: AttributeMap): ITrade {
 		return {
-			source: data[CST.DB_TX_SRC_DHM].S.split('|')[0],
-			id: data[CST.DB_TX_ID].S,
+			source: (data[CST.DB_TX_SRC_DHM].S || '').split('|')[0],
+			id: data[CST.DB_TX_ID].S || '',
 			price: Number(data[CST.DB_TX_PRICE].N),
 			amount: Number(data[CST.DB_TX_AMOUNT].N),
 			timestamp: Number(data[CST.DB_TX_TS].N)
@@ -93,14 +94,14 @@ class DynamoUtil {
 		};
 	}
 
-	public convertDynamoToPriceBar(data: object, isMinutely: boolean = true): IPriceBar {
-		const sourceDatetime = data[isMinutely ? CST.DB_MN_SRC_DATE_HOUR : CST.DB_HR_SRC_DATE].S;
+	public convertDynamoToPriceBar(data: AttributeMap): IPriceBar {
+		const sourceDatetime = data[CST.DB_MN_SRC_DATE_HOUR].S || '';
 		const [source, datetime] = sourceDatetime.split('|');
 		return {
 			source: source,
 			date: datetime.substring(0, 10),
-			hour: isMinutely ? datetime.substring(11, 13) : data[CST.DB_HR_HOUR].N,
-			minute: isMinutely ? Number(data[CST.DB_MN_MINUTE].N) : 0,
+			hour: datetime.substring(11, 13),
+			minute: Number(data[CST.DB_MN_MINUTE].N),
 			open: Number(data[CST.DB_OHLC_OPEN].N),
 			high: Number(data[CST.DB_OHLC_HIGH].N),
 			low: Number(data[CST.DB_OHLC_LOW].N),
@@ -116,7 +117,7 @@ class DynamoUtil {
 			addr = event.parameters['sender'];
 		else if (event.type === CST.EVENT_TRANSFER) addr = event.parameters['from'];
 		else if (event.type === CST.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
-		const dbInput = {
+		const dbInput: AttributeMap = {
 			[CST.DB_EV_KEY]: {
 				S:
 					event.type +
@@ -242,7 +243,7 @@ class DynamoUtil {
 				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' },
 				...data
 			}
-		}).catch((error) => util.log('Error insert heartbeat: ' + error));
+		}).catch(error => util.log('Error insert heartbeat: ' + error));
 	}
 
 	public insertStatusData(data: object): Promise<void> {
@@ -254,7 +255,7 @@ class DynamoUtil {
 				},
 				...data
 			}
-		}).catch((error) => util.log('Error insert status: ' + error));
+		}).catch(error => util.log('Error insert status: ' + error));
 	}
 
 	public async readLastBlock(): Promise<number> {

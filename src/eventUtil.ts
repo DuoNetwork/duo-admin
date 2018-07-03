@@ -8,7 +8,7 @@ import util from './util';
 class EventUtil {
 	public parseEvent(eventLog: EventLog, timestamp: number): IEvent {
 		const returnValue = eventLog.returnValues;
-		const output = {
+		const output: IEvent = {
 			type: eventLog.event,
 			id: eventLog['id'],
 			blockHash: eventLog.blockHash,

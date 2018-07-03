@@ -124,7 +124,7 @@ class SqlUtil {
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
-		const res: object[] = await this.executeQuery(
+		const res: Array<{[key: string]: string}> = await this.executeQuery(
 			'SELECT * FROM ' +
 				CST.DB_SQL_TRADE +
 				' WHERE ' +

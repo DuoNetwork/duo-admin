@@ -1,5 +1,6 @@
 import sampleMinutely from '../samples/dynamoMinutely.json';
 import sampleTrades from '../samples/dynamoTrades.json';
+import { IEvent } from '../types';
 import util from '../util';
 import dynamoUtil from './dynamoUtil';
 
@@ -24,7 +25,7 @@ const priceBar = {
 	timestamp: 1234567890
 };
 
-const events = [
+const events: IEvent[] = [
 	{
 		type: 'type',
 		id: 'id',

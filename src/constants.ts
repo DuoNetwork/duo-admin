@@ -193,7 +193,7 @@ export const SYS_STATES = {
 };
 
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
-export const EXCHANGE_WEIGHTAGE_TH = {
+export const EXCHANGE_WEIGHTAGE_TH: {[index: number]: number[]} = {
 	4: [0.35, 0.3, 0.25, 0.2],
 	3: [0.55, 0.45, 0.35],
 	2: [0.65, 0.5]

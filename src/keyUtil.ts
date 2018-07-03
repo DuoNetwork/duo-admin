@@ -53,7 +53,7 @@ class KeyUtil {
 				privateKey: key.privateKey
 			};
 		} else {
-			let key = {};
+			let key: {[k: string]: string} = {};
 			if (option.aws) {
 				const keyData = await this.getAwsKey('price-feed-private');
 				key = JSON.parse(keyData.object.Parameter.Value);
@@ -80,7 +80,7 @@ class KeyUtil {
 				password: mysqlAuthFile.password
 			};
 		} else {
-			let key = {};
+			let key: {[k: string]: string} = {};
 			if (option.aws) {
 				const keyData = await this.getAwsKey('MySQL-DB-Dev');
 				key = JSON.parse(keyData.object.Parameter.Value);

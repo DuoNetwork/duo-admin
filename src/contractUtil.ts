@@ -705,12 +705,11 @@ export default class ContractUtil {
 			type: 'function',
 			inputs: []
 		};
-		const input = [];
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.RESET_GAS_LIMIT);
 		const promiseList: Array<Promise<void>> = [];
 		for (let i = 0; i < count; i++)
-			promiseList.push(this.trigger(abi, input, gasPrice, CST.RESET_GAS_LIMIT));
+			promiseList.push(this.trigger(abi, [], gasPrice, CST.RESET_GAS_LIMIT));
 
 		await Promise.all(promiseList);
 	}
@@ -721,10 +720,9 @@ export default class ContractUtil {
 			type: 'function',
 			inputs: []
 		};
-		const input = [];
 		const gasPrice = (await this.getGasPrice()) || CST.DEFAULT_GAS_PRICE;
 		util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.PRE_RESET_GAS_LIMIT);
-		await this.trigger(abi, input, gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
+		await this.trigger(abi, [], gasPrice, CST.PRE_RESET_GAS_LIMIT); // 120000 for lastOne; 30000 for else
 	}
 
 	public getCurrentBlock() {

@@ -32,7 +32,7 @@ export interface IEvent {
 	blockNumber: number;
 	transactionHash: string;
 	logStatus: string;
-	parameters: object;
+	parameters: {[key: string]: string};
 	timestamp: number;
 }
 
