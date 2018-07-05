@@ -87,4 +87,5 @@ export interface IOption {
 	numOfMinutes: number;
 	numOfHours: number;
 	key: string;
+	endBlk: number;
 }

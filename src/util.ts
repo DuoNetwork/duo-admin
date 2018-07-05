@@ -106,7 +106,8 @@ class Util {
 			amtB: 0,
 			numOfMinutes: 2,
 			numOfHours: 2,
-			key: ''
+			key: '',
+			endBlk: 0,
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -188,6 +189,9 @@ class Util {
 					break;
 				case 'key':
 					option.key = args[1] || option.key;
+					break;
+				case 'endBlk':
+					option.endBlk = Number(args[1]) || option.endBlk;
 					break;
 				default:
 					break;
