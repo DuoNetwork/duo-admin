@@ -17,6 +17,7 @@ export default class ContractUtil {
 	public publicKey: string = '';
 	public privateKey: string = '';
 	private readonly custodianAddr: string;
+	private readonly duoAddr: string;
 	private readonly aContractAddr: string;
 	private readonly bContractAddr: string;
 
@@ -28,6 +29,7 @@ export default class ContractUtil {
 		);
 		this.abi = require('./static/Custodian.json');
 		this.custodianAddr = option.live ? CST.CUSTODIAN_ADDR_MAIN : CST.CUSTODIAN_ADDR_KOVAN;
+		this.duoAddr = option.live ? CST.DUO_CONTRACT_ADDR_MAIN : CST.DUO_CONTRACT_ADDR_KOVAN;
 		this.aContractAddr = option.live ? CST.A_CONTRACT_ADDR_MAIN : CST.A_CONTRACT_ADDR_KOVAN;
 		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
@@ -455,6 +457,61 @@ export default class ContractUtil {
 			)
 			.then(receipt => util.log(receipt))
 			.catch(error => util.log(error));
+	}
+
+	public async transferDuoToken(
+		address: string,
+		privateKey: string,
+		to: string,
+		value: number,
+		gasPrice: number,
+		gasLimit: number,
+		nonce: number = -1
+	): Promise<any> {
+		address = address || this.publicKey;
+		privateKey = privateKey || this.privateKey;
+		console.log(
+			'the account ' +
+				address +
+				' privateKey is ' +
+				privateKey +
+				' transfering DUO token to ' +
+				to +
+				' with amt ' +
+				value
+		);
+		nonce = nonce === -1 ? await this.web3.eth.getTransactionCount(address) : nonce;
+		const abi = {
+			name: 'transfer',
+			type: 'function',
+			inputs: [
+				{
+					name: 'to',
+					type: 'address'
+				},
+				{
+					name: 'value',
+					type: 'uint256'
+				}
+			]
+		};
+		const input = [to, value];
+		const command = this.generateTxString(abi, input);
+		// sending out transaction
+		gasPrice = (await this.getGasPrice()) || gasPrice;
+		// gasPrice = gasPrice || await web3.eth.
+		return new Promise((resolve, reject) => {
+			return this.web3.eth
+				.sendSignedTransaction(
+					'0x' +
+						this.signTx(
+							this.createTxCommand(nonce, gasPrice, gasLimit, this.duoAddr, 0, command),
+							privateKey
+						)
+				)
+				.then(receipt => resolve(receipt))
+				.catch(error => reject(error))
+		});
 	}
 
 	public async collectFee(
