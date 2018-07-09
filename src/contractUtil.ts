@@ -124,7 +124,7 @@ export default class ContractUtil {
 							name: 'bAddr',
 							type: 'address'
 						}
-				]
+				  ]
 				: [
 						{
 							name: 'priceInWei',
@@ -134,7 +134,7 @@ export default class ContractUtil {
 							name: 'timeInSecond',
 							type: 'uint256'
 						}
-				]
+				  ]
 		};
 		const command = this.generateTxString(abi, [
 			priceInWei,
@@ -495,22 +495,29 @@ export default class ContractUtil {
 				}
 			]
 		};
-		const input = [to, value];
+		const input = [to, this.web3.utils.toWei(value + '', 'ether')];
 		const command = this.generateTxString(abi, input);
 		// sending out transaction
-		gasPrice = (await this.getGasPrice()) || gasPrice;
+		gasPrice = (await this.getGasPrice()) * 2 || gasPrice;
 		// gasPrice = gasPrice || await web3.eth.
 		return new Promise((resolve, reject) => {
 			return this.web3.eth
 				.sendSignedTransaction(
 					'0x' +
 						this.signTx(
-							this.createTxCommand(nonce, gasPrice, gasLimit, this.duoAddr, 0, command),
+							this.createTxCommand(
+								nonce,
+								gasPrice,
+								gasLimit,
+								this.duoAddr,
+								0,
+								command
+							),
 							privateKey
 						)
 				)
 				.then(receipt => resolve(receipt))
-				.catch(error => reject(error))
+				.catch(error => reject(error));
 		});
 	}
 
