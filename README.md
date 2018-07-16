@@ -1,5 +1,5 @@
 # Introduction
-Supporting process and utilities for DUO Network Systems.
+Supporting process and utilities for DUO Network modules.
 
 ## Price Fetch
 Fetch live trades from Bitfinex, GDAX, Gemini and Kraken.
