@@ -14,7 +14,7 @@ Trigger smart contract state transition based on events emitted from smart contr
 Subscribe to state changing events from smart contract and store into database for UI and other usage.
 
 # How to run test
-clone the depository and install all dependencies 
+clone the depository and install all dependencies     
 
 ```
 npm install
