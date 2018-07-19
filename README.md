@@ -2,7 +2,7 @@
 Supporting process and utilities for DUO Network modules.
 
 ## Price Fetch
-Fetch live trades from Bitfinex, GDAX, Gemini and Kraken.
+Fetch live trades from Bitfinex,  GDAX, Gemini and Kraken.
 
 ## Price Commit
 Commit aggregated traded price to smart contract.
