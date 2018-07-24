@@ -124,7 +124,7 @@ export default class ContractUtil {
 							name: 'bAddr',
 							type: 'address'
 						}
-				  ]
+				]
 				: [
 						{
 							name: 'priceInWei',
@@ -134,7 +134,7 @@ export default class ContractUtil {
 							name: 'timeInSecond',
 							type: 'uint256'
 						}
-				  ]
+				]
 		};
 		const command = this.generateTxString(abi, [
 			priceInWei,
@@ -327,8 +327,7 @@ export default class ContractUtil {
 		};
 		await this.web3.eth
 			.sendSignedTransaction('0x' + this.signTx(rawTx, privatekey))
-			.then(receipt => util.log(receipt))
-			.catch(error => util.log(error));
+			.then(receipt => util.log(JSON.stringify(receipt, null, 4)));
 	}
 
 	public async setValue(
