@@ -162,35 +162,6 @@ export const PRE_RESET_GAS_LIMIT = 120000;
 export const RESET_GAS_LIMIT = 7880000;
 export const EVENT_FETCH_BLOCK_INTERVAL = 100;
 export const EVENT_FETCH_TIME_INVERVAL = 600000;
-export const SYS_STATES = {
-	0: 'state',
-	1: 'navAInWei',
-	2: 'navBInWei',
-	3: 'totalSupplyA',
-	4: 'totalSupplyB',
-	5: 'alphaInBP',
-	6: 'betaInWei',
-	7: 'feeAccumulatedInWei',
-	8: 'periodCouponInWei',
-	9: 'limitPeriodicInWei',
-	10: 'limitUpperInWei',
-	11: 'limitLowerInWei',
-	12: 'commissionRateInBP',
-	13: 'period',
-	14: 'iterationGasThreshold',
-	15: 'ethDuoFeeRatio',
-	16: 'preResetWaitingBlocks',
-	17: 'priceTolInBP',
-	18: 'priceFeedTolInBP',
-	19: 'priceFeedTimeTol',
-	20: 'priceUpdateCoolDown',
-	21: 'numOfPrices',
-	22: 'nextResetAddrIndex',
-	23: 'lastAdminTime',
-	24: 'adminCoolDown',
-	25: 'usersLength',
-	26: 'addrPoolLength'
-};
 
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH: {[index: number]: number[]} = {
