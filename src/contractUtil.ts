@@ -16,6 +16,7 @@ export default class ContractUtil {
 	public lastPrice: number = 400;
 	public publicKey: string = '';
 	public privateKey: string = '';
+	public readonly inceptionBlk: number = 0;
 	private readonly custodianAddr: string;
 	private readonly duoAddr: string;
 	private readonly aContractAddr: string;
@@ -32,6 +33,7 @@ export default class ContractUtil {
 		this.duoAddr = option.live ? CST.DUO_CONTRACT_ADDR_MAIN : CST.DUO_CONTRACT_ADDR_KOVAN;
 		this.aContractAddr = option.live ? CST.A_CONTRACT_ADDR_MAIN : CST.A_CONTRACT_ADDR_KOVAN;
 		this.bContractAddr = option.live ? CST.B_CONTRACT_ADDR_MAIN : CST.B_CONTRACT_ADDR_KOVAN;
+		this.inceptionBlk = option.live ? CST.INCEPTION_BLK_MAIN : CST.INCEPTION_BLK_KOVAN;
 		this.contract = new this.web3.eth.Contract(this.abi.abi, this.custodianAddr);
 	}
 

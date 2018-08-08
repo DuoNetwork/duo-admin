@@ -69,8 +69,8 @@ class EventUtil {
 				}, 15000);
 			else {
 				let startBlk = option.force
-					? CST.INCEPTION_BLK
-					: Math.max(await dynamoUtil.readLastBlock(), CST.INCEPTION_BLK);
+					? contractUtil.inceptionBlk
+					: Math.max(await dynamoUtil.readLastBlock(), contractUtil.inceptionBlk);
 				util.log('starting blk number: ' + startBlk);
 				let isProcessing = false;
 				const fetch = async () => {
