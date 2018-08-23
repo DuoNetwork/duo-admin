@@ -160,7 +160,7 @@ export const CREATE_GAS = 160000;
 export const CREATE_GAS_TH = 0.01;
 export const DEFAULT_GAS_PRICE = 5;
 export const PRE_RESET_GAS_LIMIT = 120000;
-export const RESET_GAS_LIMIT = 7880000;
+export const RESET_GAS_LIMIT = 4000000;
 export const EVENT_FETCH_BLOCK_INTERVAL = 100;
 export const EVENT_FETCH_TIME_INVERVAL = 600000;
 
