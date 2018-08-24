@@ -54,6 +54,7 @@ export interface ISqlAuth {
 
 export interface IOption {
 	live: boolean;
+	dbLive: boolean;
 	server: boolean;
 	dynamo: boolean;
 	aws: boolean;

@@ -74,6 +74,7 @@ class Util {
 	public parseOptions(argv: string[]): IOption {
 		const option = {
 			live: process.argv.includes('live'),
+			dbLive: process.argv.includes('dbLive'),
 			server: process.argv.includes('server'),
 			dynamo: process.argv.includes('dynamo'),
 			aws: process.argv.includes('aws'),
