@@ -116,7 +116,7 @@ class SqlUtil {
 					price: Number(res[0][CST.DB_HISTORY_PRICE]),
 					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
 					volume: Number(res[0][CST.DB_HISTORY_VOLUME])
-			}
+			  }
 			: { price: 0, timestamp: 0, volume: 0 };
 	}
 
@@ -146,7 +146,9 @@ class SqlUtil {
 
 	public async cleanDB(): Promise<void> {
 		const queryString =
-			'DELETE FROM ' + CST.DB_SQL_TRADE + ' WHERE timestamp < now() - interval 7 day';
+			'DELETE FROM ' +
+			CST.DB_SQL_TRADE +
+			' WHERE timestamp <  DELETE FROM eth_trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
 		util.log(queryString);
 		await this.executeQuery(queryString);
 	}
