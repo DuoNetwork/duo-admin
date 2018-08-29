@@ -148,7 +148,7 @@ class SqlUtil {
 		const queryString =
 			'DELETE FROM ' +
 			CST.DB_SQL_TRADE +
-			' WHERE timestamp <  DELETE FROM eth_trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
+			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
 		util.log(queryString);
 		await this.executeQuery(queryString);
 	}
