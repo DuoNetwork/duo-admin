@@ -19,13 +19,12 @@ class SqlUtil {
 			util.log('Connected!');
 		});
 
-		this.conn.on('error', (err) => {
+		this.conn.on('error', err => {
 			if (err.code === 'PROTOCOL_CONNECTION_LOST') {
 				util.log('ERROR: Server Disconnects. Reconnecting');
 				this.init(host, user, pwd);
-			} else
-				throw err;
-		})
+			} else throw err;
+		});
 	}
 
 	public executeQuery(sqlQuery: string): Promise<any> {
@@ -124,7 +123,7 @@ class SqlUtil {
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
-		const res: Array<{[key: string]: string}> = await this.executeQuery(
+		const res: Array<{ [key: string]: string }> = await this.executeQuery(
 			'SELECT * FROM ' +
 				CST.DB_SQL_TRADE +
 				' WHERE ' +
@@ -146,13 +145,11 @@ class SqlUtil {
 	}
 
 	public async cleanDB(): Promise<void> {
-		await this.executeQuery(
-			'DELETE FROM ' +
-				CST.DB_SQL_TRADE +
-				' WHERE timestamp < now() - interval 7 day'
-		);
+		const queryString =
+			'DELETE FROM ' + CST.DB_SQL_TRADE + ' WHERE timestamp < now() - interval 7 day';
+		util.log(queryString);
+		await this.executeQuery(queryString);
 	}
-
 }
 
 const sqlUtil = new SqlUtil();
