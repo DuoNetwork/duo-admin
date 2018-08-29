@@ -6,3 +6,4 @@ npm run kraken server azure &>> kraken.log &
 npm run subscribe server azure event=StartPreReset source=infura &>> preReset.log &
 npm run subscribe server azure event=StartReset source=infura &>> reset.log &
 npm run commit server azure source=infura &>> commit.log &
+npm run cleanDB server azure &>> cleanDB.log &

@@ -78,6 +78,8 @@ dbUtil.init(tool, option).then(() => {
 			break;
 		case 'cleanDB':
 			dbUtil.cleanDB();
+			setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
+			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		default:
 			util.log('no such tool ' + tool);
