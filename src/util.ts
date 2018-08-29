@@ -266,6 +266,9 @@ class Util {
 			case 'commit':
 				type = 'FEED';
 				break;
+			case 'cleanDB':
+				type = 'CLEANDB';
+				break;
 			case 'hourly':
 				type = 'HOURLY';
 				break;
