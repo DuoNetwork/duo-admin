@@ -1,12 +1,12 @@
+import ContractUtil from '../../duo-contract-util/src/ContractUtil';
 import bitfinexUtil from './apis/bitfinexUtil';
 import gdaxUtil from './apis/gdaxUtil';
 import geminiUtil from './apis/geminiUtil';
 import krakenUtil from './apis/krakenUtil';
-import ContractUtil from './contractUtil';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
 import keyUtil from './keyUtil';
-import ohlcUtil from './ohlcUtil';
+import priceUtil from './priceUtil';
 import util from './util';
 
 const tool = process.argv[2];
@@ -20,7 +20,7 @@ util.log(
 		' env and ' +
 		(option.source || 'local node')
 );
-const contractUtil = new ContractUtil(option);
+const contractUtil = new ContractUtil(option.source, option.provider, option.live);
 dbUtil.init(tool, option).then(() => {
 	switch (tool) {
 		case 'bitfinex':
@@ -41,24 +41,22 @@ dbUtil.init(tool, option).then(() => {
 			break;
 		case 'subscribe':
 			keyUtil.getKey(option).then(key => {
-				contractUtil.initKey(key);
-				eventUtil.subscribe(contractUtil, option);
+				eventUtil.subscribe(key.publicKey, key.privateKey, contractUtil, option);
 			});
 			break;
 		case 'commit':
 			util.log('starting commit process');
 			keyUtil.getKey(option).then(key => {
-				contractUtil.initKey(key);
-				contractUtil.commitPrice(option);
+				priceUtil.startCommitPrices(key.publicKey, key.privateKey, contractUtil, option);
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		case 'minutely':
-			ohlcUtil.startProcessMinute(option);
+			priceUtil.startProcessMinutelyPrices(option);
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		case 'hourly':
-			ohlcUtil.startProcessHour(option);
+			priceUtil.startProcessHourlyPrices(option);
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		case 'node':

@@ -1,4 +1,4 @@
-import Storage from '@google-cloud/storage';
+import { Storage } from '@google-cloud/storage';
 import { Aws } from 'aws-cli-js';
 import { IKey, IOption, ISqlAuth } from './types';
 import util from './util';
@@ -28,17 +28,16 @@ class KeyUtil {
 	}
 
 	public async getGcpKey(name: string): Promise<string> {
-		const storage = Storage({
+		const storage = new Storage({
 			projectId: 'duo-network'
 		});
 
 		const bucketName = 'eth-test';
 		const fileName = name + '.txt';
-		return storage
+		return (storage
 			.bucket(bucketName)
 			.file(fileName)
-			.download()
-			.then(data => data.toString());
+			.download() as any).then((data: any) => data.toString());
 	}
 
 	public async getKey(option: IOption): Promise<IKey> {
@@ -53,7 +52,7 @@ class KeyUtil {
 				privateKey: key.privateKey
 			};
 		} else {
-			let key: {[k: string]: string} = {};
+			let key: { [k: string]: string } = {};
 			if (option.aws) {
 				const keyData = await this.getAwsKey('price-feed-private');
 				key = JSON.parse(keyData.object.Parameter.Value);
@@ -80,7 +79,7 @@ class KeyUtil {
 				password: mysqlAuthFile.password
 			};
 		} else {
-			let key: {[k: string]: string} = {};
+			let key: { [k: string]: string } = {};
 			if (option.aws) {
 				const keyData = await this.getAwsKey('MySQL-DB-Dev');
 				key = JSON.parse(keyData.object.Parameter.Value);

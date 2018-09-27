@@ -1,51 +1,16 @@
-import { Contract, EventLog } from 'web3/types';
+import ContractUtil from '../../duo-contract-util/src/contractUtil';
 import * as CST from './constants';
-import ContractUtil from './contractUtil';
 import dynamoUtil from './database/dynamoUtil';
 import { IEvent, IOption } from './types';
 import util from './util';
 
 class EventUtil {
-	public parseEvent(eventLog: EventLog, timestamp: number): IEvent {
-		const returnValue = eventLog.returnValues;
-		const output: IEvent = {
-			type: eventLog.event,
-			id: (eventLog as any)['id'],
-			blockHash: eventLog.blockHash,
-			blockNumber: eventLog.blockNumber,
-			transactionHash: eventLog.transactionHash,
-			logStatus: (eventLog as any)['type'],
-			parameters: {},
-			timestamp: timestamp
-		};
-		for (const key in returnValue)
-			if (!util.isNumber(key)) output.parameters[key] = returnValue[key];
-
-		return output;
-	}
-
-	public async pull(
-		contract: Contract,
-		start: number,
-		end: number,
-		event: string
-	): Promise<EventLog[]> {
-		return new Promise<EventLog[]>((resolve, reject) =>
-			contract.getPastEvents(
-				event,
-				{
-					fromBlock: start,
-					toBlock: end
-				},
-				(error, events) => {
-					if (error) reject(error);
-					else resolve(events);
-				}
-			)
-		);
-	}
-
-	public async subscribe(contractUtil: ContractUtil, option: IOption) {
+	public async subscribe(
+		address: string,
+		privateKey: string,
+		contractUtil: ContractUtil,
+		option: IOption
+	) {
 		util.log('subscribing to ' + option.event);
 
 		if (option.source)
@@ -56,14 +21,14 @@ class EventUtil {
 					util.log('current state is ' + state);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.STATE_PRERESET)
-						await contractUtil.triggerPreReset();
+						await contractUtil.triggerPreReset(address, privateKey);
 					else if (
 						option.event === CST.EVENT_START_RESET &&
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
 					)
-						await contractUtil.triggerReset();
+						await contractUtil.triggerReset(address, privateKey);
 
 					dynamoUtil.insertHeartbeat();
 				}, 15000);
@@ -84,14 +49,14 @@ class EventUtil {
 						const allEvents: IEvent[] = [];
 						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 						const promiseList = CST.EVENTS.map(event =>
-							this.pull(contractUtil.contract, startBlk, end, event)
+							contractUtil.pullEvents(contractUtil.contract, startBlk, end, event)
 						);
 
 						const results = await Promise.all(promiseList);
 						for (const result of results)
 							for (const el of result) {
 								const block = await contractUtil.web3.eth.getBlock(el.blockNumber);
-								allEvents.push(this.parseEvent(el, block.timestamp * 1000));
+								allEvents.push(contractUtil.parseEvent(el, block.timestamp * 1000));
 							}
 
 						util.log(
@@ -123,16 +88,17 @@ class EventUtil {
 				util.log('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
-					tg = () => contractUtil.triggerPreReset();
-					if (state === CST.STATE_PRERESET) await contractUtil.triggerPreReset();
+					tg = () => contractUtil.triggerPreReset(address, privateKey);
+					if (state === CST.STATE_PRERESET)
+						await contractUtil.triggerPreReset(address, privateKey);
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => contractUtil.triggerReset();
+					tg = () => contractUtil.triggerReset(address, privateKey);
 					if (
 						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
 							state
 						)
 					)
-						await contractUtil.triggerReset();
+						await contractUtil.triggerReset(address, privateKey);
 				}
 			} else return Promise.resolve();
 

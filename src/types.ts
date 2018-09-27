@@ -1,3 +1,5 @@
+export * from '../../duo-contract-util/src/types';
+
 export interface ITrade {
 	source: string;
 	id: string;
@@ -22,17 +24,6 @@ export interface IPriceBar {
 	low: number;
 	close: number;
 	volume: number;
-	timestamp: number;
-}
-
-export interface IEvent {
-	type: string;
-	id: string;
-	blockHash: string;
-	blockNumber: number;
-	transactionHash: string;
-	logStatus: string;
-	parameters: {[key: string]: string};
 	timestamp: number;
 }
 

@@ -36,21 +36,6 @@ class Util {
 		);
 	}
 
-	public generateRandomIdx(max: number, alpha: number): number[] {
-		const output: number[] = [];
-		if (alpha === 1) for (let i = 0; i < max; i++) output.push(i);
-		else {
-			const num = Math.floor(max * alpha);
-
-			while (output.length < num) {
-				const item = Math.floor(Math.random() * max);
-				if (output.indexOf(item) < 0) output.push(item);
-			}
-		}
-
-		return output;
-	}
-
 	public postJson(url: string, json: object): Promise<object> {
 		return new Promise((resolve, reject) =>
 			request(
