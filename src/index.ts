@@ -20,7 +20,7 @@ util.log(
 		' env and ' +
 		(option.source || 'local node')
 );
-const contractUtil = new ContractUtil(option.source, option.provider, option.live);
+const contractUtil = new ContractUtil(null, option.source, option.provider, option.live);
 dbUtil.init(tool, option).then(() => {
 	switch (tool) {
 		case 'bitfinex':

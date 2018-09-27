@@ -21,8 +21,8 @@ class PriceUtil {
 		// rule.hour = new schedule.Range(0, 23, 1);
 		rule.minute = 0;
 
-		const sysStates = await contractUtil.contract.methods.getSystemStates().call();
-		const isInception = Number(sysStates[0]) === 0;
+		const sysStates = await contractUtil.getCustodianStates();
+		const isInception = sysStates.state === CST.CTD_INCEPTION;
 
 		if (isInception)
 			// contract is in inception state; start contract first and then commit price

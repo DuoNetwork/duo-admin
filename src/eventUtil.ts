@@ -16,15 +16,15 @@ class EventUtil {
 		if (option.source)
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event))
 				setInterval(async () => {
-					const sysState = await contractUtil.readSysStates();
-					const state = sysState[0];
+					const sysState = await contractUtil.getCustodianStates();
+					const state = sysState.state;
 					util.log('current state is ' + state);
 
-					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.STATE_PRERESET)
+					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
 						await contractUtil.triggerPreReset(address, privateKey);
 					else if (
 						option.event === CST.EVENT_START_RESET &&
-						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
+						[CST.CTD_UP_RESET, CST.CTD_DOWN_RESET, CST.CTD_PERIOD_RESET].includes(
 							state
 						)
 					)
@@ -49,7 +49,7 @@ class EventUtil {
 						const allEvents: IEvent[] = [];
 						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 						const promiseList = CST.EVENTS.map(event =>
-							contractUtil.pullEvents(contractUtil.contract, startBlk, end, event)
+							contractUtil.pullEvents(contractUtil.custodian, startBlk, end, event)
 						);
 
 						const results = await Promise.all(promiseList);
@@ -80,21 +80,21 @@ class EventUtil {
 			}
 		else {
 			util.log('starting listening ' + option.event);
-			let tg: (r: any) => Promise<void> = () => Promise.resolve();
+			let tg: (r: any) => Promise<any> = () => Promise.resolve();
 
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
-				const sysState = await contractUtil.readSysStates();
-				const state = sysState[0];
+				const sysState = await contractUtil.getCustodianStates();
+				const state = sysState.state;
 				util.log('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
 					tg = () => contractUtil.triggerPreReset(address, privateKey);
-					if (state === CST.STATE_PRERESET)
+					if (state === CST.CTD_PRERESET)
 						await contractUtil.triggerPreReset(address, privateKey);
 				} else if (option.event === CST.EVENT_START_RESET) {
 					tg = () => contractUtil.triggerReset(address, privateKey);
 					if (
-						[CST.STATE_UP_RESET, CST.STATE_DOWN_RESET, CST.STATE_PERIOD_RESET].includes(
+						[CST.CTD_UP_RESET, CST.CTD_DOWN_RESET, CST.CTD_PERIOD_RESET].includes(
 							state
 						)
 					)
@@ -102,7 +102,7 @@ class EventUtil {
 				}
 			} else return Promise.resolve();
 
-			contractUtil.contract.events[option.event]({}, async (error, evt) => {
+			contractUtil.custodian.events[option.event]({}, async (error, evt) => {
 				if (error) util.log(error);
 				else {
 					console.log(evt);
