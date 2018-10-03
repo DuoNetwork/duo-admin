@@ -58,6 +58,8 @@ class DynamoUtil {
 	public convertTradeToDynamo(trade: ITrade, systime: number) {
 		return {
 			[CST.DB_TX_ID]: { S: trade.id },
+			[CST.DB_TX_QTE]: { S: trade.quote },
+			[CST.DB_TX_BASE]: { S: trade.base },
 			[CST.DB_TX_PRICE]: { N: trade.price.toString() },
 			[CST.DB_TX_AMOUNT]: { N: trade.amount.toString() },
 			[CST.DB_TX_TS]: { N: trade.timestamp + '' },

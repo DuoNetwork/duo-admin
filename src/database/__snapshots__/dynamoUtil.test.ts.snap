@@ -88,11 +88,17 @@ Object {
   "amount": Object {
     "N": "456",
   },
+  "base": Object {
+    "S": "base",
+  },
   "id": Object {
     "S": "id",
   },
   "price": Object {
     "N": "123",
+  },
+  "quote": Object {
+    "S": "quote",
   },
   "systime": Object {
     "N": "123",
@@ -277,11 +283,17 @@ Object {
     "amount": Object {
       "N": "456",
     },
+    "base": Object {
+      "S": "base",
+    },
     "id": Object {
       "S": "id",
     },
     "price": Object {
       "N": "123",
+    },
+    "quote": Object {
+      "S": "quote",
     },
     "sourceDateHourMinute": Object {
       "S": "src|1970-01-15-06-56",
@@ -303,6 +315,9 @@ Object {
     "amount": Object {
       "N": "456",
     },
+    "base": Object {
+      "S": "base",
+    },
     "id": Object {
       "S": "id",
     },
@@ -311,6 +326,9 @@ Object {
     },
     "process": Object {
       "S": "UNKNOWN",
+    },
+    "quote": Object {
+      "S": "quote",
     },
     "systime": Object {
       "N": "0",
