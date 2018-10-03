@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchTradesREST spot 1`] = `
+Array [
+  Array [
+    "https://api.gemini.com/v1/trades/ethusd",
+  ],
+]
+`;
+
+exports[`fetchTradesREST spot 2`] = `
+Array [
+  Array [
+    Object {
+      "amount": 3.6,
+      "base": "USD",
+      "id": "4604490046",
+      "price": 219.67,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534540083,
+    },
+    true,
+  ],
+  Array [
+    Object {
+      "amount": 5,
+      "base": "USD",
+      "id": "4604489352",
+      "price": 220.2,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534524044,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 5,
+      "base": "USD",
+      "id": "4604489350",
+      "price": 220.12,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534524044,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 2.24919294,
+      "base": "USD",
+      "id": "4604488275",
+      "price": 220.09,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534480174,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 2.24940705,
+      "base": "USD",
+      "id": "4604486711",
+      "price": 220.08,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534457488,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.1351302,
+      "base": "USD",
+      "id": "4604477051",
+      "price": 219.81,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534344173,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.55,
+      "base": "USD",
+      "id": "4604471712",
+      "price": 219.31,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534290035,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 7.03960834,
+      "base": "USD",
+      "id": "4604449559",
+      "price": 220.15,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534073273,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 39.226,
+      "base": "USD",
+      "id": "4604449557",
+      "price": 220.08,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534073273,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 5,
+      "base": "USD",
+      "id": "4604449555",
+      "price": 219.88,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1538534073273,
+    },
+    false,
+  ],
+]
+`;
+
+exports[`handleWSTradeMessage spot 1`] = `
+Array [
+  Array [
+    Object {
+      "amount": 0.97,
+      "base": "USD",
+      "id": "4236821242",
+      "price": 219.88,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1533550482737,
+    },
+    true,
+  ],
+]
+`;

@@ -18,6 +18,7 @@
         "comment-format": false,
         "semicolon":false,
         "member-ordering": false,
-        "curly": [true, "as-needed"]
+        "curly": [true, "as-needed"],
+        "forin": false
     }
 }

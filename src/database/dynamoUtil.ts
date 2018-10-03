@@ -67,6 +67,8 @@ class DynamoUtil {
 
 	public convertDynamoToTrade(data: AttributeMap): ITrade {
 		return {
+			base: data[CST.DB_TX_BASE].S || '',
+			quote: data[CST.DB_TX_QTE].S || '',
 			source: (data[CST.DB_TX_SRC_DHM].S || '').split('|')[0],
 			id: data[CST.DB_TX_ID].S || '',
 			price: Number(data[CST.DB_TX_PRICE].N),
@@ -198,13 +200,13 @@ class DynamoUtil {
 	// 			[TableName]: putItems
 	// 		}
 	// 	};
-	// 	console.log(JSON.stringify(params, null, 4));
+	// 	console.logInfo(JSON.stringify(params, null, 4));
 	// 	let data = await this.batchInsertData(params);
 	// 	while (data.UnprocessedItems && !util.isEmptyObject(data.UnprocessedItems) && data.UnprocessedItems.length)
 	// 		data = await this.batchInsertData({
 	// 			RequestItems: data.UnprocessedItems
 	// 		});
-	// 	console.log('done');
+	// 	console.logInfo('done');
 	// }
 
 	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
@@ -243,7 +245,7 @@ class DynamoUtil {
 				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' },
 				...data
 			}
-		}).catch(error => util.log('Error insert heartbeat: ' + error));
+		}).catch(error => util.logInfo('Error insert heartbeat: ' + error));
 	}
 
 	public insertStatusData(data: object): Promise<void> {
@@ -255,7 +257,7 @@ class DynamoUtil {
 				},
 				...data
 			}
-		}).catch(error => util.log('Error insert status: ' + error));
+		}).catch(error => util.logInfo('Error insert status: ' + error));
 	}
 
 	public async readLastBlock(): Promise<number> {
@@ -269,7 +271,7 @@ class DynamoUtil {
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return 0;
-		// console.log(JSON.stringify(data, null, 4));
+		// console.logInfo(JSON.stringify(data, null, 4));
 		return Number(data.Items[0].block.N);
 	}
 

@@ -1,6 +1,8 @@
 export * from '../../duo-contract-util/src/types';
 
 export interface ITrade {
+	base: string;
+	quote: string;
 	source: string;
 	id: string;
 	price: number;
@@ -32,6 +34,13 @@ export interface IAccount {
 	privateKey: string;
 }
 
+export interface IBaseMarketData {
+	source: string;
+	base: string;
+	quote: string;
+	timestamp: number;
+}
+
 export interface IKey {
 	publicKey: string;
 	privateKey: string;
@@ -44,6 +53,11 @@ export interface ISqlAuth {
 }
 
 export interface IOption {
+	forceREST: boolean;
+	pair: string;
+	sources: string[];
+	exSources: string[];
+	assets: string[];
 	live: boolean;
 	dbLive: boolean;
 	server: boolean;
@@ -80,4 +94,93 @@ export interface IOption {
 	numOfHours: number;
 	key: string;
 	endBlk: number;
+}
+
+export interface ISourceSettings {
+	priceInversed: boolean;
+	quoteInversed: boolean;
+	separator: string;
+	isLowercase: boolean;
+	tradesInterval: number;
+	supportWS: boolean;
+	filterByTimestamp: boolean;
+	wsLink: string;
+}
+
+export interface IsourceAssetInfo {
+	base: {
+		[code: string]: boolean;
+	};
+	quote: {
+		[code: string]: boolean;
+	};
+	mapping: string;
+	name: string;
+}
+export interface ISource {
+	assets: {
+		[code: string]: IsourceAssetInfo;
+	};
+	settings: ISourceSettings;
+}
+
+export interface IBitfinexRawTradeWS {
+	timestamp: number;
+	seq: string;
+	id: number;
+	price: string;
+	amount: string;
+}
+
+export interface IBitfinexRawTradeRest {
+	timestamp: number;
+	tid: number;
+	price: string;
+	amount: string;
+	exchange: string;
+	type: string;
+}
+
+export interface IBitfinexRawTradeRest {
+	timestamp: number;
+	tid: number;
+	price: string;
+	amount: string;
+	exchange: string;
+	type: string;
+}
+
+export interface IGeminiTradeRest {
+	timestamp: number;
+	timestampms: number;
+	tid: number;
+	price: string;
+	amount: string;
+	exchange: string;
+	type: string;
+}
+
+export interface IGeminiTradeWs {
+	type: string;
+	eventid: number;
+	socket_sequence: number;
+	timestamp: number;
+	timestampms: number;
+	events: IGeminiTradeData[];
+}
+
+export interface IGeminiTradeData {
+	type: string;
+	tid: number;
+	price: string;
+	amount: string;
+	makerSide: string;
+}
+
+export type IKrakenRawTrade = IKrakenRawTradeEntry & {
+	last: string;
+};
+
+export interface IKrakenRawTradeEntry {
+	[pair: string]: string[][];
 }

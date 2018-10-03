@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchTradesREST spot 1`] = `
+Array [
+  Array [
+    "https://api.kraken.com/0/public/Trades?pair=ETHUSD",
+  ],
+]
+`;
+
+exports[`fetchTradesREST spot 2`] = `
+Array [
+  Array [
+    Object {
+      "amount": 0.0839,
+      "base": "USD",
+      "id": "15335151284756",
+      "price": 219.8835,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533515128475,
+    },
+    true,
+  ],
+  Array [
+    Object {
+      "amount": 1.31402601,
+      "base": "USD",
+      "id": "15335147744719",
+      "price": 219.12,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514774472,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.03243559,
+      "base": "USD",
+      "id": "15335147744656",
+      "price": 219.66,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514774465,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.0815328,
+      "base": "USD",
+      "id": "15335146199905",
+      "price": 219.88,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514619990,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.33962667,
+      "base": "USD",
+      "id": "15335145925313",
+      "price": 219.88,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514592531,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.00107193,
+      "base": "USD",
+      "id": "15335144787304",
+      "price": 219.5,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514478730,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.74665183,
+      "base": "USD",
+      "id": "15335144787284",
+      "price": 219.99,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514478728,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.21727624,
+      "base": "USD",
+      "id": "15335144787232",
+      "price": 219.88,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1533514478723,
+    },
+    false,
+  ],
+]
+`;

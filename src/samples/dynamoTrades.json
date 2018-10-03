@@ -6,6 +6,8 @@
 			"price": { "N": "573" },
 			"id": { "S": "35260767" },
 			"sourceDateHourMinute": { "S": "GDAX|2018-06-01-05-54" },
+			"base": { "S": "USD" },
+			"quote": { "S": "ETH" },
 			"timestamp": { "N": "1527832447254" }
 		},
 		{
@@ -13,6 +15,8 @@
 			"systime": { "N": "1527832858061" },
 			"price": { "N": "572.99" },
 			"id": { "S": "35260768" },
+			"base": { "S": "USD" },
+			"quote": { "S": "ETH" },
 			"sourceDateHourMinute": { "S": "GDAX|2018-06-01-05-54" },
 			"timestamp": { "N": "1527832455335" }
 		},
@@ -21,6 +25,8 @@
 			"systime": { "N": "1527832858060" },
 			"price": { "N": "573" },
 			"id": { "S": "35260769" },
+			"base": { "S": "USD" },
+			"quote": { "S": "ETH" },
 			"sourceDateHourMinute": { "S": "GDAX|2018-06-01-05-54" },
 			"timestamp": { "N": "1527832458221" }
 		},
@@ -29,6 +35,8 @@
 			"systime": { "N": "1527832858060" },
 			"price": { "N": "573" },
 			"id": { "S": "35260770" },
+			"base": { "S": "USD" },
+			"quote": { "S": "ETH" },
 			"sourceDateHourMinute": { "S": "GDAX|2018-06-01-05-54" },
 			"timestamp": { "N": "1527832490925" }
 		}

@@ -12,6 +12,8 @@ test('insertTradeData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getNowTimestamp = jest.fn(() => 0);
 	await sqlUtil.insertTradeData({
+		quote: 'quote',
+		base: 'base',
 		source: 'src',
 		id: 'id',
 		price: 123,

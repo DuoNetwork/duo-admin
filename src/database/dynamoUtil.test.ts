@@ -5,6 +5,8 @@ import util from '../util';
 import dynamoUtil from './dynamoUtil';
 
 const trade = {
+	quote: 'quote',
+	base: 'base',
 	source: 'src',
 	id: 'id',
 	price: 123,

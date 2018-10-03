@@ -72,7 +72,7 @@ class Calculateor {
 				if (weights[i] < weightCaps[i])
 					weights[i] = (weights[i] / sumOfUnCapped) * (1 - sumOfCapped);
 
-			// util.log(weights);
+			// util.logInfo(weights);
 			isValid = this.validateWeights(weights);
 		}
 		return weights;
@@ -92,7 +92,7 @@ class Calculateor {
 			// let finalArray: number[] = [];
 			return filterredExchanges[0].price;
 		else {
-			util.log('there are ' + filterredExchanges.length + ' valid exchanges');
+			util.logInfo('there are ' + filterredExchanges.length + ' valid exchanges');
 			const totalVol = volumeList.reduce((a, b) => a + b, 0);
 			const weights = volumeList.map(v => v / totalVol);
 			const finalWeights: number[] = this.modifyWeights(weights);
@@ -129,23 +129,23 @@ class Calculateor {
 		);
 
 		const priceFix: number = this.consolidatePriceFix(exchangePriceVolume);
-		util.log('priceFix calculated is ' + priceFix);
+		util.logInfo('priceFix calculated is ' + priceFix);
 
 		if (priceFix === 0) {
-			util.log('no priceFix found, use the last ETH price');
+			util.logInfo('no priceFix found, use the last ETH price');
 			const lastPriceObj = await dbUtil.readLastPrice();
-			util.log(
+			util.logInfo(
 				'the priceFix is: ' + lastPriceObj.price + ' at timestamp ' + lastPriceObj.timestamp
 			);
 			return lastPriceObj;
 		} else {
-			// util.log(exchangePriceVolume);
+			// util.logInfo(exchangePriceVolume);
 			const priceObj = {
 				price: priceFix,
 				volume: exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0),
 				timestamp: currentTimestamp
 			};
-			util.log(
+			util.logInfo(
 				'valid exchange priceFix found: ' +
 					priceObj.price +
 					' at ' +

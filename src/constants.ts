@@ -1,15 +1,23 @@
 export * from '../../duo-contract-util/src/constants';
-
-export const EXCHANGE_BITFINEX = 'BITFINEX';
-export const EXCHANGE_GEMINI = 'GEMINI';
-export const EXCHANGE_KRAKEN = 'KRAKEN';
-export const EXCHANGE_GDAX = 'GDAX';
+export const TRADES = 'trades';
+export const COMMIT = 'commit';
+export const SUBSCRIBE = 'subscribe';
+export const MINUTELY = 'minutely';
+export const HOURLY = 'hourly';
+export const NODE = 'node';
+export const CLEAN_DB = 'cleanDB';
+export const EXCHANGE_BITFINEX = 'bitfinex';
+export const EXCHANGE_GEMINI = 'gemini';
+export const EXCHANGE_KRAKEN = 'kraken';
+export const EXCHANGE_GDAX = 'gdax';
 
 export const AWS_DYNAMO_API_VERSION = '2012-10-08';
 // db setting
 export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
-export const DB_SQL_TRADE = 'eth_trades';
-export const DB_SQL_HISTORY = 'eth_historical_price';
+export const DB_SQL_TRADE = 'trades';
+export const DB_SQL_HISTORY = {
+	'ETH-USD': 'eth-usd-historical_price'
+}
 export const DB_AWS_TRADES_LIVE = 'trades_live';
 export const DB_AWS_TRADES_DEV = 'trades_dev';
 export const DB_AWS_HOURLY_LIVE = 'hourly_live';
@@ -22,6 +30,8 @@ export const DB_AWS_STATUS_LIVE = 'status_live';
 export const DB_AWS_STATUS_DEV = 'status_dev';
 export const DB_AWS_UI_EVENTS_LIVE = 'uiEvents_live';
 export const DB_AWS_UI_EVENTS_DEV = 'uiEvents_dev';
+export const DB_TX_QTE = 'quote';
+export const DB_TX_BASE = 'base';
 export const DB_TX_SRC = 'source';
 export const DB_TX_ID = 'id';
 export const DB_TX_PRICE = 'price';
@@ -71,11 +81,39 @@ export const DB_EV_UI_ETH_FEE = 'ethFee';
 export const DB_EV_UI_DUO_FEE = 'duoFee';
 export const DB_STATUS_EVENT_PUBLIC_OTHERS = 'EVENT_AWS_PUBLIC_OTHERS';
 
+export const TRADES_STATUS_LAST_UPDATE_INTERVAL_WS = 10;
+
 export const AWS_DYNAMO_ROLE_TRADE = 'trade';
 export const AWS_DYNAMO_ROLE_HOURLY = 'hourly';
 export const AWS_DYNAMO_ROLE_MINUTELY = 'minutely';
 export const AWS_DYNAMO_ROLE_EVENT = 'event';
 export const AWS_DYNAMO_ROLE_STATUS = 'status';
+
+export const API_FETCH_TRADE_INTERVAL = 1;
+export const LOG_INFO = 'INFO';
+export const LOG_ERROR = 'ERROR';
+export const LOG_DEBUG = 'DEBUG';
+export const LOG_RANKING: { [level: string]: number } = {
+	[LOG_ERROR]: 0,
+	[LOG_INFO]: 1,
+	[LOG_DEBUG]: 2
+};
+
+export const API_GMN_BASE_URL = 'https://api.gemini.com';
+export const API_GMN_WS_LINK = 'wss://api.gemini.com';
+export const API_GMN_VERSION = '/v1';
+export const API_GMN_ORDER_BOOK = '/book';
+export const API_GMN_TRADE = '/trades';
+export const API_BFX_BASE_URL = 'https://api.bitfinex.com';
+export const API_BFX_VERSION = '/v1';
+export const API_BFX_ORDER_BOOK = '/book/';
+export const API_BFX_TRADE = '/trades/';
+export const API_KRK_BASE_URL = 'https://api.kraken.com';
+export const API_KRK_VERSION = '/0/public';
+export const API_KRK_ORDER_BOOK = '/Depth';
+export const API_KRK_TRADE = '/Trades';
+export const API_GDAX_BASE_URL = 'https://api.gdax.com:443/products';
+export const API_GDAX_TRADE = '/trades';
 
 export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {

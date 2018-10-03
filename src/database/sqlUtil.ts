@@ -16,24 +16,24 @@ class SqlUtil {
 
 		this.conn.connect(err => {
 			if (err) throw err;
-			util.log('Connected!');
+			util.logInfo('Connected!');
 		});
 
 		this.conn.on('error', err => {
 			if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-				util.log('ERROR: Server Disconnects. Reconnecting');
+				util.logInfo('ERROR: Server Disconnects. Reconnecting');
 				this.init(host, user, pwd);
 			} else throw err;
 		});
 	}
 
 	public executeQuery(sqlQuery: string): Promise<any> {
-		// util.log(sqlQuery);
+		// util.logInfo(sqlQuery);
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
 					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY')
-						// util.log('.');
+						// util.logInfo('.');
 						// rocess.stdout.write(".");
 						reject(err);
 					else if (err) reject(err);
@@ -48,12 +48,12 @@ class SqlUtil {
 
 		// To do the checking for out of boundary data.
 		// if(isNaN(trade.price)){
-		// 	util.log('Price is NaN!');
+		// 	util.logInfo('Price is NaN!');
 		// 	return;
 		// }
 
 		// if(isNaN(trade.amount)){
-		// 	util.log('Amount is NaN!');
+		// 	util.logInfo('Amount is NaN!');
 		// 	return;
 		// }
 
@@ -78,8 +78,12 @@ class SqlUtil {
 			(trade.timestamp || systemTimestamp) +
 			"','" +
 			systemTimestamp +
+			"','" +
+			trade.base +
+			"','" +
+			trade.quote +
 			"')";
-		// util.log(await this.executeQuery(sql));
+		// util.logInfo(await this.executeQuery(sql));
 		await this.executeQuery(sql);
 		if (insertStatus)
 			await dynamoUtil.insertStatusData(
@@ -88,10 +92,10 @@ class SqlUtil {
 	}
 
 	public async insertPrice(price: IPrice) {
-		util.log(
+		util.logInfo(
 			await this.executeQuery(
 				'INSERT INTO ' +
-					CST.DB_SQL_HISTORY +
+					CST.DB_SQL_HISTORY['ETH-USD'] +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
@@ -106,7 +110,7 @@ class SqlUtil {
 	public async readLastPrice(): Promise<IPrice> {
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_SQL_HISTORY +
+				CST.DB_SQL_HISTORY['ETH-USD'] +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
 				' DESC LIMIT 1'
@@ -116,7 +120,7 @@ class SqlUtil {
 					price: Number(res[0][CST.DB_HISTORY_PRICE]),
 					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
 					volume: Number(res[0][CST.DB_HISTORY_VOLUME])
-			  }
+			}
 			: { price: 0, timestamp: 0, volume: 0 };
 	}
 
@@ -136,6 +140,8 @@ class SqlUtil {
 				upperTime
 		);
 		return res.map(item => ({
+			quote: item[CST.DB_TX_QTE],
+			base: item[CST.DB_TX_BASE],
 			source: item[CST.DB_TX_SRC],
 			id: item[CST.DB_TX_ID],
 			price: Number(item[CST.DB_TX_PRICE]),
@@ -149,7 +155,7 @@ class SqlUtil {
 			'DELETE FROM ' +
 			CST.DB_SQL_TRADE +
 			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
-		util.log(queryString);
+		util.logInfo(queryString);
 		await this.executeQuery(queryString);
 	}
 }

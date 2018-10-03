@@ -1,0 +1,16 @@
+{
+	"type": "update",
+	"eventid": 4236821242,
+	"timestamp": 1533550482,
+	"timestampms": 1533550482737,
+	"socket_sequence": 1,
+	"events": [
+		{
+			"type": "trade",
+			"tid": 4236821242,
+			"price": "219.88",
+			"amount": "0.97",
+			"makerSide": "bid"
+		}
+	]
+}

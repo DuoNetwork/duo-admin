@@ -29,7 +29,7 @@ class PriceUtil {
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const currentPrice = await calculator.getPriceFix();
 				const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
-				util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return contractUtil.commitPrice(
 					address,
 					key,
@@ -44,7 +44,7 @@ class PriceUtil {
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
 			const currentPrice = await calculator.getPriceFix();
 			const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
-			util.log('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 			return contractUtil.commitPrice(
 				address,
 				key,
@@ -57,7 +57,7 @@ class PriceUtil {
 	}
 
 	public async saveMinutelyData(numOfMinutes: number) {
-		util.log('processing minute trade data');
+		util.logInfo('processing minute trade data');
 		const now = moment.utc();
 		const timestamp = now.valueOf();
 
@@ -86,7 +86,7 @@ class PriceUtil {
 		);
 
 		await Promise.all(promiseList);
-		util.log('completed processing!');
+		util.logInfo('completed processing!');
 	}
 
 	public startProcessMinutelyPrices(option: IOption) {
@@ -95,7 +95,7 @@ class PriceUtil {
 	}
 
 	public async saveHourlyData(numOfHours: number) {
-		util.log('processing hourly trade data');
+		util.logInfo('processing hourly trade data');
 		const now = moment.utc();
 		const timestamp = now.valueOf();
 		const datetimeToRequest: string[] = [];
@@ -103,7 +103,7 @@ class PriceUtil {
 			datetimeToRequest.push(now.format('YYYY-MM-DD-HH'));
 			now.subtract(1, 'hours');
 		}
-		// console.log(datetimeToRequest);
+		// console.logInfo(datetimeToRequest);
 		const promiseList: Array<Promise<void>> = [];
 		CST.EXCHANGES.forEach(src =>
 			datetimeToRequest.forEach(dt =>
@@ -123,7 +123,7 @@ class PriceUtil {
 		);
 
 		await Promise.all(promiseList);
-		util.log('completed processing!');
+		util.logInfo('completed processing!');
 	}
 
 	public startProcessHourlyPrices(option: IOption) {

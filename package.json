@@ -8,10 +8,7 @@
 		"test": "jest",
 		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
 		"commit": "ts-node ./src/index commit",
-		"bitfinex": "ts-node ./src/index bitfinex",
-		"gemini": "ts-node ./src/index gemini",
-		"kraken": "ts-node ./src/index kraken",
-		"gdax": "ts-node ./src/index gdax",
+		"trades": "ts-node src/index trades",
 		"subscribe": "ts-node ./src/index subscribe",
 		"minutely": "ts-node ./src/index minutely dynamo",
 		"hourly": "ts-node ./src/index hourly dynamo",
@@ -39,7 +36,7 @@
 		"@types/jest": "^23.3.2",
 		"@types/mysql": "^2.15.5",
 		"@types/request": "^2.47.1",
-		"@types/ws": "^6.0.1",
+		"@types/ws": "^6.0.0",
 		"jest": "^23.6.0",
 		"pre-commit": "^1.2.2",
 		"ts-jest": "^23.10.2",
@@ -55,6 +52,7 @@
 		"request": "^2.88.0",
 		"ts-node": "^7.0.1",
 		"typescript": "^3.0.3",
+		"bitfinex-api-node": "1.2.1",
 		"ws": "^6.0.0"
 	}
 }

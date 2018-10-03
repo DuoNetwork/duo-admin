@@ -2,11 +2,11 @@
 
 exports[`connection initalization 1`] = `"sql db connection is not initialized"`;
 
-exports[`insertPrice 1`] = `"INSERT INTO eth_historical_price VALUES ('1234567890','123','456')"`;
+exports[`insertPrice 1`] = `"INSERT INTO eth-usd-historical_price VALUES ('1234567890','123','456')"`;
 
-exports[`insertTradeData 1`] = `"REPLACE eth_trades VALUES ('src','id','123','456','1234567890','0')"`;
+exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','base','quote')"`;
 
-exports[`readLastPrice 1`] = `"SELECT * FROM eth_historical_price order by timestamp DESC LIMIT 1"`;
+exports[`readLastPrice 1`] = `"SELECT * FROM eth-usd-historical_price order by timestamp DESC LIMIT 1"`;
 
 exports[`readLastPrice 2`] = `
 Object {
@@ -16,21 +16,25 @@ Object {
 }
 `;
 
-exports[`readSourceData 1`] = `"SELECT * FROM eth_trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890"`;
+exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890"`;
 
 exports[`readSourceData 2`] = `
 Array [
   Object {
     "amount": 456,
+    "base": undefined,
     "id": "id1",
     "price": 123,
+    "quote": undefined,
     "source": "src1",
     "timestamp": 1234567890,
   },
   Object {
     "amount": 567,
+    "base": undefined,
     "id": "id2",
     "price": 234,
+    "quote": undefined,
     "source": "src2",
     "timestamp": 2345678901,
   },

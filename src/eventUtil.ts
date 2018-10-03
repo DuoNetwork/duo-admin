@@ -11,14 +11,14 @@ class EventUtil {
 		contractUtil: ContractUtil,
 		option: IOption
 	) {
-		util.log('subscribing to ' + option.event);
+		util.logInfo('subscribing to ' + option.event);
 
 		if (option.source)
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event))
 				setInterval(async () => {
 					const sysState = await contractUtil.getCustodianStates();
 					const state = sysState.state;
-					util.log('current state is ' + state);
+					util.logInfo('current state is ' + state);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
 						await contractUtil.triggerPreReset(address, privateKey);
@@ -36,7 +36,7 @@ class EventUtil {
 				let startBlk = option.force
 					? contractUtil.inceptionBlk
 					: Math.max(await dynamoUtil.readLastBlock(), contractUtil.inceptionBlk);
-				util.log('starting blk number: ' + startBlk);
+				util.logInfo('starting blk number: ' + startBlk);
 				let isProcessing = false;
 				const fetch = async () => {
 					if (isProcessing) return;
@@ -59,7 +59,7 @@ class EventUtil {
 								allEvents.push(contractUtil.parseEvent(el, block.timestamp * 1000));
 							}
 
-						util.log(
+						util.logInfo(
 							'total ' +
 								allEvents.length +
 								' events from block ' +
@@ -79,13 +79,13 @@ class EventUtil {
 				setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
 			}
 		else {
-			util.log('starting listening ' + option.event);
+			util.logInfo('starting listening ' + option.event);
 			let tg: (r: any) => Promise<any> = () => Promise.resolve();
 
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
 				const sysState = await contractUtil.getCustodianStates();
 				const state = sysState.state;
-				util.log('current state is ' + state);
+				util.logInfo('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
 					tg = () => contractUtil.triggerPreReset(address, privateKey);
@@ -103,9 +103,9 @@ class EventUtil {
 			} else return Promise.resolve();
 
 			contractUtil.custodian.events[option.event]({}, async (error, evt) => {
-				if (error) util.log(error);
+				if (error) util.logInfo(error);
 				else {
-					console.log(evt);
+					util.logInfo(evt);
 					await tg(evt);
 				}
 			});

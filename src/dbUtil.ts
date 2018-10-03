@@ -11,11 +11,11 @@ class DbUtil {
 		this.dynamo = option.dynamo;
 		const role = util.getDynamoRole(tool, option.dynamo);
 		const process = util.getStatusProcess(tool, option);
-		util.log('role: ' + role);
-		util.log('process: ' + process);
+		util.logInfo('role: ' + role);
+		util.logInfo('process: ' + process);
 
 		dynamoUtil.init(option.live, role, process);
-		if (['bitfinex', 'gemini', 'kraken', 'gdax', 'commit', 'cleanDB'].includes(tool) && !option.dynamo)
+		if (['trades', 'commit', 'cleanDB'].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
 				sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);

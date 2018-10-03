@@ -5,15 +5,36 @@ import infura from './keys/infura.json';
 import { IOption } from './types';
 
 class Util {
-	public log(text: any): void {
-		console.log(moment().format('HH:mm:ss.SSS') + ' ' + text);
+	public logLevel: string = CST.LOG_INFO;
+
+	private log(text: any, level?: string): void {
+		if (level && CST.LOG_RANKING[this.logLevel] >= CST.LOG_RANKING[level])
+			console.log(`${moment().format('HH:mm:ss.SSS')} [${level}]: ` + text);
+		else console.log(`${moment().format('HH:mm:ss.SSS')} : ` + text);
 	}
 
-	// public truncateNum(num: number, decimal: number = 3): number {
-	// 	let x = num.toString();
-	// 	x = x.slice(0, x.indexOf('.') + decimal);
-	// 	return Number(x);
-	// }
+	public logInfo(text: any): void {
+		this.log(text, CST.LOG_INFO);
+	}
+
+	public logDebug(text: any): void {
+		this.log(text, CST.LOG_DEBUG);
+	}
+
+	public logError(text: any): void {
+		this.log(text, CST.LOG_ERROR);
+	}
+
+	public getUTCNowTimestamp() {
+		return moment.utc().valueOf();
+	}
+
+	public composeQuery(paras: { [key: string]: any }): string {
+		let query: string = '?';
+		for (const key in paras) query += key + '=' + paras[key] + '&';
+		query = query.slice(0, -1);
+		return query;
+	}
 
 	public get(url: string, headerOthers?: object): Promise<any> {
 		return new Promise((resolve, reject) =>
@@ -58,6 +79,7 @@ class Util {
 
 	public parseOptions(argv: string[]): IOption {
 		const option = {
+			forceREST: argv.includes('rest'),
 			live: process.argv.includes('live'),
 			dbLive: process.argv.includes('dbLive'),
 			server: process.argv.includes('server'),
@@ -66,6 +88,10 @@ class Util {
 			gcp: process.argv.includes('gcp'),
 			azure: process.argv.includes('azure'),
 			force: process.argv.includes('force'),
+			pair: 'ETH|USD',
+			assets: [''],
+			sources: [''],
+			exSources: [''],
 			gasPrice: 5e9,
 			gasLimit: 200000,
 			eth: 0,
@@ -93,11 +119,23 @@ class Util {
 			numOfMinutes: 2,
 			numOfHours: 2,
 			key: '',
-			endBlk: 0,
+			endBlk: 0
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
 			switch (args[0]) {
+				case 'exSources':
+					option.exSources = args[1].split(',');
+					break;
+				case 'sources':
+					option.sources = args[1].split(',');
+					break;
+				case 'pair':
+					option.pair = args[1].replace('_', '|') || option.pair;
+					break;
+				case 'assets':
+					option.assets = args[1].split(',');
+					break;
 				case 'gasPrice':
 					option.gasPrice = Number(args[1]) || option.gasPrice;
 					break;
@@ -194,20 +232,15 @@ class Util {
 					(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
 					'/' +
 					infura.token;
-			else {
-				option.provider = CST.PROVIDER_LOCAL_WS;
-				option.source = '';
-			}
+			else option.provider = CST.PROVIDER_LOCAL_WS;
+		// option.provider = '';
 
 		return option;
 	}
 
 	public getDynamoRole(tool: string, useDynamo: boolean): string {
 		switch (tool) {
-			case 'bitfinex':
-			case 'gemini':
-			case 'kraken':
-			case 'gdax':
+			case 'trades':
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
 			case 'commit':
 			case 'cleanDB':
@@ -233,12 +266,9 @@ class Util {
 		let source = '';
 
 		switch (tool) {
-			case 'bitfinex':
-			case 'gemini':
-			case 'kraken':
-			case 'gdax':
+			case 'trades':
 				type = 'PRICE';
-				source = '_' + tool.toUpperCase();
+				source = '_' + option.source.toUpperCase();
 				break;
 			case 'subscribe':
 				type = 'EVENT';
@@ -285,6 +315,12 @@ class Util {
 		for (const prop in obj) if (obj.hasOwnProperty(prop)) return false;
 
 		return true;
+	}
+
+	public async sleep(ms: number) {
+		return new Promise(resolve => {
+			setTimeout(resolve, ms);
+		});
 	}
 }
 
