@@ -35,11 +35,10 @@ class MarketUtil {
 	public launchSource(tool: string, source: string, assets: string[], option: IOption) {
 		util.logInfo(source);
 		const cmd =
-			`npm run ${tool} source=${source} assets=${assets.join(
-				','
-			)}${option.dynamo ? ' dynamo' : ''} ${option.azure ? ' azure' : ''}
-			${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}
-			${option.server ? ' server' : ''} ${
+			`npm run ${tool} source=${source} assets=${assets.join(',')}${
+				option.dynamo ? ' dynamo' : ''
+			} ${option.azure ? ' azure' : ''}
+			${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${option.server ? ' server' : ''} ${
 				option.forceREST ? 'rest' : ''
 			}` +
 			(process.platform === 'win32' ? '>>' : '&>') +
