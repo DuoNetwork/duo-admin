@@ -37,10 +37,9 @@ class MarketUtil {
 		const cmd =
 			`npm run ${tool} source=${source} assets=${assets.join(',')}${
 				option.dynamo ? ' dynamo' : ''
-			} ${option.azure ? ' azure' : ''}
-			${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${option.server ? ' server' : ''} ${
-				option.forceREST ? 'rest' : ''
-			}` +
+			}${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
+				option.server ? ' server' : ''
+			} ${option.forceREST ? 'rest' : ''}` +
 			(process.platform === 'win32' ? '>>' : '&>') +
 			` ${tool}.${source}.${assets.join('.')}.log`;
 
