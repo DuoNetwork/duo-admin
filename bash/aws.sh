@@ -1,4 +1,5 @@
 pkill npm
+rm *.log
 npm run trades assets=ETH,USD server aws &> trades.ALL.log &
 npm run subscribe server aws event=StartPreReset &>> preReset.log &
 npm run subscribe server aws event=StartReset &>> reset.log &
