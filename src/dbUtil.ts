@@ -1,3 +1,4 @@
+import * as CST from './constants';
 import dynamoUtil from './database/dynamoUtil';
 import sqlUtil from './database/sqlUtil';
 import keyUtil from './keyUtil';
@@ -15,7 +16,7 @@ class DbUtil {
 		util.logInfo('process: ' + process);
 
 		dynamoUtil.init(option.live, role, process);
-		if (['trades', 'commit', 'cleanDB'].includes(tool) && !option.dynamo)
+		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
 				sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);

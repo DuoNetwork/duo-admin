@@ -8,7 +8,6 @@ class MarketUtil {
 		const assetIds = option.assets.length
 			? option.assets
 			: option.pair.split('|').filter(asset => asset !== '');
-		console.log('source' + option.source);
 
 		if (!option.source) {
 			util.logInfo('launching all sources for assets ' + assetIds.join(',') + ' in WS');
@@ -36,7 +35,9 @@ class MarketUtil {
 	public launchSource(tool: string, source: string, assets: string[], option: IOption) {
 		util.logInfo(source);
 		const cmd =
-			`npm run ${tool} source=${source} assets=${assets.join(',')} ${
+			`npm run ${tool} source=${source} assets=${assets.join(
+				','
+			)}${option.dynamo ? ' dynamo' : ''} ${option.server ? ' server' : ''} ${
 				option.forceREST ? 'rest' : ''
 			}` +
 			(process.platform === 'win32' ? '>>' : '&>') +

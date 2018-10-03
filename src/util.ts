@@ -240,19 +240,19 @@ class Util {
 
 	public getDynamoRole(tool: string, useDynamo: boolean): string {
 		switch (tool) {
-			case 'trades':
+			case CST.TRADES:
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
-			case 'commit':
-			case 'cleanDB':
-			case 'node':
-			case 'getKey':
-			case 'getSqlAuth':
+			case CST.COMMIT:
+			case CST.CLEAN_DB:
+			case CST.NODE:
+			// case 'getKey':
+			// case 'getSqlAuth':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
-			case 'subscribe':
+			case CST.SUBSCRIBE:
 				return CST.AWS_DYNAMO_ROLE_EVENT;
-			case 'hourly':
+			case CST.HOURLY:
 				return CST.AWS_DYNAMO_ROLE_HOURLY;
-			case 'minutely':
+			case CST.MINUTELY:
 				return CST.AWS_DYNAMO_ROLE_MINUTELY;
 			default:
 				return '';
@@ -262,13 +262,14 @@ class Util {
 	public getStatusProcess(tool: string, option: IOption) {
 		let type = '';
 		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
+		console.log('dynamo', option.dynamo);
 		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
 		let source = '';
 
 		switch (tool) {
 			case 'trades':
 				type = 'PRICE';
-				source = '_' + option.source.toUpperCase();
+				source = option.source ? '_' + option.source.toUpperCase() : '';
 				break;
 			case 'subscribe':
 				type = 'EVENT';
