@@ -10,7 +10,7 @@ CREATE TABLE `priceFeedDB`.`trades` (
   `systime` VARCHAR(255) NOT NULL,
   `base` VARCHAR(255) NOT NULL,
   `quote` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`timestamp`, `id`, `source`, `base`, `quote`));
+  PRIMARY KEY (`timestamp`, `id`, `source`));
 
 CREATE TABLE `priceFeedDB`.`eth-usd-historical_price` (
   `timestamp` VARCHAR(255) NOT NULL,
