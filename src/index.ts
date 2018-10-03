@@ -1,4 +1,4 @@
-import ContractUtil from '../../duo-contract-util/src/ContractUtil';
+import ContractUtil from '../../duo-contract-util/src/contractUtil';
 import * as CST from './constants';
 import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
