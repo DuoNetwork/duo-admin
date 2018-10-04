@@ -92,6 +92,15 @@ class SqlUtil {
 	}
 
 	public async insertPrice(price: IPrice) {
+		console.log('INSERT INTO ' +
+		CST.DB_SQL_HISTORY['ETH-USD'] +
+		" VALUES ('" +
+		price.timestamp +
+		"','" +
+		price.price +
+		"','" +
+		price.volume +
+		"')");
 		util.logInfo(
 			await this.executeQuery(
 				'INSERT INTO ' +
