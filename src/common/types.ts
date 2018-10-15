@@ -1,33 +1,4 @@
-export * from '../../duo-contract-util/src/types';
-
-export interface ITrade {
-	base: string;
-	quote: string;
-	source: string;
-	id: string;
-	price: number;
-	amount: number;
-	timestamp: number;
-}
-
-export interface IPrice {
-	price: number;
-	volume: number;
-	timestamp: number;
-}
-
-// export interface IPriceBar {
-// 	source: string;
-// 	date: string;
-// 	hour: string;
-// 	minute: number;
-// 	open: number;
-// 	high: number;
-// 	low: number;
-// 	close: number;
-// 	volume: number;
-// 	timestamp: number;
-// }
+export * from '../../../duo-contract-util/src/types';
 
 export interface IBaseMarketData {
 	source: string;
@@ -36,7 +7,18 @@ export interface IBaseMarketData {
 	timestamp: number;
 }
 
-export interface IPriceBar extends IBaseMarketData {
+export interface ITrade extends IBaseMarketData {
+	id: string;
+	price: number;
+	amount: number;
+}
+
+export interface IPriceFix extends IBaseMarketData {
+	price: number;
+	volume: number;
+}
+
+export interface IPrice extends IBaseMarketData {
 	period: number;
 	open: number;
 	high: number;
@@ -48,13 +30,6 @@ export interface IPriceBar extends IBaseMarketData {
 export interface IAccount {
 	address: string;
 	privateKey: string;
-}
-
-export interface IBaseMarketData {
-	source: string;
-	base: string;
-	quote: string;
-	timestamp: number;
 }
 
 export interface IKey {
@@ -124,7 +99,7 @@ export interface ISourceSettings {
 	wsLink: string;
 }
 
-export interface IsourceAssetInfo {
+export interface ISourceAsset {
 	base: {
 		[code: string]: boolean;
 	};
@@ -136,7 +111,7 @@ export interface IsourceAssetInfo {
 }
 export interface ISource {
 	assets: {
-		[code: string]: IsourceAssetInfo;
+		[code: string]: ISourceAsset;
 	};
 	settings: ISourceSettings;
 }
@@ -147,15 +122,6 @@ export interface IBitfinexRawTradeWS {
 	id: number;
 	price: string;
 	amount: string;
-}
-
-export interface IBitfinexRawTradeRest {
-	timestamp: number;
-	tid: number;
-	price: string;
-	amount: string;
-	exchange: string;
-	type: string;
 }
 
 export interface IBitfinexRawTradeRest {
@@ -200,4 +166,11 @@ export type IKrakenRawTrade = IKrakenRawTradeEntry & {
 
 export interface IKrakenRawTradeEntry {
 	[pair: string]: string[][];
+}
+
+export interface IGdaxRawTradeRest {
+	error: string[];
+	result: {
+		[code: string]: Array<Array<string | number>>;
+	};
 }

@@ -1,7 +1,7 @@
-import ContractUtil from '../../duo-contract-util/src/contractUtil';
-import * as CST from './constants';
-import dynamoUtil from './database/dynamoUtil';
-import { IEvent, IOption } from './types';
+import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import * as CST from '../common/constants';
+import { IEvent, IOption } from '../common/types';
+import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class EventUtil {

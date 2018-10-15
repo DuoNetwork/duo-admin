@@ -1,6 +1,6 @@
-import * as CST from '../constants';
-import {IKrakenRawTrade, ITrade } from '../types';
-import util from '../util';
+import * as CST from '../common/constants';
+import {IKrakenRawTrade, ITrade } from '../common/types';
+import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class KrakenApi extends BaseApi {

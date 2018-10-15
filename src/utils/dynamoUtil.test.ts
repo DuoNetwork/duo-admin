@@ -1,8 +1,8 @@
 // import sampleMinutely from '../samples/dynamoMinutely.json';
+import { IEvent } from '../common/types';
 import sampleTrades from '../samples/dynamoTrades.json';
-import { IEvent } from '../types';
-import util from '../util';
 import dynamoUtil from './dynamoUtil';
+import util from './util';
 
 const trade = {
 	quote: 'quote',
@@ -13,19 +13,6 @@ const trade = {
 	amount: 456,
 	timestamp: 1234567890
 };
-
-// const priceBar = {
-// 	source: 'src',
-// 	date: 'YYYY-MM-DD',
-// 	hour: '00',
-// 	minute: 0,
-// 	open: 1,
-// 	high: 3,
-// 	low: 0,
-// 	close: 2,
-// 	volume: 123,
-// 	timestamp: 1234567890
-// };
 
 const events: IEvent[] = [
 	{
@@ -65,7 +52,10 @@ test('convertTradeToDynamo', () =>
 		dynamoUtil.convertPriceToDynamo({
 			price: 123,
 			timestamp: 1234567890,
-			volume: 456
+			volume: 456,
+			source: '',
+			base: '',
+			quote: ''
 		})
 	).toMatchSnapshot());
 

@@ -1,9 +1,9 @@
 import ws from 'ws';
-import * as CST from '../constants';
-import dbUtil from '../dbUtil';
+import * as CST from '../common/constants';
+import {IBaseMarketData, ISource, ISourceAsset, ISourceSettings, ITrade } from '../common/types';
 import sources from '../static/sources.json';
-import {IBaseMarketData, ISource, IsourceAssetInfo, ISourceSettings, ITrade } from '../types';
-import util from '../util';
+import dbUtil from '../utils/dbUtil';
+import util from '../utils/util';
 
 export default abstract class BaseApi {
 	protected source: string = 'source';
@@ -20,7 +20,7 @@ export default abstract class BaseApi {
 	};
 
 	public isInitialized: boolean = false;
-	public assetsInfo: { [code: string]: IsourceAssetInfo } = {};
+	public assetsInfo: { [code: string]: ISourceAsset } = {};
 	public sourcePairMapping: { [srcPair: string]: string } = {};
 	public last: { [localPair: string]: string } = {};
 	public tradeStatusLastUpdatedAt: { [key: string]: number } = {};
@@ -144,19 +144,19 @@ export default abstract class BaseApi {
 					if (this.settings.quoteInversed)
 						sourcePair = this.settings.isLowercase
 							? baseTicker.toLowerCase() +
-							  this.settings.separator +
-							  quoteTicker.toLowerCase()
+							this.settings.separator +
+							quoteTicker.toLowerCase()
 							: baseTicker.toUpperCase() +
-							  this.settings.separator +
-							  quoteTicker.toUpperCase();
+							this.settings.separator +
+							quoteTicker.toUpperCase();
 					else
 						sourcePair = this.settings.isLowercase
 							? quoteTicker.toLowerCase() +
-							  this.settings.separator +
-							  baseTicker.toLowerCase()
+							this.settings.separator +
+							baseTicker.toLowerCase()
 							: quoteTicker.toUpperCase() +
-							  this.settings.separator +
-							  baseTicker.toUpperCase();
+							this.settings.separator +
+							baseTicker.toUpperCase();
 
 					this.sourcePairMapping[sourcePair] = localPair;
 					sourcePairs.push(sourcePair);

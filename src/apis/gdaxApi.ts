@@ -1,7 +1,7 @@
 import moment from 'moment';
-import * as CST from '../constants';
-import { ITrade } from '../types';
-import util from '../util';
+import * as CST from '../common/constants';
+import { ITrade } from '../common/types';
+import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GdaxApi extends BaseApi {

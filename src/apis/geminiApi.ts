@@ -1,8 +1,8 @@
 import ws from 'ws';
-import * as CST from '../constants';
+import * as CST from '../common/constants';
 
-import { IGeminiTradeData, IGeminiTradeRest, IGeminiTradeWs, ITrade } from '../types';
-import util from '../util';
+import { IGeminiTradeData, IGeminiTradeRest, IGeminiTradeWs, ITrade } from '../common/types';
+import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GeminiApi extends BaseApi {

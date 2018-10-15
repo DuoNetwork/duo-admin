@@ -1,11 +1,11 @@
 import ContractUtil from '../../duo-contract-util/src/contractUtil';
-import * as CST from './constants';
-import dbUtil from './dbUtil';
-import eventUtil from './eventUtil';
-import keyUtil from './keyUtil';
-import marketUtil from './marketUtil';
-import priceUtil from './priceUtil';
-import util from './util';
+import * as CST from './common/constants';
+import dbUtil from './utils/dbUtil';
+import eventUtil from './utils/eventUtil';
+import keyUtil from './utils/keyUtil';
+import marketUtil from './utils/marketUtil';
+import priceUtil from './utils/priceUtil';
+import util from './utils/util';
 
 const tool = process.argv[2];
 util.logInfo('tool ' + tool);

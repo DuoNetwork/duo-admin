@@ -1,10 +1,10 @@
 // import moment from 'moment';
-import ContractUtil from '../../duo-contract-util/src/contractUtil';
-import apis from './apis';
+import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import apis from '../apis';
+import * as CST from '../common/constants';
+import { IOption, IPrice } from '../common/types';
 import calculator from './calculator';
-import * as CST from './constants';
-import dynamoUtil from './database/dynamoUtil';
-import { IOption, IPriceBar } from './types';
+import dynamoUtil from './dynamoUtil';
 import util from './util';
 const schedule = require('node-schedule');
 
@@ -65,10 +65,10 @@ class PriceUtil {
 	}
 
 	public sortPricesByPairPeriod(
-		prices: IPriceBar[],
+		prices: IPrice[],
 		period: number
-	): { [pair: string]: { [timestamp: number]: IPriceBar[] } } {
-		const pairPrices: { [pair: string]: { [timestamp: number]: IPriceBar[] } } = {};
+	): { [pair: string]: { [timestamp: number]: IPrice[] } } {
+		const pairPrices: { [pair: string]: { [timestamp: number]: IPrice[] } } = {};
 		prices.forEach(price => {
 			const pair = price.quote + '|' + price.base;
 			const timestamp = Math.floor(price.timestamp / 60000 / period);
@@ -79,7 +79,7 @@ class PriceUtil {
 		return pairPrices;
 	}
 
-	public getPeriodPrice(prices: IPriceBar[], period: number): IPriceBar {
+	public getPeriodPrice(prices: IPrice[], period: number): IPrice {
 		prices.sort((a, b) => a.timestamp - b.timestamp);
 		const first = prices[0];
 		const last = prices[prices.length - 1];
@@ -125,7 +125,7 @@ class PriceUtil {
 			);
 			util.logInfo(`fetched ${basePrices.length} basePeriod prices`);
 			const pairPeriodPrices = this.sortPricesByPairPeriod(basePrices, period);
-			const pairPrices: { [pair: string]: IPriceBar[] } = {};
+			const pairPrices: { [pair: string]: IPrice[] } = {};
 			for (const pair in pairPeriodPrices)
 				for (const pd in pairPeriodPrices[pair]) {
 					const periodPrices = pairPeriodPrices[pair][pd];

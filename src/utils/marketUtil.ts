@@ -1,6 +1,6 @@
 import child_process from 'child_process';
-import apis from './apis';
-import { IOption } from './types';
+import apis from '../apis';
+import { IOption } from '../common/types';
 import util from './util';
 
 class MarketUtil {

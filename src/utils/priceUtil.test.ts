@@ -1,4 +1,4 @@
-import dynamoUtil from '../src/database/dynamoUtil';
+import dynamoUtil from './dynamoUtil';
 import priceUtil from './priceUtil';
 import util from './util';
 

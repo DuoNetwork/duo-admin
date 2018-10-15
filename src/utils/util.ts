@@ -1,8 +1,8 @@
 import moment from 'moment';
 import request from 'request';
-import * as CST from './constants';
-import infura from './keys/infura.json';
-import { IOption } from './types';
+import * as CST from '../common/constants';
+import { IOption } from '../common/types';
+import infura from '../keys/infura.json';
 // import { Options } from 'aws-cli-js';
 
 class Util {

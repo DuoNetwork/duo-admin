@@ -2,7 +2,10 @@
 
 exports[`getExchangePriceFix 1`] = `
 Object {
+  "base": "USD",
   "price": 634.7,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1524453966393,
   "volume": 0.4,
 }
@@ -10,7 +13,10 @@ Object {
 
 exports[`getExchangePriceFix 2`] = `
 Object {
+  "base": "USD",
   "price": 637,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1524465953111,
   "volume": 6.002117,
 }
@@ -18,7 +24,10 @@ Object {
 
 exports[`getExchangePriceFix 3`] = `
 Object {
+  "base": "USD",
   "price": 667,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1524547898561,
   "volume": 0.024,
 }
@@ -26,7 +35,10 @@ Object {
 
 exports[`getExchangePriceFix 4`] = `
 Object {
+  "base": "USD",
   "price": 633,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1524463065507,
   "volume": 8.67,
 }
@@ -34,7 +46,10 @@ Object {
 
 exports[`getPriceFix case 1 1`] = `
 Object {
+  "base": "",
   "price": 666.98,
+  "quote": "",
+  "source": "",
   "timestamp": 1524547909941,
   "volume": 0.16599999999999998,
 }
@@ -42,7 +57,10 @@ Object {
 
 exports[`getPriceFix case 2 1`] = `
 Object {
+  "base": "",
   "price": 638.5705,
+  "quote": "",
+  "source": "",
   "timestamp": 1524547909941,
   "volume": 35.73263379,
 }
@@ -50,7 +68,10 @@ Object {
 
 exports[`getVolumeMedianPrice 1`] = `
 Object {
+  "base": "USD",
   "price": 634.69,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1234567890,
   "volume": 3.15308079,
 }
@@ -58,7 +79,10 @@ Object {
 
 exports[`getVolumeMedianPrice 2`] = `
 Object {
+  "base": "USD",
   "price": 638,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1234567890,
   "volume": 22.681753,
 }
@@ -66,7 +90,10 @@ Object {
 
 exports[`getVolumeMedianPrice 3`] = `
 Object {
+  "base": "USD",
   "price": 666.98,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1234567890,
   "volume": 0.16599999999999998,
 }
@@ -74,7 +101,10 @@ Object {
 
 exports[`getVolumeMedianPrice 4`] = `
 Object {
+  "base": "USD",
   "price": 633,
+  "quote": "ETH",
+  "source": "",
   "timestamp": 1234567890,
   "volume": 12.835600000000001,
 }

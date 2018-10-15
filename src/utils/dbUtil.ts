@@ -1,8 +1,8 @@
-import * as CST from './constants';
-import dynamoUtil from './database/dynamoUtil';
-import sqlUtil from './database/sqlUtil';
+import * as CST from '../common/constants';
+import { IOption, IPriceFix, ITrade } from '../common/types';
+import dynamoUtil from './dynamoUtil';
 import keyUtil from './keyUtil';
-import { IOption, IPrice, ITrade } from './types';
+import sqlUtil from './sqlUtil';
 import util from './util';
 
 class DbUtil {
@@ -32,11 +32,11 @@ class DbUtil {
 			: sqlUtil.insertTradeData(trade, insertStatus);
 	}
 
-	public insertPrice(price: IPrice) {
+	public insertPrice(price: IPriceFix) {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
 	}
 
-	public readLastPrice(): Promise<IPrice> {
+	public readLastPrice(): Promise<IPriceFix> {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice();
 	}
 

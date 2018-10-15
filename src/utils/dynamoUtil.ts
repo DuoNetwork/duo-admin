@@ -8,9 +8,9 @@ import {
 	QueryOutput
 } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
-import * as CST from '../constants';
-import { IEvent, IPrice, IPriceBar, ITrade } from '../types';
-import util from '../util';
+import * as CST from '../common/constants';
+import { IEvent, IPrice, IPriceFix, ITrade } from '../common/types';
+import util from './util';
 
 class DynamoUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
@@ -79,7 +79,7 @@ class DynamoUtil {
 		};
 	}
 
-	public convertPriceToDynamo(price: IPrice) {
+	public convertPriceToDynamo(price: IPriceFix) {
 		return {
 			[CST.DB_HISTORY_PRICE]: { N: price.price + '' },
 			[CST.DB_HISTORY_TIMESTAMP]: { N: price.timestamp + '' },
@@ -87,7 +87,7 @@ class DynamoUtil {
 		};
 	}
 
-	public convertPriceBarToDynamo(priceBar: IPriceBar) {
+	public convertPriceBarToDynamo(priceBar: IPrice) {
 		return {
 			[CST.DB_OHLC_OPEN]: { N: priceBar.open + '' },
 			[CST.DB_OHLC_HIGH]: { N: priceBar.high + '' },
@@ -98,7 +98,7 @@ class DynamoUtil {
 		};
 	}
 
-	// public convertDynamoToPriceBar(data: AttributeMap): IPriceBar {
+	// public convertDynamoToPriceBar(data: AttributeMap): IPrice {
 	// 	const sourceDatetime = data[CST.DB_MN_SRC_DATE_HOUR].S || '';
 	// 	const [source, datetime] = sourceDatetime.split('|');
 	// 	return {
@@ -211,7 +211,7 @@ class DynamoUtil {
 	// 	console.logInfo('done');
 	// }
 
-	// public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
+	// public insertMinutelyData(priceBar: IPrice): Promise<void> {
 	// 	return this.insertData({
 	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
 	// 		Item: {
@@ -230,7 +230,7 @@ class DynamoUtil {
 		else throw new Error('invalid period');
 	}
 
-	// public async insertHourlyData(priceBar: IPriceBar): Promise<void> {
+	// public async insertHourlyData(priceBar: IPrice): Promise<void> {
 	// 	return this.insertData({
 	// 		TableName: this.live ? CST.DB_AWS_HOURLY_LIVE : CST.DB_AWS_HOURLY_DEV,
 	// 		Item: {
@@ -297,7 +297,7 @@ class DynamoUtil {
 		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
 
-	// public async readMinutelyData(source: string, datetimeString: string): Promise<IPriceBar[]> {
+	// public async readMinutelyData(source: string, datetimeString: string): Promise<IPrice[]> {
 	// 	const params = {
 	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
 	// 		KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
@@ -383,7 +383,7 @@ class DynamoUtil {
 		);
 	}
 
-	public parsePrice(data: AttributeMap, period: number): IPriceBar {
+	public parsePrice(data: AttributeMap, period: number): IPrice {
 		return {
 			source: (data[this.getPriceKeyField(period)].S || '').split('|')[0],
 			base: data[CST.DB_TX_BASE].S || '',
@@ -398,7 +398,7 @@ class DynamoUtil {
 		};
 	}
 
-	public parseTradedPrice(data: AttributeMap): IPriceBar {
+	public parseTradedPrice(data: AttributeMap): IPrice {
 		const price = Number(data[CST.DB_TX_PRICE].N);
 		return {
 			source: (data[CST.DB_SRC_DHM].S || '').split('|')[0],
@@ -414,7 +414,7 @@ class DynamoUtil {
 		};
 	}
 
-	public async addPrice(price: IPriceBar) {
+	public async addPrice(price: IPrice) {
 		const data: AttributeMap = {
 			[CST.DB_TX_BASE]: { S: price.base },
 			[CST.DB_TX_QTE]: { S: price.quote },
@@ -479,7 +479,7 @@ class DynamoUtil {
 			`...... ${JSON.stringify(primaryKeyPeriodStarts.map(x => util.timestampToString(x)))}`
 		);
 
-		let prices: IPriceBar[] = [];
+		let prices: IPrice[] = [];
 		for (const keyPeriodStart of primaryKeyPeriodStarts) {
 			const singleKeyPeriodPrices = await dynamoUtil.getSingleKeyPeriodPrices(
 				src,

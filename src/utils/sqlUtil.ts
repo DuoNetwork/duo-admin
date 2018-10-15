@@ -1,8 +1,8 @@
 import * as mysql from 'mysql';
-import * as CST from '../constants';
-import { IPrice, ITrade } from '../types';
-import util from '../util';
+import * as CST from '../common/constants';
+import { IPriceFix, ITrade } from '../common/types';
 import dynamoUtil from './dynamoUtil';
+import util from './util';
 
 class SqlUtil {
 	private conn: undefined | mysql.Connection = undefined;
@@ -91,7 +91,7 @@ class SqlUtil {
 			);
 	}
 
-	public async insertPrice(price: IPrice) {
+	public async insertPrice(price: IPriceFix) {
 		util.logInfo(
 			await this.executeQuery(
 				'INSERT INTO ' +
@@ -107,7 +107,7 @@ class SqlUtil {
 		);
 	}
 
-	public async readLastPrice(): Promise<IPrice> {
+	public async readLastPrice(): Promise<IPriceFix> {
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
 				CST.DB_SQL_HISTORY['ETH-USD'] +
@@ -119,9 +119,19 @@ class SqlUtil {
 			? {
 					price: Number(res[0][CST.DB_HISTORY_PRICE]),
 					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
-					volume: Number(res[0][CST.DB_HISTORY_VOLUME])
+					volume: Number(res[0][CST.DB_HISTORY_VOLUME]),
+					source: '',
+					base: '',
+					quote: ''
 			}
-			: { price: 0, timestamp: 0, volume: 0 };
+			: {
+					price: 0,
+					timestamp: 0,
+					volume: 0,
+					source: '',
+					base: '',
+					quote: ''
+			};
 	}
 
 	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {

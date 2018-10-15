@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Aws } from 'aws-cli-js';
-import { IKey, IOption, ISqlAuth } from './types';
+import { IKey, IOption, ISqlAuth } from '../common/types';
 import util from './util';
 
 class KeyUtil {

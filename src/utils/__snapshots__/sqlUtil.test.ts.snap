@@ -10,7 +10,10 @@ exports[`readLastPrice 1`] = `"SELECT * FROM eth_usd_historical_price order by t
 
 exports[`readLastPrice 2`] = `
 Object {
+  "base": "",
   "price": 123,
+  "quote": "",
+  "source": "",
   "timestamp": 1234567890,
   "volume": 456,
 }

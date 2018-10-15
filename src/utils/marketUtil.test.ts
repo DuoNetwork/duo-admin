@@ -1,5 +1,5 @@
 import child_process from 'child_process';
-import bitfinexApi from './apis/bitfinexApi';
+import bitfinexApi from '../apis/bitfinexApi';
 import marketUtil from './marketUtil';
 import util from './util';
 

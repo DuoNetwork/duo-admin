@@ -1,5 +1,5 @@
 // import { PROVIDER_LOCAL_WS } from '../../duo-contract-util/src/constants';
-export * from '../../duo-contract-util/src/constants';
+export * from '../../../duo-contract-util/src/constants';
 export const TRADES = 'trades';
 export const COMMIT = 'commit';
 export const SUBSCRIBE = 'subscribe';

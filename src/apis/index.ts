@@ -1,4 +1,4 @@
-import * as CST from '../constants';
+import * as CST from '../common/constants';
 import BaseApi from './BaseApi';
 import bitfinexApi from './bitfinexApi';
 import gdaxApi from './gdaxApi';

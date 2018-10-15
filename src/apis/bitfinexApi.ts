@@ -1,6 +1,6 @@
-import * as CST from '../constants';
-import {IBitfinexRawTradeRest, IBitfinexRawTradeWS, ITrade } from '../types';
-import util from '../util';
+import * as CST from '../common/constants';
+import {IBitfinexRawTradeRest, IBitfinexRawTradeWS, ITrade } from '../common/types';
+import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 const BFX = require('bitfinex-api-node');
