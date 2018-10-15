@@ -1,0 +1,296 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`launchSource 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource debug 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource forceREST 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 rest>> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource live 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`startFetching no source 1`] = `
+Array [
+  Array [
+    "tool",
+    "bitfinex",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [],
+    },
+  ],
+  Array [
+    "tool",
+    "gemini",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [],
+    },
+  ],
+  Array [
+    "tool",
+    "kraken",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [],
+    },
+  ],
+  Array [
+    "tool",
+    "gdax",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [],
+    },
+  ],
+  Array [
+    "tool",
+    "bitfinex",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "gemini",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "kraken",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "gdax",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "bitfinex",
+    Array [
+      "someQuote",
+      "someBase",
+    ],
+    Object {
+      "assets": Array [],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "pair": "someQuote|someBase",
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "gemini",
+    Array [
+      "someQuote",
+      "someBase",
+    ],
+    Object {
+      "assets": Array [],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "pair": "someQuote|someBase",
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "kraken",
+    Array [
+      "someQuote",
+      "someBase",
+    ],
+    Object {
+      "assets": Array [],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "pair": "someQuote|someBase",
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "gdax",
+    Array [
+      "someQuote",
+      "someBase",
+    ],
+    Object {
+      "assets": Array [],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "pair": "someQuote|someBase",
+      "source": "",
+      "sources": Array [
+        "bitfinex",
+        "okex",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`startFetching source 1`] = `
+Array [
+  Array [
+    Array [
+      "quote|base",
+    ],
+  ],
+]
+`;

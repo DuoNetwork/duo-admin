@@ -1,0 +1,187 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`aggregatePrice 1`] = `
+Array [
+  Array [
+    Object {
+      "base": "USD",
+      "close": 205,
+      "high": 210,
+      "low": 200,
+      "open": 202,
+      "period": 1,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1535958660000,
+      "volume": 0.0007,
+    },
+  ],
+  Array [
+    Object {
+      "base": "USD",
+      "close": 215,
+      "high": 220,
+      "low": 210,
+      "open": 214,
+      "period": 1,
+      "quote": "ETH",
+      "source": "gemini",
+      "timestamp": 1535958600000,
+      "volume": 0.0013,
+    },
+  ],
+  Array [
+    Object {
+      "base": "USD",
+      "close": 210,
+      "high": 213,
+      "low": 200,
+      "open": 207,
+      "period": 1,
+      "quote": "ETH",
+      "source": "kraken",
+      "timestamp": 1535958660000,
+      "volume": 17.6757,
+    },
+  ],
+]
+`;
+
+exports[`getBasePeriod 1`] = `"invalid period"`;
+
+exports[`getPeriodPrice 1 1`] = `
+Object {
+  "base": "USD",
+  "close": 215,
+  "high": 220,
+  "low": 210,
+  "open": 214,
+  "period": 1,
+  "quote": "ETH",
+  "source": "gemini",
+  "timestamp": 1535958600000,
+  "volume": 0.0013,
+}
+`;
+
+exports[`getPeriodPrice 1 2`] = `
+Object {
+  "base": "USD",
+  "close": 210,
+  "high": 213,
+  "low": 200,
+  "open": 202,
+  "period": 1,
+  "quote": "ETH",
+  "source": "bitfinex",
+  "timestamp": 1535958660000,
+  "volume": 17.676399999999997,
+}
+`;
+
+exports[`getPeriodPrice 60 1`] = `
+Object {
+  "base": "USD",
+  "close": 210,
+  "high": 220,
+  "low": 200,
+  "open": 214,
+  "period": 60,
+  "quote": "ETH",
+  "source": "gemini",
+  "timestamp": 1535958000000,
+  "volume": 17.677699999999998,
+}
+`;
+
+exports[`sortPricesByPairPeriod 1 1`] = `
+Object {
+  "ETH|USD": Object {
+    "25599310": Array [
+      Object {
+        "base": "USD",
+        "close": 215,
+        "high": 220,
+        "low": 210,
+        "open": 214,
+        "period": 0,
+        "quote": "ETH",
+        "source": "gemini",
+        "timestamp": 1535958609000,
+        "volume": 0.0013,
+      },
+    ],
+    "25599311": Array [
+      Object {
+        "base": "USD",
+        "close": 205,
+        "high": 210,
+        "low": 200,
+        "open": 202,
+        "period": 0,
+        "quote": "ETH",
+        "source": "bitfinex",
+        "timestamp": 1535958681000,
+        "volume": 0.0007,
+      },
+      Object {
+        "base": "USD",
+        "close": 210,
+        "high": 213,
+        "low": 200,
+        "open": 207,
+        "period": 0,
+        "quote": "ETH",
+        "source": "kraken",
+        "timestamp": 1535958681000,
+        "volume": 17.6757,
+      },
+    ],
+  },
+}
+`;
+
+exports[`sortPricesByPairPeriod 60 1`] = `
+Object {
+  "ETH|USD": Object {
+    "426655": Array [
+      Object {
+        "base": "USD",
+        "close": 205,
+        "high": 210,
+        "low": 200,
+        "open": 202,
+        "period": 0,
+        "quote": "ETH",
+        "source": "bitfinex",
+        "timestamp": 1535958681000,
+        "volume": 0.0007,
+      },
+      Object {
+        "base": "USD",
+        "close": 210,
+        "high": 213,
+        "low": 200,
+        "open": 207,
+        "period": 0,
+        "quote": "ETH",
+        "source": "kraken",
+        "timestamp": 1535958681000,
+        "volume": 17.6757,
+      },
+      Object {
+        "base": "USD",
+        "close": 215,
+        "high": 220,
+        "low": 210,
+        "open": 214,
+        "period": 0,
+        "quote": "ETH",
+        "source": "gemini",
+        "timestamp": 1535958609000,
+        "volume": 0.0013,
+      },
+    ],
+  },
+}
+`;

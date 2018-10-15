@@ -279,7 +279,6 @@ class DynamoUtil {
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return 0;
-		// console.logInfo(JSON.stringify(data, null, 4));
 		return Number(data.Items[0].block.N);
 	}
 
@@ -377,14 +376,8 @@ class DynamoUtil {
 			}
 		}
 
-		console.log(params);
-
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
-		console.log('>>>>>>>>>> period: ' + period);
-
-		// console.log(data.Items.map(p => this.parsePrice(p, period)));
-
 		return data.Items.map(
 			p => (period > 0 ? this.parsePrice(p, period) : this.parseTradedPrice(p))
 		);

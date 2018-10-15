@@ -36,3 +36,33 @@ test('{}, null, undefined is empty', () => {
 test('{test: true} is not empty', () => {
 	expect(util.isEmptyObject({ test: true })).toBe(false);
 });
+
+test('parseOptions', () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	const command = [
+		'npm',
+		'run',
+		'trades',
+		'source=source',
+		'assets=quote,base',
+		'period=10',
+		'start=20180930T080000',
+		'end=20180930T100000'
+	];
+	expect(util.parseOptions(command)).toMatchSnapshot();
+});
+
+test('getPeriodStartTimestamp', () => {
+	// 1970-01-15 6:56:07
+	// util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	// 1970-01-15 6:55:00
+	expect(util.getPeriodStartTimestamp(1234567890, 1)).toBe(1234500000);
+	// 1970-01-15 6:40:00
+	expect(util.getPeriodStartTimestamp(1234567890, 10)).toBe(1233600000);
+	// 1970-01-15 5:00:00
+	expect(util.getPeriodStartTimestamp(1234567890, 60)).toBe(1227600000);
+	// 1970-01-15 0:00:00
+	expect(util.getPeriodStartTimestamp(1234567890, 360)).toBe(1209600000);
+	// 1970-01-14 0:00:00
+	expect(util.getPeriodStartTimestamp(1234567890, 1440)).toBe(1123200000);
+});
