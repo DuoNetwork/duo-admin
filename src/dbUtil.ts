@@ -10,12 +10,12 @@ class DbUtil {
 
 	public async init(tool: string, option: IOption) {
 		this.dynamo = option.dynamo;
-		const role = util.getDynamoRole(tool, option.dynamo);
+		const role = util.getDynamoRole(option, tool, option.dynamo);
 		const process = util.getStatusProcess(tool, option);
 		util.logInfo('role: ' + role);
 		util.logInfo('process: ' + process);
 
-		dynamoUtil.init(option.live, role, process);
+		dynamoUtil.init(option.live, process);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);

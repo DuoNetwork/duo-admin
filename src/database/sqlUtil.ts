@@ -92,15 +92,6 @@ class SqlUtil {
 	}
 
 	public async insertPrice(price: IPrice) {
-		console.log('INSERT INTO ' +
-		CST.DB_SQL_HISTORY['ETH-USD'] +
-		" VALUES ('" +
-		price.timestamp +
-		"','" +
-		price.price +
-		"','" +
-		price.volume +
-		"')");
 		util.logInfo(
 			await this.executeQuery(
 				'INSERT INTO ' +
@@ -151,8 +142,8 @@ class SqlUtil {
 		return res.map(item => ({
 			quote: item[CST.DB_TX_QTE],
 			base: item[CST.DB_TX_BASE],
-			source: item[CST.DB_TX_SRC],
 			id: item[CST.DB_TX_ID],
+			source: item[CST.DB_TX_SRC],
 			price: Number(item[CST.DB_TX_PRICE]),
 			amount: Number(item[CST.DB_TX_AMOUNT]),
 			timestamp: Number(item[CST.DB_TX_TS])

@@ -1,7 +1,7 @@
-import moment from 'moment';
+// import moment from 'moment';
 import * as CST from './constants';
 import dbUtil from './dbUtil';
-import { IPrice, IPriceBar, ITrade } from './types';
+import { IPrice, ITrade } from './types';
 import util from './util';
 
 class Calculateor {
@@ -160,51 +160,51 @@ class Calculateor {
 		}
 	}
 
-	public getMinutelyOHLCFromTrades(trades: ITrade[], timestamp: number): IPriceBar {
-		trades.sort((a, b) => a.timestamp - b.timestamp);
-		const firstTrade = trades[0];
-		const lastTrade = trades[trades.length - 1];
-		trades.sort((a, b) => a.price - b.price);
-		const lowestTrade = trades[0];
-		const highestTrade = trades[trades.length - 1];
-		const volume = trades.reduce((sum, p) => sum + p.amount, 0);
-		return {
-			source: firstTrade.source,
-			date: moment.utc(firstTrade.timestamp).format('YYYY-MM-DD'),
-			hour: moment.utc(firstTrade.timestamp).format('HH'),
-			minute: Number(moment.utc(firstTrade.timestamp).format('mm')),
-			open: firstTrade.price,
-			high: highestTrade.price,
-			low: lowestTrade.price,
-			close: lastTrade.price,
-			volume: volume,
-			timestamp: timestamp
-		};
-	}
+	// public getMinutelyOHLCFromTrades(trades: ITrade[], timestamp: number): IPriceBar {
+	// 	trades.sort((a, b) => a.timestamp - b.timestamp);
+	// 	const firstTrade = trades[0];
+	// 	const lastTrade = trades[trades.length - 1];
+	// 	trades.sort((a, b) => a.price - b.price);
+	// 	const lowestTrade = trades[0];
+	// 	const highestTrade = trades[trades.length - 1];
+	// 	const volume = trades.reduce((sum, p) => sum + p.amount, 0);
+	// 	return {
+	// 		source: firstTrade.source,
+	// 		date: moment.utc(firstTrade.timestamp).format('YYYY-MM-DD'),
+	// 		hour: moment.utc(firstTrade.timestamp).format('HH'),
+	// 		minute: Number(moment.utc(firstTrade.timestamp).format('mm')),
+	// 		open: firstTrade.price,
+	// 		high: highestTrade.price,
+	// 		low: lowestTrade.price,
+	// 		close: lastTrade.price,
+	// 		volume: volume,
+	// 		timestamp: timestamp
+	// 	};
+	// }
 
-	public getHourlyOHLCFromPriceBars(priceBars: IPriceBar[], timestamp: number): IPriceBar {
-		priceBars.sort((a, b) => a.minute - b.minute);
-		const firstBar = priceBars[0];
-		const lastBar = priceBars[priceBars.length - 1];
-		priceBars.sort((a, b) => b.high - a.high);
-		const highestBar = priceBars[0];
-		priceBars.sort((a, b) => a.low - b.low);
-		const lowestBar = priceBars[0];
-		const volume = priceBars.reduce((sum, p) => sum + p.volume, 0);
-		// trades.sort((a, b) => a.price - b.price);
-		return {
-			source: firstBar.source,
-			date: firstBar.date,
-			hour: firstBar.hour,
-			minute: 0,
-			open: firstBar.open,
-			high: highestBar.high,
-			low: lowestBar.low,
-			close: lastBar.close,
-			volume: volume,
-			timestamp: timestamp
-		};
-	}
+	// public getHourlyOHLCFromPriceBars(priceBars: IPriceBar[], timestamp: number): IPriceBar {
+	// 	priceBars.sort((a, b) => a.minute - b.minute);
+	// 	const firstBar = priceBars[0];
+	// 	const lastBar = priceBars[priceBars.length - 1];
+	// 	priceBars.sort((a, b) => b.high - a.high);
+	// 	const highestBar = priceBars[0];
+	// 	priceBars.sort((a, b) => a.low - b.low);
+	// 	const lowestBar = priceBars[0];
+	// 	const volume = priceBars.reduce((sum, p) => sum + p.volume, 0);
+	// 	// trades.sort((a, b) => a.price - b.price);
+	// 	return {
+	// 		source: firstBar.source,
+	// 		date: firstBar.date,
+	// 		hour: firstBar.hour,
+	// 		minute: 0,
+	// 		open: firstBar.open,
+	// 		high: highestBar.high,
+	// 		low: lowestBar.low,
+	// 		close: lastBar.close,
+	// 		volume: volume,
+	// 		timestamp: timestamp
+	// 	};
+	// }
 }
 const calculator = new Calculateor();
 export default calculator;

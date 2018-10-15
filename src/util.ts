@@ -3,6 +3,7 @@ import request from 'request';
 import * as CST from './constants';
 import infura from './keys/infura.json';
 import { IOption } from './types';
+// import { Options } from 'aws-cli-js';
 
 class Util {
 	public logLevel: string = CST.LOG_INFO;
@@ -119,6 +120,7 @@ class Util {
 			numOfMinutes: 2,
 			numOfHours: 2,
 			key: '',
+			period: 1,
 			endBlk: 0
 		};
 		for (let i = 3; i < argv.length; i++) {
@@ -217,6 +219,9 @@ class Util {
 				case 'endBlk':
 					option.endBlk = Number(args[1]) || option.endBlk;
 					break;
+				case 'period':
+					option.period = Number(args[1]);
+					break;
 				default:
 					break;
 			}
@@ -238,22 +243,32 @@ class Util {
 		return option;
 	}
 
-	public getDynamoRole(tool: string, useDynamo: boolean): string {
+	public getPeriodStartTimestamp(timestamp: number, period: number = 1) {
+		// const now = this.getUTCNowTimestamp();
+		return Math.floor(timestamp / 60000 / period - 1) * 60000 * period;
+	}
+
+	public timestampToString(ts: number) {
+		//just for debugging purpose
+		return moment.utc(ts).format('YYYY-MM-DDTHH:mm:ss');
+	}
+
+	public getDynamoRole(option: IOption, tool: string, useDynamo: boolean): string {
 		switch (tool) {
 			case CST.TRADES:
 				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
 			case CST.COMMIT:
 			case CST.CLEAN_DB:
 			case CST.NODE:
-			// case 'getKey':
-			// case 'getSqlAuth':
+				// case 'getKey':
+				// case 'getSqlAuth':
 				return CST.AWS_DYNAMO_ROLE_STATUS;
 			case CST.SUBSCRIBE:
 				return CST.AWS_DYNAMO_ROLE_EVENT;
-			case CST.HOURLY:
-				return CST.AWS_DYNAMO_ROLE_HOURLY;
-			case CST.MINUTELY:
-				return CST.AWS_DYNAMO_ROLE_MINUTELY;
+			case CST.DB_PRICES:
+				if (option.period === 1) return CST.AWS_DYNAMO_ROLE_MINUTELY;
+				else if (option.period === 60) return CST.AWS_DYNAMO_ROLE_HOURLY;
+				else return '';
 			default:
 				return '';
 		}
@@ -268,7 +283,7 @@ class Util {
 
 		switch (tool) {
 			case 'trades':
-				type = 'PRICE';
+				type = 'TRADE';
 				source = option.source ? '_' + option.source.toUpperCase() : '';
 				break;
 			case 'subscribe':
@@ -285,12 +300,15 @@ class Util {
 			case 'cleanDB':
 				type = 'CLEANDB';
 				break;
-			case 'hourly':
-				type = 'HOURLY';
+			case 'prices':
+				type = 'PRICE';
+				if (option.period === 0) source = '_MINUTELY';
+				else if (option.period === 60) source = '_HOURLY';
+				else source = '';
 				break;
-			case 'minutely':
-				type = 'MINUTELY';
-				break;
+			// case 'minutely':
+			// 	type = 'MINUTELY';
+			// 	break;
 			case 'node':
 				type = 'CHAIN';
 				break;

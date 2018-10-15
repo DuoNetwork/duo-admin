@@ -1,3 +1,4 @@
+// import { PROVIDER_LOCAL_WS } from '../../duo-contract-util/src/constants';
 export * from '../../duo-contract-util/src/constants';
 export const TRADES = 'trades';
 export const COMMIT = 'commit';
@@ -18,33 +19,46 @@ export const DB_SQL_TRADE = 'trades';
 export const DB_SQL_HISTORY = {
 	'ETH-USD': 'eth_usd_historical_price'
 }
-export const DB_AWS_TRADES_LIVE = 'trades_live';
-export const DB_AWS_TRADES_DEV = 'trades_dev';
-export const DB_AWS_HOURLY_LIVE = 'hourly_live';
-export const DB_AWS_HOURLY_DEV = 'hourly_dev';
-export const DB_AWS_MINUTELY_LIVE = 'minutely_live';
-export const DB_AWS_MINUTELY_DEV = 'minutely_dev';
-export const DB_AWS_EVENTS_LIVE = 'events_live';
-export const DB_AWS_EVENTS_DEV = 'events_dev';
-export const DB_AWS_STATUS_LIVE = 'status_live';
-export const DB_AWS_STATUS_DEV = 'status_dev';
-export const DB_AWS_UI_EVENTS_LIVE = 'uiEvents_live';
-export const DB_AWS_UI_EVENTS_DEV = 'uiEvents_dev';
+
+export const DB_DUO = 'duo';
+export const DB_TRADES = 'trades';
+export const DB_LIVE = 'live';
+export const DB_DEV = 'dev';
+export const DB_PRICES = 'prices';
+export const DB_AWS_TRADES_LIVE = 'duo.trades.live';
+export const DB_AWS_TRADES_DEV = 'duo.trades.dev';
+export const DB_AWS_HOURLY_LIVE = 'duo.prices.60.live';
+export const DB_AWS_HOURLY_DEV = 'duo.prices.60.dev';
+export const DB_AWS_MINUTELY_LIVE = 'duo.prices.1.live';
+export const DB_AWS_MINUTELY_DEV = 'duo.prices.1.dev';
+export const DB_AWS_EVENTS_LIVE = 'duo.events.live';
+export const DB_AWS_EVENTS_DEV = 'duo.events.dev';
+export const DB_AWS_STATUS_LIVE = 'duo.status.live';
+export const DB_AWS_STATUS_DEV = 'duo.status.dev';
+export const DB_AWS_UI_EVENTS_LIVE = 'duo.uiEvents.live';
+export const DB_AWS_UI_EVENTS_DEV = 'duo.uiEvents.dev';
 export const DB_TX_QTE = 'quote';
 export const DB_TX_BASE = 'base';
+export const DB_TX_QUOTE_BASE_ID = 'quoteBaseId';
 export const DB_TX_SRC = 'source';
 export const DB_TX_ID = 'id';
 export const DB_TX_PRICE = 'price';
 export const DB_TX_AMOUNT = 'amount';
 export const DB_TX_TS = 'timestamp';
 export const DB_TX_SYSTIME = 'systime';
+export const DB_UPDATED_AT = 'updatedAt';
 export const DB_TX_SRC_DHM = 'sourceDateHourMinute';
 export const DB_HISTORY_PRICE = 'price';
 export const DB_HISTORY_TIMESTAMP = 'timestamp';
+export const DB_QUOTE_BASE_TS = 'quoteBaseTimestamp';
 export const DB_HISTORY_VOLUME = 'volume';
 export const DB_HR_SRC_DATE = 'sourceDate';
 export const DB_HR_HOUR = 'hour';
 export const DB_MN_SRC_DATE_HOUR = 'sourceDateHour';
+export const DB_SRC_DHM = 'sourceDateHourMinute';
+export const DB_SRC_DH = 'sourceDateHour';
+export const DB_SRC_DATE = 'sourceDate';
+export const DB_SRC_YM = 'sourceYearMonth';
 export const DB_MN_MINUTE = 'minute';
 export const DB_OHLC_OPEN = 'open';
 export const DB_OHLC_HIGH = 'high';
@@ -81,6 +95,7 @@ export const DB_EV_UI_ETH_FEE = 'ethFee';
 export const DB_EV_UI_DUO_FEE = 'duoFee';
 export const DB_STATUS_EVENT_PUBLIC_OTHERS = 'EVENT_AWS_PUBLIC_OTHERS';
 
+export const STATUS_INTERVAL = 30;
 export const TRADES_STATUS_LAST_UPDATE_INTERVAL_WS = 10;
 
 export const AWS_DYNAMO_ROLE_TRADE = 'trade';
@@ -97,6 +112,17 @@ export const LOG_RANKING: { [level: string]: number } = {
 	[LOG_ERROR]: 0,
 	[LOG_INFO]: 1,
 	[LOG_DEBUG]: 2
+};
+
+export const DB_PRICES_PRIMARY_KEY_RESOLUTION: {
+	[period: number]: 'minute' | 'hour' | 'day' | 'month';
+} = {
+	0: 'minute',
+	1: 'hour',
+	10: 'hour',
+	60: 'day',
+	360: 'month',
+	1440: 'month'
 };
 
 export const API_GMN_BASE_URL = 'https://api.gemini.com';

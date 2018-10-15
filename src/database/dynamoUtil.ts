@@ -17,11 +17,11 @@ class DynamoUtil {
 	// private role: string = '';
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	public init(live: boolean, role: string, process: string) {
+	public init(live: boolean, process: string) {
 		this.live = live;
 		this.process = process;
 		// this.role = role;
-		AWS.config.loadFromPath('./src/keys/aws/' + (live ? 'live' : 'dev') + '/' + role + '.json');
+		AWS.config.loadFromPath('./src/keys/aws/' + (live ? 'live' : 'dev') + '/admin.json');
 		this.ddb = new AWS.DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
 	}
 
@@ -57,9 +57,7 @@ class DynamoUtil {
 
 	public convertTradeToDynamo(trade: ITrade, systime: number) {
 		return {
-			[CST.DB_TX_ID]: { S: trade.id },
-			[CST.DB_TX_QTE]: { S: trade.quote },
-			[CST.DB_TX_BASE]: { S: trade.base },
+			[CST.DB_TX_QUOTE_BASE_ID]: { S: `${trade.quote}|${trade.base}|${trade.id}` },
 			[CST.DB_TX_PRICE]: { N: trade.price.toString() },
 			[CST.DB_TX_AMOUNT]: { N: trade.amount.toString() },
 			[CST.DB_TX_TS]: { N: trade.timestamp + '' },
@@ -68,11 +66,13 @@ class DynamoUtil {
 	}
 
 	public convertDynamoToTrade(data: AttributeMap): ITrade {
+		const quoteBaseId = data[CST.DB_TX_QUOTE_BASE_ID].S || '';
+		const [base, quote, id] = quoteBaseId.split('|');
 		return {
-			base: data[CST.DB_TX_BASE].S || '',
-			quote: data[CST.DB_TX_QTE].S || '',
+			base: base,
+			quote: quote,
+			id: id,
 			source: (data[CST.DB_TX_SRC_DHM].S || '').split('|')[0],
-			id: data[CST.DB_TX_ID].S || '',
 			price: Number(data[CST.DB_TX_PRICE].N),
 			amount: Number(data[CST.DB_TX_AMOUNT].N),
 			timestamp: Number(data[CST.DB_TX_TS].N)
@@ -98,22 +98,22 @@ class DynamoUtil {
 		};
 	}
 
-	public convertDynamoToPriceBar(data: AttributeMap): IPriceBar {
-		const sourceDatetime = data[CST.DB_MN_SRC_DATE_HOUR].S || '';
-		const [source, datetime] = sourceDatetime.split('|');
-		return {
-			source: source,
-			date: datetime.substring(0, 10),
-			hour: datetime.substring(11, 13),
-			minute: Number(data[CST.DB_MN_MINUTE].N),
-			open: Number(data[CST.DB_OHLC_OPEN].N),
-			high: Number(data[CST.DB_OHLC_HIGH].N),
-			low: Number(data[CST.DB_OHLC_LOW].N),
-			close: Number(data[CST.DB_OHLC_CLOSE].N),
-			volume: Number(data[CST.DB_OHLC_VOLUME].N),
-			timestamp: Number(data[CST.DB_OHLC_TS].N)
-		};
-	}
+	// public convertDynamoToPriceBar(data: AttributeMap): IPriceBar {
+	// 	const sourceDatetime = data[CST.DB_MN_SRC_DATE_HOUR].S || '';
+	// 	const [source, datetime] = sourceDatetime.split('|');
+	// 	return {
+	// 		source: source,
+	// 		date: datetime.substring(0, 10),
+	// 		hour: datetime.substring(11, 13),
+	// 		minute: Number(data[CST.DB_MN_MINUTE].N),
+	// 		open: Number(data[CST.DB_OHLC_OPEN].N),
+	// 		high: Number(data[CST.DB_OHLC_HIGH].N),
+	// 		low: Number(data[CST.DB_OHLC_LOW].N),
+	// 		close: Number(data[CST.DB_OHLC_CLOSE].N),
+	// 		volume: Number(data[CST.DB_OHLC_VOLUME].N),
+	// 		timestamp: Number(data[CST.DB_OHLC_TS].N)
+	// 	};
+	// }
 
 	public convertEventToDynamo(event: IEvent, sysTime: number) {
 		let addr = '';
@@ -160,6 +160,8 @@ class DynamoUtil {
 				...data
 			}
 		};
+
+		console.log(params.TableName, params.Item[CST.DB_TX_SRC_DHM]);
 
 		await this.insertData(params);
 		if (insertStatus) await this.insertStatusData(data);
@@ -211,31 +213,37 @@ class DynamoUtil {
 	// 	console.logInfo('done');
 	// }
 
-	public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
-		return this.insertData({
-			TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
-			Item: {
-				[CST.DB_MN_SRC_DATE_HOUR]: {
-					S: priceBar.source + '|' + priceBar.date + '-' + priceBar.hour
-				},
-				[CST.DB_MN_MINUTE]: { N: Number(priceBar.minute) + '' },
-				...this.convertPriceBarToDynamo(priceBar)
-			}
-		});
+	// public insertMinutelyData(priceBar: IPriceBar): Promise<void> {
+	// 	return this.insertData({
+	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
+	// 		Item: {
+	// 			[CST.DB_MN_SRC_DATE_HOUR]: {
+	// 				S: priceBar.source + '|' + priceBar.date + '-' + priceBar.hour
+	// 			},
+	// 			[CST.DB_MN_MINUTE]: { N: Number(priceBar.minute) + '' },
+	// 			...this.convertPriceBarToDynamo(priceBar)
+	// 		}
+	// 	});
+	// }
+
+	public getPriceKeyField(period: number) {
+		if (period === 0) return CST.DB_SRC_DHM;
+		else if (period === 1) return CST.DB_MN_SRC_DATE_HOUR;
+		else throw new Error('invalid period');
 	}
 
-	public async insertHourlyData(priceBar: IPriceBar): Promise<void> {
-		return this.insertData({
-			TableName: this.live ? CST.DB_AWS_HOURLY_LIVE : CST.DB_AWS_HOURLY_DEV,
-			Item: {
-				[CST.DB_HR_SRC_DATE]: {
-					S: priceBar.source + '|' + priceBar.date
-				},
-				[CST.DB_HR_HOUR]: { N: Number(priceBar.hour) + '' },
-				...this.convertPriceBarToDynamo(priceBar)
-			}
-		});
-	}
+	// public async insertHourlyData(priceBar: IPriceBar): Promise<void> {
+	// 	return this.insertData({
+	// 		TableName: this.live ? CST.DB_AWS_HOURLY_LIVE : CST.DB_AWS_HOURLY_DEV,
+	// 		Item: {
+	// 			[CST.DB_HR_SRC_DATE]: {
+	// 				S: priceBar.source + '|' + priceBar.date
+	// 			},
+	// 			[CST.DB_HR_HOUR]: { N: Number(priceBar.hour) + '' },
+	// 			...this.convertPriceBarToDynamo(priceBar)
+	// 		}
+	// 	});
+	// }
 
 	public insertHeartbeat(data: object = {}): Promise<void> {
 		return this.insertData({
@@ -292,19 +300,209 @@ class DynamoUtil {
 		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
 
-	public async readMinutelyData(source: string, datetimeString: string): Promise<IPriceBar[]> {
-		const params = {
-			TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
-			KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
-			ExpressionAttributeValues: {
-				[':' + CST.DB_MN_SRC_DATE_HOUR]: { S: source + '|' + datetimeString }
+	// public async readMinutelyData(source: string, datetimeString: string): Promise<IPriceBar[]> {
+	// 	const params = {
+	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
+	// 		KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
+	// 		ExpressionAttributeValues: {
+	// 			[':' + CST.DB_MN_SRC_DATE_HOUR]: { S: source + '|' + datetimeString }
+	// 		}
+	// 	};
+
+	// 	const data = await this.queryData(params);
+	// 	if (!data.Items || !data.Items.length) return [];
+
+	// 	return data.Items.map(d => this.convertDynamoToPriceBar(d));
+	// }
+
+	public async getSingleKeyPeriodPrices(
+		src: string,
+		period: number,
+		timestamp: number,
+		pair: string = ''
+	) {
+		let params: QueryInput;
+		if (period === 0) {
+			params = {
+				TableName: `${CST.DB_DUO}.${CST.DB_TRADES}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
+				KeyConditionExpression: `${CST.DB_SRC_DHM} = :${CST.DB_SRC_DHM}`,
+				ExpressionAttributeValues: {
+					[':' + CST.DB_SRC_DHM]: {
+						S: `${src}|${moment.utc(timestamp).format('YYYY-MM-DD-HH-mm')}`
+					}
+				}
+			};
+			if (pair) {
+				params.KeyConditionExpression += ` AND ${
+					CST.DB_TX_QUOTE_BASE_ID
+				} BETWEEN :start AND :end`;
+				if (params.ExpressionAttributeValues) {
+					params.ExpressionAttributeValues[':start'] = { S: `${pair}|` };
+					params.ExpressionAttributeValues[':end'] = { S: `${pair}|z` };
+				}
 			}
-		};
+		} else {
+			const keyConditionExpression = `${this.getPriceKeyField(period)} = :primaryValue`;
+			let primaryValue;
+			if (period <= 10)
+				primaryValue = { S: `${src}|${moment.utc(timestamp).format('YYYY-MM-DD-HH')}` };
+			else if (period === 60)
+				primaryValue = {
+					S: `${src}|${moment.utc(timestamp).format('YYYY-MM-DD')}`
+				};
+			else if (period > 60)
+				primaryValue = {
+					S: `${src}|${moment.utc(timestamp).format('YYYY-MM')}`
+				};
+			else throw new Error('invalid period');
+
+			params = {
+				TableName: `${CST.DB_DUO}.${CST.DB_PRICES}.${period}.${
+					this.live ? CST.DB_LIVE : CST.DB_DEV
+				}`,
+				KeyConditionExpression: keyConditionExpression,
+				ExpressionAttributeValues: {
+					[':primaryValue']: primaryValue
+				}
+			};
+
+			if (pair) {
+				params.KeyConditionExpression += ` AND ${
+					CST.DB_QUOTE_BASE_TS
+				} BETWEEN :start AND :end`;
+				if (params.ExpressionAttributeValues) {
+					params.ExpressionAttributeValues[':start'] = { S: `${pair}|${timestamp}` };
+					params.ExpressionAttributeValues[':end'] = {
+						S: `${pair}|${util.getUTCNowTimestamp()}`
+					};
+				}
+			}
+		}
+
+		console.log(params);
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
+		console.log('>>>>>>>>>> period: ' + period);
 
-		return data.Items.map(d => this.convertDynamoToPriceBar(d));
+		// console.log(data.Items.map(p => this.parsePrice(p, period)));
+
+		return data.Items.map(
+			p => (period > 0 ? this.parsePrice(p, period) : this.parseTradedPrice(p))
+		);
+	}
+
+	public parsePrice(data: AttributeMap, period: number): IPriceBar {
+		return {
+			source: (data[this.getPriceKeyField(period)].S || '').split('|')[0],
+			base: data[CST.DB_TX_BASE].S || '',
+			quote: data[CST.DB_TX_QTE].S || '',
+			timestamp: Number((data[CST.DB_QUOTE_BASE_TS].S || '').split('|')[2]),
+			period: period,
+			open: Number(data[CST.DB_OHLC_OPEN].N),
+			high: Number(data[CST.DB_OHLC_HIGH].N),
+			low: Number(data[CST.DB_OHLC_LOW].N),
+			close: Number(data[CST.DB_OHLC_CLOSE].N),
+			volume: Number(data[CST.DB_OHLC_VOLUME].N)
+		};
+	}
+
+	public parseTradedPrice(data: AttributeMap): IPriceBar {
+		const price = Number(data[CST.DB_TX_PRICE].N);
+		return {
+			source: (data[CST.DB_SRC_DHM].S || '').split('|')[0],
+			base: (data[CST.DB_TX_QUOTE_BASE_ID].S || '').split('|')[1],
+			quote: (data[CST.DB_TX_QUOTE_BASE_ID].S || '').split('|')[0],
+			timestamp: Number(data[CST.DB_TX_TS].N),
+			period: 0,
+			open: price,
+			high: price,
+			low: price,
+			close: price,
+			volume: Number(data[CST.DB_TX_AMOUNT].N)
+		};
+	}
+
+	public async addPrice(price: IPriceBar) {
+		const data: AttributeMap = {
+			[CST.DB_TX_BASE]: { S: price.base },
+			[CST.DB_TX_QTE]: { S: price.quote },
+			[CST.DB_OHLC_OPEN]: { N: price.open + '' },
+			[CST.DB_OHLC_HIGH]: { N: price.high + '' },
+			[CST.DB_OHLC_LOW]: { N: price.low + '' },
+			[CST.DB_OHLC_CLOSE]: { N: price.close + '' },
+			[CST.DB_OHLC_VOLUME]: { N: price.volume + '' },
+			[CST.DB_QUOTE_BASE_TS]: {
+				S: `${price.quote}|${price.base}|${price.timestamp}`
+			},
+			[CST.DB_UPDATED_AT]: { N: util.getUTCNowTimestamp() + '' }
+		};
+
+		if (price.period <= 10)
+			data[CST.DB_SRC_DH] = {
+				S: `${price.source}|${moment.utc(price.timestamp).format('YYYY-MM-DD-HH')}`
+			};
+		else if (price.period === 60)
+			data[CST.DB_SRC_DATE] = {
+				S: `${price.source}|${moment.utc(price.timestamp).format('YYYY-MM-DD')}`
+			};
+		else if (price.period > 60)
+			data[CST.DB_SRC_YM] = {
+				S: `${price.source}|${moment.utc(price.timestamp).format('YYYY-MM')}`
+			};
+		else throw new Error('invalid period');
+
+		return this.insertData({
+			TableName: `${CST.DB_DUO}.${CST.DB_PRICES}.${price.period}.${
+				this.live ? CST.DB_LIVE : CST.DB_DEV
+			}`,
+			Item: data
+		});
+	}
+
+	public async getPrices(
+		src: string,
+		period: number,
+		start: number,
+		end: number = 0,
+		pair: string = ''
+	) {
+		util.logDebug(
+			`=>priceUtil.getPrices(${src},${String(period)},${util.timestampToString(
+				start
+			)}, ${util.timestampToString(end)})`
+		);
+		if (!end) end = util.getUTCNowTimestamp();
+
+		const res = CST.DB_PRICES_PRIMARY_KEY_RESOLUTION[period];
+		const primaryKeyPeriodStarts: number[] = [start];
+		const dateObj = moment
+			.utc(start)
+			.startOf(res)
+			.add(1, res);
+		while (dateObj.valueOf() < end) {
+			primaryKeyPeriodStarts.push(dateObj.valueOf());
+			dateObj.add(1, res);
+		}
+		util.logDebug(
+			`...... ${JSON.stringify(primaryKeyPeriodStarts.map(x => util.timestampToString(x)))}`
+		);
+
+		let prices: IPriceBar[] = [];
+		for (const keyPeriodStart of primaryKeyPeriodStarts) {
+			const singleKeyPeriodPrices = await dynamoUtil.getSingleKeyPeriodPrices(
+				src,
+				period,
+				keyPeriodStart,
+				pair
+			);
+			singleKeyPeriodPrices.forEach(price => prices.push(price));
+		}
+		prices = prices.filter(price => price.timestamp >= start && price.timestamp < end);
+		prices.sort((a, b) => -a.timestamp + b.timestamp);
+
+		util.logDebug(`...... prices:${String(prices.length)}`);
+		return prices;
 	}
 }
 

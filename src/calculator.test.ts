@@ -58,18 +58,18 @@ test('getPriceFix case 2', async () => {
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
-test('getMinutelyOHLCFromTrades', () =>
-	expect(
-		calculator.getMinutelyOHLCFromTrades(
-			sampleTrades.Items.map(d => dynamoUtil.convertDynamoToTrade(d)),
-			1234567890
-		)
-	).toMatchSnapshot());
+// test('getMinutelyOHLCFromTrades', () =>
+// 	expect(
+// 		calculator.getMinutelyOHLCFromTrades(
+// 			sampleTrades.Items.map(d => dynamoUtil.convertDynamoToTrade(d)),
+// 			1234567890
+// 		)
+// 	).toMatchSnapshot());
 
-test('getHourlyOHLCFromTrades', () =>
-	expect(
-		calculator.getHourlyOHLCFromPriceBars(
-			samppleMinutes.Items.map(d => dynamoUtil.convertDynamoToPriceBar(d)),
-			1234567890
-		)
-	).toMatchSnapshot());
+// test('getHourlyOHLCFromTrades', () =>
+// 	expect(
+// 		calculator.getHourlyOHLCFromPriceBars(
+// 			samppleMinutes.Items.map(d => dynamoUtil.convertDynamoToPriceBar(d)),
+// 			1234567890
+// 		)
+// 	).toMatchSnapshot());

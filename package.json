@@ -10,8 +10,7 @@
 		"commit": "ts-node ./src/index commit",
 		"trades": "ts-node src/index trades",
 		"subscribe": "ts-node ./src/index subscribe",
-		"minutely": "ts-node ./src/index minutely dynamo",
-		"hourly": "ts-node ./src/index hourly dynamo",
+		"prices": "ts-node src/index prices",
 		"node": "ts-node ./src/index node",
 		"cleanDB": "ts-node ./src/index cleanDB"
 	},

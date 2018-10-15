@@ -1,9 +1,10 @@
-import moment from 'moment';
+// import moment from 'moment';
 import ContractUtil from '../../duo-contract-util/src/contractUtil';
+import apis from './apis';
 import calculator from './calculator';
 import * as CST from './constants';
 import dynamoUtil from './database/dynamoUtil';
-import { IOption } from './types';
+import { IOption, IPriceBar } from './types';
 import util from './util';
 const schedule = require('node-schedule');
 
@@ -56,79 +57,101 @@ class PriceUtil {
 		});
 	}
 
-	public async saveMinutelyData(numOfMinutes: number) {
-		util.logInfo('processing minute trade data');
-		const now = moment.utc();
-		const timestamp = now.valueOf();
+	public getBasePeriod(period: number) {
+		if (period === 1) return 0;
+		if (period === 60) return 1;
 
-		const datetimeToRequest: string[] = [];
-		for (let i = 0; i < numOfMinutes; i++) {
-			datetimeToRequest.push(now.format('YYYY-MM-DD-HH-mm'));
-			now.subtract(1, 'minutes');
+		throw new Error('invalid period');
+	}
+
+	public sortPricesByPairPeriod(
+		prices: IPriceBar[],
+		period: number
+	): { [pair: string]: { [timestamp: number]: IPriceBar[] } } {
+		const pairPrices: { [pair: string]: { [timestamp: number]: IPriceBar[] } } = {};
+		prices.forEach(price => {
+			const pair = price.quote + '|' + price.base;
+			const timestamp = Math.floor(price.timestamp / 60000 / period);
+			if (!pairPrices[pair]) pairPrices[pair] = {};
+			if (!pairPrices[pair][timestamp]) pairPrices[pair][timestamp] = [];
+			pairPrices[pair][timestamp].push(price);
+		});
+		return pairPrices;
+	}
+
+	public getPeriodPrice(prices: IPriceBar[], period: number): IPriceBar {
+		prices.sort((a, b) => a.timestamp - b.timestamp);
+		const first = prices[0];
+		const last = prices[prices.length - 1];
+		prices.sort((a, b) => -a.high + b.high);
+		const high = prices[0];
+		prices.sort((a, b) => a.low - b.low);
+		const low = prices[0];
+		return {
+			source: first.source,
+			open: first.open,
+			high: high.high,
+			low: low.low,
+			close: last.close,
+			volume: prices.reduce((sum, p) => sum + p.volume, 0),
+			timestamp: Math.floor(first.timestamp / 60000 / period) * 60000 * period,
+			period: period,
+			quote: first.quote,
+			base: first.base
+		};
+	}
+
+	public async aggregatePrice(period: number) {
+		util.logDebug(`priceUtil.aggregatePrice(${period})`);
+		const now = util.getUTCNowTimestamp();
+		const start = util.getPeriodStartTimestamp(now, period);
+		for (const src in apis) {
+			util.logInfo('------------------');
+			util.logInfo(
+				`[${src}]: To aggreate period:${String(
+					period
+				)} prices from timestamp ${util.timestampToString(start)}`
+			);
+			util.logInfo(
+				`[${src}]: querying basePeriod:${this.getBasePeriod(
+					period
+				)} prices from timestamp ${util.timestampToString(start)}`
+			);
+			const basePrices = await dynamoUtil.getPrices(
+				src,
+				this.getBasePeriod(period),
+				start,
+				now
+			);
+			util.logInfo(`fetched ${basePrices.length} basePeriod prices`);
+			const pairPeriodPrices = this.sortPricesByPairPeriod(basePrices, period);
+			const pairPrices: { [pair: string]: IPriceBar[] } = {};
+			for (const pair in pairPeriodPrices)
+				for (const pd in pairPeriodPrices[pair]) {
+					const periodPrices = pairPeriodPrices[pair][pd];
+					if (periodPrices.length) {
+						if (!pairPrices[pair]) pairPrices[pair] = [];
+						pairPrices[pair].push(this.getPeriodPrice(periodPrices, period));
+					}
+				}
+
+			util.logInfo('finished process, updating database');
+			for (const pair in pairPrices)
+				for (const price of pairPrices[pair]) await dynamoUtil.addPrice(price);
 		}
 
-		const promiseList: Array<Promise<void>> = [];
-		CST.EXCHANGES.forEach(src =>
-			datetimeToRequest.forEach(dt =>
-				promiseList.push(
-					dynamoUtil
-						.readTradeData(src, dt)
-						.then(
-							trades =>
-								trades.length
-									? dynamoUtil.insertMinutelyData(
-											calculator.getMinutelyOHLCFromTrades(trades, timestamp)
-									)
-									: Promise.resolve()
-						)
-				)
-			)
+		util.logInfo('all source processed');
+	}
+
+	public startAggregate(period: number) {
+		// console.log({ period: period + '' });
+		dynamoUtil.insertStatusData({ period: { N: period + '' }});
+
+		setInterval(
+			() => dynamoUtil.insertStatusData({ period: { N: period + '' }}),
+			CST.STATUS_INTERVAL * 1000
 		);
-
-		await Promise.all(promiseList);
-		util.logInfo('completed processing!');
-	}
-
-	public startProcessMinutelyPrices(option: IOption) {
-		const numOfMinutes = option.numOfMinutes > 2 ? option.numOfMinutes : 2;
-		setInterval(() => this.saveMinutelyData(numOfMinutes), 60000);
-	}
-
-	public async saveHourlyData(numOfHours: number) {
-		util.logInfo('processing hourly trade data');
-		const now = moment.utc();
-		const timestamp = now.valueOf();
-		const datetimeToRequest: string[] = [];
-		for (let i = 0; i < numOfHours; i++) {
-			datetimeToRequest.push(now.format('YYYY-MM-DD-HH'));
-			now.subtract(1, 'hours');
-		}
-		// console.logInfo(datetimeToRequest);
-		const promiseList: Array<Promise<void>> = [];
-		CST.EXCHANGES.forEach(src =>
-			datetimeToRequest.forEach(dt =>
-				promiseList.push(
-					dynamoUtil
-						.readMinutelyData(src, dt)
-						.then(
-							bars =>
-								bars.length
-									? dynamoUtil.insertHourlyData(
-											calculator.getHourlyOHLCFromPriceBars(bars, timestamp)
-									)
-									: Promise.resolve()
-						)
-				)
-			)
-		);
-
-		await Promise.all(promiseList);
-		util.logInfo('completed processing!');
-	}
-
-	public startProcessHourlyPrices(option: IOption) {
-		const numOfHours: number = option.numOfHours > 2 ? option.numOfHours : 2;
-		setInterval(() => this.saveHourlyData(numOfHours), 300000);
+		setInterval(() => this.aggregatePrice(period), 30000);
 	}
 }
 

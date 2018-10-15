@@ -16,17 +16,33 @@ export interface IPrice {
 	timestamp: number;
 }
 
-export interface IPriceBar {
+// export interface IPriceBar {
+// 	source: string;
+// 	date: string;
+// 	hour: string;
+// 	minute: number;
+// 	open: number;
+// 	high: number;
+// 	low: number;
+// 	close: number;
+// 	volume: number;
+// 	timestamp: number;
+// }
+
+export interface IBaseMarketData {
 	source: string;
-	date: string;
-	hour: string;
-	minute: number;
+	base: string;
+	quote: string;
+	timestamp: number;
+}
+
+export interface IPriceBar extends IBaseMarketData {
+	period: number;
 	open: number;
 	high: number;
 	low: number;
 	close: number;
 	volume: number;
-	timestamp: number;
 }
 
 export interface IAccount {
@@ -94,6 +110,7 @@ export interface IOption {
 	numOfHours: number;
 	key: string;
 	endBlk: number;
+	period: number;
 }
 
 export interface ISourceSettings {

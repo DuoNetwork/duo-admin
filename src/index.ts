@@ -36,13 +36,8 @@ dbUtil.init(tool, option).then(() => {
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
-		case CST.MINUTELY:
-			priceUtil.startProcessMinutelyPrices(option);
-			setInterval(() => dbUtil.insertHeartbeat(), 30000);
-			break;
-		case CST.HOURLY:
-			priceUtil.startProcessHourlyPrices(option);
-			setInterval(() => dbUtil.insertHeartbeat(), 30000);
+		case CST.DB_PRICES:
+			priceUtil.startAggregate(option.period);
 			break;
 		case CST.NODE:
 			util.logInfo('starting node hear beat');

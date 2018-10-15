@@ -69,8 +69,8 @@ test('convertTradeToDynamo', () =>
 		})
 	).toMatchSnapshot());
 
-test('convertPriceBarToDynamo', () =>
-	expect(dynamoUtil.convertPriceBarToDynamo(priceBar)).toMatchSnapshot());
+// test('convertPriceBarToDynamo', () =>
+// 	expect(dynamoUtil.convertPriceBarToDynamo(priceBar)).toMatchSnapshot());
 
 test('convertEventToDynamo', () =>
 	events.forEach(event =>
@@ -86,19 +86,19 @@ test('insertTradeData', async () => {
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
 });
 
-test('insertMinutelyData', async () => {
-	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
-	await dynamoUtil.insertMinutelyData(priceBar);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-});
+// test('insertMinutelyData', async () => {
+// 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
+// 	await dynamoUtil.insertMinutelyData(priceBar);
+// 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+// 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+// });
 
-test('insertHourlyData', async () => {
-	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
-	await dynamoUtil.insertHourlyData(priceBar);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-});
+// test('insertHourlyData', async () => {
+// 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
+// 	await dynamoUtil.insertHourlyData(priceBar);
+// 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+// 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+// });
 
 test('insertEventsData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve({}));
@@ -129,9 +129,9 @@ test('readTradeData', async () => {
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
-test('readMinutelyData', async () => {
-	dynamoUtil.queryData = jest.fn(() => Promise.resolve(sampleMinutely));
-	expect(await dynamoUtil.readMinutelyData('source', 'datetime')).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-});
+// test('readMinutelyData', async () => {
+// 	dynamoUtil.queryData = jest.fn(() => Promise.resolve(sampleMinutely));
+// 	expect(await dynamoUtil.readMinutelyData('source', 'datetime')).toMatchSnapshot();
+// 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+// 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+// });
