@@ -1,4 +1,4 @@
-import sampleMinutely from '../samples/dynamoMinutely.json';
+// import sampleMinutely from '../samples/dynamoMinutely.json';
 import sampleTrades from '../samples/dynamoTrades.json';
 import { IEvent } from '../types';
 import util from '../util';
@@ -14,18 +14,18 @@ const trade = {
 	timestamp: 1234567890
 };
 
-const priceBar = {
-	source: 'src',
-	date: 'YYYY-MM-DD',
-	hour: '00',
-	minute: 0,
-	open: 1,
-	high: 3,
-	low: 0,
-	close: 2,
-	volume: 123,
-	timestamp: 1234567890
-};
+// const priceBar = {
+// 	source: 'src',
+// 	date: 'YYYY-MM-DD',
+// 	hour: '00',
+// 	minute: 0,
+// 	open: 1,
+// 	high: 3,
+// 	low: 0,
+// 	close: 2,
+// 	volume: 123,
+// 	timestamp: 1234567890
+// };
 
 const events: IEvent[] = [
 	{

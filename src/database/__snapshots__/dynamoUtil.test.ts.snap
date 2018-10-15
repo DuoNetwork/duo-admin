@@ -60,45 +60,16 @@ Object {
 }
 `;
 
-exports[`convertPriceBarToDynamo 1`] = `
-Object {
-  "close": Object {
-    "N": "2",
-  },
-  "high": Object {
-    "N": "3",
-  },
-  "low": Object {
-    "N": "0",
-  },
-  "open": Object {
-    "N": "1",
-  },
-  "timestamp": Object {
-    "N": "1234567890",
-  },
-  "volume": Object {
-    "N": "123",
-  },
-}
-`;
-
 exports[`convertTradeToDynamo 1`] = `
 Object {
   "amount": Object {
     "N": "456",
   },
-  "base": Object {
-    "S": "base",
-  },
-  "id": Object {
-    "S": "id",
-  },
   "price": Object {
     "N": "123",
   },
-  "quote": Object {
-    "S": "quote",
+  "quoteBaseId": Object {
+    "S": "quote|base|id",
   },
   "systime": Object {
     "N": "123",
@@ -151,7 +122,7 @@ Object {
       "S": "txHash",
     },
   },
-  "TableName": "events_dev",
+  "TableName": "duo.events.dev",
 }
 `;
 
@@ -183,7 +154,7 @@ Object {
       "S": "txHash",
     },
   },
-  "TableName": "events_dev",
+  "TableName": "duo.events.dev",
 }
 `;
 
@@ -197,71 +168,7 @@ Object {
       "N": "0",
     },
   },
-  "TableName": "status_dev",
-}
-`;
-
-exports[`insertHourlyData 1`] = `
-Object {
-  "Item": Object {
-    "close": Object {
-      "N": "2",
-    },
-    "high": Object {
-      "N": "3",
-    },
-    "hour": Object {
-      "N": "0",
-    },
-    "low": Object {
-      "N": "0",
-    },
-    "open": Object {
-      "N": "1",
-    },
-    "sourceDate": Object {
-      "S": "src|YYYY-MM-DD",
-    },
-    "timestamp": Object {
-      "N": "1234567890",
-    },
-    "volume": Object {
-      "N": "123",
-    },
-  },
-  "TableName": "hourly_dev",
-}
-`;
-
-exports[`insertMinutelyData 1`] = `
-Object {
-  "Item": Object {
-    "close": Object {
-      "N": "2",
-    },
-    "high": Object {
-      "N": "3",
-    },
-    "low": Object {
-      "N": "0",
-    },
-    "minute": Object {
-      "N": "0",
-    },
-    "open": Object {
-      "N": "1",
-    },
-    "sourceDateHour": Object {
-      "S": "src|YYYY-MM-DD-00",
-    },
-    "timestamp": Object {
-      "N": "1234567890",
-    },
-    "volume": Object {
-      "N": "123",
-    },
-  },
-  "TableName": "minutely_dev",
+  "TableName": "duo.status.dev",
 }
 `;
 
@@ -273,7 +180,7 @@ Object {
     },
     "test": "test",
   },
-  "TableName": "status_dev",
+  "TableName": "duo.status.dev",
 }
 `;
 
@@ -283,17 +190,11 @@ Object {
     "amount": Object {
       "N": "456",
     },
-    "base": Object {
-      "S": "base",
-    },
-    "id": Object {
-      "S": "id",
-    },
     "price": Object {
       "N": "123",
     },
-    "quote": Object {
-      "S": "quote",
+    "quoteBaseId": Object {
+      "S": "quote|base|id",
     },
     "sourceDateHourMinute": Object {
       "S": "src|1970-01-15-06-56",
@@ -305,7 +206,7 @@ Object {
       "N": "1234567890",
     },
   },
-  "TableName": "trades_dev",
+  "TableName": "duo.trades.dev",
 }
 `;
 
@@ -315,20 +216,14 @@ Object {
     "amount": Object {
       "N": "456",
     },
-    "base": Object {
-      "S": "base",
-    },
-    "id": Object {
-      "S": "id",
-    },
     "price": Object {
       "N": "123",
     },
     "process": Object {
       "S": "UNKNOWN",
     },
-    "quote": Object {
-      "S": "quote",
+    "quoteBaseId": Object {
+      "S": "quote|base|id",
     },
     "systime": Object {
       "N": "0",
@@ -337,72 +232,7 @@ Object {
       "N": "1234567890",
     },
   },
-  "TableName": "status_dev",
-}
-`;
-
-exports[`readMinutelyData 1`] = `
-Array [
-  Object {
-    "close": 582.89,
-    "date": "2018-06-01",
-    "high": 582.89,
-    "hour": "07",
-    "low": 582.88,
-    "minute": 53,
-    "open": 582.88,
-    "source": "GDAX",
-    "timestamp": 1527839720962,
-    "volume": 12.117600000000001,
-  },
-  Object {
-    "close": 582.89,
-    "date": "2018-06-01",
-    "high": 582.89,
-    "hour": "07",
-    "low": 582.88,
-    "minute": 54,
-    "open": 582.89,
-    "source": "GDAX",
-    "timestamp": 1527839720962,
-    "volume": 6.9742,
-  },
-  Object {
-    "close": 582.37,
-    "date": "2018-06-01",
-    "high": 582.37,
-    "hour": "07",
-    "low": 582.37,
-    "minute": 57,
-    "open": 582.37,
-    "source": "GDAX",
-    "timestamp": 1527839996554,
-    "volume": 0.6640794,
-  },
-  Object {
-    "close": 582.37,
-    "date": "2018-06-01",
-    "high": 582.37,
-    "hour": "07",
-    "low": 582.37,
-    "minute": 58,
-    "open": 582.37,
-    "source": "GDAX",
-    "timestamp": 1527839996554,
-    "volume": 2.9680999999999997,
-  },
-]
-`;
-
-exports[`readMinutelyData 2`] = `
-Object {
-  "ExpressionAttributeValues": Object {
-    ":sourceDateHour": Object {
-      "S": "source|datetime",
-    },
-  },
-  "KeyConditionExpression": "sourceDateHour = :sourceDateHour",
-  "TableName": "minutely_dev",
+  "TableName": "duo.status.dev",
 }
 `;
 
@@ -410,37 +240,37 @@ exports[`readTradeData 1`] = `
 Array [
   Object {
     "amount": 1.181,
-    "base": "USD",
+    "base": "ETH",
     "id": "35260767",
     "price": 573,
-    "quote": "ETH",
+    "quote": "USD",
     "source": "GDAX",
     "timestamp": 1527832447254,
   },
   Object {
     "amount": 0.48160278,
-    "base": "USD",
+    "base": "ETH",
     "id": "35260768",
     "price": 572.99,
-    "quote": "ETH",
+    "quote": "USD",
     "source": "GDAX",
     "timestamp": 1527832455335,
   },
   Object {
     "amount": 0.0501,
-    "base": "USD",
+    "base": "ETH",
     "id": "35260769",
     "price": 573,
-    "quote": "ETH",
+    "quote": "USD",
     "source": "GDAX",
     "timestamp": 1527832458221,
   },
   Object {
     "amount": 0.2845,
-    "base": "USD",
+    "base": "ETH",
     "id": "35260770",
     "price": 573,
-    "quote": "ETH",
+    "quote": "USD",
     "source": "GDAX",
     "timestamp": 1527832490925,
   },
@@ -455,6 +285,6 @@ Object {
     },
   },
   "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
-  "TableName": "trades_dev",
+  "TableName": "duo.trades.dev",
 }
 `;

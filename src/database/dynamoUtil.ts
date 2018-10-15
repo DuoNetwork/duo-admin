@@ -161,8 +161,6 @@ class DynamoUtil {
 			}
 		};
 
-		console.log(params.TableName, params.Item[CST.DB_TX_SRC_DHM]);
-
 		await this.insertData(params);
 		if (insertStatus) await this.insertStatusData(data);
 	}

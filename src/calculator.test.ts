@@ -1,9 +1,9 @@
 import calculator from './calculator';
 import * as CST from './constants';
-import dynamoUtil from './database/dynamoUtil';
+// import dynamoUtil from './database/dynamoUtil';
 import dbUtil from './dbUtil';
-import samppleMinutes from './samples/dynamoMinutely.json';
-import sampleTrades from './samples/dynamoTrades.json';
+// import samppleMinutes from './samples/dynamoMinutely.json';
+// import sampleTrades from './samples/dynamoTrades.json';
 import trades from './samples/ETHUSDtrades.json';
 import trades2 from './samples/ETHUSDtrades2.json';
 import { ITrade } from './types';
