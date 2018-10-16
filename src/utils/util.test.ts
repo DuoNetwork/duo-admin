@@ -94,19 +94,19 @@ for (const tool of toolToTest) {
 	}
 }
 
-const platforms = ['aws, gcp, azure'];
+const platforms = ['aws', 'gcp', 'azure'];
 
 for (const platform of platforms) {
 	if (platform === 'azure') option.azure = true;
 	else if (platform === 'gcp') option.gcp = true;
 	else option.aws = true;
 	for (const tool of toolToTest) {
-		test('getDynamoRole getStatusProcess useDynamo', () => {
+		test(`getDynamoRole getStatusProcess ${platform} useDynamo`, () => {
 			option.dynamo = true;
 			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 		});
 
-		test('getDynamoRole getStatusProcess do not useDynamo', () => {
+		test(`getDynamoRole getStatusProcess ${platform} do not useDynamo`, () => {
 			option.dynamo = false;
 			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 		});

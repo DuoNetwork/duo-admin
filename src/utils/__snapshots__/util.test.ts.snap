@@ -12,29 +12,77 @@ exports[`getDynamoRole do not useDynamo 5`] = `"event"`;
 
 exports[`getDynamoRole do not useDynamo 6`] = `"hourly"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 1`] = `"TRADE_AWS_PRIVATE"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 2`] = `"FEED_AWS_PRIVATE"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 3`] = `"CLEANDB_AWS_PRIVATE"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 4`] = `"CHAIN_AWS_PRIVATE"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 5`] = `"EVENT_AWS_PRIVATE_OTHERS"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
 
-exports[`getDynamoRole getStatusProcess do not useDynamo 6`] = `"PRICE_AWS_PRIVATE_HOURLY"`;
+exports[`getDynamoRole getStatusProcess aws do not useDynamo 6`] = `"PRICE_AZURE_PRIVATE_HOURLY"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 1`] = `"TRADE_AWS_PUBLIC"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 2`] = `"FEED_AWS_PUBLIC"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 3`] = `"CLEANDB_AWS_PUBLIC"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 4`] = `"CHAIN_AWS_PUBLIC"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 5`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
 
-exports[`getDynamoRole getStatusProcess useDynamo 6`] = `"PRICE_AWS_PUBLIC_HOURLY"`;
+exports[`getDynamoRole getStatusProcess aws useDynamo 6`] = `"PRICE_AZURE_PUBLIC_HOURLY"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
+
+exports[`getDynamoRole getStatusProcess azure do not useDynamo 6`] = `"PRICE_AZURE_PRIVATE_HOURLY"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
+
+exports[`getDynamoRole getStatusProcess azure useDynamo 6`] = `"PRICE_AZURE_PUBLIC_HOURLY"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
+
+exports[`getDynamoRole getStatusProcess gcp do not useDynamo 6`] = `"PRICE_AZURE_PRIVATE_HOURLY"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
+
+exports[`getDynamoRole getStatusProcess gcp useDynamo 6`] = `"PRICE_AZURE_PUBLIC_HOURLY"`;
 
 exports[`getDynamoRole period 60 do not useDynamo 1`] = `"hourly"`;
 

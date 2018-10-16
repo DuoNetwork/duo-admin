@@ -76,3 +76,9 @@ test('readSourceData', async () => {
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect(trades).toMatchSnapshot();
 });
+
+test('cleanDB', async () => {
+	sqlUtil.executeQuery = jest.fn(() => Promise.resolve());
+	await sqlUtil.cleanDB();
+	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
