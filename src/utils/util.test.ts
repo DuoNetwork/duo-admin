@@ -1,3 +1,5 @@
+import * as CST from '../common/constants';
+import { IOption } from '../common/types';
 import util from './util';
 
 test('isNumber() return true for numbers', () => {
@@ -66,3 +68,47 @@ test('getPeriodStartTimestamp', () => {
 	// 1970-01-14 0:00:00
 	expect(util.getPeriodStartTimestamp(1234567890, 1440)).toBe(1123200000);
 });
+
+const toolToTest = [CST.TRADES, CST.COMMIT, CST.CLEAN_DB, CST.NODE, CST.SUBSCRIBE, CST.DB_PRICES];
+
+const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
+for (const tool of toolToTest) {
+	test('getDynamoRole useDynamo', () => {
+		expect(util.getDynamoRole(option, tool, true)).toMatchSnapshot();
+	});
+
+	test('getDynamoRole do not useDynamo', () => {
+		expect(util.getDynamoRole(option, tool, false)).toMatchSnapshot();
+	});
+
+	if (tool === CST.DB_PRICES) {
+		option.period = 60;
+
+		test('getDynamoRole period 60 useDynamo', () => {
+			expect(util.getDynamoRole(option, tool, true)).toMatchSnapshot();
+		});
+
+		test('getDynamoRole period 60 do not useDynamo', () => {
+			expect(util.getDynamoRole(option, tool, false)).toMatchSnapshot();
+		});
+	}
+}
+
+const platforms = ['aws, gcp, azure'];
+
+for (const platform of platforms) {
+	if (platform === 'azure') option.azure = true;
+	else if (platform === 'gcp') option.gcp = true;
+	else option.aws = true;
+	for (const tool of toolToTest) {
+		test('getDynamoRole getStatusProcess useDynamo', () => {
+			option.dynamo = true;
+			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
+		});
+
+		test('getDynamoRole getStatusProcess do not useDynamo', () => {
+			option.dynamo = false;
+			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
+		});
+	}
+}

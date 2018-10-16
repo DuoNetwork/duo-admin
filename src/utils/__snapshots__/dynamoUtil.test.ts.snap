@@ -1,5 +1,195 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`addPrice 1`] = `
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceDateHour": Object {
+          "S": "source|1970-01-15-06",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.1.dev",
+    },
+  ],
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceDateHour": Object {
+          "S": "source|1970-01-15-06",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.10.dev",
+    },
+  ],
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceDate": Object {
+          "S": "source|1970-01-15",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.60.dev",
+    },
+  ],
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceYearMonth": Object {
+          "S": "source|1970-01",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.360.dev",
+    },
+  ],
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceYearMonth": Object {
+          "S": "source|1970-01",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.1440.dev",
+    },
+  ],
+]
+`;
+
 exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
 
 exports[`convertEventToDynamo 1`] = `
@@ -93,6 +283,55 @@ Object {
   "TableName": "duo.uiEvents.dev",
 }
 `;
+
+exports[`getPrices 1`] = `
+Array [
+  Array [
+    "anySrc",
+    1,
+    1538956680000,
+    "",
+  ],
+  Array [
+    "anySrc",
+    1,
+    1538956680000,
+    "",
+  ],
+  Array [
+    "anySrc",
+    1,
+    1538956800000,
+    "",
+  ],
+  Array [
+    "anySrc",
+    1,
+    1538956680000,
+    "ETH|USD",
+  ],
+  Array [
+    "anySrc",
+    1,
+    1538956800000,
+    "ETH|USD",
+  ],
+  Array [
+    "anySrc",
+    60,
+    1538956680000,
+    "",
+  ],
+  Array [
+    "anySrc",
+    60,
+    1538956800000,
+    "",
+  ],
+]
+`;
+
+exports[`getSingleKeyPeriodPrices 1`] = `Array []`;
 
 exports[`insertEventsData 1`] = `
 Object {

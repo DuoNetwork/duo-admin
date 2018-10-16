@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as CST from '../common/constants';
 import { IEvent } from '../common/types';
 import conversion from '../samples/dynamo/conversion.json';
@@ -143,6 +144,87 @@ test('parseUIConversion', () => {
 	expect(dynamoUtil.parseUIConversion(uiRedeem)).toMatchSnapshot();
 });
 
+test('getPrices', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+
+	const start = moment.utc('20181007T235800').valueOf();
+	const end = moment.utc('20181008T001000').valueOf();
+	dynamoUtil.getSingleKeyPeriodPrices = jest.fn(() =>
+		Promise.resolve([
+			{
+				source: 'bitfinex',
+				base: 'USD',
+				quote: 'ETH',
+				timestamp: start,
+				period: 0,
+				open: 220.10002,
+				high: 220.10002,
+				low: 220.10002,
+				close: 220.10002,
+				volume: 0.0007
+			},
+			{
+				source: 'bitfinex',
+				base: 'USD',
+				quote: 'ETH',
+				timestamp: start,
+				period: 0,
+				open: 220.10002,
+				high: 220.10002,
+				low: 220.10002,
+				close: 220.10002,
+				volume: 17.6757
+			},
+			{
+				source: 'bitfinex',
+				base: 'USD',
+				quote: 'ETH',
+				timestamp: start,
+				period: 0,
+				open: 202.12,
+				high: 202.12,
+				low: 202.12,
+				close: 202.12,
+				volume: 0.0013
+			}
+		])
+	);
+	await dynamoUtil.getPrices('anySrc', 1, start);
+	await dynamoUtil.getPrices('anySrc', 1, start, end);
+	await dynamoUtil.getPrices('anySrc', 1, start, end, 'ETH|USD');
+	await dynamoUtil.getPrices('anySrc', 60, start, end);
+	expect(
+		(dynamoUtil.getSingleKeyPeriodPrices as jest.Mock<Promise<void>>).mock.calls
+	).toMatchSnapshot();
+});
+
+const price = {
+	source: 'source',
+	base: 'base',
+	quote: 'quote',
+	timestamp: 1234567890,
+	period: 1,
+	open: 2,
+	high: 4,
+	low: 0,
+	close: 3,
+	volume: 5
+};
+
+test('addPrice', async () => {
+	dynamoUtil.insertData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.addPrice(price);
+	price.period = 10;
+	await dynamoUtil.addPrice(price);
+	price.period = 60;
+	await dynamoUtil.addPrice(price);
+	price.period = 360;
+	await dynamoUtil.addPrice(price);
+	price.period = 1440;
+	await dynamoUtil.addPrice(price);
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
 test('insertUIConversion', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getNowTimestamp = jest.fn(() => 1234567890);
@@ -166,4 +248,22 @@ test('deleteUIConversionEvent', async () => {
 		duoFee: 0
 	});
 	expect((dynamoUtil.deleteData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getSingleKeyPeriodPrices', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 9876543210);
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: []
+		})
+	);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 0, 1234567890);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 0, 1234567890, 'quote|base');
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 1, 1234567890);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 1, 1234567890, 'quote|base');
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 10, 1234567890);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 60, 1234567890);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 360, 1234567890);
+	await dynamoUtil.getSingleKeyPeriodPrices('src', 1440, 1234567890);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });

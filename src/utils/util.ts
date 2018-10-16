@@ -290,11 +290,11 @@ class Util {
 		let source = '';
 
 		switch (tool) {
-			case 'trades':
+			case CST.TRADES:
 				type = 'TRADE';
 				source = option.source ? '_' + option.source.toUpperCase() : '';
 				break;
-			case 'subscribe':
+			case CST.SUBSCRIBE:
 				type = 'EVENT';
 				source =
 					'_' +
@@ -302,13 +302,13 @@ class Util {
 						? option.event.toUpperCase()
 						: 'OTHERS');
 				break;
-			case 'commit':
+			case CST.COMMIT:
 				type = 'FEED';
 				break;
-			case 'cleanDB':
+			case CST.CLEAN_DB:
 				type = 'CLEANDB';
 				break;
-			case 'prices':
+			case CST.DB_PRICES:
 				type = 'PRICE';
 				if (option.period === 0) source = '_MINUTELY';
 				else if (option.period === 60) source = '_HOURLY';
@@ -317,7 +317,7 @@ class Util {
 			// case 'minutely':
 			// 	type = 'MINUTELY';
 			// 	break;
-			case 'node':
+			case CST.NODE:
 				type = 'CHAIN';
 				break;
 			default:
