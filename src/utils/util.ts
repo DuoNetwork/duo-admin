@@ -10,7 +10,6 @@ class Util {
 	private log(text: any, level?: string): void {
 		if (level && CST.LOG_RANKING[this.logLevel] >= CST.LOG_RANKING[level])
 			console.log(`${moment().format('HH:mm:ss.SSS')} [${level}]: ` + text);
-		else console.log(`${moment().format('HH:mm:ss.SSS')} : ` + text);
 	}
 
 	public logInfo(text: any): void {
