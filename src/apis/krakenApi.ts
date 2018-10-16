@@ -1,5 +1,6 @@
 import * as CST from '../common/constants';
 import { IKrakenRawTrade, ITrade } from '../common/types';
+import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
@@ -34,7 +35,7 @@ export class KrakenApi extends BaseApi {
 			util.composeQuery(paras);
 		util.logInfo(url);
 
-		const response = JSON.parse(await util.get(url));
+		const response = JSON.parse(await httpUtil.get(url));
 		const result: IKrakenRawTrade = response.result;
 		let data: string[][] = [];
 		for (const key in result)

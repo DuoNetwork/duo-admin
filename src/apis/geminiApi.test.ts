@@ -1,6 +1,7 @@
 import tradesRest from '../samples/gemini/tradesRest.json';
 import tradesWs from '../samples/gemini/tradesWs.json';
 import dbUtil from '../utils/dbUtil';
+import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import api from './geminiApi';
 
@@ -27,11 +28,11 @@ for (const testName in testCases) {
 		api.last = {};
 		api.tradeStatusLastUpdatedAt = {};
 
-		util.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
+		httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
 		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
 
 		await api.fetchTradesREST(testCase.sourceInstrument);
-		expect((util.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
 		expect(calls).toMatchSnapshot();
 		expect(calls.length).toEqual(testCase.tradesRest.length);

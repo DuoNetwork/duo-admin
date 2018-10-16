@@ -1,6 +1,6 @@
 import tradesRest from '../samples/gdax/tradesRest.json';
 import dbUtil from '../utils/dbUtil';
-import util from '../utils/util';
+import httpUtil from '../utils/httpUtil';
 import api from './krakenApi';
 
 api.init();
@@ -26,11 +26,11 @@ for (const testName in testCases) {
 		api.last = {};
 		api.tradeStatusLastUpdatedAt = {};
 
-		util.get = jest.fn(() => Promise.resolve(JSON.stringify(testCase.tradesRest)));
+		httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(testCase.tradesRest)));
 		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
 
 		await api.fetchTradesREST(testCase.sourceInstrument);
-		expect((util.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
 		expect(calls).toMatchSnapshot();
 		expect(calls.length).toEqual(

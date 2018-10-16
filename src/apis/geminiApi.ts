@@ -1,7 +1,7 @@
 import ws from 'ws';
 import * as CST from '../common/constants';
-
 import { IGeminiTradeData, IGeminiTradeRest, IGeminiTradeWs, ITrade } from '../common/types';
+import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
@@ -56,7 +56,7 @@ export class GeminiApi extends BaseApi {
 			CST.API_GMN_BASE_URL + CST.API_GMN_VERSION + CST.API_GMN_TRADE + '/' + sourcePair;
 		util.logInfo(url);
 
-		const result: IGeminiTradeRest[] = JSON.parse(await util.get(url));
+		const result: IGeminiTradeRest[] = JSON.parse(await httpUtil.get(url));
 		await this.addTrades(
 			this.sourcePairMapping[sourcePair],
 			result.map(trade => this.parseTradeREST(sourcePair, trade))

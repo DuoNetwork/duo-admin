@@ -1,5 +1,6 @@
 import * as CST from '../common/constants';
 import {IBitfinexRawTradeRest, IBitfinexRawTradeWS, ITrade } from '../common/types';
+import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
@@ -57,7 +58,7 @@ export class BitfinexApi extends BaseApi {
 			(this.last[localPair] ? util.composeQuery({ since: this.last[localPair] }) : '');
 		util.logInfo(url);
 
-		const result: IBitfinexRawTradeRest[] = JSON.parse(await util.get(url));
+		const result: IBitfinexRawTradeRest[] = JSON.parse(await httpUtil.get(url));
 		await this.addTrades(
 			this.sourcePairMapping[sourcePair],
 			result.map(trade => this.parseTradeREST(sourcePair, trade))

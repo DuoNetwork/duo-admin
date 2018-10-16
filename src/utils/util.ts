@@ -1,5 +1,4 @@
 import moment from 'moment';
-import request from 'request';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
 import infura from '../keys/infura.json';
@@ -35,47 +34,6 @@ class Util {
 		for (const key in paras) query += key + '=' + paras[key] + '&';
 		query = query.slice(0, -1);
 		return query;
-	}
-
-	public get(url: string, headerOthers?: object): Promise<any> {
-		return new Promise((resolve, reject) =>
-			request(
-				{
-					url,
-					headers: Object.assign(
-						{
-							'user-agent': 'node.js'
-						},
-						headerOthers || {}
-					)
-				},
-				(error, res, body) => {
-					if (error) reject(error);
-					else if (res.statusCode === 200) resolve(body);
-					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
-				}
-			)
-		);
-	}
-
-	public postJson(url: string, json: object): Promise<object> {
-		return new Promise((resolve, reject) =>
-			request(
-				{
-					url,
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					json
-				},
-				(error, res, body) => {
-					if (error) reject(error);
-					else if (res.statusCode === 200) resolve(body);
-					else reject('Error status ' + res.statusCode + ' ' + res.statusMessage);
-				}
-			)
-		);
 	}
 
 	public parseOptions(argv: string[]): IOption {
