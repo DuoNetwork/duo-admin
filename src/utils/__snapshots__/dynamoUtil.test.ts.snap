@@ -80,20 +80,6 @@ Object {
 }
 `;
 
-exports[`convertTradeToDynamo 2`] = `
-Object {
-  "price": Object {
-    "N": "123",
-  },
-  "timestamp": Object {
-    "N": "1234567890",
-  },
-  "volume": Object {
-    "N": "456",
-  },
-}
-`;
-
 exports[`insertEventsData 1`] = `
 Object {
   "Item": Object {
@@ -233,58 +219,5 @@ Object {
     },
   },
   "TableName": "duo.status.dev",
-}
-`;
-
-exports[`readTradeData 1`] = `
-Array [
-  Object {
-    "amount": 1.181,
-    "base": "ETH",
-    "id": "35260767",
-    "price": 573,
-    "quote": "USD",
-    "source": "GDAX",
-    "timestamp": 1527832447254,
-  },
-  Object {
-    "amount": 0.48160278,
-    "base": "ETH",
-    "id": "35260768",
-    "price": 572.99,
-    "quote": "USD",
-    "source": "GDAX",
-    "timestamp": 1527832455335,
-  },
-  Object {
-    "amount": 0.0501,
-    "base": "ETH",
-    "id": "35260769",
-    "price": 573,
-    "quote": "USD",
-    "source": "GDAX",
-    "timestamp": 1527832458221,
-  },
-  Object {
-    "amount": 0.2845,
-    "base": "ETH",
-    "id": "35260770",
-    "price": 573,
-    "quote": "USD",
-    "source": "GDAX",
-    "timestamp": 1527832490925,
-  },
-]
-`;
-
-exports[`readTradeData 2`] = `
-Object {
-  "ExpressionAttributeValues": Object {
-    ":sourceDateHourMinute": Object {
-      "S": "source|datetime",
-    },
-  },
-  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
-  "TableName": "duo.trades.dev",
 }
 `;

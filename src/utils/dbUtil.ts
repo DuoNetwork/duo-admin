@@ -16,7 +16,8 @@ class DbUtil {
 		util.logInfo('role: ' + role);
 		util.logInfo('process: ' + process);
 
-		dynamoUtil.init(option.live, process);
+		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
+		dynamoUtil.init(config, option.live, process);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);

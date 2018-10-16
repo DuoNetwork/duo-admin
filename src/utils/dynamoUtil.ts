@@ -1,28 +1,29 @@
 import AWS from 'aws-sdk';
 import {
 	AttributeMap,
-	BatchWriteItemInput,
-	BatchWriteItemOutput,
+	// BatchWriteItemInput,
+	// BatchWriteItemOutput,
 	PutItemInput,
 	QueryInput,
-	QueryOutput
+	QueryOutput,
+	ScanInput,
+	ScanOutput
 } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
 import * as CST from '../common/constants';
-import { IEvent, IPrice, IPriceFix, ITrade } from '../common/types';
+import { IEvent, IPrice, ITrade } from '../common/types';
 import util from './util';
 
 class DynamoUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
-	// private role: string = '';
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	public init(live: boolean, process: string) {
+	public init(config: object, live: boolean, process: string) {
 		this.live = live;
 		this.process = process;
-		// this.role = role;
-		AWS.config.loadFromPath('./src/keys/aws/' + (live ? 'live' : 'dev') + '/admin.json');
+		AWS.config.update(config);
 		this.ddb = new AWS.DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
+		return Promise.resolve();
 	}
 
 	public insertData(params: PutItemInput): Promise<void> {
@@ -34,23 +35,32 @@ class DynamoUtil {
 		);
 	}
 
-	public batchInsertData(params: BatchWriteItemInput): Promise<BatchWriteItemOutput> {
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.batchWriteItem(
-							params,
-							(err, data) => (err ? reject(err) : resolve(data))
-					)
-					: reject('dynamo db connection is not initialized')
-		);
-	}
+	// public batchInsertData(params: BatchWriteItemInput): Promise<BatchWriteItemOutput> {
+	// 	return new Promise(
+	// 		(resolve, reject) =>
+	// 			this.ddb
+	// 				? this.ddb.batchWriteItem(
+	// 						params,
+	// 						(err, data) => (err ? reject(err) : resolve(data))
+	// 				  )
+	// 				: reject('dynamo db connection is not initialized')
+	// 	);
+	// }
 
 	public queryData(params: QueryInput): Promise<QueryOutput> {
 		return new Promise(
 			(resolve, reject) =>
 				this.ddb
 					? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
+					: reject('dynamo db connection is not initialized')
+		);
+	}
+
+	public scanData(params: ScanInput): Promise<ScanOutput> {
+		return new Promise(
+			(resolve, reject) =>
+				this.ddb
+					? this.ddb.scan(params, (err, data) => (err ? reject(err) : resolve(data)))
 					: reject('dynamo db connection is not initialized')
 		);
 	}
@@ -64,56 +74,6 @@ class DynamoUtil {
 			[CST.DB_TX_SYSTIME]: { N: systime + '' }
 		};
 	}
-
-	public convertDynamoToTrade(data: AttributeMap): ITrade {
-		const quoteBaseId = data[CST.DB_TX_QUOTE_BASE_ID].S || '';
-		const [base, quote, id] = quoteBaseId.split('|');
-		return {
-			base: base,
-			quote: quote,
-			id: id,
-			source: (data[CST.DB_TX_SRC_DHM].S || '').split('|')[0],
-			price: Number(data[CST.DB_TX_PRICE].N),
-			amount: Number(data[CST.DB_TX_AMOUNT].N),
-			timestamp: Number(data[CST.DB_TX_TS].N)
-		};
-	}
-
-	public convertPriceToDynamo(price: IPriceFix) {
-		return {
-			[CST.DB_HISTORY_PRICE]: { N: price.price + '' },
-			[CST.DB_HISTORY_TIMESTAMP]: { N: price.timestamp + '' },
-			[CST.DB_HISTORY_VOLUME]: { N: price.volume + '' }
-		};
-	}
-
-	public convertPriceBarToDynamo(priceBar: IPrice) {
-		return {
-			[CST.DB_OHLC_OPEN]: { N: priceBar.open + '' },
-			[CST.DB_OHLC_HIGH]: { N: priceBar.high + '' },
-			[CST.DB_OHLC_LOW]: { N: priceBar.low + '' },
-			[CST.DB_OHLC_CLOSE]: { N: priceBar.close + '' },
-			[CST.DB_OHLC_VOLUME]: { N: priceBar.volume + '' },
-			[CST.DB_OHLC_TS]: { N: priceBar.timestamp + '' }
-		};
-	}
-
-	// public convertDynamoToPriceBar(data: AttributeMap): IPrice {
-	// 	const sourceDatetime = data[CST.DB_MN_SRC_DATE_HOUR].S || '';
-	// 	const [source, datetime] = sourceDatetime.split('|');
-	// 	return {
-	// 		source: source,
-	// 		date: datetime.substring(0, 10),
-	// 		hour: datetime.substring(11, 13),
-	// 		minute: Number(data[CST.DB_MN_MINUTE].N),
-	// 		open: Number(data[CST.DB_OHLC_OPEN].N),
-	// 		high: Number(data[CST.DB_OHLC_HIGH].N),
-	// 		low: Number(data[CST.DB_OHLC_LOW].N),
-	// 		close: Number(data[CST.DB_OHLC_CLOSE].N),
-	// 		volume: Number(data[CST.DB_OHLC_VOLUME].N),
-	// 		timestamp: Number(data[CST.DB_OHLC_TS].N)
-	// 	};
-	// }
 
 	public convertEventToDynamo(event: IEvent, sysTime: number) {
 		let addr = '';
@@ -254,21 +214,6 @@ class DynamoUtil {
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return 0;
 		return Number(data.Items[0].block.N);
-	}
-
-	public async readTradeData(source: string, datetimeString: string): Promise<ITrade[]> {
-		const params = {
-			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
-			KeyConditionExpression: CST.DB_TX_SRC_DHM + ' = :' + CST.DB_TX_SRC_DHM,
-			ExpressionAttributeValues: {
-				[':' + CST.DB_TX_SRC_DHM]: { S: source + '|' + datetimeString }
-			}
-		};
-
-		const data = await this.queryData(params);
-		if (!data.Items || !data.Items.length) return [];
-
-		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
 
 	public async getSingleKeyPeriodPrices(

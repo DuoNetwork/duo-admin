@@ -80,7 +80,7 @@ test('startFetching no source', async () => {
 
 test('startFetching source', async () => {
 	util.sleep = jest.fn();
-	bitfinexApi.getSourceInstruments = jest.fn(() => ['quote|base']);
+	bitfinexApi.getSourcePairs = jest.fn(() => ['quote|base']);
 	bitfinexApi.fetchTrades = jest.fn();
 	await marketUtil.startFetching('tool', {
 		source: 'bitfinex',

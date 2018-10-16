@@ -1,5 +1,4 @@
 import { IEvent } from '../common/types';
-import sampleTrades from '../samples/dynamoTrades.json';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
 
@@ -46,18 +45,6 @@ test('connection initalization', () =>
 test('convertTradeToDynamo', () =>
 	expect(dynamoUtil.convertTradeToDynamo(trade, 123)).toMatchSnapshot());
 
-test('convertTradeToDynamo', () =>
-	expect(
-		dynamoUtil.convertPriceToDynamo({
-			price: 123,
-			timestamp: 1234567890,
-			volume: 456,
-			source: '',
-			base: 'USD',
-			quote: 'ETH'
-		})
-	).toMatchSnapshot());
-
 test('convertEventToDynamo', () =>
 	events.forEach(event =>
 		expect(dynamoUtil.convertEventToDynamo(event, 9876543210)).toMatchSnapshot()
@@ -92,11 +79,4 @@ test('insertStatusData', async () => {
 	await dynamoUtil.insertStatusData({ test: 'test' });
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-});
-
-test('readTradeData', async () => {
-	dynamoUtil.queryData = jest.fn(() => Promise.resolve(sampleTrades));
-	expect(await dynamoUtil.readTradeData('source', 'datetime')).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });

@@ -20,7 +20,7 @@ class MarketUtil {
 			if (!api) throw new Error('invalid source');
 			api.init();
 
-			const sourceInstruments = api.getSourceInstruments(assetIds);
+			const sourceInstruments = api.getSourcePairs(assetIds);
 			util.logInfo(
 				`[${option.source}]:` +
 					'start fetching for pairs ' +
