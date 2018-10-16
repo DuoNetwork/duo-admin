@@ -39,7 +39,7 @@ test('getExchangePriceFix', () => {
 test('getPriceFix case 1', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
-	util.getNowTimestamp = jest.fn(() => 1524547909941);
+	util.getUTCNowTimestamp = jest.fn(() => 1524547909941);
 	await calculator.getPriceFix('USD', 'ETH');
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
@@ -47,7 +47,7 @@ test('getPriceFix case 1', async () => {
 test('getPriceFix case 2', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades2));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
-	util.getNowTimestamp = jest.fn(() => 1524547909941);
+	util.getUTCNowTimestamp = jest.fn(() => 1524547909941);
 	await calculator.getPriceFix('USD', 'ETH');
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });

@@ -10,7 +10,7 @@ test('connection initalization', () => {
 test('insertTradeData', async () => {
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve());
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
-	util.getNowTimestamp = jest.fn(() => 0);
+	util.getUTCNowTimestamp = jest.fn(() => 0);
 	await sqlUtil.insertTradeData({
 		quote: 'quote',
 		base: 'base',

@@ -25,10 +25,6 @@ class Util {
 		this.log(text, CST.LOG_ERROR);
 	}
 
-	public getUTCNowTimestamp() {
-		return moment.utc().valueOf();
-	}
-
 	public composeQuery(paras: { [key: string]: any }): string {
 		let query: string = '?';
 		for (const key in paras) query += key + '=' + paras[key] + '&';
@@ -285,7 +281,7 @@ class Util {
 		return type + platform + privacy + source;
 	}
 
-	public getNowTimestamp() {
+	public getUTCNowTimestamp() {
 		return moment().valueOf();
 	}
 

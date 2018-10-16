@@ -130,7 +130,7 @@ class DynamoUtil {
 	}
 
 	public async insertTradeData(trade: ITrade, insertStatus: boolean): Promise<void> {
-		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
+		const systemTimestamp = util.getUTCNowTimestamp(); // record down the MTS
 		const data = this.convertTradeToDynamo(trade, systemTimestamp);
 
 		const params = {
@@ -148,7 +148,7 @@ class DynamoUtil {
 	}
 
 	public async insertEventsData(events: IEvent[]) {
-		const systime = util.getNowTimestamp();
+		const systime = util.getUTCNowTimestamp();
 		const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
 		// const putItem: any;
 
@@ -166,7 +166,7 @@ class DynamoUtil {
 	}
 
 	// public async batchInsertEventData(events: IEvent[]) {
-	// 	const systime = util.getNowTimestamp();
+	// 	const systime = util.getUTCNowTimestamp();
 	// 	const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
 	// 	const putItems: any[] = [];
 	// 	events.forEach(async event => {
@@ -206,7 +206,7 @@ class DynamoUtil {
 				[CST.DB_ST_PROCESS]: {
 					S: this.process
 				},
-				[CST.DB_ST_TS]: { N: util.getNowTimestamp() + '' },
+				[CST.DB_ST_TS]: { N: util.getUTCNowTimestamp() + '' },
 				...data
 			}
 		}).catch(error => util.logInfo('Error insert heartbeat: ' + error));
@@ -577,7 +577,7 @@ class DynamoUtil {
 				[CST.DB_EV_KEY]: {
 					S: (isCreate ? CST.EVENT_CREATE : CST.EVENT_REDEEM) + '|' + account
 				},
-				[CST.DB_EV_SYSTIME]: { N: util.getNowTimestamp() + '' },
+				[CST.DB_EV_SYSTIME]: { N: util.getUTCNowTimestamp() + '' },
 				[CST.DB_EV_TX_HASH]: { S: txHash },
 				[CST.DB_EV_UI_ETH]: { N: eth + '' },
 				[CST.DB_EV_UI_TOKEN_A]: { N: tokenA + '' },

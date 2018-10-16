@@ -44,7 +44,7 @@ class SqlUtil {
 	}
 
 	public async insertTradeData(trade: ITrade, insertStatus: boolean) {
-		const systemTimestamp = util.getNowTimestamp(); // record down the MTS
+		const systemTimestamp = util.getUTCNowTimestamp(); // record down the MTS
 
 		// To do the checking for out of boundary data.
 		// if(isNaN(trade.price)){
