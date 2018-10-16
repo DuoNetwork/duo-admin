@@ -27,6 +27,48 @@ export interface IPrice extends IBaseMarketData {
 	volume: number;
 }
 
+export interface IBaseEvent {
+	timestamp: number;
+	transactionHash: string;
+	blockNumber: number;
+}
+
+export interface IAcceptedPrice extends IBaseEvent {
+	price: number;
+	navA: number;
+	navB: number;
+}
+
+export interface ITotalSupply extends IBaseEvent {
+	tokenA: number,
+	tokenB: number
+}
+
+export interface IConversion extends IBaseEvent {
+	type: string;
+	eth: number;
+	tokenA: number;
+	tokenB: number;
+	ethFee: number;
+	duoFee: number;
+	pending?: boolean;
+	reverted?: boolean;
+}
+
+export interface IStatus {
+	process: string;
+	timestamp: number;
+}
+
+export interface IPriceStatus extends IStatus {
+	price: number;
+	volume: number;
+}
+
+export interface INodeStatus extends IStatus {
+	block: number;
+}
+
 export interface IAccount {
 	address: string;
 	privateKey: string;

@@ -3,6 +3,7 @@ import {
 	AttributeMap,
 	// BatchWriteItemInput,
 	// BatchWriteItemOutput,
+	DeleteItemInput,
 	PutItemInput,
 	QueryInput,
 	QueryOutput,
@@ -10,19 +11,31 @@ import {
 	ScanOutput
 } from 'aws-sdk/clients/dynamodb';
 import moment from 'moment';
+import ContractUtil from '../../../duo-contract-util/src/contractUtil';
 import * as CST from '../common/constants';
-import { IEvent, IPrice, ITrade } from '../common/types';
+import {
+	IAcceptedPrice,
+	IConversion,
+	IEvent,
+	IPrice,
+	IPriceStatus,
+	IStatus,
+	ITotalSupply,
+	ITrade
+} from '../common/types';
 import util from './util';
 
 class DynamoUtil {
 	private ddb: undefined | AWS.DynamoDB = undefined;
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	public init(config: object, live: boolean, process: string) {
+	private contractUtil: ContractUtil | undefined = undefined;
+	public init(config: object, live: boolean, process: string, contractUtil: ContractUtil) {
 		this.live = live;
 		this.process = process;
 		AWS.config.update(config);
 		this.ddb = new AWS.DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
+		this.contractUtil = contractUtil;
 		return Promise.resolve();
 	}
 
@@ -61,6 +74,15 @@ class DynamoUtil {
 			(resolve, reject) =>
 				this.ddb
 					? this.ddb.scan(params, (err, data) => (err ? reject(err) : resolve(data)))
+					: reject('dynamo db connection is not initialized')
+		);
+	}
+
+	public deleteData(params: DeleteItemInput): Promise<void> {
+		return new Promise(
+			(resolve, reject) =>
+				this.ddb
+					? this.ddb.deleteItem(params, err => (err ? reject(err) : resolve()))
 					: reject('dynamo db connection is not initialized')
 		);
 	}
@@ -398,6 +420,235 @@ class DynamoUtil {
 
 		util.logDebug(`...... prices:${String(prices.length)}`);
 		return prices;
+	}
+
+	public async queryAcceptPriceEvent(dates: string[]) {
+		const allData: IAcceptedPrice[] = [];
+		for (const date of dates)
+			allData.push(
+				...this.parseAcceptedPrice(
+					await this.queryData({
+						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
+						ExpressionAttributeValues: {
+							[':' + CST.DB_EV_KEY]: { S: CST.EVENT_ACCEPT_PRICE + '|' + date }
+						}
+					})
+				)
+			);
+		return allData;
+	}
+
+	public parseAcceptedPrice(acceptPrice: QueryOutput): IAcceptedPrice[] {
+		if (!acceptPrice.Items || !acceptPrice.Items.length) return [];
+		return acceptPrice.Items.map(p => ({
+			transactionHash: p[CST.DB_EV_TX_HASH].S || '',
+			blockNumber: Number(p[CST.DB_EV_BLOCK_NO].N),
+			price: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_PX].S || '') : 0,
+			navA: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
+			navB: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
+			timestamp: Math.round(Number(p[CST.DB_EV_TS].S) / 3600) * 3600000
+		}));
+	}
+
+	public async queryTotalSupplyEvent(dates: string[]) {
+		const allData: ITotalSupply[] = [];
+		for (const date of dates)
+			allData.push(
+				...this.parseTotalSupply(
+					await this.queryData({
+						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
+						ExpressionAttributeValues: {
+							[':' + CST.DB_EV_KEY]: { S: CST.EVENT_TOTAL_SUPPLY + '|' + date }
+						}
+					})
+				)
+			);
+
+		return allData;
+	}
+
+	public parseTotalSupply(totalSupply: QueryOutput): ITotalSupply[] {
+		if (!totalSupply.Items || !totalSupply.Items.length) return [];
+		return totalSupply.Items.map(t => ({
+			transactionHash: t[CST.DB_EV_TX_HASH].S || '',
+			blockNumber: Number(t[CST.DB_EV_BLOCK_NO].N),
+			tokenA: this.contractUtil
+				? this.contractUtil.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_A].S || '')
+				: 0,
+			tokenB: this.contractUtil
+				? this.contractUtil.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_B].S || '')
+				: 0,
+			timestamp: Number((t[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0])
+		}));
+	}
+
+	public async queryConversionEvent(address: string, dates: string[]) {
+		const eventKeys: string[] = [];
+		dates.forEach(date =>
+			eventKeys.push(
+				...[CST.EVENT_CREATE, CST.EVENT_REDEEM].map(ev => ev + '|' + date + '|' + address)
+			)
+		);
+		const allData: IConversion[] = [];
+		for (const ek of eventKeys)
+			allData.push(
+				...this.parseConversion(
+					await this.queryData({
+						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
+						ExpressionAttributeValues: {
+							[':' + CST.DB_EV_KEY]: { S: ek }
+						}
+					})
+				)
+			);
+		return allData;
+	}
+
+	public parseConversion(conversion: QueryOutput): IConversion[] {
+		if (!conversion.Items || !conversion.Items.length) return [];
+		return conversion.Items.map(c => ({
+			transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+			blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
+			type: (c[CST.DB_EV_KEY].S || '').split('|')[0],
+			timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
+			eth: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_ETH].S || '') : 0,
+			tokenA: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_A].S || '') : 0,
+			tokenB: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_B].S || '') : 0,
+			ethFee: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_ETH_FEE].S || '') : 0,
+			duoFee: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_DUO_FEE].S || '') : 0
+		}));
+	}
+
+	public async scanStatus() {
+		return this.parseStatus(
+			await this.scanData({
+				TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV
+			})
+		);
+	}
+
+	public parseStatus(status: ScanOutput): IStatus[] {
+		if (!status.Items || !status.Items.length) return [];
+
+		const output = status.Items.map(d => {
+			const process = d[CST.DB_ST_PROCESS].S || '';
+			const timestamp = Number(d[CST.DB_ST_TS].N);
+			if (process.startsWith('PRICE'))
+				return {
+					process: process,
+					timestamp: timestamp,
+					price: Number(d[CST.DB_TX_PRICE].N),
+					volume: Number(d[CST.DB_TX_AMOUNT].N)
+				} as IPriceStatus;
+			else if (process.startsWith('CHAIN'))
+				return {
+					process: process,
+					timestamp: timestamp,
+					block: Number(d[CST.DB_ST_BLOCK].N)
+				};
+			else
+				return {
+					process: process,
+					timestamp: timestamp
+				};
+		});
+		output.sort((a, b) => b.timestamp - a.timestamp);
+		output.sort((a, b) => a.process.localeCompare(b.process));
+
+		return output;
+	}
+
+	public async insertUIConversion(
+		account: string,
+		txHash: string,
+		isCreate: boolean,
+		eth: number,
+		tokenA: number,
+		tokenB: number,
+		ethFee: number,
+		duoFee: number
+	) {
+		const params = {
+			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+			Item: {
+				[CST.DB_EV_KEY]: {
+					S: (isCreate ? CST.EVENT_CREATE : CST.EVENT_REDEEM) + '|' + account
+				},
+				[CST.DB_EV_SYSTIME]: { N: util.getNowTimestamp() + '' },
+				[CST.DB_EV_TX_HASH]: { S: txHash },
+				[CST.DB_EV_UI_ETH]: { N: eth + '' },
+				[CST.DB_EV_UI_TOKEN_A]: { N: tokenA + '' },
+				[CST.DB_EV_UI_TOKEN_B]: { N: tokenB + '' },
+				[CST.DB_EV_UI_ETH_FEE]: { N: ethFee + '' },
+				[CST.DB_EV_UI_DUO_FEE]: { N: duoFee + '' }
+			}
+		};
+
+		await this.insertData(params);
+	}
+
+	public async queryUIConversionEvent(account: string) {
+		const eventKeys: string[] = [CST.EVENT_CREATE, CST.EVENT_REDEEM].map(
+			ev => ev + '|' + account
+		);
+		const allData: IConversion[] = [];
+		for (const ek of eventKeys)
+			allData.push(
+				...this.parseUIConversion(
+					await this.queryData({
+						TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
+						ExpressionAttributeValues: {
+							[':' + CST.DB_EV_KEY]: { S: ek }
+						}
+					})
+				)
+			);
+		for (const c of allData)
+			try {
+				if (this.contractUtil) {
+					const receipt = await this.contractUtil.getTransactionReceipt(c.transactionHash);
+					c.pending = !receipt;
+					c.reverted = !receipt.status;
+				}
+			} catch (error) {
+				continue;
+			}
+
+		return allData;
+	}
+
+	public parseUIConversion(conversion: QueryOutput): IConversion[] {
+		if (!conversion.Items || !conversion.Items.length) return [];
+		return conversion.Items.map(c => ({
+			transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+			blockNumber: 0,
+			type: (c[CST.DB_EV_KEY].S || '').split('|')[0],
+			timestamp: Number(c[CST.DB_EV_SYSTIME].N || ''),
+			eth: Number(c[CST.DB_EV_UI_ETH].N),
+			tokenA: Number(c[CST.DB_EV_UI_TOKEN_A].N),
+			tokenB: Number(c[CST.DB_EV_UI_TOKEN_B].N),
+			ethFee: Number(c[CST.DB_EV_UI_ETH_FEE].N),
+			duoFee: Number(c[CST.DB_EV_UI_DUO_FEE].N),
+			pending: true
+		}));
+	}
+
+	public deleteUIConversionEvent(account: string, conversion: IConversion): Promise<void> {
+		return this.deleteData({
+			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+			Key: {
+				[CST.DB_EV_KEY]: {
+					S: conversion.type + '|' + account
+				},
+				[CST.DB_EV_TX_HASH]: {
+					S: conversion.transactionHash
+				}
+			}
+		});
 	}
 }
 

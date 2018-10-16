@@ -19,7 +19,7 @@ util.logInfo(
 		(option.source || 'local node')
 );
 const contractUtil = new ContractUtil(null, option.source, option.provider, option.live);
-dbUtil.init(tool, option).then(() => {
+dbUtil.init(tool, option, contractUtil).then(() => {
 	switch (tool) {
 		case CST.TRADES:
 			marketUtil.startFetching(tool, option);

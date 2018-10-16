@@ -1,3 +1,4 @@
+import ContractUtil from '../../../duo-contract-util/src/contractUtil';
 import * as CST from '../common/constants';
 import { IOption, IPriceFix, ITrade } from '../common/types';
 // import localSQLauth from '../keys/mysql.json';
@@ -9,7 +10,7 @@ import util from './util';
 class DbUtil {
 	private dynamo: boolean = false;
 
-	public async init(tool: string, option: IOption) {
+	public async init(tool: string, option: IOption, contractUtil: ContractUtil) {
 		this.dynamo = option.dynamo;
 		const role = util.getDynamoRole(option, tool, option.dynamo);
 		const process = util.getStatusProcess(tool, option);
@@ -17,7 +18,7 @@ class DbUtil {
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
-		dynamoUtil.init(config, option.live, process);
+		dynamoUtil.init(config, option.live, process, contractUtil);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
