@@ -4,7 +4,7 @@ exports[`connection initalization 1`] = `"sql db connection is not initialized"`
 
 exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','123','456','ETH|USD')"`;
 
-exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','base','quote')"`;
+exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','quote|base')"`;
 
 exports[`readLastPrice 1`] = `"SELECT * FROM historical_price order by timestamp WHERE pair = ETH|USD DESC LIMIT 1"`;
 
@@ -19,7 +19,7 @@ Object {
 }
 `;
 
-exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890"`;
+exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890 AND pair = ETH|USD;"`;
 
 exports[`readSourceData 2`] = `
 Array [

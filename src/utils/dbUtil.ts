@@ -42,8 +42,8 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(base, quote);
 	}
 
-	public readSourceData(currentTimestamp: number): Promise<ITrade[]> {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp);
+	public readSourceData(currentTimestamp: number, base: string, quote: string): Promise<ITrade[]> {
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp, base, quote);
 	}
 
 	public cleanDB(): Promise<void> {

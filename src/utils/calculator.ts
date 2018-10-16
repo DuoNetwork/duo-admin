@@ -117,7 +117,7 @@ class Calculateor {
 
 	public async getPriceFix(base: string, quote: string): Promise<IPriceFix> {
 		const currentTimestamp: number = util.getNowTimestamp();
-		const trades = await dbUtil.readSourceData(currentTimestamp);
+		const trades = await dbUtil.readSourceData(currentTimestamp, base, quote);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
 			[CST.API_BITFINEX]: [],
 			[CST.API_GEMINI]: [],

@@ -79,9 +79,7 @@ class SqlUtil {
 			"','" +
 			systemTimestamp +
 			"','" +
-			trade.base +
-			"','" +
-			trade.quote +
+			(trade.quote + '|' + trade.base) +
 			"')";
 		// util.logInfo(await this.executeQuery(sql));
 		await this.executeQuery(sql);
@@ -137,7 +135,12 @@ class SqlUtil {
 			};
 	}
 
-	public async readSourceData(currentTimestamp: number): Promise<ITrade[]> {
+	public async readSourceData(
+		currentTimestamp: number,
+		base: string,
+		quote: string
+	): Promise<ITrade[]> {
+		const pair = quote + '|' + base;
 		const lowerTime = currentTimestamp - 3600000 + '';
 		const upperTime = currentTimestamp + '';
 		const res: Array<{ [key: string]: string }> = await this.executeQuery(
@@ -150,7 +153,8 @@ class SqlUtil {
 				' AND ' +
 				CST.DB_TX_TS +
 				' <= ' +
-				upperTime
+				upperTime +
+				` AND pair = ${pair};`
 		);
 		return res.map(item => ({
 			quote: item[CST.DB_TX_QTE],

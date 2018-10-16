@@ -72,7 +72,7 @@ test('readSourceData', async () => {
 			}
 		])
 	);
-	const trades = await sqlUtil.readSourceData(1234567890);
+	const trades = await sqlUtil.readSourceData(1234567890, 'USD', 'ETH');
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect(trades).toMatchSnapshot();
 });
