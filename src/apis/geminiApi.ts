@@ -6,7 +6,7 @@ import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GeminiApi extends BaseApi {
-	public source: string = CST.EXCHANGE_GEMINI;
+	public source: string = CST.API_GEMINI;
 	public parseTrade(sourcePair: string, parsedJson: any): ITrade {
 		const timestampms = parsedJson.timestampms || '';
 		const trade = parsedJson.events[0];
@@ -15,7 +15,7 @@ export class GeminiApi extends BaseApi {
 		return {
 			quote: quote,
 			base: base,
-			source: CST.EXCHANGE_GEMINI,
+			source: CST.API_GEMINI,
 			id: trade.tid + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.amount)),

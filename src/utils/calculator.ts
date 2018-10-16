@@ -119,24 +119,24 @@ class Calculateor {
 		const currentTimestamp: number = util.getNowTimestamp();
 		const trades = await dbUtil.readSourceData(currentTimestamp);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
-			[CST.EXCHANGE_BITFINEX]: [],
-			[CST.EXCHANGE_GEMINI]: [],
-			[CST.EXCHANGE_GDAX]: [],
-			[CST.EXCHANGE_KRAKEN]: []
+			[CST.API_BITFINEX]: [],
+			[CST.API_GEMINI]: [],
+			[CST.API_GDAX]: [],
+			[CST.API_KRAKEN]: []
 		};
 
 		trades.forEach(item => {
-			if (item.source === CST.EXCHANGE_BITFINEX)
-				EXCHANGES_TRADES[CST.EXCHANGE_BITFINEX].push(item);
-			else if (item.source === CST.EXCHANGE_GEMINI)
-				EXCHANGES_TRADES[CST.EXCHANGE_GEMINI].push(item);
-			else if (item.source === CST.EXCHANGE_GDAX)
-				EXCHANGES_TRADES[CST.EXCHANGE_GDAX].push(item);
-			else if (item.source === CST.EXCHANGE_KRAKEN)
-				EXCHANGES_TRADES[CST.EXCHANGE_KRAKEN].push(item);
+			if (item.source === CST.API_BITFINEX)
+				EXCHANGES_TRADES[CST.API_BITFINEX].push(item);
+			else if (item.source === CST.API_GEMINI)
+				EXCHANGES_TRADES[CST.API_GEMINI].push(item);
+			else if (item.source === CST.API_GDAX)
+				EXCHANGES_TRADES[CST.API_GDAX].push(item);
+			else if (item.source === CST.API_KRAKEN)
+				EXCHANGES_TRADES[CST.API_KRAKEN].push(item);
 		});
 
-		const exchangePriceVolume = CST.EXCHANGES.map(src =>
+		const exchangePriceVolume = CST.API_LIST.map(src =>
 			this.getExchangePriceFix(EXCHANGES_TRADES[src], currentTimestamp)
 		);
 

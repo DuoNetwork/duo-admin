@@ -6,7 +6,7 @@ import BaseApi from './BaseApi';
 const BFX = require('bitfinex-api-node');
 
 export class BitfinexApi extends BaseApi {
-	public source: string = CST.EXCHANGE_BITFINEX;
+	public source: string = CST.API_BITFINEX;
 
 	protected parseTradeWS(sourcePair: string, trade: IBitfinexRawTradeWS): ITrade {
 		const { base, quote } = this.parseMarketData(sourcePair);

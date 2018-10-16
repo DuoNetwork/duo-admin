@@ -6,10 +6,10 @@ import geminiApi from './geminiApi';
 import krakenApi from './krakenApi';
 
 const apis: { [key: string]: BaseApi } = {
-	[CST.EXCHANGE_BITFINEX]: bitfinexApi,
-	[CST.EXCHANGE_GEMINI]: geminiApi,
-	[CST.EXCHANGE_KRAKEN]: krakenApi,
-	[CST.EXCHANGE_GDAX]: gdaxApi
+	[CST.API_BITFINEX]: bitfinexApi,
+	[CST.API_GEMINI]: geminiApi,
+	[CST.API_KRAKEN]: krakenApi,
+	[CST.API_GDAX]: gdaxApi
 };
 
 export default apis;

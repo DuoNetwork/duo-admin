@@ -1,5 +1,5 @@
-import dbUtil from '../utils/dbUtil';
 import tradesRest from '../samples/kraken/tradesRest.json';
+import dbUtil from '../utils/dbUtil';
 import util from '../utils/util';
 import api from './krakenApi';
 

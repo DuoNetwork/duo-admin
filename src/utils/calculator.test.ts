@@ -8,7 +8,7 @@ import dbUtil from './dbUtil';
 import util from './util';
 
 test('getVolumeMedianPrice', () => {
-	CST.EXCHANGES.forEach(exchange => {
+	CST.API_LIST.forEach(exchange => {
 		const exchangeTrades: ITrade[] = trades.filter(item => item.source === exchange);
 		expect(calculator.getVolumeMedianPrice(exchangeTrades, 1234567890)).toMatchSnapshot();
 	});
@@ -26,7 +26,7 @@ test('modifyWeights', () => {
 });
 
 test('getExchangePriceFix', () => {
-	CST.EXCHANGES.forEach(exchange => {
+	CST.API_LIST.forEach(exchange => {
 		const exchangeTrades: ITrade[] = trades.filter(item => item.source === exchange);
 		const timestamp = exchangeTrades.reduce(
 			(min, p) => (Number(p.timestamp) < min ? Number(p.timestamp) : min),

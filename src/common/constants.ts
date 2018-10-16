@@ -7,10 +7,10 @@ export const MINUTELY = 'minutely';
 export const HOURLY = 'hourly';
 export const NODE = 'node';
 export const CLEAN_DB = 'cleanDB';
-export const EXCHANGE_BITFINEX = 'bitfinex';
-export const EXCHANGE_GEMINI = 'gemini';
-export const EXCHANGE_KRAKEN = 'kraken';
-export const EXCHANGE_GDAX = 'gdax';
+export const API_BITFINEX = 'bitfinex';
+export const API_GEMINI = 'gemini';
+export const API_KRAKEN = 'kraken';
+export const API_GDAX = 'gdax';
 
 export const AWS_DYNAMO_API_VERSION = '2012-10-08';
 // db setting
@@ -139,7 +139,7 @@ export const API_KRK_TRADE = '/Trades';
 export const API_GDAX_BASE_URL = 'https://api.gdax.com:443/products';
 export const API_GDAX_TRADE = '/trades';
 
-export const EXCHANGES = [EXCHANGE_BITFINEX, EXCHANGE_GEMINI, EXCHANGE_KRAKEN, EXCHANGE_GDAX];
+export const API_LIST = [API_GEMINI, API_KRAKEN, API_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {
 	4: [0.35, 0.3, 0.25, 0.2],
 	3: [0.55, 0.45, 0.35],

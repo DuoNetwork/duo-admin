@@ -1,6 +1,6 @@
 import ws from 'ws';
 import * as CST from '../common/constants';
-import {IBaseMarketData, ISource, ISourceAsset, ISourceSettings, ITrade } from '../common/types';
+import { IBaseMarketData, ISource, ISourceAsset, ISourceSettings, ITrade } from '../common/types';
 import sources from '../static/sources.json';
 import dbUtil from '../utils/dbUtil';
 import util from '../utils/util';
@@ -33,16 +33,49 @@ export default abstract class BaseApi {
 		util.logInfo(`${this.source} Api initialized`);
 	}
 
-	public getSourceInstruments(assetIds: string[]): string[] {
-		util.logDebug(`BaseApi.getSourceInstruments: assetIds: ${JSON.stringify(assetIds)}`);
+	public getSourcePairs(assetIds: string[]): string[] {
+		util.logDebug('assets ' + assetIds.join('.'));
+		const sourcePairs = [];
+		const tickers = Object.keys(this.assetsInfo)
+			.map(ticker => (assetIds.includes(this.assetsInfo[ticker].mapping) ? ticker : ''))
+			.filter(ticker => ticker !== '');
 
-		const sourceInstruments = this.getSourceCashPairs(assetIds);
+		for (const baseTicker of tickers)
+			for (const quoteTicker of tickers)
+				if (
+					quoteTicker !== baseTicker &&
+					Object.keys(this.assetsInfo[baseTicker].quote).includes(quoteTicker)
+				) {
+					const quoteLocalCode = this.assetsInfo[quoteTicker].mapping;
+					const baseLocalCode = this.assetsInfo[baseTicker].mapping;
+					const localPair = quoteLocalCode + '|' + baseLocalCode;
+
+					let sourcePair = '';
+					if (this.settings.quoteInversed)
+						sourcePair = this.settings.isLowercase
+							? baseTicker.toLowerCase() +
+							this.settings.separator +
+							quoteTicker.toLowerCase()
+							: baseTicker.toUpperCase() +
+							this.settings.separator +
+							quoteTicker.toUpperCase();
+					else
+						sourcePair = this.settings.isLowercase
+							? quoteTicker.toLowerCase() +
+							this.settings.separator +
+							baseTicker.toLowerCase()
+							: quoteTicker.toUpperCase() +
+							this.settings.separator +
+							baseTicker.toUpperCase();
+
+					this.sourcePairMapping[sourcePair] = localPair;
+					sourcePairs.push(sourcePair);
+				}
+
 		util.logDebug(
-			`BaseApi.getSourceInstruments: ${this.source}.sourcePairMapping:${JSON.stringify(
-				this.sourcePairMapping
-			)}`
+			`BaseApi.getSourcePairs(${JSON.stringify(assetIds)}) => ${JSON.stringify(sourcePairs)}`
 		);
-		return sourceInstruments;
+		return sourcePairs;
 	}
 
 	private filterSortTrades(localPair: string, trades: ITrade[], filterTrades: boolean) {
@@ -116,58 +149,6 @@ export default abstract class BaseApi {
 			source: this.source,
 			timestamp: util.getUTCNowTimestamp()
 		};
-	}
-
-	public getSourceCashPairs(cashes: string[]): string[] {
-		util.logDebug('cashes ' + cashes.join('.'));
-		const sourcePairs = [];
-		console.log('assetsInfo');
-		console.log(this.assetsInfo);
-
-		const tickers = Object.keys(this.assetsInfo)
-			.map(ticker => (cashes.includes(this.assetsInfo[ticker].mapping) ? ticker : ''))
-			.filter(ticker => ticker !== '');
-
-		console.log(tickers);
-
-		for (const baseTicker of tickers)
-			for (const quoteTicker of tickers)
-				if (
-					quoteTicker !== baseTicker &&
-					Object.keys(this.assetsInfo[baseTicker].quote).includes(quoteTicker)
-				) {
-					const quoteLocalCode = this.assetsInfo[quoteTicker].mapping;
-					const baseLocalCode = this.assetsInfo[baseTicker].mapping;
-					const localPair = quoteLocalCode + '|' + baseLocalCode;
-
-					let sourcePair = '';
-					if (this.settings.quoteInversed)
-						sourcePair = this.settings.isLowercase
-							? baseTicker.toLowerCase() +
-							this.settings.separator +
-							quoteTicker.toLowerCase()
-							: baseTicker.toUpperCase() +
-							this.settings.separator +
-							quoteTicker.toUpperCase();
-					else
-						sourcePair = this.settings.isLowercase
-							? quoteTicker.toLowerCase() +
-							this.settings.separator +
-							baseTicker.toLowerCase()
-							: quoteTicker.toUpperCase() +
-							this.settings.separator +
-							baseTicker.toUpperCase();
-
-					this.sourcePairMapping[sourcePair] = localPair;
-					sourcePairs.push(sourcePair);
-				}
-
-		util.logDebug(
-			`BaseApi.getSourceCashPairs(${JSON.stringify(cashes)}) => ${JSON.stringify(
-				sourcePairs
-			)}`
-		);
-		return sourcePairs;
 	}
 
 	public async fetchTrades(sourcePairs: string[]) {

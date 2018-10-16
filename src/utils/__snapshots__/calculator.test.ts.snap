@@ -3,17 +3,6 @@
 exports[`getExchangePriceFix 1`] = `
 Object {
   "base": "USD",
-  "price": 634.7,
-  "quote": "ETH",
-  "source": "",
-  "timestamp": 1524453966393,
-  "volume": 0.4,
-}
-`;
-
-exports[`getExchangePriceFix 2`] = `
-Object {
-  "base": "USD",
   "price": 637,
   "quote": "ETH",
   "source": "",
@@ -22,7 +11,7 @@ Object {
 }
 `;
 
-exports[`getExchangePriceFix 3`] = `
+exports[`getExchangePriceFix 2`] = `
 Object {
   "base": "USD",
   "price": 667,
@@ -33,7 +22,7 @@ Object {
 }
 `;
 
-exports[`getExchangePriceFix 4`] = `
+exports[`getExchangePriceFix 3`] = `
 Object {
   "base": "USD",
   "price": 633,
@@ -58,26 +47,15 @@ Object {
 exports[`getPriceFix case 2 1`] = `
 Object {
   "base": "USD",
-  "price": 638.5705,
+  "price": 635.974008870658,
   "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
-  "volume": 35.73263379,
+  "volume": 32.579553000000004,
 }
 `;
 
 exports[`getVolumeMedianPrice 1`] = `
-Object {
-  "base": "USD",
-  "price": 634.69,
-  "quote": "ETH",
-  "source": "",
-  "timestamp": 1234567890,
-  "volume": 3.15308079,
-}
-`;
-
-exports[`getVolumeMedianPrice 2`] = `
 Object {
   "base": "USD",
   "price": 638,
@@ -88,7 +66,7 @@ Object {
 }
 `;
 
-exports[`getVolumeMedianPrice 3`] = `
+exports[`getVolumeMedianPrice 2`] = `
 Object {
   "base": "USD",
   "price": 666.98,
@@ -99,7 +77,7 @@ Object {
 }
 `;
 
-exports[`getVolumeMedianPrice 4`] = `
+exports[`getVolumeMedianPrice 3`] = `
 Object {
   "base": "USD",
   "price": 633,

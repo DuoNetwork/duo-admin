@@ -1,7 +1,7 @@
-import dbUtil from '../utils/dbUtil';
 import tradesRest from '../samples/bitfinex/tradesRest.json';
 import tradesWsSnapshot from '../samples/bitfinex/tradesWsSnapshot.json';
 import tradesWsUpdate from '../samples/bitfinex/tradesWsUpdate.json';
+import dbUtil from '../utils/dbUtil';
 import util from '../utils/util';
 import api from './bitfinexApi';
 

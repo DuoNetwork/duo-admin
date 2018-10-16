@@ -1,8 +1,6 @@
 {
-
 	"bitfinex": {
 		"assets": {
-			
 			"ETH": {
 				"base": {
 					"USD": true
@@ -11,18 +9,14 @@
 				"name": "Ethereum",
 				"mapping": "ETH"
 			},
-		
 			"USD": {
-				"base": {
-				
-				},
+				"base": {},
 				"quote": {
 					"ETH": true
 				},
 				"name": "US dollar",
 				"mapping": "USD"
 			}
-			
 		},
 		"settings": {
 			"priceInversed": false,
@@ -42,22 +36,18 @@
 				"base": {
 					"USD": true
 				},
-				"quote":{},
+				"quote": {},
 				"name": "Ethereum",
 				"mapping": "ETH"
 			},
-		
 			"USD": {
-				"base": {
-				
-				},
+				"base": {},
 				"quote": {
 					"ETH": true
 				},
 				"name": "US dollar",
 				"mapping": "USD"
 			}
-			
 		},
 		"settings": {
 			"priceInversed": false,
@@ -72,22 +62,18 @@
 			"inflationRequired": false
 		}
 	},
-
 	"kraken": {
 		"assets": {
 			"ETH": {
 				"base": {
 					"USD": true
 				},
-				"quote":{},
+				"quote": {},
 				"name": "Ethereum",
 				"mapping": "ETH"
 			},
-		
 			"USD": {
-				"base": {
-				
-				},
+				"base": {},
 				"quote": {
 					"ETH": true
 				},
@@ -114,15 +100,12 @@
 				"base": {
 					"USD": true
 				},
-				"quote":{},
+				"quote": {},
 				"name": "Ethereum",
 				"mapping": "ETH"
 			},
-		
 			"USD": {
-				"base": {
-				
-				},
+				"base": {},
 				"quote": {
 					"ETH": true
 				},
@@ -143,5 +126,4 @@
 			"inflationRequired": false
 		}
 	}
-
 }

@@ -8,8 +8,7 @@ CREATE TABLE `priceFeedDB`.`trades` (
   `amount` VARCHAR(255) NOT NULL,
   `timestamp` VARCHAR(255) NOT NULL,
   `systime` VARCHAR(255) NOT NULL,
-  `base` VARCHAR(255) NOT NULL,
-  `quote` VARCHAR(255) NOT NULL,
+  `pair` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`timestamp`, `id`, `source`));
 
 CREATE TABLE `priceFeedDB`.`historical_price` (

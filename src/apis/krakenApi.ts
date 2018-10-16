@@ -1,12 +1,12 @@
 import * as CST from '../common/constants';
-import {IKrakenRawTrade, ITrade } from '../common/types';
+import { IKrakenRawTrade, ITrade } from '../common/types';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class KrakenApi extends BaseApi {
-	public source: string = CST.EXCHANGE_KRAKEN;
+	public source: string = CST.API_KRAKEN;
 	protected parseTrade(sourcePair: string, trade: string[]): ITrade {
-		const {base, quote} = this.parseMarketData(sourcePair);
+		const { base, quote } = this.parseMarketData(sourcePair);
 
 		return {
 			base: base,

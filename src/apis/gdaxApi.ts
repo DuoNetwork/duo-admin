@@ -5,13 +5,13 @@ import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GdaxApi extends BaseApi {
-	public source: string = CST.EXCHANGE_GDAX;
+	public source: string = CST.API_GDAX;
 	public parseTrade(sourcePair: string, trade: { [key: string]: string | number }): ITrade {
-		const {base, quote} = this.parseMarketData(sourcePair);
+		const { base, quote } = this.parseMarketData(sourcePair);
 		return {
 			base: base,
 			quote: quote,
-			source: CST.EXCHANGE_GDAX,
+			source: CST.API_GDAX,
 			id: trade.trade_id + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.size)),
