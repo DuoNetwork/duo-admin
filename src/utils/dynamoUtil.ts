@@ -196,7 +196,8 @@ class DynamoUtil {
 
 	public getPriceKeyField(period: number) {
 		if (period === 0) return CST.DB_SRC_DHM;
-		else if (period === 1) return CST.DB_MN_SRC_DATE_HOUR;
+		else if (period === 1) return CST.DB_SRC_DH;
+		else if (period === 60) return CST.DB_SRC_DATE;
 		else throw new Error('invalid period');
 	}
 
