@@ -3,7 +3,7 @@
 exports[`fetchTradesREST spot 1`] = `
 Array [
   Array [
-    "https://api.kraken.com/0/public/Trades?pair=ETHUSD",
+    "https://api.gdax.com:443/products/eth-usd/trades",
   ],
 ]
 `;
@@ -12,99 +12,89 @@ exports[`fetchTradesREST spot 2`] = `
 Array [
   Array [
     Object {
-      "amount": 55.15907384,
+      "amount": 6.6079,
       "base": "USD",
-      "id": "15385333204866",
-      "price": 220,
+      "id": "41222229",
+      "price": 204.05,
       "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533320486,
+      "source": "gdax",
+      "timestamp": 1539681436111,
     },
     true,
   ],
   Array [
     Object {
-      "amount": 30,
+      "amount": 0.0193,
       "base": "USD",
-      "id": "15385333196094",
-      "price": 220,
+      "id": "41222228",
+      "price": 204.05,
       "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319609,
+      "source": "gdax",
+      "timestamp": 1539681436111,
     },
     false,
   ],
   Array [
     Object {
-      "amount": 21.44,
+      "amount": 0.0066,
       "base": "USD",
-      "id": "15385333195739",
-      "price": 220,
+      "id": "41222227",
+      "price": 204.05,
       "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319574,
+      "source": "gdax",
+      "timestamp": 1539681436111,
     },
     false,
   ],
   Array [
     Object {
-      "amount": 267.49816172,
+      "amount": 0.2334,
       "base": "USD",
-      "id": "15385333195578",
-      "price": 220,
+      "id": "41222226",
+      "price": 204.05,
       "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319557,
-    },
-    false,
-  ],
-  Array [
-    Object {
-      "amount": 7.76592969,
-      "base": "USD",
-      "id": "15385333195557",
-      "price": 220,
-      "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319555,
-    },
-    false,
-  ],
-  Array [
-    Object {
-      "amount": 14.85235943,
-      "base": "USD",
-      "id": "15385333195537",
-      "price": 220,
-      "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319553,
-    },
-    false,
-  ],
-  Array [
-    Object {
-      "amount": 27.32884916,
-      "base": "USD",
-      "id": "15385333195512",
-      "price": 220,
-      "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319551,
-    },
-    false,
-  ],
-  Array [
-    Object {
-      "amount": 5,
-      "base": "USD",
-      "id": "15385333195299",
-      "price": 220,
-      "quote": "ETH",
-      "source": "kraken",
-      "timestamp": 1538533319529,
+      "source": "gdax",
+      "timestamp": 1539681430566,
     },
     false,
   ],
 ]
+`;
+
+exports[`fetchTradesWS 1`] = `"no ws"`;
+
+exports[`parseTrade 1`] = `
+Object {
+  "amount": 0.8124,
+  "base": "USD",
+  "id": "41222165",
+  "price": 203.75,
+  "quote": "ETH",
+  "source": "gdax",
+  "timestamp": 1539680912470,
+}
+`;
+
+exports[`parseTrade 2`] = `
+Object {
+  "amount": 1.08247223,
+  "base": "USD",
+  "id": "41222164",
+  "price": 203.81,
+  "quote": "ETH",
+  "source": "gdax",
+  "timestamp": 1539680905248,
+}
+`;
+
+exports[`parseTrade 3`] = `
+Object {
+  "amount": 0.08034588,
+  "base": "USD",
+  "id": "41222163",
+  "price": 203.92,
+  "quote": "ETH",
+  "source": "gdax",
+  "timestamp": 1539680897586,
+}
 `;

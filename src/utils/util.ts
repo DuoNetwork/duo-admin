@@ -43,39 +43,16 @@ class Util {
 			gcp: process.argv.includes('gcp'),
 			azure: process.argv.includes('azure'),
 			force: process.argv.includes('force'),
-			pair: 'ETH|USD',
+			pair: '',
 			assets: [''],
 			sources: [''],
 			exSources: [''],
 			gasPrice: 5e9,
 			gasLimit: 200000,
-			eth: 0,
-			address: '',
-			addr1: '',
-			addr2: '',
-			privateKey: '',
-			price: 0,
 			source: '',
-			pwd: '',
 			event: '',
 			provider: '',
-			contractState: '',
-			accountNum: 1,
-			saveAccount: false,
-			from: '',
-			to: '',
-			value: 0,
-			index: 0,
-			total: 10,
-			minEther: 0.02,
-			alpha: 0.3,
-			amtA: 0,
-			amtB: 0,
-			numOfMinutes: 2,
-			numOfHours: 2,
-			key: '',
 			period: 1,
-			endBlk: 0,
 			base: 'USD',
 			quote: 'ETH'
 		};
@@ -100,27 +77,6 @@ class Util {
 				case 'gasLimit':
 					option.gasLimit = Number(args[1]) || option.gasLimit;
 					break;
-				case 'eth':
-					option.eth = Number(args[1]) || option.eth;
-					break;
-				case 'address':
-					option.address = args[1] || option.address;
-					break;
-				case 'addr1':
-					option.addr1 = args[1] || option.addr1;
-					break;
-				case 'addr2':
-					option.addr2 = args[1] || option.addr2;
-					break;
-				case 'privateKey':
-					option.privateKey = args[1] || option.privateKey;
-					break;
-				case 'price':
-					option.price = Number(args[1]) || option.price;
-					break;
-				case 'pwd':
-					option.pwd = args[1] || option.pwd;
-					break;
 				case 'source':
 					option.source = args[1] || option.source;
 					break;
@@ -129,51 +85,6 @@ class Util {
 					break;
 				case 'provider':
 					option.provider = args[1] || option.provider;
-					break;
-				case 'contractState':
-					option.contractState = args[1] || option.contractState;
-					break;
-				case 'accountNum':
-					option.accountNum = Number(args[1]) || option.accountNum;
-					break;
-				case 'saveAccount':
-					option.saveAccount = args[1] === 'yes' || option.saveAccount;
-					break;
-				case 'from':
-					option.from = args[1] || option.from;
-					break;
-				case 'total':
-					option.total = Number(args[1]) || option.total;
-					break;
-				case 'minEther':
-					option.minEther = Number(args[1]) || option.minEther;
-					break;
-				case 'alpha':
-					option.alpha = Number(args[1]) || option.alpha;
-					break;
-				case 'amtA':
-					option.amtA = Number(args[1]) || option.amtA;
-					break;
-				case 'amtB':
-					option.amtB = Number(args[1]) || option.amtB;
-					break;
-				case 'value':
-					option.value = Number(args[1]) || option.value;
-					break;
-				case 'index':
-					option.index = Number(args[1]) || option.index;
-					break;
-				case 'numOfMinutes':
-					option.numOfMinutes = Number(args[1]) || option.numOfMinutes;
-					break;
-				case 'numOfHours':
-					option.numOfHours = Number(args[1]) || option.numOfHours;
-					break;
-				case 'key':
-					option.key = args[1] || option.key;
-					break;
-				case 'endBlk':
-					option.endBlk = Number(args[1]) || option.endBlk;
 					break;
 				case 'period':
 					option.period = Number(args[1]);

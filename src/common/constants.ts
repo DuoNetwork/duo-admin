@@ -44,6 +44,7 @@ export const DB_TX_PRICE = 'price';
 export const DB_TX_AMOUNT = 'amount';
 export const DB_TX_TS = 'timestamp';
 export const DB_TX_SYSTIME = 'systime';
+export const DB_TX_PAIR = 'pair';
 export const DB_UPDATED_AT = 'updatedAt';
 export const DB_TX_SRC_DHM = 'sourceDateHourMinute';
 export const DB_HISTORY_PRICE = 'price';

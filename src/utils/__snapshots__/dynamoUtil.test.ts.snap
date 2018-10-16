@@ -255,6 +255,9 @@ Object {
   "amount": Object {
     "N": "456",
   },
+  "pair": Object {
+    "S": "quote|base",
+  },
   "price": Object {
     "N": "123",
   },
@@ -429,6 +432,9 @@ Object {
     "amount": Object {
       "N": "456",
     },
+    "pair": Object {
+      "S": "quote|base",
+    },
     "price": Object {
       "N": "123",
     },
@@ -454,6 +460,9 @@ Object {
   "Item": Object {
     "amount": Object {
       "N": "456",
+    },
+    "pair": Object {
+      "S": "quote|base",
     },
     "price": Object {
       "N": "123",

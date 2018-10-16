@@ -108,3 +108,5 @@ Array [
   ],
 ]
 `;
+
+exports[`fetchTradesWS 1`] = `"no ws"`;

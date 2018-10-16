@@ -7,21 +7,6 @@ import BaseApi from './BaseApi';
 
 export class GeminiApi extends BaseApi {
 	public source: string = CST.API_GEMINI;
-	public parseTrade(sourcePair: string, parsedJson: any): ITrade {
-		const timestampms = parsedJson.timestampms || '';
-		const trade = parsedJson.events[0];
-		const { quote, base } = this.parseMarketData(sourcePair);
-
-		return {
-			quote: quote,
-			base: base,
-			source: CST.API_GEMINI,
-			id: trade.tid + '',
-			price: Number(trade.price),
-			amount: Math.abs(Number(trade.amount)),
-			timestamp: Number(timestampms)
-		};
-	}
 
 	protected parseTradeWS(sourcePair: string, trade: IGeminiTradeWs): ITrade {
 		const events: IGeminiTradeData[] = trade.events;

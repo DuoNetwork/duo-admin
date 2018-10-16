@@ -93,7 +93,8 @@ class DynamoUtil {
 			[CST.DB_TX_PRICE]: { N: trade.price.toString() },
 			[CST.DB_TX_AMOUNT]: { N: trade.amount.toString() },
 			[CST.DB_TX_TS]: { N: trade.timestamp + '' },
-			[CST.DB_TX_SYSTIME]: { N: systime + '' }
+			[CST.DB_TX_SYSTIME]: { N: systime + '' },
+			[CST.DB_TX_PAIR]: {S: `${trade.quote}|${trade.base}`}
 		};
 	}
 

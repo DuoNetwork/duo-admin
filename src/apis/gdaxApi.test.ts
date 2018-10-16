@@ -1,7 +1,9 @@
+import moment from 'moment';
+import parsedTrades from '../samples/gdax/parsedTrades.json';
 import tradesRest from '../samples/gdax/tradesRest.json';
 import dbUtil from '../utils/dbUtil';
 import httpUtil from '../utils/httpUtil';
-import api from './krakenApi';
+import api from './gdaxApi';
 
 api.init();
 let sourceCashPair = ['ETH', 'USD']
@@ -33,12 +35,14 @@ for (const testName in testCases) {
 		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
 		expect(calls).toMatchSnapshot();
-		expect(calls.length).toEqual(
-			Object.keys(testCase.tradesRest.result)
-				.map(key => testCase.tradesRest.result[key])
-				.filter((x: any) => Array.isArray(x))
-				.map(x => x.length)
-				.reduce((x1: number, x2: number) => x1 + x2)
+	});
+
+	test('parseTrade', async () => {
+		moment().valueOf = jest.fn(() => Promise.resolve(123456789));
+		parsedTrades.forEach(trade =>
+			expect(api.parseTrade(testCase.sourceInstrument, trade)).toMatchSnapshot()
 		);
 	});
 }
+
+test('fetchTradesWS', () => expect(() => api.fetchTradesWS()).toThrowErrorMatchingSnapshot());

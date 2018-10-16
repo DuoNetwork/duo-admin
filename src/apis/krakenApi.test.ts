@@ -42,3 +42,5 @@ for (const testName in testCases) {
 		);
 	});
 }
+
+test('fetchTradesWS', () => expect(() => api.fetchTradesWS()).toThrowErrorMatchingSnapshot());

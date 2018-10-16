@@ -25,7 +25,6 @@ export class GdaxApi extends BaseApi {
 		util.logInfo(url);
 		const res = await httpUtil.get(url);
 		const result: Array<{ [key: string]: string }> = JSON.parse(res);
-
 		await this.addTrades(
 			this.sourcePairMapping[sourcePair],
 			result.map(trade => this.parseTrade(sourcePair, trade))
