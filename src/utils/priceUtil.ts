@@ -145,10 +145,10 @@ class PriceUtil {
 
 	public startAggregate(period: number) {
 		// console.log({ period: period + '' });
-		dynamoUtil.insertStatusData({ period: { N: period + '' }});
+		dynamoUtil.insertHeartbeat({ period: { N: period + '' }});
 
 		setInterval(
-			() => dynamoUtil.insertStatusData({ period: { N: period + '' }}),
+			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' }}),
 			CST.STATUS_INTERVAL * 1000
 		);
 		setInterval(() => this.aggregatePrice(period), 30000);
