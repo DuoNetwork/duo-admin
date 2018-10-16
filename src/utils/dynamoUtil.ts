@@ -538,7 +538,7 @@ class DynamoUtil {
 		const output = status.Items.map(d => {
 			const process = d[CST.DB_ST_PROCESS].S || '';
 			const timestamp = Number(d[CST.DB_ST_TS].N);
-			if (process.startsWith('PRICE'))
+			if (process.startsWith('TRADE'))
 				return {
 					process: process,
 					timestamp: timestamp,

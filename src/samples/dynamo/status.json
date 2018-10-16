@@ -2,7 +2,7 @@
     "Items": [
         {
             "process": {
-                "S": "PRICE_AWS_PUBLIC_GEMINI"
+                "S": "TRADE_AWS_PUBLIC_GEMINI"
             },
             "amount": {
                 "N": "0.021854"
@@ -22,7 +22,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PRIVATE_GDAX"
+                "S": "TRADE_AWS_PRIVATE_GDAX"
             },
             "amount": {
                 "N": "0.112"
@@ -80,7 +80,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PRIVATE_BITFINEX"
+                "S": "TRADE_AWS_PRIVATE_BITFINEX"
             },
             "amount": {
                 "N": "2"
@@ -100,7 +100,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PRIVATE_KRAKEN"
+                "S": "TRADE_AWS_PRIVATE_KRAKEN"
             },
             "amount": {
                 "N": "1.3"
@@ -120,7 +120,7 @@
         },
         {
             "process": {
-                "S": "PRICE_GCP_PRIVATE_GEMINI"
+                "S": "TRADE_GCP_PRIVATE_GEMINI"
             },
             "amount": {
                 "N": "0.005219"
@@ -148,7 +148,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PUBLIC_GDAX"
+                "S": "TRADE_AWS_PUBLIC_GDAX"
             },
             "amount": {
                 "N": "6.52551355"
@@ -168,7 +168,7 @@
         },
         {
             "process": {
-                "S": "PRICE_GCP_PRIVATE_BITFINEX"
+                "S": "TRADE_GCP_PRIVATE_BITFINEX"
             },
             "amount": {
                 "N": "5.16121098"
@@ -196,7 +196,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AZURE_PRIVATE_GEMINI"
+                "S": "TRADE_AZURE_PRIVATE_GEMINI"
             },
             "amount": {
                 "N": "0.714947"
@@ -224,7 +224,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PUBLIC_BITFINEX"
+                "S": "TRADE_AWS_PUBLIC_BITFINEX"
             },
             "amount": {
                 "N": "1.608"
@@ -255,7 +255,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PUBLIC_KRAKEN"
+                "S": "TRADE_AWS_PUBLIC_KRAKEN"
             },
             "amount": {
                 "N": "1.13"
@@ -283,7 +283,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AWS_PRIVATE_GEMINI"
+                "S": "TRADE_AWS_PRIVATE_GEMINI"
             },
             "amount": {
                 "N": "0.034274"
@@ -303,7 +303,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AZURE_PRIVATE_KRAKEN"
+                "S": "TRADE_AZURE_PRIVATE_KRAKEN"
             },
             "amount": {
                 "N": "0.29453729"
@@ -331,7 +331,7 @@
         },
         {
             "process": {
-                "S": "PRICE_GCP_PRIVATE_KRAKEN"
+                "S": "TRADE_GCP_PRIVATE_KRAKEN"
             },
             "amount": {
                 "N": "0.2"
@@ -351,7 +351,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AZURE_PRIVATE_BITFINEX"
+                "S": "TRADE_AZURE_PRIVATE_BITFINEX"
             },
             "amount": {
                 "N": "0.02548273"
@@ -371,7 +371,7 @@
         },
         {
             "process": {
-                "S": "PRICE_AZURE_PRIVATE_GDAX"
+                "S": "TRADE_AZURE_PRIVATE_GDAX"
             },
             "amount": {
                 "N": "0.69683"
@@ -391,7 +391,7 @@
         },
         {
             "process": {
-                "S": "PRICE_GCP_PRIVATE_GDAX"
+                "S": "TRADE_GCP_PRIVATE_GDAX"
             },
             "amount": {
                 "N": "0.7576"
