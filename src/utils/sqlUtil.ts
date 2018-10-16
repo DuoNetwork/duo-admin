@@ -95,25 +95,28 @@ class SqlUtil {
 		util.logInfo(
 			await this.executeQuery(
 				'INSERT INTO ' +
-					CST.DB_SQL_HISTORY['ETH-USD'] +
+					CST.DB_SQL_HISTORY +
 					" VALUES ('" +
 					price.timestamp +
 					"','" +
 					price.price +
 					"','" +
 					price.volume +
+					"','" +
+					(price.quote + '|' + price.base) +
 					"')"
 			)
 		);
 	}
 
-	public async readLastPrice(): Promise<IPriceFix> {
+	public async readLastPrice(base: string, quote: string): Promise<IPriceFix> {
+		const pair = quote + '|' + base;
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
-				CST.DB_SQL_HISTORY['ETH-USD'] +
+				CST.DB_SQL_HISTORY +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
-				' DESC LIMIT 1'
+				` WHERE pair = ${pair} DESC LIMIT 1`
 		);
 		return res[0]
 			? {
@@ -121,16 +124,16 @@ class SqlUtil {
 					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
 					volume: Number(res[0][CST.DB_HISTORY_VOLUME]),
 					source: '',
-					base: '',
-					quote: ''
+					base: base,
+					quote: quote
 			}
 			: {
 					price: 0,
 					timestamp: 0,
 					volume: 0,
 					source: '',
-					base: '',
-					quote: ''
+					base: base,
+					quote: quote
 			};
 	}
 

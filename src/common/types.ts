@@ -86,6 +86,8 @@ export interface IOption {
 	key: string;
 	endBlk: number;
 	period: number;
+	base: string;
+	quote: string;
 }
 
 export interface ISourceSettings {

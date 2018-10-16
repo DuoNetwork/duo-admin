@@ -28,7 +28,7 @@ class PriceUtil {
 		if (isInception)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
-				const currentPrice = await calculator.getPriceFix();
+				const currentPrice = await calculator.getPriceFix(option.base, option.quote);
 				const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
 				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return contractUtil.commitPrice(
@@ -43,7 +43,7 @@ class PriceUtil {
 			});
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
-			const currentPrice = await calculator.getPriceFix();
+			const currentPrice = await calculator.getPriceFix(option.base, option.quote);
 			const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
 			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 			return contractUtil.commitPrice(

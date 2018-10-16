@@ -12,10 +12,11 @@ CREATE TABLE `priceFeedDB`.`trades` (
   `quote` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`timestamp`, `id`, `source`));
 
-CREATE TABLE `priceFeedDB`.`eth_usd_historical_price` (
+CREATE TABLE `priceFeedDB`.`historical_price` (
   `timestamp` VARCHAR(255) NOT NULL,
   `price` VARCHAR(255) NOT NULL,
   `volume` VARCHAR(255) NOT NULL,
+  `pair` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`timestamp`));
 
 

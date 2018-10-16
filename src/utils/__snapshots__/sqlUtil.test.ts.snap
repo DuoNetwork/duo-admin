@@ -2,17 +2,17 @@
 
 exports[`connection initalization 1`] = `"sql db connection is not initialized"`;
 
-exports[`insertPrice 1`] = `"INSERT INTO eth_usd_historical_price VALUES ('1234567890','123','456')"`;
+exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','123','456','ETH|USD')"`;
 
 exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','base','quote')"`;
 
-exports[`readLastPrice 1`] = `"SELECT * FROM eth_usd_historical_price order by timestamp DESC LIMIT 1"`;
+exports[`readLastPrice 1`] = `"SELECT * FROM historical_price order by timestamp WHERE pair = ETH|USD DESC LIMIT 1"`;
 
 exports[`readLastPrice 2`] = `
 Object {
-  "base": "",
+  "base": "USD",
   "price": 123,
-  "quote": "",
+  "quote": "ETH",
   "source": "",
   "timestamp": 1234567890,
   "volume": 456,

@@ -1,5 +1,6 @@
 import * as CST from '../common/constants';
 import { IOption, IPriceFix, ITrade } from '../common/types';
+import localSQLauth from '../keys/mysql.json';
 import dynamoUtil from './dynamoUtil';
 import keyUtil from './keyUtil';
 import sqlUtil from './sqlUtil';
@@ -20,10 +21,7 @@ class DbUtil {
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
 				sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
-			} else {
-				const localSQLauth = require('./keys/mysql.json');
-				sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
-			}
+			} else sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
 	}
 
 	public insertTradeData(trade: ITrade, insertStatus: boolean) {
@@ -36,8 +34,8 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
 	}
 
-	public readLastPrice(): Promise<IPriceFix> {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice();
+	public readLastPrice(base: string, quote: string): Promise<IPriceFix> {
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(base, quote);
 	}
 
 	public readSourceData(currentTimestamp: number): Promise<ITrade[]> {

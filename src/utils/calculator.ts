@@ -1,4 +1,3 @@
-// import moment from 'moment';
 import * as CST from '../common/constants';
 import { IPriceFix, ITrade } from '../common/types';
 import dbUtil from './dbUtil';
@@ -86,7 +85,6 @@ class Calculateor {
 				if (weights[i] < weightCaps[i])
 					weights[i] = (weights[i] / sumOfUnCapped) * (1 - sumOfCapped);
 
-			// util.logInfo(weights);
 			isValid = this.validateWeights(weights);
 		}
 		return weights;
@@ -117,7 +115,7 @@ class Calculateor {
 		}
 	}
 
-	public async getPriceFix(): Promise<IPriceFix> {
+	public async getPriceFix(base: string, quote: string): Promise<IPriceFix> {
 		const currentTimestamp: number = util.getNowTimestamp();
 		const trades = await dbUtil.readSourceData(currentTimestamp);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
@@ -147,20 +145,19 @@ class Calculateor {
 
 		if (priceFix === 0) {
 			util.logInfo('no priceFix found, use the last ETH price');
-			const lastPriceObj = await dbUtil.readLastPrice();
+			const lastPriceObj = await dbUtil.readLastPrice(base, quote);
 			util.logInfo(
 				'the priceFix is: ' + lastPriceObj.price + ' at timestamp ' + lastPriceObj.timestamp
 			);
 			return lastPriceObj;
 		} else {
-			// util.logInfo(exchangePriceVolume);
 			const priceObj = {
 				price: priceFix,
 				volume: exchangePriceVolume.reduce((sum, p) => sum + p.volume, 0),
 				timestamp: currentTimestamp,
 				source: '',
-				base: '',
-				quote: ''
+				base: base,
+				quote: quote
 			};
 			util.logInfo(
 				'valid exchange priceFix found: ' +

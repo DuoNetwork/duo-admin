@@ -30,8 +30,8 @@ test('insertPrice', async () => {
 		volume: 456,
 		timestamp: 1234567890,
 		source: '',
-		base: '',
-		quote: ''
+		base: 'USD',
+		quote: 'ETH'
 	});
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
@@ -46,7 +46,7 @@ test('readLastPrice', async () => {
 			}
 		])
 	);
-	const price = await sqlUtil.readLastPrice();
+	const price = await sqlUtil.readLastPrice('USD', 'ETH');
 	expect(
 		(sqlUtil.executeQuery as jest.Mock<Promise<IPrice[]>>).mock.calls[0][0]
 	).toMatchSnapshot();

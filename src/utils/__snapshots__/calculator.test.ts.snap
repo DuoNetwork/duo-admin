@@ -46,9 +46,9 @@ Object {
 
 exports[`getPriceFix case 1 1`] = `
 Object {
-  "base": "",
+  "base": "USD",
   "price": 666.98,
-  "quote": "",
+  "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
   "volume": 0.16599999999999998,
@@ -57,9 +57,9 @@ Object {
 
 exports[`getPriceFix case 2 1`] = `
 Object {
-  "base": "",
+  "base": "USD",
   "price": 638.5705,
-  "quote": "",
+  "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
   "volume": 35.73263379,

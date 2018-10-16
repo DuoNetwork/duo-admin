@@ -4,14 +4,8 @@ import { ITrade } from '../common/types';
 import trades from '../samples/ETHUSDtrades.json';
 import trades2 from '../samples/ETHUSDtrades2.json';
 import calculator from './calculator';
-// import dynamoUtil from './database/dynamoUtil';
 import dbUtil from './dbUtil';
-// import samppleMinutes from './samples/dynamoMinutely.json';
-// import sampleTrades from './samples/dynamoTrades.json';
-
 import util from './util';
-
-// console.log(trades);
 
 test('getVolumeMedianPrice', () => {
 	CST.EXCHANGES.forEach(exchange => {
@@ -46,8 +40,7 @@ test('getPriceFix case 1', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
 	util.getNowTimestamp = jest.fn(() => 1524547909941);
-	// console.log(dbUtil.readSourceData);
-	await calculator.getPriceFix();
+	await calculator.getPriceFix('USD', 'ETH');
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });
 
@@ -55,7 +48,6 @@ test('getPriceFix case 2', async () => {
 	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades2));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
 	util.getNowTimestamp = jest.fn(() => 1524547909941);
-	// console.log(dbUtil.readSourceData);
-	await calculator.getPriceFix();
+	await calculator.getPriceFix('USD', 'ETH');
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 });

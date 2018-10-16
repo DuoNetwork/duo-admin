@@ -43,10 +43,10 @@ class KeyUtil {
 	public async getKey(option: IOption): Promise<IKey> {
 		if (!option.live && !option.server) {
 			const key = option.azure
-				? require('./keys/kovan/pfAzure.json')
+				? require('../keys/kovan/pfAzure.json')
 				: option.gcp
-					? require('./keys/kovan/pfGcp.json')
-					: require('./keys/kovan/pfAws.json');
+					? require('../keys/kovan/pfGcp.json')
+					: require('../keys/kovan/pfAws.json');
 			return {
 				publicKey: key.publicKey,
 				privateKey: key.privateKey
@@ -72,7 +72,7 @@ class KeyUtil {
 
 	public async getSqlAuth(option: IOption): Promise<ISqlAuth> {
 		if (!option.live && !option.server) {
-			const mysqlAuthFile = require('./keys/mysql.json');
+			const mysqlAuthFile = require('../keys/mysql.json');
 			return {
 				host: mysqlAuthFile.host,
 				user: mysqlAuthFile.user,

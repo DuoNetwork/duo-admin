@@ -121,7 +121,9 @@ class Util {
 			numOfHours: 2,
 			key: '',
 			period: 1,
-			endBlk: 0
+			endBlk: 0,
+			base: 'USD',
+			quote: 'ETH'
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -221,6 +223,12 @@ class Util {
 					break;
 				case 'period':
 					option.period = Number(args[1]);
+					break;
+				case 'base':
+					option.base = args[1] || option.base;
+					break;
+				case 'quote':
+					option.quote = args[1] || option.quote;
 					break;
 				default:
 					break;

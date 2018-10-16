@@ -16,9 +16,7 @@ export const AWS_DYNAMO_API_VERSION = '2012-10-08';
 // db setting
 export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';
 export const DB_SQL_TRADE = 'trades';
-export const DB_SQL_HISTORY = {
-	'ETH-USD': 'eth_usd_historical_price'
-}
+export const DB_SQL_HISTORY = 'historical_price';
 
 export const DB_DUO = 'duo';
 export const DB_TRADES = 'trades';

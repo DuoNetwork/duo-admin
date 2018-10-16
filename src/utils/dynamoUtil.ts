@@ -211,37 +211,11 @@ class DynamoUtil {
 	// 	console.logInfo('done');
 	// }
 
-	// public insertMinutelyData(priceBar: IPrice): Promise<void> {
-	// 	return this.insertData({
-	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
-	// 		Item: {
-	// 			[CST.DB_MN_SRC_DATE_HOUR]: {
-	// 				S: priceBar.source + '|' + priceBar.date + '-' + priceBar.hour
-	// 			},
-	// 			[CST.DB_MN_MINUTE]: { N: Number(priceBar.minute) + '' },
-	// 			...this.convertPriceBarToDynamo(priceBar)
-	// 		}
-	// 	});
-	// }
-
 	public getPriceKeyField(period: number) {
 		if (period === 0) return CST.DB_SRC_DHM;
 		else if (period === 1) return CST.DB_MN_SRC_DATE_HOUR;
 		else throw new Error('invalid period');
 	}
-
-	// public async insertHourlyData(priceBar: IPrice): Promise<void> {
-	// 	return this.insertData({
-	// 		TableName: this.live ? CST.DB_AWS_HOURLY_LIVE : CST.DB_AWS_HOURLY_DEV,
-	// 		Item: {
-	// 			[CST.DB_HR_SRC_DATE]: {
-	// 				S: priceBar.source + '|' + priceBar.date
-	// 			},
-	// 			[CST.DB_HR_HOUR]: { N: Number(priceBar.hour) + '' },
-	// 			...this.convertPriceBarToDynamo(priceBar)
-	// 		}
-	// 	});
-	// }
 
 	public insertHeartbeat(data: object = {}): Promise<void> {
 		return this.insertData({
@@ -296,21 +270,6 @@ class DynamoUtil {
 
 		return data.Items.map(d => this.convertDynamoToTrade(d));
 	}
-
-	// public async readMinutelyData(source: string, datetimeString: string): Promise<IPrice[]> {
-	// 	const params = {
-	// 		TableName: this.live ? CST.DB_AWS_MINUTELY_LIVE : CST.DB_AWS_MINUTELY_DEV,
-	// 		KeyConditionExpression: CST.DB_MN_SRC_DATE_HOUR + ' = :' + CST.DB_MN_SRC_DATE_HOUR,
-	// 		ExpressionAttributeValues: {
-	// 			[':' + CST.DB_MN_SRC_DATE_HOUR]: { S: source + '|' + datetimeString }
-	// 		}
-	// 	};
-
-	// 	const data = await this.queryData(params);
-	// 	if (!data.Items || !data.Items.length) return [];
-
-	// 	return data.Items.map(d => this.convertDynamoToPriceBar(d));
-	// }
 
 	public async getSingleKeyPeriodPrices(
 		src: string,
