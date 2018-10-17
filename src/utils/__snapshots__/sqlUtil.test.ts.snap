@@ -8,7 +8,7 @@ exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','
 
 exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','quote|base')"`;
 
-exports[`readLastPrice 1`] = `"SELECT * FROM historical_price order by timestamp WHERE pair = ETH|USD DESC LIMIT 1"`;
+exports[`readLastPrice 1`] = `"SELECT * FROM historical_price order by timestamp WHERE pair = 'ETH|USD' DESC LIMIT 1"`;
 
 exports[`readLastPrice 2`] = `
 Object {

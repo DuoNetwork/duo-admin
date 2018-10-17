@@ -114,7 +114,7 @@ class SqlUtil {
 				CST.DB_SQL_HISTORY +
 				' order by ' +
 				CST.DB_HISTORY_TIMESTAMP +
-				` WHERE pair = ${pair} DESC LIMIT 1`
+				` WHERE pair = '${pair}' DESC LIMIT 1`
 		);
 		return res[0]
 			? {
