@@ -21,7 +21,7 @@ Object {
 }
 `;
 
-exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890 AND pair = ETH|USD;"`;
+exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890 AND pair = 'ETH|USD';"`;
 
 exports[`readSourceData 2`] = `
 Array [

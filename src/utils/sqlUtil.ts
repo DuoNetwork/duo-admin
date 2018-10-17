@@ -154,7 +154,7 @@ class SqlUtil {
 				CST.DB_TX_TS +
 				' <= ' +
 				upperTime +
-				` AND pair = ${pair};`
+				` AND pair = '${pair}';`
 		);
 		return res.map(item => ({
 			quote: item[CST.DB_TX_QTE],
