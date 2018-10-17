@@ -174,7 +174,7 @@ class Util {
 				break;
 			case CST.DB_PRICES:
 				type = 'PRICE';
-				if (option.period === 0) source = '_MINUTELY';
+				if (option.period === 1) source = '_MINUTELY';
 				else if (option.period === 60) source = '_HOURLY';
 				else source = '';
 				break;
