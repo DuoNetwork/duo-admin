@@ -3,22 +3,22 @@
 exports[`getExchangePriceFix 1`] = `
 Object {
   "base": "USD",
-  "price": 637,
+  "price": 667,
   "quote": "ETH",
   "source": "",
-  "timestamp": 1524465953111,
-  "volume": 6.002117,
+  "timestamp": 1524547898561,
+  "volume": 0.024,
 }
 `;
 
 exports[`getExchangePriceFix 2`] = `
 Object {
   "base": "USD",
-  "price": 667,
+  "price": 637,
   "quote": "ETH",
   "source": "",
-  "timestamp": 1524547898561,
-  "volume": 0.024,
+  "timestamp": 1524465953111,
+  "volume": 6.002117,
 }
 `;
 
@@ -58,22 +58,22 @@ Object {
 exports[`getVolumeMedianPrice 1`] = `
 Object {
   "base": "USD",
-  "price": 638,
+  "price": 666.98,
   "quote": "ETH",
   "source": "",
   "timestamp": 1234567890,
-  "volume": 22.681753,
+  "volume": 0.16599999999999998,
 }
 `;
 
 exports[`getVolumeMedianPrice 2`] = `
 Object {
   "base": "USD",
-  "price": 666.98,
+  "price": 638,
   "quote": "ETH",
   "source": "",
   "timestamp": 1234567890,
-  "volume": 0.16599999999999998,
+  "volume": 22.681753,
 }
 `;
 

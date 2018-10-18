@@ -137,7 +137,7 @@ export const API_KRK_TRADE = '/Trades';
 export const API_GDAX_BASE_URL = 'https://api.gdax.com:443/products';
 export const API_GDAX_TRADE = '/trades';
 
-export const API_LIST = [API_GEMINI, API_KRAKEN, API_GDAX];
+export const API_LIST = [API_KRAKEN, API_GEMINI, API_GDAX];
 export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {
 	4: [0.35, 0.3, 0.25, 0.2],
 	3: [0.55, 0.45, 0.35],
