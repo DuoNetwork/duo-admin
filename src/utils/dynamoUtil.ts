@@ -1,5 +1,4 @@
-import AWS from 'aws-sdk';
-import {
+import DynamoDB, {
 	AttributeMap,
 	// BatchWriteItemInput,
 	// BatchWriteItemOutput,
@@ -10,6 +9,7 @@ import {
 	ScanInput,
 	ScanOutput
 } from 'aws-sdk/clients/dynamodb';
+import AWS from 'aws-sdk/global';
 import moment from 'moment';
 import ContractUtil from '../../../duo-contract-util/src/contractUtil';
 import * as CST from '../common/constants';
@@ -26,7 +26,7 @@ import {
 import util from './util';
 
 class DynamoUtil {
-	private ddb: undefined | AWS.DynamoDB = undefined;
+	private ddb: undefined | DynamoDB = undefined;
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
 	private contractUtil: ContractUtil | undefined = undefined;
@@ -34,7 +34,7 @@ class DynamoUtil {
 		this.live = live;
 		this.process = process;
 		AWS.config.update(config);
-		this.ddb = new AWS.DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
+		this.ddb = new DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
 		this.contractUtil = contractUtil;
 		return Promise.resolve();
 	}
