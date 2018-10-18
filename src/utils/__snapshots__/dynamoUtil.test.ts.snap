@@ -552,6 +552,7 @@ exports[`parseAcceptedPrices 1`] = `
 Array [
   Object {
     "blockNumber": 7722428,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "navA": 0,
     "navB": 0,
     "price": 0,
@@ -560,6 +561,7 @@ Array [
   },
   Object {
     "blockNumber": 7722781,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "navA": 0,
     "navB": 0,
     "price": 0,
@@ -568,6 +570,7 @@ Array [
   },
   Object {
     "blockNumber": 7723130,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "navA": 0,
     "navB": 0,
     "price": 0,
@@ -576,6 +579,7 @@ Array [
   },
   Object {
     "blockNumber": 7723483,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "navA": 0,
     "navB": 0,
     "price": 0,
@@ -584,6 +588,7 @@ Array [
   },
   Object {
     "blockNumber": 7723836,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "navA": 0,
     "navB": 0,
     "price": 0,
@@ -764,6 +769,7 @@ exports[`parseTotalSupply 1`] = `
 Array [
   Object {
     "blockNumber": 7650502,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "timestamp": 1528862200000,
     "tokenA": 0,
     "tokenB": 0,
@@ -771,6 +777,7 @@ Array [
   },
   Object {
     "blockNumber": 7651095,
+    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
     "timestamp": 1528867600000,
     "tokenA": 0,
     "tokenB": 0,
@@ -819,7 +826,7 @@ exports[`queryAcceptPriceEvent 1`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":eventKey": Object {
-      "S": "AcceptPrice|date1",
+      "S": "0x0|AcceptPrice|date1",
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
@@ -831,7 +838,7 @@ exports[`queryAcceptPriceEvent 2`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":eventKey": Object {
-      "S": "AcceptPrice|date2",
+      "S": "0x0|AcceptPrice|date2",
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
@@ -891,7 +898,7 @@ exports[`queryTotalSupplyEvent 1`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":eventKey": Object {
-      "S": "TotalSupply|date1",
+      "S": "0x0|TotalSupply|date1",
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
@@ -903,7 +910,7 @@ exports[`queryTotalSupplyEvent 2`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":eventKey": Object {
-      "S": "TotalSupply|date2",
+      "S": "0x0|TotalSupply|date2",
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",

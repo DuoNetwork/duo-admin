@@ -3,7 +3,7 @@
 		{
 			"timeInSecond": { "S": "1529625600" },
 			"sender": { "S": "0x00476E55e02673B0E4D2B474071014D5a366Ed4E" },
-			"eventKey": { "S": "AcceptPrice|2018-06-22" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|AcceptPrice|2018-06-22" },
 			"navAInWei": { "S": "1000595000000000000" },
 			"timestampId": { "S": "1529625612000|log_f7abca98" },
 			"blockNumber": { "N": "7722428" },
@@ -21,7 +21,7 @@
 		{
 			"timeInSecond": { "S": "1529629200" },
 			"sender": { "S": "0x00476E55e02673B0E4D2B474071014D5a366Ed4E" },
-			"eventKey": { "S": "AcceptPrice|2018-06-22" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|AcceptPrice|2018-06-22" },
 			"navAInWei": { "S": "1000612000000000000" },
 			"timestampId": { "S": "1529629212000|log_70c6f8ed" },
 			"blockNumber": { "N": "7722781" },
@@ -39,7 +39,7 @@
 		{
 			"timeInSecond": { "S": "1529632800" },
 			"sender": { "S": "0x00476E55e02673B0E4D2B474071014D5a366Ed4E" },
-			"eventKey": { "S": "AcceptPrice|2018-06-22" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|AcceptPrice|2018-06-22" },
 			"navAInWei": { "S": "1000629000000000000" },
 			"timestampId": { "S": "1529632812000|log_964e7ac0" },
 			"blockNumber": { "N": "7723130" },
@@ -57,7 +57,7 @@
 		{
 			"timeInSecond": { "S": "1529636400" },
 			"sender": { "S": "0x002002812b42601Ae5026344F0395E68527bb0F8" },
-			"eventKey": { "S": "AcceptPrice|2018-06-22" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|AcceptPrice|2018-06-22" },
 			"navAInWei": { "S": "1000646000000000000" },
 			"timestampId": { "S": "1529636412000|log_c0cbb602" },
 			"blockNumber": { "N": "7723483" },
@@ -75,7 +75,7 @@
 		{
 			"timeInSecond": { "S": "1529640000" },
 			"sender": { "S": "0x00476E55e02673B0E4D2B474071014D5a366Ed4E" },
-			"eventKey": { "S": "AcceptPrice|2018-06-22" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|AcceptPrice|2018-06-22" },
 			"navAInWei": { "S": "1000663000000000000" },
 			"timestampId": { "S": "1529640012000|log_c9b92ac6" },
 			"blockNumber": { "N": "7723836" },

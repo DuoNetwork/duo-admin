@@ -426,7 +426,7 @@ class DynamoUtil {
 		return prices;
 	}
 
-	public async queryAcceptPriceEvent(dates: string[]) {
+	public async queryAcceptPriceEvent(contractAddress: string, dates: string[]) {
 		const allData: IAcceptedPrice[] = [];
 		for (const date of dates)
 			allData.push(
@@ -435,7 +435,9 @@ class DynamoUtil {
 						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
-							[':' + CST.DB_EV_KEY]: { S: CST.EVENT_ACCEPT_PRICE + '|' + date }
+							[':' + CST.DB_EV_KEY]: {
+								S: contractAddress + '|' + CST.EVENT_ACCEPT_PRICE + '|' + date
+							}
 						}
 					})
 				)
@@ -446,6 +448,7 @@ class DynamoUtil {
 	public parseAcceptedPrice(acceptPrice: QueryOutput): IAcceptedPrice[] {
 		if (!acceptPrice.Items || !acceptPrice.Items.length) return [];
 		return acceptPrice.Items.map(p => ({
+			contractAddress: (p[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: p[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(p[CST.DB_EV_BLOCK_NO].N),
 			price: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_PX].S || '') : 0,
@@ -455,7 +458,7 @@ class DynamoUtil {
 		}));
 	}
 
-	public async queryTotalSupplyEvent(dates: string[]) {
+	public async queryTotalSupplyEvent(contractAddress: string, dates: string[]) {
 		const allData: ITotalSupply[] = [];
 		for (const date of dates)
 			allData.push(
@@ -464,7 +467,9 @@ class DynamoUtil {
 						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
-							[':' + CST.DB_EV_KEY]: { S: CST.EVENT_TOTAL_SUPPLY + '|' + date }
+							[':' + CST.DB_EV_KEY]: {
+								S: contractAddress + '|' + CST.EVENT_TOTAL_SUPPLY + '|' + date
+							}
 						}
 					})
 				)
@@ -476,6 +481,7 @@ class DynamoUtil {
 	public parseTotalSupply(totalSupply: QueryOutput): ITotalSupply[] {
 		if (!totalSupply.Items || !totalSupply.Items.length) return [];
 		return totalSupply.Items.map(t => ({
+			contractAddress: (t[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: t[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(t[CST.DB_EV_BLOCK_NO].N),
 			tokenA: this.contractUtil
