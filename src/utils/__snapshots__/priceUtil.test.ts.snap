@@ -5,20 +5,6 @@ Array [
   Array [
     Object {
       "base": "USD",
-      "close": 205,
-      "high": 210,
-      "low": 200,
-      "open": 202,
-      "period": 1,
-      "quote": "ETH",
-      "source": "bitfinex",
-      "timestamp": 1535958660000,
-      "volume": 0.0007,
-    },
-  ],
-  Array [
-    Object {
-      "base": "USD",
       "close": 215,
       "high": 220,
       "low": 210,

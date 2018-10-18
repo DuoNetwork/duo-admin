@@ -1,22 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`addTrades REST bitfinex - filterBy (id > ID_1)  1`] = `
-Array [
-  Array [
-    Object {
-      "amount": 1,
-      "base": "USD",
-      "id": "ID_2",
-      "price": 0.05,
-      "quote": "ETH",
-      "source": "source",
-      "timestamp": 1234567891,
-    },
-    true,
-  ],
-]
-`;
-
 exports[`addTrades REST gdax - filterBy (id > ID_1)  1`] = `
 Array [
   Array [
@@ -68,35 +51,6 @@ Array [
 ]
 `;
 
-exports[`addTrades WS bitfinex  1`] = `
-Array [
-  Array [
-    Object {
-      "amount": 1,
-      "base": "USD",
-      "id": "ID_2",
-      "price": 0.05,
-      "quote": "ETH",
-      "source": "source",
-      "timestamp": 1234567891,
-    },
-    true,
-  ],
-  Array [
-    Object {
-      "amount": 1,
-      "base": "USD",
-      "id": "ID_1",
-      "price": 0.05,
-      "quote": "ETH",
-      "source": "source",
-      "timestamp": 1234567892,
-    },
-    false,
-  ],
-]
-`;
-
 exports[`addTrades WS gemini  1`] = `
 Array [
   Array [
@@ -123,12 +77,6 @@ Array [
     },
     false,
   ],
-]
-`;
-
-exports[`getSourcePairs bitfinex  1`] = `
-Array [
-  "QUOTETICKERBASETICKER",
 ]
 `;
 

@@ -1,5 +1,5 @@
 import child_process from 'child_process';
-import bitfinexApi from '../apis/bitfinexApi';
+import geminiApi from '../apis/geminiApi';
 import marketUtil from './marketUtil';
 import util from './util';
 
@@ -58,7 +58,7 @@ test('startFetching no source', async () => {
 
 	await marketUtil.startFetching('tool', {
 		source: '',
-		sources: ['bitfinex', 'okex'],
+		sources: ['gemini', 'kraken'],
 		exSources: [],
 		assets: ['quote', 'base'],
 		forceREST: false,
@@ -67,7 +67,7 @@ test('startFetching no source', async () => {
 
 	await marketUtil.startFetching('tool', {
 		source: '',
-		sources: ['bitfinex', 'okex'],
+		sources: ['gemini', 'kraken'],
 		exSources: [],
 		pair: 'someQuote|someBase',
 		assets: [],
@@ -80,13 +80,13 @@ test('startFetching no source', async () => {
 
 test('startFetching source', async () => {
 	util.sleep = jest.fn();
-	bitfinexApi.getSourcePairs = jest.fn(() => ['quote|base']);
-	bitfinexApi.fetchTrades = jest.fn();
+	geminiApi.getSourcePairs = jest.fn(() => ['quote|base']);
+	geminiApi.fetchTrades = jest.fn();
 	await marketUtil.startFetching('tool', {
-		source: 'bitfinex',
+		source: 'gemini',
 		assets: ['quote', 'base'],
 		forceREST: true,
 		debug: false
 	} as any);
-	expect((bitfinexApi.fetchTrades as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect((geminiApi.fetchTrades as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });

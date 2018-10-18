@@ -40,25 +40,6 @@ exports[`startFetching no source 1`] = `
 Array [
   Array [
     "tool",
-    "bitfinex",
-    Array [
-      "quote",
-      "base",
-    ],
-    Object {
-      "assets": Array [
-        "quote",
-        "base",
-      ],
-      "debug": false,
-      "exSources": Array [],
-      "forceREST": false,
-      "source": "",
-      "sources": Array [],
-    },
-  ],
-  Array [
-    "tool",
     "gemini",
     Array [
       "quote",
@@ -116,28 +97,6 @@ Array [
   ],
   Array [
     "tool",
-    "bitfinex",
-    Array [
-      "quote",
-      "base",
-    ],
-    Object {
-      "assets": Array [
-        "quote",
-        "base",
-      ],
-      "debug": false,
-      "exSources": Array [],
-      "forceREST": false,
-      "source": "",
-      "sources": Array [
-        "bitfinex",
-        "okex",
-      ],
-    },
-  ],
-  Array [
-    "tool",
     "gemini",
     Array [
       "quote",
@@ -153,8 +112,8 @@ Array [
       "forceREST": false,
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
@@ -175,8 +134,8 @@ Array [
       "forceREST": false,
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
@@ -197,28 +156,8 @@ Array [
       "forceREST": false,
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
-      ],
-    },
-  ],
-  Array [
-    "tool",
-    "bitfinex",
-    Array [
-      "someQuote",
-      "someBase",
-    ],
-    Object {
-      "assets": Array [],
-      "debug": false,
-      "exSources": Array [],
-      "forceREST": false,
-      "pair": "someQuote|someBase",
-      "source": "",
-      "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
@@ -237,8 +176,8 @@ Array [
       "pair": "someQuote|someBase",
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
@@ -257,8 +196,8 @@ Array [
       "pair": "someQuote|someBase",
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
@@ -277,8 +216,8 @@ Array [
       "pair": "someQuote|someBase",
       "source": "",
       "sources": Array [
-        "bitfinex",
-        "okex",
+        "gemini",
+        "kraken",
       ],
     },
   ],
