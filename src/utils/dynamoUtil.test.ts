@@ -22,6 +22,7 @@ const trade = {
 
 const events: IEvent[] = [
 	{
+		contractAddress: 'contractAddress',
 		type: 'type',
 		id: 'id',
 		blockHash: 'blockHash',
@@ -34,6 +35,7 @@ const events: IEvent[] = [
 		timestamp: 1234567890
 	},
 	{
+		contractAddress: '0x0f80F055c7482b919183EcD06e0dd5FD7991D309',
 		type: 'CommitPrice',
 		id: 'id',
 		blockHash: 'blockHash',
@@ -111,7 +113,7 @@ test('parseAcceptedPrices', () => expect(dynamoUtil.parseAcceptedPrice(prices)).
 
 test('queryConversionEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(4);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
@@ -133,7 +135,7 @@ test('parseTotalSupply', () => expect(dynamoUtil.parseTotalSupply(totalSupply)).
 
 test('queryUIConversionEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR);
+	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
@@ -228,8 +230,8 @@ test('addPrice', async () => {
 test('insertUIConversion', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, '0x123', true, 123, 456, 456, 0.123, 0);
-	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, '0x123', false, 123, 456, 456, 0, 0.123);
+	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', true, 123, 456, 456, 0.123, 0);
+	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', false, 123, 456, 456, 0, 0.123);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
 });
@@ -237,6 +239,7 @@ test('insertUIConversion', async () => {
 test('deleteUIConversionEvent', async () => {
 	dynamoUtil.deleteData = jest.fn(() => Promise.resolve());
 	await dynamoUtil.deleteUIConversionEvent(CST.DUMMY_ADDR, {
+		contractAddress: 'contractAddress',
 		type: 'type',
 		transactionHash: 'txHash',
 		eth: 0,

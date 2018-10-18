@@ -45,6 +45,7 @@ export interface ITotalSupply extends IBaseEvent {
 }
 
 export interface IConversion extends IBaseEvent {
+	contractAddress: string;
 	type: string;
 	eth: number;
 	tokenA: number;

@@ -4,7 +4,7 @@
 			"eth": { "N": "0.20051663085602844" },
 			"ethFee": { "N": "0" },
 			"duoFee": { "N": "2.0051663085602844" },
-			"eventKey": { "S": "Redeem|0xf5921ff118e7Fb7fE74559A3632fB2d0bcc35AF2" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Redeem|0xf5921ff118e7Fb7fE74559A3632fB2d0bcc35AF2" },
 			"tokenA": { "N": "34.14530889109876" },
 			"tokenB": { "N": "34.14530889109876" },
 			"systime": { "N": "1529317783500" },

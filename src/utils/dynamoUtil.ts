@@ -94,7 +94,7 @@ class DynamoUtil {
 			[CST.DB_TX_AMOUNT]: { N: trade.amount.toString() },
 			[CST.DB_TX_TS]: { N: trade.timestamp + '' },
 			[CST.DB_TX_SYSTIME]: { N: systime + '' },
-			[CST.DB_TX_PAIR]: {S: `${trade.quote}|${trade.base}`}
+			[CST.DB_TX_PAIR]: { S: `${trade.quote}|${trade.base}` }
 		};
 	}
 
@@ -107,6 +107,8 @@ class DynamoUtil {
 		const dbInput: AttributeMap = {
 			[CST.DB_EV_KEY]: {
 				S:
+					event.contractAddress +
+					'|' +
 					event.type +
 					'|' +
 					moment
@@ -486,11 +488,13 @@ class DynamoUtil {
 		}));
 	}
 
-	public async queryConversionEvent(address: string, dates: string[]) {
+	public async queryConversionEvent(contractAddress: string, address: string, dates: string[]) {
 		const eventKeys: string[] = [];
 		dates.forEach(date =>
 			eventKeys.push(
-				...[CST.EVENT_CREATE, CST.EVENT_REDEEM].map(ev => ev + '|' + date + '|' + address)
+				...[CST.EVENT_CREATE, CST.EVENT_REDEEM].map(
+					ev => contractAddress + '|' + ev + '|' + date + '|' + address
+				)
 			)
 		);
 		const allData: IConversion[] = [];
@@ -511,17 +515,35 @@ class DynamoUtil {
 
 	public parseConversion(conversion: QueryOutput): IConversion[] {
 		if (!conversion.Items || !conversion.Items.length) return [];
-		return conversion.Items.map(c => ({
-			transactionHash: c[CST.DB_EV_TX_HASH].S || '',
-			blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
-			type: (c[CST.DB_EV_KEY].S || '').split('|')[0],
-			timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
-			eth: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_ETH].S || '') : 0,
-			tokenA: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_A].S || '') : 0,
-			tokenB: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_B].S || '') : 0,
-			ethFee: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_ETH_FEE].S || '') : 0,
-			duoFee: this.contractUtil ? this.contractUtil.fromWei(c[CST.DB_EV_DUO_FEE].S || '') : 0
-		}));
+		return conversion.Items.map(c => {
+			const [contractAddress, type] = (c[CST.DB_EV_KEY].S || '').split('|');
+			if (this.contractUtil)
+				return {
+					contractAddress: contractAddress,
+					transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+					blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
+					type: type || '',
+					timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
+					eth: this.contractUtil.fromWei(c[CST.DB_EV_ETH].S || ''),
+					tokenA: this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
+					tokenB: this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
+					ethFee: this.contractUtil.fromWei(c[CST.DB_EV_ETH_FEE].S || ''),
+					duoFee: this.contractUtil.fromWei(c[CST.DB_EV_DUO_FEE].S || '')
+				};
+			else
+				return {
+					contractAddress: contractAddress,
+					transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+					blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
+					type: type || '',
+					timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
+					eth: 0,
+					tokenA: 0,
+					tokenB: 0,
+					ethFee: 0,
+					duoFee: 0
+				};
+		});
 	}
 
 	public async scanStatus() {
@@ -564,6 +586,7 @@ class DynamoUtil {
 	}
 
 	public async insertUIConversion(
+		contractAddress: string,
 		account: string,
 		txHash: string,
 		isCreate: boolean,
@@ -577,7 +600,12 @@ class DynamoUtil {
 			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
 			Item: {
 				[CST.DB_EV_KEY]: {
-					S: (isCreate ? CST.EVENT_CREATE : CST.EVENT_REDEEM) + '|' + account
+					S:
+						contractAddress +
+						'|' +
+						(isCreate ? CST.EVENT_CREATE : CST.EVENT_REDEEM) +
+						'|' +
+						account
 				},
 				[CST.DB_EV_SYSTIME]: { N: util.getUTCNowTimestamp() + '' },
 				[CST.DB_EV_TX_HASH]: { S: txHash },
@@ -592,9 +620,9 @@ class DynamoUtil {
 		await this.insertData(params);
 	}
 
-	public async queryUIConversionEvent(account: string) {
+	public async queryUIConversionEvent(contractAddress: string, account: string) {
 		const eventKeys: string[] = [CST.EVENT_CREATE, CST.EVENT_REDEEM].map(
-			ev => ev + '|' + account
+			ev => contractAddress + '|' + ev + '|' + account
 		);
 		const allData: IConversion[] = [];
 		for (const ek of eventKeys)
@@ -612,7 +640,9 @@ class DynamoUtil {
 		for (const c of allData)
 			try {
 				if (this.contractUtil) {
-					const receipt = await this.contractUtil.getTransactionReceipt(c.transactionHash);
+					const receipt = await this.contractUtil.getTransactionReceipt(
+						c.transactionHash
+					);
 					c.pending = !receipt;
 					c.reverted = !receipt.status;
 				}
@@ -625,18 +655,22 @@ class DynamoUtil {
 
 	public parseUIConversion(conversion: QueryOutput): IConversion[] {
 		if (!conversion.Items || !conversion.Items.length) return [];
-		return conversion.Items.map(c => ({
-			transactionHash: c[CST.DB_EV_TX_HASH].S || '',
-			blockNumber: 0,
-			type: (c[CST.DB_EV_KEY].S || '').split('|')[0],
-			timestamp: Number(c[CST.DB_EV_SYSTIME].N || ''),
-			eth: Number(c[CST.DB_EV_UI_ETH].N),
-			tokenA: Number(c[CST.DB_EV_UI_TOKEN_A].N),
-			tokenB: Number(c[CST.DB_EV_UI_TOKEN_B].N),
-			ethFee: Number(c[CST.DB_EV_UI_ETH_FEE].N),
-			duoFee: Number(c[CST.DB_EV_UI_DUO_FEE].N),
-			pending: true
-		}));
+		return conversion.Items.map(c => {
+			const [contractAddress, type] = (c[CST.DB_EV_KEY].S || '').split('|');
+			return {
+				contractAddress: contractAddress,
+				transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+				blockNumber: 0,
+				type: type || '',
+				timestamp: Number(c[CST.DB_EV_SYSTIME].N || ''),
+				eth: Number(c[CST.DB_EV_UI_ETH].N),
+				tokenA: Number(c[CST.DB_EV_UI_TOKEN_A].N),
+				tokenB: Number(c[CST.DB_EV_UI_TOKEN_B].N),
+				ethFee: Number(c[CST.DB_EV_UI_ETH_FEE].N),
+				duoFee: Number(c[CST.DB_EV_UI_DUO_FEE].N),
+				pending: true
+			};
+		});
 	}
 
 	public deleteUIConversionEvent(account: string, conversion: IConversion): Promise<void> {
@@ -644,7 +678,7 @@ class DynamoUtil {
 			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
 			Key: {
 				[CST.DB_EV_KEY]: {
-					S: conversion.type + '|' + account
+					S: conversion.contractAddress + '|' + conversion.type + '|' + account
 				},
 				[CST.DB_EV_TX_HASH]: {
 					S: conversion.transactionHash

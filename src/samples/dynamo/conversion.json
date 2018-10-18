@@ -10,7 +10,7 @@
 			"duoFeeInWei": { "S": "800000000000000000" },
 			"sender": { "S": "0x00D8d0660b243452fC2f996A892D3083A903576F" },
 			"ethFeeInWei": { "S": "0" },
-			"eventKey": { "S": "Create|2018-06-21|0x00D8d0660b243452fC2f996A892D3083A903576F" },
+			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Create|2018-06-21|0x00D8d0660b243452fC2f996A892D3083A903576F" },
 			"ethAmtInWei": { "S": "100000000000000000" },
 			"blockHash": {
 				"S": "0xec76167caceb595c96a0571a7e3f288d9af95b9910c7f68e32f02a2c3aa0d8a4"
