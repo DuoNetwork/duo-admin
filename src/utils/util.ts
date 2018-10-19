@@ -125,27 +125,6 @@ class Util {
 		return moment.utc(ts).format('YYYY-MM-DDTHH:mm:ss');
 	}
 
-	public getDynamoRole(option: IOption, tool: string, useDynamo: boolean): string {
-		switch (tool) {
-			case CST.TRADES:
-				return useDynamo ? CST.AWS_DYNAMO_ROLE_TRADE : CST.AWS_DYNAMO_ROLE_STATUS;
-			case CST.COMMIT:
-			case CST.CLEAN_DB:
-			case CST.NODE:
-				// case 'getKey':
-				// case 'getSqlAuth':
-				return CST.AWS_DYNAMO_ROLE_STATUS;
-			case CST.SUBSCRIBE:
-				return CST.AWS_DYNAMO_ROLE_EVENT;
-			case CST.DB_PRICES:
-				if (option.period === 1) return CST.AWS_DYNAMO_ROLE_MINUTELY;
-				else if (option.period === 60) return CST.AWS_DYNAMO_ROLE_HOURLY;
-				else return '';
-			default:
-				return '';
-		}
-	}
-
 	public getStatusProcess(tool: string, option: IOption) {
 		let type = '';
 		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';

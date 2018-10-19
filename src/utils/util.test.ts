@@ -72,27 +72,6 @@ test('getPeriodStartTimestamp', () => {
 const toolToTest = [CST.TRADES, CST.COMMIT, CST.CLEAN_DB, CST.NODE, CST.SUBSCRIBE, CST.DB_PRICES];
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
-for (const tool of toolToTest) {
-	test('getDynamoRole useDynamo', () => {
-		expect(util.getDynamoRole(option, tool, true)).toMatchSnapshot();
-	});
-
-	test('getDynamoRole do not useDynamo', () => {
-		expect(util.getDynamoRole(option, tool, false)).toMatchSnapshot();
-	});
-
-	if (tool === CST.DB_PRICES) {
-		option.period = 60;
-
-		test('getDynamoRole period 60 useDynamo', () => {
-			expect(util.getDynamoRole(option, tool, true)).toMatchSnapshot();
-		});
-
-		test('getDynamoRole period 60 do not useDynamo', () => {
-			expect(util.getDynamoRole(option, tool, false)).toMatchSnapshot();
-		});
-	}
-}
 
 const platforms = ['aws', 'gcp', 'azure'];
 
@@ -101,12 +80,12 @@ for (const platform of platforms) {
 	else if (platform === 'gcp') option.gcp = true;
 	else option.aws = true;
 	for (const tool of toolToTest) {
-		test(`getDynamoRole getStatusProcess ${platform} useDynamo`, () => {
+		test(`getStatusProcess ${platform} useDynamo`, () => {
 			option.dynamo = true;
 			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 		});
 
-		test(`getDynamoRole getStatusProcess ${platform} do not useDynamo`, () => {
+		test(`getStatusProcess ${platform} do not useDynamo`, () => {
 			option.dynamo = false;
 			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 		});

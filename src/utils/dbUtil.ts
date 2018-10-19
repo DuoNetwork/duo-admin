@@ -12,9 +12,7 @@ class DbUtil {
 
 	public async init(tool: string, option: IOption, contractUtil: ContractUtil) {
 		this.dynamo = option.dynamo;
-		const role = util.getDynamoRole(option, tool, option.dynamo);
 		const process = util.getStatusProcess(tool, option);
-		util.logInfo('role: ' + role);
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
