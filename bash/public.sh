@@ -1,4 +1,4 @@
-pkill npm
+killall -s KILL node
 rm *.log
 npm run trades assets=ETH,USD server dynamo &> trades.ALL.log &
 npm run prices period=1 dev dynamo &> prices.1.log &
