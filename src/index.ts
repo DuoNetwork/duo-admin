@@ -11,13 +11,12 @@ const tool = process.argv[2];
 util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
 util.logInfo(
-	'using ' +
-		(option.live ? 'live' : 'dev') +
-		'running on ' +
-		(option.server ? 'server' : 'local') +
-		' env and ' +
-		(option.source || 'local node')
+	`using ${option.live ? 'live' : 'dev'}
+	running on ${option.server ? 'server' : 'local'}
+	using source ${option.source}
+	using provider ${option.provider}`
 );
+
 const contractUtil = new ContractUtil(null, option.source, option.provider, option.live);
 dbUtil.init(tool, option, contractUtil).then(() => {
 	switch (tool) {
