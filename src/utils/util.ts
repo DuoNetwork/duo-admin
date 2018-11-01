@@ -34,6 +34,7 @@ class Util {
 	public parseOptions(argv: string[]): IOption {
 		const option = {
 			forceREST: argv.includes('rest'),
+			ws: argv.includes('ws'),
 			live: process.argv.includes('live'),
 			dbLive: process.argv.includes('dbLive'),
 			server: process.argv.includes('server'),
@@ -104,12 +105,15 @@ class Util {
 				option.provider = option.live
 					? CST.PROVIDER_MYETHER_MAIN
 					: CST.PROVIDER_INFURA_KOVAN + '/' + infura.token;
-			else if (option.source === CST.SRC_INFURA)
+			else if (option.source === CST.SRC_INFURA && !option.ws)
 				option.provider =
 					(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
 					'/' +
 					infura.token;
-			else option.provider = CST.PROVIDER_LOCAL_WS;
+			else
+				option.provider = option.live
+					? CST.PROVIDER_INFURA_MAIN_WS
+					: CST.PROVIDER_INFURA_KOVAN_WS;
 		// option.provider = '';
 
 		return option;

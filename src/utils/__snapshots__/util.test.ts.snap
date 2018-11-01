@@ -95,12 +95,13 @@ Object {
   "live": false,
   "pair": "",
   "period": 10,
-  "provider": "ws://localhost:8546",
+  "provider": "wss://kovan.infura.io/ws",
   "quote": "ETH",
   "server": false,
   "source": "source",
   "sources": Array [
     "",
   ],
+  "ws": false,
 }
 `;
