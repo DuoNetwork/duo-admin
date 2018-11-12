@@ -1,5 +1,4 @@
 // import moment from 'moment';
-import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
@@ -13,7 +12,6 @@ class PriceUtil {
 	public async startCommitPrices(
 		address: string,
 		key: string,
-		beethovanWapper: BeethovanWapper,
 		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
@@ -21,31 +19,29 @@ class PriceUtil {
 		const endTime = new Date(startTime.getTime() + 3500000);
 		const commitStart = new Date(endTime.getTime() + 50000);
 		const rule = new schedule.RecurrenceRule();
-		// rule.hour = new schedule.Range(0, 23, 1);
 		rule.minute = 0;
 
-		const sysStates = await beethovanWapper.getStates();
-		const isInception = sysStates.state === CST.CTD_INCEPTION;
+		const isStarted = await magiWrapper.isStarted();
 
-		if (isInception)
+		if (!isStarted)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-				const gasPrice = (await beethovanWapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return magiWrapper.startMagi(
 					address,
 					key,
-					currentPrice.price,
-					currentPrice.timestamp,
 					gasPrice,
-					option.gasLimit + 50000
+					option.gasLimit + 50000,
+					currentPrice.price,
+					currentPrice.timestamp
 				);
 			});
 
-		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
+		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
 			const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-			const gasPrice = (await beethovanWapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 			return magiWrapper.commitPrice(
 				address,

@@ -38,7 +38,6 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				priceUtil.startCommitPrices(
 					key.publicKey,
 					key.privateKey,
-					beethovanWapper,
 					magiWrapper,
 					option
 				);
