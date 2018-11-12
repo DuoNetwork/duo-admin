@@ -62,6 +62,9 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				30000
 			);
 			break;
+		case CST.FETCH_PRICE:
+		
+			break;
 		case CST.CLEAN_DB:
 			dbUtil.cleanDB();
 			setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);

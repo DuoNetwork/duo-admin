@@ -12,7 +12,8 @@
 		"subscribe": "ts-node ./src/index subscribe",
 		"prices": "ts-node src/index prices",
 		"node": "ts-node ./src/index node",
-		"cleanDB": "ts-node ./src/index cleanDB"
+		"cleanDB": "ts-node ./src/index cleanDB",
+		"fetchPrice": "ts-node ./src/index fetchPrice"
 	},
 	"jest": {
 		"roots": [

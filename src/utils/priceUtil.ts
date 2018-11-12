@@ -1,8 +1,9 @@
 // import moment from 'moment';
+import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
-import { IOption, IPrice } from '../common/types';
+import { IBeethovanStates, IOption, IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
@@ -51,6 +52,69 @@ class PriceUtil {
 				gasPrice,
 				option.gasLimit
 			);
+		});
+	}
+
+	public async fetchPrice(
+		address: string,
+		key: string,
+		beethovanWapper: BeethovanWapper,
+		magiWrapper: MagiWrapper,
+		option: IOption
+	) {
+		const isStarted = await magiWrapper.isStarted();
+		if (!isStarted) {
+			util.logDebug('Magi not ready, please start Magi first');
+			return;
+		}
+		const state: IBeethovanStates = await beethovanWapper.getStates();
+		const startTime = new Date();
+		const endTime = new Date(startTime.getTime() + 3500000);
+		const commitStart = new Date(endTime.getTime() + 50000);
+		const rule = new schedule.RecurrenceRule();
+		rule.minute = 0;
+		if (state.state === CST.CTD_INCEPTION)
+			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
+				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+				return beethovanWapper.startCustodian(
+					address,
+					key,
+					option.live ? CST.BEETHOVAN_A_ADDR_MAIN : CST.BEETHOVAN_A_ADDR_KOVAN,
+					option.live ? CST.BEETHOVAN_B_ADDR_MAIN : CST.BEETHOVAN_B_ADDR_KOVAN,
+					option.live ? CST.MAGI_ADDR_MAIN : CST.MAGI_ADDR_KOVAN,
+					gasPrice,
+					option.gasLimit
+				);
+			});
+
+		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
+			// first checking Magi current time is set correctly
+			// const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
+			// const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
+			// if (currentBlkTime - lastPrice.timestamp > 3600)
+			// 	util.logDebug('magi price not updated, pls wait');
+			// else if (currentBlkTime - lastPrice.timestamp < 100) {
+			// 	// within 100 seconds tolerance, save to proceed fetching
+			// 	await beethovanWapper.fetchPrice(
+			// 		address,
+			// 		key
+			// 	);
+			// } else {
+			// 	util.logDebug('too late to trigger fetching');
+			// }
+
+			// const currentPrice = await calculator.getPriceFix(option.base, option.quote);
+			// const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+			// util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+			// return magiWrapper.commitPrice(
+			// 	address,
+			// 	key,
+			// 	currentPrice.price,
+			// 	currentPrice.timestamp,
+			// 	gasPrice,
+			// 	option.gasLimit
+			// );
 		});
 	}
 
@@ -142,10 +206,10 @@ class PriceUtil {
 
 	public startAggregate(period: number) {
 		// console.log({ period: period + '' });
-		dynamoUtil.insertHeartbeat({ period: { N: period + '' }});
+		dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
 
 		setInterval(
-			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' }}),
+			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' } }),
 			CST.STATUS_INTERVAL * 1000
 		);
 		setInterval(() => this.aggregatePrice(period), 30000);
