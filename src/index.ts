@@ -1,4 +1,6 @@
-import ContractUtil from '../../duo-contract-util/src/contractUtil';
+import BeethovanWapper from '../../duo-contract-wrapper/src/BeethovanWapper';
+import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
+import Web3Wrapper from '../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from './common/constants';
 import dbUtil from './utils/dbUtil';
 import eventUtil from './utils/eventUtil';
@@ -17,21 +19,29 @@ util.logInfo(
 	using provider ${option.provider}`
 );
 
-const contractUtil = new ContractUtil(null, option.source, option.provider, option.live);
-dbUtil.init(tool, option, contractUtil).then(() => {
+const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
+const beethovanWapper = new BeethovanWapper(web3Wrapper, option.live);
+dbUtil.init(tool, option, web3Wrapper).then(() => {
 	switch (tool) {
 		case CST.TRADES:
 			marketUtil.startFetching(tool, option);
 			break;
 		case CST.SUBSCRIBE:
 			keyUtil.getKey(option).then(key => {
-				eventUtil.subscribe(key.publicKey, key.privateKey, contractUtil, option);
+				eventUtil.subscribe(key.publicKey, key.privateKey, beethovanWapper, option);
 			});
 			break;
 		case CST.COMMIT:
 			util.logInfo('starting commit process');
+			const magiWrapper = new MagiWrapper(web3Wrapper, option.live);
 			keyUtil.getKey(option).then(key => {
-				priceUtil.startCommitPrices(key.publicKey, key.privateKey, contractUtil, option);
+				priceUtil.startCommitPrices(
+					key.publicKey,
+					key.privateKey,
+					beethovanWapper,
+					magiWrapper,
+					option
+				);
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
@@ -42,7 +52,7 @@ dbUtil.init(tool, option, contractUtil).then(() => {
 			util.logInfo('starting node hear beat');
 			setInterval(
 				() =>
-					contractUtil
+					web3Wrapper
 						.getCurrentBlock()
 						.then(bn =>
 							dbUtil.insertHeartbeat({

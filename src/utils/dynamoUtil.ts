@@ -11,7 +11,7 @@ import DynamoDB, {
 } from 'aws-sdk/clients/dynamodb';
 import AWS from 'aws-sdk/global';
 import moment from 'moment';
-import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import {
 	IAcceptedPrice,
@@ -29,13 +29,13 @@ class DynamoUtil {
 	private ddb: undefined | DynamoDB = undefined;
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	private contractUtil: ContractUtil | undefined = undefined;
-	public init(config: object, live: boolean, process: string, contractUtil: ContractUtil) {
+	private web3Wrapper: Web3Wrapper | undefined = undefined;
+	public init(config: object, live: boolean, process: string, web3Wrapper: Web3Wrapper) {
 		this.live = live;
 		this.process = process;
 		AWS.config.update(config);
 		this.ddb = new DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
-		this.contractUtil = contractUtil;
+		this.web3Wrapper = web3Wrapper;
 		return Promise.resolve();
 	}
 
@@ -451,9 +451,9 @@ class DynamoUtil {
 			contractAddress: (p[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: p[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(p[CST.DB_EV_BLOCK_NO].N),
-			price: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_PX].S || '') : 0,
-			navA: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
-			navB: this.contractUtil ? this.contractUtil.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
+			price: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_PX].S || '') : 0,
+			navA: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
+			navB: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
 			timestamp: Math.round(Number(p[CST.DB_EV_TS].S) / 3600) * 3600000
 		}));
 	}
@@ -484,11 +484,11 @@ class DynamoUtil {
 			contractAddress: (t[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: t[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(t[CST.DB_EV_BLOCK_NO].N),
-			tokenA: this.contractUtil
-				? this.contractUtil.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_A].S || '')
+			tokenA: this.web3Wrapper
+				? this.web3Wrapper.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_A].S || '')
 				: 0,
-			tokenB: this.contractUtil
-				? this.contractUtil.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_B].S || '')
+			tokenB: this.web3Wrapper
+				? this.web3Wrapper.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_B].S || '')
 				: 0,
 			timestamp: Number((t[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0])
 		}));
@@ -523,18 +523,18 @@ class DynamoUtil {
 		if (!conversion.Items || !conversion.Items.length) return [];
 		return conversion.Items.map(c => {
 			const [contractAddress, type] = (c[CST.DB_EV_KEY].S || '').split('|');
-			if (this.contractUtil)
+			if (this.web3Wrapper)
 				return {
 					contractAddress: contractAddress,
 					transactionHash: c[CST.DB_EV_TX_HASH].S || '',
 					blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
 					type: type || '',
 					timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
-					eth: this.contractUtil.fromWei(c[CST.DB_EV_ETH].S || ''),
-					tokenA: this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
-					tokenB: this.contractUtil.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
-					ethFee: this.contractUtil.fromWei(c[CST.DB_EV_ETH_FEE].S || ''),
-					duoFee: this.contractUtil.fromWei(c[CST.DB_EV_DUO_FEE].S || '')
+					eth: this.web3Wrapper.fromWei(c[CST.DB_EV_ETH].S || ''),
+					tokenA: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
+					tokenB: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
+					ethFee: this.web3Wrapper.fromWei(c[CST.DB_EV_ETH_FEE].S || ''),
+					duoFee: this.web3Wrapper.fromWei(c[CST.DB_EV_DUO_FEE].S || '')
 				};
 			else
 				return {
@@ -645,8 +645,8 @@ class DynamoUtil {
 			);
 		for (const c of allData)
 			try {
-				if (this.contractUtil) {
-					const receipt = await this.contractUtil.getTransactionReceipt(
+				if (this.web3Wrapper) {
+					const receipt = await this.web3Wrapper.getTransactionReceipt(
 						c.transactionHash
 					);
 					c.pending = !receipt;

@@ -1,4 +1,4 @@
-export * from '../../../duo-contract-util/src/types';
+export * from '../../../duo-contract-wrapper/src/types';
 
 export interface IBaseMarketData {
 	source: string;

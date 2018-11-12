@@ -1,4 +1,5 @@
-import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
+import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import { IEvent, IOption } from '../common/types';
 import dynamoUtil from './dynamoUtil';
@@ -8,7 +9,7 @@ class EventUtil {
 	public async subscribe(
 		address: string,
 		privateKey: string,
-		contractUtil: ContractUtil,
+		beethovanWapper: BeethovanWapper,
 		option: IOption
 	) {
 		util.logInfo('subscribing to ' + option.event);
@@ -16,47 +17,44 @@ class EventUtil {
 		if (option.source)
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event))
 				setInterval(async () => {
-					const sysState = await contractUtil.getCustodianStates();
+					const sysState = await beethovanWapper.getStates();
 					const state = sysState.state;
 					util.logInfo('current state is ' + state);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-						await contractUtil.triggerPreReset(address, privateKey);
-					else if (
-						option.event === CST.EVENT_START_RESET &&
-						[CST.CTD_UP_RESET, CST.CTD_DOWN_RESET, CST.CTD_PERIOD_RESET].includes(
-							state
-						)
-					)
-						await contractUtil.triggerReset(address, privateKey);
+						await beethovanWapper.triggerPreReset(address, privateKey);
+					else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
+						await beethovanWapper.triggerReset(address, privateKey);
 
 					dynamoUtil.insertHeartbeat();
 				}, 15000);
 			else {
 				let startBlk = option.force
-					? contractUtil.inceptionBlk
-					: Math.max(await dynamoUtil.readLastBlock(), contractUtil.inceptionBlk);
+					? beethovanWapper.inceptionBlk
+					: Math.max(await dynamoUtil.readLastBlock(), beethovanWapper.inceptionBlk);
 				util.logInfo('starting blk number: ' + startBlk);
 				let isProcessing = false;
 				const fetch = async () => {
 					if (isProcessing) return;
 
 					isProcessing = true;
-					const currentBlk = await contractUtil.web3.eth.getBlockNumber();
+					const currentBlk = await beethovanWapper.web3Wrapper.getCurrentBlock();
 					while (startBlk <= currentBlk) {
 						// const block = await contractUtil.web3.eth.getBlock(startBlk);
 						// let timestamp = block.timestamp * 1000;
 						const allEvents: IEvent[] = [];
 						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 						const promiseList = CST.EVENTS.map(event =>
-							contractUtil.pullEvents(contractUtil.custodian, startBlk, end, event)
+							Web3Wrapper.pullEvents(beethovanWapper.contract, startBlk, end, event)
 						);
 
 						const results = await Promise.all(promiseList);
 						for (const result of results)
 							for (const el of result) {
-								const block = await contractUtil.web3.eth.getBlock(el.blockNumber);
-								allEvents.push(contractUtil.parseEvent(el, block.timestamp * 1000));
+								const block = await beethovanWapper.web3Wrapper.web3.eth.getBlock(
+									el.blockNumber
+								);
+								allEvents.push(Web3Wrapper.parseEvent(el, block.timestamp * 1000));
 							}
 
 						util.logInfo(
@@ -83,26 +81,22 @@ class EventUtil {
 			let tg: (r: any) => Promise<any> = () => Promise.resolve();
 
 			if ([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
-				const sysState = await contractUtil.getCustodianStates();
+				const sysState = await beethovanWapper.getStates();
 				const state = sysState.state;
 				util.logInfo('current state is ' + state);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
-					tg = () => contractUtil.triggerPreReset(address, privateKey);
+					tg = () => beethovanWapper.triggerPreReset(address, privateKey);
 					if (state === CST.CTD_PRERESET)
-						await contractUtil.triggerPreReset(address, privateKey);
+						await beethovanWapper.triggerPreReset(address, privateKey);
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => contractUtil.triggerReset(address, privateKey);
-					if (
-						[CST.CTD_UP_RESET, CST.CTD_DOWN_RESET, CST.CTD_PERIOD_RESET].includes(
-							state
-						)
-					)
-						await contractUtil.triggerReset(address, privateKey);
+					tg = () => beethovanWapper.triggerReset(address, privateKey);
+					if (state === CST.CTD_RESET)
+						await beethovanWapper.triggerReset(address, privateKey);
 				}
 			} else return Promise.resolve();
 
-			contractUtil.custodian.events[option.event]({}, async (error, evt) => {
+			beethovanWapper.contract.events[option.event]({}, async (error, evt) => {
 				if (error) util.logInfo(error);
 				else {
 					util.logInfo(evt);

@@ -1,5 +1,6 @@
 // import moment from 'moment';
-import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
+import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
 import { IOption, IPrice } from '../common/types';
@@ -12,7 +13,8 @@ class PriceUtil {
 	public async startCommitPrices(
 		address: string,
 		key: string,
-		contractUtil: ContractUtil,
+		beethovanWapper: BeethovanWapper,
+		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
 		const startTime = new Date();
@@ -22,31 +24,30 @@ class PriceUtil {
 		// rule.hour = new schedule.Range(0, 23, 1);
 		rule.minute = 0;
 
-		const sysStates = await contractUtil.getCustodianStates();
+		const sysStates = await beethovanWapper.getStates();
 		const isInception = sysStates.state === CST.CTD_INCEPTION;
 
 		if (isInception)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
 				const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-				const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
+				const gasPrice = (await beethovanWapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return contractUtil.commitPrice(
+				return magiWrapper.startMagi(
 					address,
 					key,
 					currentPrice.price,
 					currentPrice.timestamp,
 					gasPrice,
-					option.gasLimit + 50000,
-					true
+					option.gasLimit + 50000
 				);
 			});
 
 		schedule.scheduleJob({ start: isInception ? commitStart : startTime, rule }, async () => {
 			const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-			const gasPrice = (await contractUtil.getGasPrice()) || option.gasPrice;
+			const gasPrice = (await beethovanWapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-			return contractUtil.commitPrice(
+			return magiWrapper.commitPrice(
 				address,
 				key,
 				currentPrice.price,

@@ -1,4 +1,4 @@
-import ContractUtil from '../../../duo-contract-util/src/contractUtil';
+import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import { IOption, IPriceFix, ITrade } from '../common/types';
 // import localSQLauth from '../keys/mysql.json';
@@ -10,13 +10,13 @@ import util from './util';
 class DbUtil {
 	private dynamo: boolean = false;
 
-	public async init(tool: string, option: IOption, contractUtil: ContractUtil) {
+	public async init(tool: string, option: IOption, web3Wrapper: Web3Wrapper) {
 		this.dynamo = option.dynamo;
 		const process = util.getStatusProcess(tool, option);
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
-		dynamoUtil.init(config, option.live, process, contractUtil);
+		dynamoUtil.init(config, option.live, process, web3Wrapper);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
