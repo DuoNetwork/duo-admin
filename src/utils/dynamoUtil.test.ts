@@ -230,10 +230,8 @@ test('addPrice', async () => {
 test('insertUIConversion', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', true, 123, 456, 456, 0.123, 0);
-	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', false, 123, 456, 456, 0, 0.123);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', true, 123, 456, 456, 0.123);
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('deleteUIConversionEvent', async () => {
@@ -247,10 +245,9 @@ test('deleteUIConversionEvent', async () => {
 		tokenB: 0,
 		timestamp: 0,
 		blockNumber: 0,
-		ethFee: 0,
-		duoFee: 0
+		fee: 0
 	});
-	expect((dynamoUtil.deleteData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.deleteData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices', async () => {

@@ -274,17 +274,21 @@ Object {
 `;
 
 exports[`deleteUIConversionEvent 1`] = `
-Object {
-  "Key": Object {
-    "eventKey": Object {
-      "S": "contractAddress|type|0x0",
+Array [
+  Array [
+    Object {
+      "Key": Object {
+        "eventKey": Object {
+          "S": "contractAddress|type|0x0",
+        },
+        "transactionHash": Object {
+          "S": "txHash",
+        },
+      },
+      "TableName": "duo.uiEvents.dev",
     },
-    "transactionHash": Object {
-      "S": "txHash",
-    },
-  },
-  "TableName": "duo.uiEvents.dev",
-}
+  ],
+]
 `;
 
 exports[`getPrices 1`] = `
@@ -485,67 +489,36 @@ Object {
 `;
 
 exports[`insertUIConversion 1`] = `
-Object {
-  "Item": Object {
-    "duoFee": Object {
-      "N": "0",
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "eth": Object {
+          "N": "123",
+        },
+        "eventKey": Object {
+          "S": "0x0|Create|0x0",
+        },
+        "fee": Object {
+          "N": "0.123",
+        },
+        "systime": Object {
+          "N": "1234567890",
+        },
+        "tokenA": Object {
+          "N": "456",
+        },
+        "tokenB": Object {
+          "N": "456",
+        },
+        "transactionHash": Object {
+          "S": "0x123",
+        },
+      },
+      "TableName": "duo.uiEvents.dev",
     },
-    "eth": Object {
-      "N": "123",
-    },
-    "ethFee": Object {
-      "N": "0.123",
-    },
-    "eventKey": Object {
-      "S": "0x0|Create|0x0",
-    },
-    "systime": Object {
-      "N": "1234567890",
-    },
-    "tokenA": Object {
-      "N": "456",
-    },
-    "tokenB": Object {
-      "N": "456",
-    },
-    "transactionHash": Object {
-      "S": "0x123",
-    },
-  },
-  "TableName": "duo.uiEvents.dev",
-}
-`;
-
-exports[`insertUIConversion 2`] = `
-Object {
-  "Item": Object {
-    "duoFee": Object {
-      "N": "0.123",
-    },
-    "eth": Object {
-      "N": "123",
-    },
-    "ethFee": Object {
-      "N": "0",
-    },
-    "eventKey": Object {
-      "S": "0x0|Redeem|0x0",
-    },
-    "systime": Object {
-      "N": "1234567890",
-    },
-    "tokenA": Object {
-      "N": "456",
-    },
-    "tokenB": Object {
-      "N": "456",
-    },
-    "transactionHash": Object {
-      "S": "0x123",
-    },
-  },
-  "TableName": "duo.uiEvents.dev",
-}
+  ],
+]
 `;
 
 exports[`parseAcceptedPrices 1`] = `
@@ -603,9 +576,8 @@ Array [
   Object {
     "blockNumber": 7715602,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "duoFee": 0,
     "eth": 0,
-    "ethFee": 0,
+    "fee": 0,
     "timestamp": 1529559912000,
     "tokenA": 0,
     "tokenB": 0,
@@ -791,9 +763,8 @@ Array [
   Object {
     "blockNumber": 0,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "duoFee": 0,
     "eth": 0.21704519241528358,
-    "ethFee": 0.0021704519241528357,
+    "fee": 0.0021704519241528357,
     "pending": true,
     "timestamp": 1529317121530,
     "tokenA": 36.9599025612444,
@@ -809,9 +780,8 @@ Array [
   Object {
     "blockNumber": 0,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "duoFee": 2.0051663085602844,
     "eth": 0.20051663085602844,
-    "ethFee": 0,
+    "fee": NaN,
     "pending": true,
     "timestamp": 1529317783500,
     "tokenA": 34.14530889109876,

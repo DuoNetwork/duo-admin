@@ -7,9 +7,8 @@
 			"logStatus": { "S": "mined" },
 			"systime": { "N": "1529560019579" },
 			"tokenBInWei": { "S": "26160725000000000000" },
-			"duoFeeInWei": { "S": "800000000000000000" },
 			"sender": { "S": "0x00D8d0660b243452fC2f996A892D3083A903576F" },
-			"ethFeeInWei": { "S": "0" },
+			"feeInWei": { "S": "1000000000000000" },
 			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Create|2018-06-21|0x00D8d0660b243452fC2f996A892D3083A903576F" },
 			"ethAmtInWei": { "S": "100000000000000000" },
 			"blockHash": {

@@ -50,8 +50,7 @@ export interface IConversion extends IBaseEvent {
 	eth: number;
 	tokenA: number;
 	tokenB: number;
-	ethFee: number;
-	duoFee: number;
+	fee: number;
 	pending?: boolean;
 	reverted?: boolean;
 }

@@ -40,11 +40,10 @@ class DynamoUtil {
 	}
 
 	public insertData(params: PutItemInput): Promise<void> {
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.putItem(params, err => (err ? reject(err) : resolve()))
-					: reject('dynamo db connection is not initialized')
+		return new Promise((resolve, reject) =>
+			this.ddb
+				? this.ddb.putItem(params, err => (err ? reject(err) : resolve()))
+				: reject('dynamo db connection is not initialized')
 		);
 	}
 
@@ -61,29 +60,26 @@ class DynamoUtil {
 	// }
 
 	public queryData(params: QueryInput): Promise<QueryOutput> {
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
-					: reject('dynamo db connection is not initialized')
+		return new Promise((resolve, reject) =>
+			this.ddb
+				? this.ddb.query(params, (err, data) => (err ? reject(err) : resolve(data)))
+				: reject('dynamo db connection is not initialized')
 		);
 	}
 
 	public scanData(params: ScanInput): Promise<ScanOutput> {
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.scan(params, (err, data) => (err ? reject(err) : resolve(data)))
-					: reject('dynamo db connection is not initialized')
+		return new Promise((resolve, reject) =>
+			this.ddb
+				? this.ddb.scan(params, (err, data) => (err ? reject(err) : resolve(data)))
+				: reject('dynamo db connection is not initialized')
 		);
 	}
 
 	public deleteData(params: DeleteItemInput): Promise<void> {
-		return new Promise(
-			(resolve, reject) =>
-				this.ddb
-					? this.ddb.deleteItem(params, err => (err ? reject(err) : resolve()))
-					: reject('dynamo db connection is not initialized')
+		return new Promise((resolve, reject) =>
+			this.ddb
+				? this.ddb.deleteItem(params, err => (err ? reject(err) : resolve()))
+				: reject('dynamo db connection is not initialized')
 		);
 	}
 
@@ -137,7 +133,7 @@ class DynamoUtil {
 		const data = this.convertTradeToDynamo(trade, systemTimestamp);
 
 		const params = {
-			TableName: this.live ? CST.DB_AWS_TRADES_LIVE : CST.DB_AWS_TRADES_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_TRADES}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			Item: {
 				[CST.DB_TX_SRC_DHM]: {
 					S: trade.source + '|' + moment.utc(trade.timestamp).format('YYYY-MM-DD-HH-mm')
@@ -152,7 +148,7 @@ class DynamoUtil {
 
 	public async insertEventsData(events: IEvent[]) {
 		const systime = util.getUTCNowTimestamp();
-		const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
+		const TableName = `${CST.DB_DUO}.${CST.DB_EVENTS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`;
 		// const putItem: any;
 
 		events.forEach(async event => {
@@ -205,7 +201,7 @@ class DynamoUtil {
 
 	public insertHeartbeat(data: object = {}): Promise<void> {
 		return this.insertData({
-			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_STATUS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			Item: {
 				[CST.DB_ST_PROCESS]: {
 					S: this.process
@@ -218,7 +214,7 @@ class DynamoUtil {
 
 	public insertStatusData(data: object): Promise<void> {
 		return this.insertData({
-			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_STATUS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			Item: {
 				[CST.DB_ST_PROCESS]: {
 					S: this.process
@@ -230,7 +226,7 @@ class DynamoUtil {
 
 	public async readLastBlock(): Promise<number> {
 		const params = {
-			TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_STATUS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			KeyConditionExpression: CST.DB_ST_PROCESS + ' = :' + CST.DB_ST_PROCESS,
 			ExpressionAttributeValues: {
 				[':' + CST.DB_ST_PROCESS]: { S: CST.DB_STATUS_EVENT_PUBLIC_OTHERS }
@@ -308,8 +304,8 @@ class DynamoUtil {
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
-		return data.Items.map(
-			p => (period > 0 ? this.parsePrice(p, period) : this.parseTradedPrice(p))
+		return data.Items.map(p =>
+			period > 0 ? this.parsePrice(p, period) : this.parseTradedPrice(p)
 		);
 	}
 
@@ -432,7 +428,9 @@ class DynamoUtil {
 			allData.push(
 				...this.parseAcceptedPrice(
 					await this.queryData({
-						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						TableName: `${CST.DB_DUO}.${CST.DB_EVENTS}.${
+							this.live ? CST.DB_LIVE : CST.DB_DEV
+						}`,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: {
@@ -464,7 +462,9 @@ class DynamoUtil {
 			allData.push(
 				...this.parseTotalSupply(
 					await this.queryData({
-						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						TableName: `${CST.DB_DUO}.${CST.DB_EVENTS}.${
+							this.live ? CST.DB_LIVE : CST.DB_DEV
+						}`,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: {
@@ -508,7 +508,9 @@ class DynamoUtil {
 			allData.push(
 				...this.parseConversion(
 					await this.queryData({
-						TableName: this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV,
+						TableName: `${CST.DB_DUO}.${CST.DB_EVENTS}.${
+							this.live ? CST.DB_LIVE : CST.DB_DEV
+						}`,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: { S: ek }
@@ -533,8 +535,7 @@ class DynamoUtil {
 					eth: this.web3Wrapper.fromWei(c[CST.DB_EV_ETH].S || ''),
 					tokenA: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
 					tokenB: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
-					ethFee: this.web3Wrapper.fromWei(c[CST.DB_EV_ETH_FEE].S || ''),
-					duoFee: this.web3Wrapper.fromWei(c[CST.DB_EV_DUO_FEE].S || '')
+					fee: this.web3Wrapper.fromWei(c[CST.DB_EV_FEE].S || '')
 				};
 			else
 				return {
@@ -546,8 +547,7 @@ class DynamoUtil {
 					eth: 0,
 					tokenA: 0,
 					tokenB: 0,
-					ethFee: 0,
-					duoFee: 0
+					fee: 0
 				};
 		});
 	}
@@ -555,7 +555,7 @@ class DynamoUtil {
 	public async scanStatus() {
 		return this.parseStatus(
 			await this.scanData({
-				TableName: this.live ? CST.DB_AWS_STATUS_LIVE : CST.DB_AWS_STATUS_DEV
+				TableName: `${CST.DB_DUO}.${CST.DB_STATUS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`
 			})
 		);
 	}
@@ -599,11 +599,10 @@ class DynamoUtil {
 		eth: number,
 		tokenA: number,
 		tokenB: number,
-		ethFee: number,
-		duoFee: number
+		fee: number
 	) {
 		const params = {
-			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_UI_EVENTS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			Item: {
 				[CST.DB_EV_KEY]: {
 					S:
@@ -618,8 +617,7 @@ class DynamoUtil {
 				[CST.DB_EV_UI_ETH]: { N: eth + '' },
 				[CST.DB_EV_UI_TOKEN_A]: { N: tokenA + '' },
 				[CST.DB_EV_UI_TOKEN_B]: { N: tokenB + '' },
-				[CST.DB_EV_UI_ETH_FEE]: { N: ethFee + '' },
-				[CST.DB_EV_UI_DUO_FEE]: { N: duoFee + '' }
+				[CST.DB_EV_UI_FEE]: { N: fee + '' }
 			}
 		};
 
@@ -635,7 +633,9 @@ class DynamoUtil {
 			allData.push(
 				...this.parseUIConversion(
 					await this.queryData({
-						TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+						TableName: `${CST.DB_DUO}.${CST.DB_UI_EVENTS}.${
+							this.live ? CST.DB_LIVE : CST.DB_DEV
+						}`,
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: { S: ek }
@@ -646,9 +646,7 @@ class DynamoUtil {
 		for (const c of allData)
 			try {
 				if (this.web3Wrapper) {
-					const receipt = await this.web3Wrapper.getTransactionReceipt(
-						c.transactionHash
-					);
+					const receipt = await this.web3Wrapper.getTransactionReceipt(c.transactionHash);
 					c.pending = !receipt;
 					c.reverted = !receipt.status;
 				}
@@ -672,8 +670,7 @@ class DynamoUtil {
 				eth: Number(c[CST.DB_EV_UI_ETH].N),
 				tokenA: Number(c[CST.DB_EV_UI_TOKEN_A].N),
 				tokenB: Number(c[CST.DB_EV_UI_TOKEN_B].N),
-				ethFee: Number(c[CST.DB_EV_UI_ETH_FEE].N),
-				duoFee: Number(c[CST.DB_EV_UI_DUO_FEE].N),
+				fee: Number(c[CST.DB_EV_UI_FEE].N),
 				pending: true
 			};
 		});
@@ -681,7 +678,7 @@ class DynamoUtil {
 
 	public deleteUIConversionEvent(account: string, conversion: IConversion): Promise<void> {
 		return this.deleteData({
-			TableName: this.live ? CST.DB_AWS_UI_EVENTS_LIVE : CST.DB_AWS_UI_EVENTS_DEV,
+			TableName: `${CST.DB_DUO}.${CST.DB_UI_EVENTS}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
 			Key: {
 				[CST.DB_EV_KEY]: {
 					S: conversion.contractAddress + '|' + conversion.type + '|' + account
