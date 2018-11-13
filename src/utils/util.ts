@@ -161,11 +161,11 @@ class Util {
 				else if (option.period === 60) source = '_HOURLY';
 				else source = '';
 				break;
-			// case 'minutely':
-			// 	type = 'MINUTELY';
-			// 	break;
-			case CST.NODE:
-				type = 'CHAIN';
+			case 'minutely':
+				type = 'MINUTELY';
+				break;
+			case CST.FETCH_PRICE:
+				type = 'FETCH';
 				break;
 			default:
 				return '';

@@ -6,7 +6,7 @@ exports[`getStatusProcess aws do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
 
 exports[`getStatusProcess aws do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
 
-exports[`getStatusProcess aws do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
+exports[`getStatusProcess aws do not useDynamo 4`] = `""`;
 
 exports[`getStatusProcess aws do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
 
@@ -18,7 +18,7 @@ exports[`getStatusProcess aws useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
 
 exports[`getStatusProcess aws useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
 
-exports[`getStatusProcess aws useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
+exports[`getStatusProcess aws useDynamo 4`] = `""`;
 
 exports[`getStatusProcess aws useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
 
@@ -30,7 +30,7 @@ exports[`getStatusProcess azure do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
 
 exports[`getStatusProcess azure do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
 
-exports[`getStatusProcess azure do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
+exports[`getStatusProcess azure do not useDynamo 4`] = `""`;
 
 exports[`getStatusProcess azure do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
 
@@ -42,7 +42,7 @@ exports[`getStatusProcess azure useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
 
 exports[`getStatusProcess azure useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
 
-exports[`getStatusProcess azure useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
+exports[`getStatusProcess azure useDynamo 4`] = `""`;
 
 exports[`getStatusProcess azure useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
 
@@ -54,7 +54,7 @@ exports[`getStatusProcess gcp do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
 
 exports[`getStatusProcess gcp do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
 
-exports[`getStatusProcess gcp do not useDynamo 4`] = `"CHAIN_AZURE_PRIVATE"`;
+exports[`getStatusProcess gcp do not useDynamo 4`] = `""`;
 
 exports[`getStatusProcess gcp do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
 
@@ -66,7 +66,7 @@ exports[`getStatusProcess gcp useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
 
 exports[`getStatusProcess gcp useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
 
-exports[`getStatusProcess gcp useDynamo 4`] = `"CHAIN_AZURE_PUBLIC"`;
+exports[`getStatusProcess gcp useDynamo 4`] = `""`;
 
 exports[`getStatusProcess gcp useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
 
