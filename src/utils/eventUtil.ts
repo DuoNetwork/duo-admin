@@ -51,7 +51,7 @@ class EventUtil {
 						const results = await Promise.all(promiseList);
 						for (const result of results)
 							for (const el of result) {
-								const block = await beethovanWapper.web3Wrapper.web3.eth.getBlock(
+								const block = await beethovanWapper.web3Wrapper.getBlock(
 									el.blockNumber
 								);
 								allEvents.push(Web3Wrapper.parseEvent(el, block.timestamp * 1000));
