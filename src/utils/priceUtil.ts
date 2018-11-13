@@ -1,9 +1,9 @@
 // import moment from 'moment';
-import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
+import BeethovenWapper from '../../../duo-contract-wrapper/src/BeethovenWapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
-import { IBeethovanStates, IContractPrice, IOption, IPrice } from '../common/types';
+import { IBeethovenStates, IContractPrice, IOption, IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
@@ -58,7 +58,7 @@ class PriceUtil {
 	public async fetchPrice(
 		address: string,
 		key: string,
-		beethovanWapper: BeethovanWapper,
+		beethovenWapper: BeethovenWapper,
 		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
@@ -67,7 +67,7 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		// const state: IBeethovanStates = await beethovanWapper.getStates();
+		// const state: IBeethovenStates = await beethovenWapper.getStates();
 		const startTime = new Date();
 		// const endTime = new Date(startTime.getTime() + 3500000);
 		// const commitStart = new Date(endTime.getTime() + 50000);
@@ -76,12 +76,12 @@ class PriceUtil {
 		// if (state.state === CST.CTD_INCEPTION){
 		// 	const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 		// 	util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-		// 	return beethovanWapper.startCustodian(
+		// 	return beethovenWapper.startCustodian(
 		// 		address,   // use operator address
 		// 		key,	   // use operator privateKey
-		// 		beethovanWapper.web3Wrapper.contractAddresses.Beethovan.aToken,
-		// 		beethovanWapper.web3Wrapper.contractAddresses.Beethovan.bToken,
-		// 		beethovanWapper.web3Wrapper.contractAddresses.Magi,
+		// 		beethovenWapper.web3Wrapper.contractAddresses.Beethoven.aToken,
+		// 		beethovenWapper.web3Wrapper.contractAddresses.Beethoven.bToken,
+		// 		beethovenWapper.web3Wrapper.contractAddresses.Magi,
 		// 		gasPrice,
 		// 		300000
 		// 	);
@@ -98,9 +98,9 @@ class PriceUtil {
 			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 			while (!done && blkTime - lastPrice.timestamp < 100) {
 				// within 100 seconds tolerance, save to proceed fetching
-				await beethovanWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
+				await beethovenWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
 
-				const btvStates: IBeethovanStates = await beethovanWapper.getStates();
+				const btvStates: IBeethovenStates = await beethovenWapper.getStates();
 				if (btvStates.lastPriceTime - lastPrice.timestamp < 30) done = true;
 
 				blkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();

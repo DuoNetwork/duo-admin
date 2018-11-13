@@ -1,4 +1,4 @@
-import BeethovanWapper from '../../duo-contract-wrapper/src/BeethovanWapper';
+import BeethovenWapper from '../../duo-contract-wrapper/src/BeethovenWapper';
 import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
 import Web3Wrapper from '../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from './common/constants';
@@ -20,7 +20,7 @@ util.logInfo(
 );
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
-const beethovanWapper = new BeethovanWapper(web3Wrapper, option.live);
+const beethovenWapper = new BeethovenWapper(web3Wrapper, option.live);
 const magiWrapper = new MagiWrapper(web3Wrapper);
 dbUtil.init(tool, option, web3Wrapper).then(() => {
 	switch (tool) {
@@ -29,7 +29,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.SUBSCRIBE:
 			keyUtil.getKey(option).then(key => {
-				eventUtil.subscribe(key.publicKey, key.privateKey, beethovanWapper, option);
+				eventUtil.subscribe(key.publicKey, key.privateKey, beethovenWapper, option);
 			});
 			break;
 		case CST.COMMIT:
@@ -68,7 +68,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				priceUtil.fetchPrice(
 					key.publicKey,
 					key.privateKey,
-					beethovanWapper,
+					beethovenWapper,
 					magiWrapper,
 					option
 				);
