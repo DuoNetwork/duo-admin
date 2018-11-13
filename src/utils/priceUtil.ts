@@ -69,8 +69,8 @@ class PriceUtil {
 		}
 		// const state: IBeethovanStates = await beethovanWapper.getStates();
 		const startTime = new Date();
-		const endTime = new Date(startTime.getTime() + 3500000);
-		const commitStart = new Date(endTime.getTime() + 50000);
+		// const endTime = new Date(startTime.getTime() + 3500000);
+		// const commitStart = new Date(endTime.getTime() + 50000);
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = 0;
 		// if (state.state === CST.CTD_INCEPTION){
@@ -86,7 +86,7 @@ class PriceUtil {
 		// 		300000
 		// 	);
 		// }
-		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
+		schedule.scheduleJob({ start: startTime, rule }, async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			let done = false;
