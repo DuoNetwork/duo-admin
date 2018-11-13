@@ -67,27 +67,25 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		const state: IBeethovanStates = await beethovanWapper.getStates();
+		// const state: IBeethovanStates = await beethovanWapper.getStates();
 		const startTime = new Date();
 		const endTime = new Date(startTime.getTime() + 3500000);
 		const commitStart = new Date(endTime.getTime() + 50000);
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = 0;
-		if (state.state === CST.CTD_INCEPTION)
-			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
-				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return beethovanWapper.startCustodian(
-					address,
-					key,
-					option.live ? CST.BEETHOVAN_A_ADDR_MAIN : CST.BEETHOVAN_A_ADDR_KOVAN,
-					option.live ? CST.BEETHOVAN_B_ADDR_MAIN : CST.BEETHOVAN_B_ADDR_KOVAN,
-					option.live ? CST.MAGI_ADDR_MAIN : CST.MAGI_ADDR_KOVAN,
-					gasPrice,
-					option.gasLimit
-				);
-			});
-
+		// if (state.state === CST.CTD_INCEPTION){
+		// 	const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+		// 	util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+		// 	return beethovanWapper.startCustodian(
+		// 		address,   // use operator address
+		// 		key,	   // use operator privateKey
+		// 		beethovanWapper.web3Wrapper.contractAddresses.Beethovan.aToken,
+		// 		beethovanWapper.web3Wrapper.contractAddresses.Beethovan.bToken,
+		// 		beethovanWapper.web3Wrapper.contractAddresses.Magi,
+		// 		gasPrice,
+		// 		300000
+		// 	);
+		// }
 		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
