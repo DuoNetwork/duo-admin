@@ -1,4 +1,4 @@
-pkill npm
+killall -s KILL node
 rm *.log
 npm run trades assets=ETH,USD server gcp &> trades.ALL.log &
 npm run subscribe server gcp event=StartPreReset source=infura &>> preReset.log &
