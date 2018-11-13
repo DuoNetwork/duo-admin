@@ -33,10 +33,10 @@ class PriceUtil {
 				return magiWrapper.startMagi(
 					address,
 					key,
-					gasPrice,
-					option.gasLimit + 50000,
 					currentPrice.price,
-					Math.floor(currentPrice.timestamp / 1000)
+					Math.floor(currentPrice.timestamp / 1000),
+					gasPrice,
+					option.gasLimit + 50000
 				);
 			});
 
