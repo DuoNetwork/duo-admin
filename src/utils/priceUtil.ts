@@ -36,7 +36,7 @@ class PriceUtil {
 					gasPrice,
 					option.gasLimit + 50000,
 					currentPrice.price,
-					currentPrice.timestamp
+					Math.floor(currentPrice.timestamp / 1000)
 				);
 			});
 
@@ -48,7 +48,7 @@ class PriceUtil {
 				address,
 				key,
 				currentPrice.price,
-				currentPrice.timestamp,
+				Math.floor(currentPrice.timestamp / 1000),
 				gasPrice,
 				option.gasLimit
 			);
