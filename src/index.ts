@@ -21,6 +21,7 @@ util.logInfo(
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
 const beethovanWapper = new BeethovanWapper(web3Wrapper, option.live);
+const magiWrapper = new MagiWrapper(web3Wrapper);
 dbUtil.init(tool, option, web3Wrapper).then(() => {
 	switch (tool) {
 		case CST.TRADES:
@@ -33,7 +34,6 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.COMMIT:
 			util.logInfo('starting commit process');
-			const magiWrapper = new MagiWrapper(web3Wrapper, option.live);
 			keyUtil.getKey(option).then(key => {
 				priceUtil.startCommitPrices(
 					key.publicKey,
@@ -63,7 +63,17 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			);
 			break;
 		case CST.FETCH_PRICE:
-		
+			util.logInfo('starting fetchPrice process');
+			keyUtil.getKey(option).then(key => {
+				priceUtil.fetchPrice(
+					key.publicKey,
+					key.privateKey,
+					beethovanWapper,
+					magiWrapper,
+					option
+				);
+			});
+			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		case CST.CLEAN_DB:
 			dbUtil.cleanDB();

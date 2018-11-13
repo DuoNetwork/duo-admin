@@ -3,7 +3,7 @@ import BeethovanWapper from '../../../duo-contract-wrapper/src/BeethovanWapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
-import { IBeethovanStates, IOption, IPrice } from '../common/types';
+import { IBeethovanStates, IContractPrice, IOption, IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
@@ -90,31 +90,23 @@ class PriceUtil {
 
 		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
 			// first checking Magi current time is set correctly
-			// const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			// const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
-			// if (currentBlkTime - lastPrice.timestamp > 3600)
-			// 	util.logDebug('magi price not updated, pls wait');
-			// else if (currentBlkTime - lastPrice.timestamp < 100) {
-			// 	// within 100 seconds tolerance, save to proceed fetching
-			// 	await beethovanWapper.fetchPrice(
-			// 		address,
-			// 		key
-			// 	);
-			// } else {
-			// 	util.logDebug('too late to trigger fetching');
-			// }
+			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
+			let done = false;
+			const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
+			if (currentBlkTime - lastPrice.timestamp > 3600)
+				util.logDebug('magi price not updated, pls wait');
 
-			// const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-			// const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-			// util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-			// return magiWrapper.commitPrice(
-			// 	address,
-			// 	key,
-			// 	currentPrice.price,
-			// 	currentPrice.timestamp,
-			// 	gasPrice,
-			// 	option.gasLimit
-			// );
+			let blkTime = currentBlkTime;
+			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+			while (!done && blkTime - lastPrice.timestamp < 100) {
+				// within 100 seconds tolerance, save to proceed fetching
+				await beethovanWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
+
+				const btvStates: IBeethovanStates = await beethovanWapper.getStates();
+				if (btvStates.lastPriceTime - lastPrice.timestamp < 30) done = true;
+
+				blkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
+			}
 		});
 	}
 
