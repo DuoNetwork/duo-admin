@@ -141,7 +141,8 @@ class Util {
 				type = 'TRADE';
 				source = option.source ? '_' + option.source.toUpperCase() : '';
 				break;
-			case CST.SUBSCRIBE:
+			case CST.TRIGGER:
+			case CST.FETCH_EVENTS:
 				type = 'EVENT';
 				source =
 					'_' +

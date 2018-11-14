@@ -9,11 +9,12 @@
 		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
 		"commit": "ts-node ./src/index commit",
 		"trades": "ts-node src/index trades",
-		"subscribe": "ts-node ./src/index subscribe",
+		"trigger": "ts-node ./src/index trigger",
 		"prices": "ts-node src/index prices",
 		"node": "ts-node ./src/index node",
 		"cleanDB": "ts-node ./src/index cleanDB",
-		"fetchPrice": "ts-node ./src/index fetchPrice"
+		"fetchPrice": "ts-node ./src/index fetchPrice",
+		"fetchEvents": "ts-node ./src/index fetchEvents"
 	},
 	"jest": {
 		"roots": [

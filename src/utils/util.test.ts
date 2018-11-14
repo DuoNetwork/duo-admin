@@ -69,7 +69,7 @@ test('getPeriodStartTimestamp', () => {
 	expect(util.getPeriodStartTimestamp(1234567890, 1440)).toBe(1123200000);
 });
 
-const toolToTest = [CST.TRADES, CST.COMMIT, CST.CLEAN_DB, CST.NODE, CST.SUBSCRIBE, CST.DB_PRICES];
+const toolToTest = [CST.TRADES, CST.COMMIT, CST.CLEAN_DB, CST.NODE, CST.TRIGGER, CST.FETCH_EVENTS, CST.FETCH_PRICE, CST.DB_PRICES];
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
 

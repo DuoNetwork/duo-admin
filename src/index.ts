@@ -1,4 +1,5 @@
 import BeethovenWapper from '../../duo-contract-wrapper/src/BeethovenWapper';
+import EsplanadeWrapper from '../../duo-contract-wrapper/src/EsplanadeWrapper';
 import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
 import Web3Wrapper from '../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from './common/constants';
@@ -20,17 +21,21 @@ util.logInfo(
 );
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
-const beethovenWapper = new BeethovenWapper(web3Wrapper, option.live);
+const beethovenWapper = new BeethovenWapper(web3Wrapper);
 const magiWrapper = new MagiWrapper(web3Wrapper);
+const esplanadeWrapper = new EsplanadeWrapper(web3Wrapper);
 dbUtil.init(tool, option, web3Wrapper).then(() => {
 	switch (tool) {
 		case CST.TRADES:
 			marketUtil.startFetching(tool, option);
 			break;
-		case CST.SUBSCRIBE:
+		case CST.TRIGGER:
 			keyUtil.getKey(option).then(key => {
-				eventUtil.subscribe(key.publicKey, key.privateKey, beethovenWapper, option);
+				eventUtil.trigger(key.publicKey, key.privateKey, beethovenWapper, option);
 			});
+			break;
+		case CST.FETCH_EVENTS:
+			eventUtil.fetch([beethovenWapper, magiWrapper, esplanadeWrapper], option.force);
 			break;
 		case CST.COMMIT:
 			util.logInfo('starting commit process');
