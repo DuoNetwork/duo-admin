@@ -90,7 +90,7 @@ class PriceUtil {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			let done = false;
-			const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
+			const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTimeStamp();
 			if (currentBlkTime - lastPrice.timestamp > 3600000)
 				util.logDebug('magi price not updated, pls wait');
 
@@ -103,7 +103,7 @@ class PriceUtil {
 				const btvStates: IBeethovenStates = await beethovenWapper.getStates();
 				if (btvStates.lastPriceTime - lastPrice.timestamp < 30000) done = true;
 
-				blkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
+				blkTime = await magiWrapper.web3Wrapper.getCurrentBlockTimeStamp();
 			}
 		});
 	}
