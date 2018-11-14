@@ -68,11 +68,10 @@ class PriceUtil {
 			return;
 		}
 		// const state: IBeethovenStates = await beethovenWapper.getStates();
-		const startTime = new Date();
 		// const endTime = new Date(startTime.getTime() + 3500000);
 		// const commitStart = new Date(endTime.getTime() + 50000);
-		const rule = new schedule.RecurrenceRule();
-		rule.minute = 0;
+		// const rule = new schedule.RecurrenceRule();
+		// rule.minute = 0;
 		// if (state.state === CST.CTD_INCEPTION){
 		// 	const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 		// 	util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
@@ -89,7 +88,6 @@ class PriceUtil {
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-
 			const btvStates: IBeethovenStates = await beethovenWapper.getStates();
 			if (lastPrice.timestamp - btvStates.lastPriceTime > 3000000) {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
