@@ -38,10 +38,8 @@ class EventUtil {
 					if (isProcessing) return;
 
 					isProcessing = true;
-					const currentBlk = await beethovenWapper.web3Wrapper.getCurrentBlock();
+					const currentBlk = await beethovenWapper.web3Wrapper.getCurrentBlockNumber();
 					while (startBlk <= currentBlk) {
-						// const block = await contractUtil.web3.eth.getBlock(startBlk);
-						// let timestamp = block.timestamp * 1000;
 						const allEvents: IEvent[] = [];
 						const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 						const promiseList = CST.EVENTS.map(event =>
@@ -50,12 +48,15 @@ class EventUtil {
 
 						const results = await Promise.all(promiseList);
 						for (const result of results)
-							for (const el of result) {
-								const block = await beethovenWapper.web3Wrapper.getBlock(
-									el.blockNumber
+							for (const el of result)
+								allEvents.push(
+									Web3Wrapper.parseEvent(
+										el,
+										await beethovenWapper.web3Wrapper.getBlockTimestamp(
+											el.blockNumber
+										)
+									)
 								);
-								allEvents.push(Web3Wrapper.parseEvent(el, block.timestamp * 1000));
-							}
 
 						util.logInfo(
 							'total ' +

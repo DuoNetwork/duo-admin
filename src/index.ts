@@ -52,7 +52,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			setInterval(
 				() =>
 					web3Wrapper
-						.getCurrentBlock()
+						.getCurrentBlockNumber()
 						.then(bn =>
 							dbUtil.insertHeartbeat({
 								block: { N: bn + '' }
