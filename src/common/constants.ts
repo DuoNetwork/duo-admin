@@ -1,7 +1,7 @@
 export * from '../../../duo-contract-wrapper/src/constants';
 export const TRADES = 'trades';
 export const COMMIT = 'commit';
-export const TRIGGER = 'subscribe';
+export const TRIGGER = 'trigger';
 export const MINUTELY = 'minutely';
 export const HOURLY = 'hourly';
 export const NODE = 'node';
