@@ -450,8 +450,8 @@ class DynamoUtil {
 			transactionHash: p[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(p[CST.DB_EV_BLOCK_NO].N),
 			price: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_PX].S || '') : 0,
-			navA: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
-			navB: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
+			navA: this.web3Wrapper && p[CST.DB_EV_NAV_A] ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
+			navB: this.web3Wrapper && p[CST.DB_EV_NAV_B] ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
 			timestamp: Math.round(Number(p[CST.DB_EV_TS].S) / 3600) * 3600000
 		}));
 	}
