@@ -86,26 +86,16 @@ class PriceUtil {
 		// 		300000
 		// 	);
 		// }
-		schedule.scheduleJob({ start: startTime, rule }, async () => {
+		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			let done = false;
-			const currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
-			if (currentBlkTime - lastPrice.timestamp > 3600000)
-				util.logDebug('magi price not updated, pls wait');
 
-			let blkTime = currentBlkTime;
-			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-			while (!done && blkTime - lastPrice.timestamp < 100000) {
-				// within 100 seconds tolerance, save to proceed fetching
+			const btvStates: IBeethovenStates = await beethovenWapper.getStates();
+			if (lastPrice.timestamp - btvStates.lastPriceTime > 3000000) {
+				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				await beethovenWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
-
-				const btvStates: IBeethovenStates = await beethovenWapper.getStates();
-				if (btvStates.lastPriceTime - lastPrice.timestamp < 30000) done = true;
-
-				blkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
 			}
-		});
+		}, 30000);
 	}
 
 	public getBasePeriod(period: number) {
