@@ -91,17 +91,17 @@ class PriceUtil {
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			let done = false;
 			const currentBlkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
-			if (currentBlkTime - lastPrice.timestamp > 3600)
+			if (currentBlkTime - lastPrice.timestamp > 3600000)
 				util.logDebug('magi price not updated, pls wait');
 
 			let blkTime = currentBlkTime;
 			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-			while (!done && blkTime - lastPrice.timestamp < 100) {
+			while (!done && blkTime - lastPrice.timestamp < 100000) {
 				// within 100 seconds tolerance, save to proceed fetching
 				await beethovenWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
 
 				const btvStates: IBeethovenStates = await beethovenWapper.getStates();
-				if (btvStates.lastPriceTime - lastPrice.timestamp < 30) done = true;
+				if (btvStates.lastPriceTime - lastPrice.timestamp < 30000) done = true;
 
 				blkTime = await magiWrapper.web3Wrapper.getCurrentBlockTime();
 			}
