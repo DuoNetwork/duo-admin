@@ -93,7 +93,7 @@ class PriceUtil {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				await beethovenWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
 			}
-		}, 30000);
+		}, 15000);
 	}
 
 	public getBasePeriod(period: number) {
