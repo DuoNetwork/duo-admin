@@ -58,7 +58,7 @@ class PriceUtil {
 	public async fetchPrice(
 		address: string,
 		key: string,
-		beethovenWapper: BeethovenWapper,
+		beethovenWappers: BeethovenWapper[],
 		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
@@ -67,32 +67,17 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		// const state: IBeethovenStates = await beethovenWapper.getStates();
-		// const endTime = new Date(startTime.getTime() + 3500000);
-		// const commitStart = new Date(endTime.getTime() + 50000);
-		// const rule = new schedule.RecurrenceRule();
-		// rule.minute = 0;
-		// if (state.state === CST.CTD_INCEPTION){
-		// 	const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-		// 	util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-		// 	return beethovenWapper.startCustodian(
-		// 		address,   // use operator address
-		// 		key,	   // use operator privateKey
-		// 		beethovenWapper.web3Wrapper.contractAddresses.Beethoven.aToken,
-		// 		beethovenWapper.web3Wrapper.contractAddresses.Beethoven.bToken,
-		// 		beethovenWapper.web3Wrapper.contractAddresses.Magi,
-		// 		gasPrice,
-		// 		300000
-		// 	);
-		// }
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			const btvStates: IBeethovenStates = await beethovenWapper.getStates();
-			if (lastPrice.timestamp - btvStates.lastPriceTime > 3000000) {
-				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-				await beethovenWapper.fetchPrice(address, key, gasPrice, option.gasLimit);
-			}
+			const promiseList = beethovenWappers.map(async bw => {
+				const btvStates: IBeethovenStates = await bw.getStates();
+				if (lastPrice.timestamp - btvStates.lastPriceTime > 3000000) {
+					const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+					await bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit);
+				}
+			});
+			await Promise.all(promiseList);
 		}, 15000);
 	}
 

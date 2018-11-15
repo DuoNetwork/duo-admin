@@ -10,7 +10,7 @@ class EventUtil {
 	public async trigger(
 		address: string,
 		privateKey: string,
-		beethovenWapper: BeethovenWapper,
+		beethovenWappers: BeethovenWapper[],
 		option: IOption
 	) {
 		util.logInfo('subscribing to ' + option.event);
@@ -21,39 +21,44 @@ class EventUtil {
 
 		if (option.source)
 			setInterval(async () => {
-				const sysState = await beethovenWapper.getStates();
-				const state = sysState.state;
-				util.logInfo('current state is ' + state);
+				const promiseList = beethovenWappers.map(async bw => {
+					const sysState = await bw.getStates();
+					const state = sysState.state;
+					util.logDebug('current state is ' + state + ' for ' + bw.address);
 
-				if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-					await beethovenWapper.triggerPreReset(address, privateKey);
-				else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
-					await beethovenWapper.triggerReset(address, privateKey);
+					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
+						await bw.triggerPreReset(address, privateKey);
+					else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
+						await bw.triggerReset(address, privateKey);
 
-				dynamoUtil.insertHeartbeat();
+					dynamoUtil.insertHeartbeat();
+				});
+				await Promise.all(promiseList);
 			}, 15000);
 		else {
-			util.logInfo('starting listening ' + option.event);
-			let tg: () => Promise<any> = () => Promise.resolve();
-			const sysState = await beethovenWapper.getStates();
-			const state = sysState.state;
-			util.logInfo('current state is ' + state);
+			for (const bw of beethovenWappers) {
+				util.logInfo('starting listening ' + option.event + ' for ' + bw.address);
+				let tg: () => Promise<any> = () => Promise.resolve();
+				const sysState = await bw.getStates();
+				const state = sysState.state;
+				util.logInfo('current state is ' + state + ' for ' + bw.address);
 
-			if (option.event === CST.EVENT_START_PRE_RESET) {
-				tg = () => beethovenWapper.triggerPreReset(address, privateKey);
-				if (state === CST.CTD_PRERESET) await tg();
-			} else if (option.event === CST.EVENT_START_RESET) {
-				tg = () => beethovenWapper.triggerReset(address, privateKey);
-				if (state === CST.CTD_RESET) await tg();
-			}
-
-			beethovenWapper.contract.events[option.event]({}, async (error, evt) => {
-				if (error) util.logInfo(error);
-				else {
-					util.logInfo(evt);
-					await tg();
+				if (option.event === CST.EVENT_START_PRE_RESET) {
+					tg = () => bw.triggerPreReset(address, privateKey);
+					if (state === CST.CTD_PRERESET) await tg();
+				} else if (option.event === CST.EVENT_START_RESET) {
+					tg = () => bw.triggerReset(address, privateKey);
+					if (state === CST.CTD_RESET) await tg();
 				}
-			});
+
+				bw.contract.events[option.event]({}, async (error, evt) => {
+					if (error) util.logInfo(error);
+					else {
+						util.logInfo(evt);
+						await tg();
+					}
+				});
+			}
 
 			setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
 		}

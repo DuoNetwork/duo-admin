@@ -21,9 +21,19 @@ util.logInfo(
 );
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
-const beethovenWapper = new BeethovenWapper(web3Wrapper);
-const magiWrapper = new MagiWrapper(web3Wrapper);
-const esplanadeWrapper = new EsplanadeWrapper(web3Wrapper);
+const btvPerpWapper = new BeethovenWapper(
+	web3Wrapper,
+	web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
+);
+const btv6mWapper = new BeethovenWapper(
+	web3Wrapper,
+	web3Wrapper.contractAddresses.Custodians.Beethoven['6M'].custodian.address
+);
+const magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
+const esplanadeWrapper = new EsplanadeWrapper(
+	web3Wrapper,
+	web3Wrapper.contractAddresses.MultiSigManagers[0].address
+);
 dbUtil.init(tool, option, web3Wrapper).then(() => {
 	switch (tool) {
 		case CST.TRADES:
@@ -31,21 +41,24 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.TRIGGER:
 			keyUtil.getKey(option).then(key => {
-				eventUtil.trigger(key.publicKey, key.privateKey, beethovenWapper, option);
+				eventUtil.trigger(
+					key.publicKey,
+					key.privateKey,
+					[btvPerpWapper, btv6mWapper],
+					option
+				);
 			});
 			break;
 		case CST.FETCH_EVENTS:
-			eventUtil.fetch([beethovenWapper, magiWrapper, esplanadeWrapper], option.force);
+			eventUtil.fetch(
+				[btvPerpWapper, btv6mWapper, magiWrapper, esplanadeWrapper],
+				option.force
+			);
 			break;
 		case CST.COMMIT:
 			util.logInfo('starting commit process');
 			keyUtil.getKey(option).then(key => {
-				priceUtil.startCommitPrices(
-					key.publicKey,
-					key.privateKey,
-					magiWrapper,
-					option
-				);
+				priceUtil.startCommitPrices(key.publicKey, key.privateKey, magiWrapper, option);
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
@@ -73,7 +86,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				priceUtil.fetchPrice(
 					key.publicKey,
 					key.privateKey,
-					beethovenWapper,
+					[btvPerpWapper, btv6mWapper],
 					magiWrapper,
 					option
 				);
