@@ -86,7 +86,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				priceUtil.fetchPrice(
 					key.publicKey,
 					key.privateKey,
-					[btvPerpWapper, btv6mWapper],
+					[btvPerpWapper],
 					magiWrapper,
 					option
 				);
