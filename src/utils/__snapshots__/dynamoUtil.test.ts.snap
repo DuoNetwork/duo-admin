@@ -590,17 +590,17 @@ Array [
 exports[`parseStatus 1`] = `
 Array [
   Object {
-    "block": 7535634,
-    "process": "CHAIN_AWS_PUBLIC",
-    "timestamp": 1527846160749,
-  },
-  Object {
     "process": "EVENT_AWS_PRIVATE_STARTPRERESET",
     "timestamp": 1527751553589,
   },
   Object {
     "process": "EVENT_AWS_PRIVATE_STARTRESET",
     "timestamp": 1527751833800,
+  },
+  Object {
+    "block": 7535634,
+    "process": "EVENT_AWS_PUBLIC_OTHERS",
+    "timestamp": 1527846160749,
   },
   Object {
     "process": "EVENT_AZURE_PRIVATE_STARTPRERESET",

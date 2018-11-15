@@ -244,7 +244,7 @@
         },
         {
             "process": {
-                "S": "CHAIN_AWS_PUBLIC"
+                "S": "EVENT_AWS_PUBLIC_OTHERS"
             },
             "block": {
                 "N": "7535634"

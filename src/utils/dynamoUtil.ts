@@ -573,7 +573,7 @@ class DynamoUtil {
 					price: Number(d[CST.DB_TX_PRICE].N),
 					volume: Number(d[CST.DB_TX_AMOUNT].N)
 				} as IPriceStatus;
-			else if (process.startsWith('CHAIN'))
+			else if (process.startsWith('EVENT') && process.endsWith('OTHERS'))
 				return {
 					process: process,
 					timestamp: timestamp,
