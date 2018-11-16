@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`launchSource 1`] = `
+exports[`launchSource debug 1`] = `
 Array [
   Array [
     "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
@@ -9,11 +9,52 @@ Array [
 ]
 `;
 
-exports[`launchSource debug 1`] = `
+exports[`launchSource debug 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource fail 1`] = `
 Array [
   Array [
     "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
     Object {},
+  ],
+]
+`;
+
+exports[`launchSource fail 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource fail 3`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "forceREST": false,
+      "live": false,
+    },
+    "source",
+    Array [
+      "asset1",
+      "asset2",
+      "asset3",
+    ],
   ],
 ]
 `;
@@ -27,6 +68,17 @@ Array [
 ]
 `;
 
+exports[`launchSource forceREST 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
 exports[`launchSource live 1`] = `
 Array [
   Array [
@@ -34,6 +86,79 @@ Array [
     Object {},
   ],
 ]
+`;
+
+exports[`launchSource live 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource success 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource success 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": Object {
+      "on": [MockFunction] {
+        "calls": Array [
+          Array [
+            "exit",
+            [Function],
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+    },
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource success 3`] = `
+Array [
+  Array [
+    "exit",
+    [Function],
+  ],
+]
+`;
+
+exports[`retry after long enought time 1`] = `
+Object {
+  "failCount": 1,
+  "instance": undefined,
+  "lastFailTimestamp": 1234567890,
+  "source": "source",
+}
+`;
+
+exports[`retry within short time 1`] = `
+Object {
+  "failCount": 3,
+  "instance": undefined,
+  "lastFailTimestamp": 1234567890,
+  "source": "source",
+}
 `;
 
 exports[`startFetching no source 1`] = `

@@ -1,3 +1,4 @@
+import { ChildProcess } from 'child_process';
 export * from '../../../duo-contract-wrapper/src/types';
 
 export interface IBaseMarketData {
@@ -195,4 +196,11 @@ export interface IGdaxRawTradeRest {
 	result: {
 		[code: string]: Array<Array<string | number>>;
 	};
+}
+
+export interface ISubProcess {
+	source: string;
+	instance: ChildProcess;
+	lastFailTimestamp: number;
+	failCount: number;
 }

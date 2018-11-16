@@ -1,9 +1,11 @@
 import child_process from 'child_process';
 import apis from '../apis';
-import { IOption } from '../common/types';
+import { IOption, ISubProcess } from '../common/types';
 import util from './util';
 
 class MarketUtil {
+	public subProcesses: { [key: string]: ISubProcess } = {};
+
 	public async startFetching(tool: string, option: IOption): Promise<void> {
 		const assetIds = option.assets.length
 			? option.assets
@@ -13,6 +15,12 @@ class MarketUtil {
 			util.logInfo('launching all sources for assets ' + assetIds.join(',') + ' in WS');
 			for (const source in apis) {
 				await util.sleep(1000);
+				this.subProcesses[source] = {
+					source: source,
+					lastFailTimestamp: 0,
+					failCount: 0,
+					instance: undefined as any
+				};
 				this.launchSource(tool, source, assetIds, option);
 			}
 		} else {
@@ -21,6 +29,10 @@ class MarketUtil {
 			api.init();
 
 			const sourceInstruments = api.getSourcePairs(assetIds);
+			if (!sourceInstruments.length) {
+				util.logInfo(`[${option.source}]: No sourceInstruments to fetch. Process.exit()`);
+				process.exit(0);
+			}
 			util.logInfo(
 				`[${option.source}]:` +
 					'start fetching for pairs ' +
@@ -50,8 +62,33 @@ class MarketUtil {
 			process.platform === 'win32' ? {} : { shell: '/bin/bash' }
 		);
 
-		if (!procInstance) util.logError('failed to launch ' + source);
-		else util.logInfo(`[${source}]: Launched ${tool}  ${assets.join(',')}`);
+		this.subProcesses[source].instance = procInstance;
+		this.subProcesses[source].lastFailTimestamp = util.getUTCNowTimestamp();
+
+		if (!procInstance) {
+			util.logError('Failed to launch ' + source);
+			this.retry(tool, option, source, assets);
+		} else {
+			util.logInfo(`[${source}]: Launched ${tool}  ${assets.join(',')}`);
+			procInstance.on('exit', code => {
+				util.logError(`[${source}]: Exit with code ${code}`);
+				if (code) this.retry(tool, option, source, assets);
+			});
+		}
+	}
+
+	public retry(tool: string, option: IOption, source: string, assets: string[]) {
+		const now: number = util.getUTCNowTimestamp();
+
+		if (now - this.subProcesses[source].lastFailTimestamp < 30000)
+			this.subProcesses[source].failCount++;
+		else this.subProcesses[source].failCount = 1;
+
+		this.subProcesses[source].lastFailTimestamp = now;
+
+		if (this.subProcesses[source].failCount < 3)
+			setTimeout(() => this.launchSource(tool, source, assets, option), 5000);
+		else util.logError('Retry Aborted ' + source);
 	}
 }
 
