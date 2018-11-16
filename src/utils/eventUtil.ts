@@ -1,4 +1,4 @@
-import BaseWrapper from '../../../duo-contract-wrapper/src/BaseWrapper';
+import BaseContractWrapper from '../../../duo-contract-wrapper/src/BaseContractWrapper';
 import BeethovenWapper from '../../../duo-contract-wrapper/src/BeethovenWapper';
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
@@ -64,10 +64,10 @@ class EventUtil {
 		}
 	}
 
-	public async fetch(baseWrappers: BaseWrapper[], force: boolean) {
+	public async fetch(BaseContractWrappers: BaseContractWrapper[], force: boolean) {
 		util.logInfo('fetching events');
 
-		const web3Wrapper = baseWrappers[0].web3Wrapper;
+		const web3Wrapper = BaseContractWrappers[0].web3Wrapper;
 
 		let startBlk = force
 			? web3Wrapper.inceptionBlockNumber
@@ -84,7 +84,7 @@ class EventUtil {
 				const allEvents: IEvent[] = [];
 				const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 				const promiseList: Array<Promise<any>> = [];
-				baseWrappers.forEach(bw =>
+				BaseContractWrappers.forEach(bw =>
 					bw.events.forEach(event =>
 						promiseList.push(Web3Wrapper.pullEvents(bw.contract, startBlk, end, event))
 					)
