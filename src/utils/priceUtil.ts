@@ -70,7 +70,11 @@ class PriceUtil {
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			const promiseList = beethovenWappers.map(async bw => {
+			const nounce = await beethovenWappers[0].web3Wrapper.getTransactionCount(address);
+			const nounceArray = Array.from(Array(beethovenWappers.length).keys()).map(
+				e => e + nounce
+			);
+			const promiseList = beethovenWappers.map(async (bw, i) => {
 				const btvStates: IBeethovenStates = await bw.getStates();
 				if (
 					btvStates.state === CST.CTD_TRADING &&
@@ -78,7 +82,7 @@ class PriceUtil {
 				) {
 					const gasPrice =
 						(await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-					await bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit);
+					await bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit, nounceArray[i]);
 				}
 			});
 			await Promise.all(promiseList);
