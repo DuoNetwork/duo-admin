@@ -3,4 +3,4 @@ rm *.log
 npm run trades assets=ETH,USD server dynamo &> trades.ALL.log &
 npm run prices period=1 dev dynamo &> prices.1.log &
 npm run prices period=60 dev dynamo &> prices.60.log &
-npm run fetchEvents server source=infura dynamo &>> others.log &
+npm run fetchEvents server source=infura dynamo $1 &>> others.log &
