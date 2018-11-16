@@ -72,8 +72,12 @@ class PriceUtil {
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			const promiseList = beethovenWappers.map(async bw => {
 				const btvStates: IBeethovenStates = await bw.getStates();
-				if (lastPrice.timestamp - btvStates.lastPriceTime > 3000000) {
-					const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+				if (
+					btvStates.state === CST.CTD_TRADING &&
+					lastPrice.timestamp - btvStates.lastPriceTime > 3000000
+				) {
+					const gasPrice =
+						(await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 					await bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit);
 				}
 			});
