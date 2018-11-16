@@ -25,9 +25,9 @@ const btvPerpWapper = new BeethovenWapper(
 	web3Wrapper,
 	web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
 );
-const btv6mWapper = new BeethovenWapper(
+const btvM19Wapper = new BeethovenWapper(
 	web3Wrapper,
-	web3Wrapper.contractAddresses.Custodians.Beethoven['6M'].custodian.address
+	web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
 );
 const magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
 const esplanadeWrapper = new EsplanadeWrapper(
@@ -44,14 +44,14 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				eventUtil.trigger(
 					key.publicKey,
 					key.privateKey,
-					[btvPerpWapper, btv6mWapper],
+					[btvPerpWapper, btvM19Wapper],
 					option
 				);
 			});
 			break;
 		case CST.FETCH_EVENTS:
 			eventUtil.fetch(
-				[btvPerpWapper, btv6mWapper, magiWrapper, esplanadeWrapper],
+				[btvPerpWapper, btvM19Wapper, magiWrapper, esplanadeWrapper],
 				option.force
 			);
 			break;
