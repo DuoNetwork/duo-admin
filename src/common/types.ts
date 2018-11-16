@@ -42,8 +42,8 @@ export interface IAcceptedPrice extends IBaseEvent {
 }
 
 export interface ITotalSupply extends IBaseEvent {
-	tokenA: number,
-	tokenB: number
+	tokenA: number;
+	tokenB: number;
 }
 
 export interface IConversion extends IBaseEvent {
