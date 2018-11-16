@@ -67,25 +67,33 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
+		let nounce = await beethovenWappers[0].web3Wrapper.getTransactionCount(address);
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			const nounce = await beethovenWappers[0].web3Wrapper.getTransactionCount(address);
-			const nounceArray = Array.from(Array(beethovenWappers.length).keys()).map(
-				e => e + nounce
-			);
-			const promiseList = beethovenWappers.map(async (bw, i) => {
+			const promiseList: Array<Promise<void>> = [];
+			const wrappersToCall: BeethovenWapper[] = [];
+
+			for (const bw of beethovenWappers) {
 				const btvStates: IBeethovenStates = await bw.getStates();
 				if (
 					btvStates.state === CST.CTD_TRADING &&
 					lastPrice.timestamp - btvStates.lastPriceTime > 3000000
-				) {
-					const gasPrice =
-						(await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-					await bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit, nounceArray[i]);
+				)
+					wrappersToCall.push(bw);
+			}
+
+			if (wrappersToCall.length) {
+				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+				for (const bw of wrappersToCall) {
+					promiseList.push(
+						bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit, nounce)
+					);
+					nounce++;
 				}
-			});
-			await Promise.all(promiseList);
+
+				await Promise.all(promiseList);
+			}
 		}, 15000);
 	}
 
