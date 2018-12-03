@@ -16,7 +16,13 @@ class DbUtil {
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
-		dynamoUtil.init(config, option.live, process, web3Wrapper);
+		dynamoUtil.init(config, option.live, process, web3Wrapper.fromWei, async txHash => {
+			const txReceipt = await web3Wrapper.getTransactionReceipt(txHash);
+			if (!txReceipt) return null;
+			return {
+				status: txReceipt.status
+			};
+		});
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
@@ -41,8 +47,14 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(base, quote);
 	}
 
-	public readSourceData(currentTimestamp: number, base: string, quote: string): Promise<ITrade[]> {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readSourceData(currentTimestamp, base, quote);
+	public readSourceData(
+		currentTimestamp: number,
+		base: string,
+		quote: string
+	): Promise<ITrade[]> {
+		return this.dynamo
+			? Promise.reject('invalid')
+			: sqlUtil.readSourceData(currentTimestamp, base, quote);
 	}
 
 	public cleanDB(): Promise<void> {

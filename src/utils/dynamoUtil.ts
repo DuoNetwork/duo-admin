@@ -11,7 +11,6 @@ import DynamoDB, {
 } from 'aws-sdk/clients/dynamodb';
 import AWS from 'aws-sdk/global';
 import moment from 'moment';
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import {
 	IAcceptedPrice,
@@ -29,13 +28,22 @@ class DynamoUtil {
 	private ddb: undefined | DynamoDB = undefined;
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	private web3Wrapper: Web3Wrapper | undefined = undefined;
-	public init(config: object, live: boolean, process: string, web3Wrapper: Web3Wrapper) {
+	private fromWei: (input: string | number) => number = (input) => Number(input) / 1e18;
+	private getTxStatus: (txHash: string) => Promise<{ status: string } | null> = () =>
+		Promise.resolve(null);
+	public init(
+		config: object,
+		live: boolean,
+		process: string,
+		fromWei: (input: string | number) => number,
+		getTxStatus: (txHash: string) => Promise<{ status: string } | null>
+	) {
 		this.live = live;
 		this.process = process;
 		AWS.config.update(config);
 		this.ddb = new DynamoDB({ apiVersion: CST.AWS_DYNAMO_API_VERSION });
-		this.web3Wrapper = web3Wrapper;
+		this.fromWei = fromWei;
+		this.getTxStatus = getTxStatus;
 		return Promise.resolve();
 	}
 
@@ -449,9 +457,9 @@ class DynamoUtil {
 			contractAddress: (p[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: p[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(p[CST.DB_EV_BLOCK_NO].N),
-			price: this.web3Wrapper ? this.web3Wrapper.fromWei(p[CST.DB_EV_PX].S || '') : 0,
-			navA: this.web3Wrapper && p[CST.DB_EV_NAV_A] ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
-			navB: this.web3Wrapper && p[CST.DB_EV_NAV_B] ? this.web3Wrapper.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
+			price: this.fromWei(p[CST.DB_EV_PX].S || ''),
+			navA: p[CST.DB_EV_NAV_A] ? this.fromWei(p[CST.DB_EV_NAV_A].S || '') : 0,
+			navB: p[CST.DB_EV_NAV_B] ? this.fromWei(p[CST.DB_EV_NAV_B].S || '') : 0,
 			timestamp: Math.round(Number(p[CST.DB_EV_TS].S) / 3600) * 3600000
 		}));
 	}
@@ -484,12 +492,8 @@ class DynamoUtil {
 			contractAddress: (t[CST.DB_EV_KEY].S || '').split('|')[0],
 			transactionHash: t[CST.DB_EV_TX_HASH].S || '',
 			blockNumber: Number(t[CST.DB_EV_BLOCK_NO].N),
-			tokenA: this.web3Wrapper
-				? this.web3Wrapper.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_A].S || '')
-				: 0,
-			tokenB: this.web3Wrapper
-				? this.web3Wrapper.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_B].S || '')
-				: 0,
+			tokenA: this.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_A].S || ''),
+			tokenB: this.fromWei(t[CST.DB_EV_TOTAL_SUPPLY_B].S || ''),
 			timestamp: Number((t[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0])
 		}));
 	}
@@ -525,30 +529,17 @@ class DynamoUtil {
 		if (!conversion.Items || !conversion.Items.length) return [];
 		return conversion.Items.map(c => {
 			const [contractAddress, type] = (c[CST.DB_EV_KEY].S || '').split('|');
-			if (this.web3Wrapper)
-				return {
-					contractAddress: contractAddress,
-					transactionHash: c[CST.DB_EV_TX_HASH].S || '',
-					blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
-					type: type || '',
-					timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
-					eth: this.web3Wrapper.fromWei(c[CST.DB_EV_ETH].S || ''),
-					tokenA: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
-					tokenB: this.web3Wrapper.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
-					fee: this.web3Wrapper.fromWei(c[CST.DB_EV_FEE].S || '')
-				};
-			else
-				return {
-					contractAddress: contractAddress,
-					transactionHash: c[CST.DB_EV_TX_HASH].S || '',
-					blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
-					type: type || '',
-					timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
-					eth: 0,
-					tokenA: 0,
-					tokenB: 0,
-					fee: 0
-				};
+			return {
+				contractAddress: contractAddress,
+				transactionHash: c[CST.DB_EV_TX_HASH].S || '',
+				blockNumber: Number(c[CST.DB_EV_BLOCK_NO].N),
+				type: type || '',
+				timestamp: Number((c[CST.DB_EV_TIMESTAMP_ID].S || '').split('|')[0]),
+				eth: this.fromWei(c[CST.DB_EV_ETH].S || ''),
+				tokenA: this.fromWei(c[CST.DB_EV_TOKEN_A].S || ''),
+				tokenB: this.fromWei(c[CST.DB_EV_TOKEN_B].S || ''),
+				fee: this.fromWei(c[CST.DB_EV_FEE].S || '')
+			};
 		});
 	}
 
@@ -645,11 +636,9 @@ class DynamoUtil {
 			);
 		for (const c of allData)
 			try {
-				if (this.web3Wrapper) {
-					const receipt = await this.web3Wrapper.getTransactionReceipt(c.transactionHash);
-					c.pending = !receipt;
-					c.reverted = !receipt.status;
-				}
+				const receipt = await this.getTxStatus(c.transactionHash);
+				c.pending = !receipt;
+				c.reverted = !!receipt && !receipt.status;
 			} catch (error) {
 				continue;
 			}
