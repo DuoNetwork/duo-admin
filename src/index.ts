@@ -13,12 +13,25 @@ import util from './utils/util';
 const tool = process.argv[2];
 util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
+
+if (!option.provider) {
+	const infura = require('./keys/infura.json');
+	if (option.source === CST.SRC_INFURA && !option.ws)
+		option.provider =
+			(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
+			'/' +
+			infura.token;
+	else option.provider = option.live ? CST.PROVIDER_INFURA_MAIN_WS : CST.PROVIDER_INFURA_KOVAN_WS;
+}
+
 util.logInfo(
 	`using ${option.live ? 'live' : 'dev'}
 	running on ${option.server ? 'server' : 'local'}
 	using source ${option.source}
 	using provider ${option.provider}`
 );
+
+// option.provider = '';
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
 const btvPerpWapper = new BeethovenWapper(

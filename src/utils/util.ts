@@ -1,7 +1,6 @@
 import moment from 'moment';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
-import infura from '../keys/infura.json';
 // import { Options } from 'aws-cli-js';
 
 class Util {
@@ -99,22 +98,6 @@ class Util {
 					break;
 			}
 		}
-
-		if (!option.provider)
-			if (option.source === CST.SRC_MYETHER)
-				option.provider = option.live
-					? CST.PROVIDER_MYETHER_MAIN
-					: CST.PROVIDER_INFURA_KOVAN + '/' + infura.token;
-			else if (option.source === CST.SRC_INFURA && !option.ws)
-				option.provider =
-					(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
-					'/' +
-					infura.token;
-			else
-				option.provider = option.live
-					? CST.PROVIDER_INFURA_MAIN_WS
-					: CST.PROVIDER_INFURA_KOVAN_WS;
-		// option.provider = '';
 
 		return option;
 	}

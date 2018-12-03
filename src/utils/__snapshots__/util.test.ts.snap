@@ -119,7 +119,7 @@ Object {
   "live": false,
   "pair": "",
   "period": 10,
-  "provider": "wss://kovan.infura.io/ws",
+  "provider": "",
   "quote": "ETH",
   "server": false,
   "source": "source",
