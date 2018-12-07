@@ -16,7 +16,7 @@ class DbUtil {
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
-		dynamoUtil.init(config, option.live, process, web3Wrapper.fromWei, async txHash => {
+		dynamoUtil.init(config, option.live, process, (value: string | number) => web3Wrapper.fromWei(value), async txHash => {
 			const txReceipt = await web3Wrapper.getTransactionReceipt(txHash);
 			if (!txReceipt) return null;
 			return {
