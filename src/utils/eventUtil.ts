@@ -1,5 +1,5 @@
 import BaseContractWrapper from '../../../duo-contract-wrapper/src/BaseContractWrapper';
-import BeethovenWapper from '../../../duo-contract-wrapper/src/BeethovenWapper';
+import DualClassCustodianWrapper from '../../../duo-contract-wrapper/src/DualClassCustodianWrapper';
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import { IEvent, IOption } from '../common/types';
@@ -10,7 +10,7 @@ class EventUtil {
 	public async trigger(
 		address: string,
 		privateKey: string,
-		beethovenWappers: BeethovenWapper[],
+		beethovenWappers: DualClassCustodianWrapper[],
 		option: IOption
 	) {
 		util.logInfo('subscribing to ' + option.event);

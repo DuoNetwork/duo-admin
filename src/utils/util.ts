@@ -43,6 +43,8 @@ class Util {
 			azure: process.argv.includes('azure'),
 			force: process.argv.includes('force'),
 			pair: '',
+			contractType: 'Beethoven',
+			maturity: 'Perpetual',
 			assets: [''],
 			sources: [''],
 			exSources: [''],
@@ -93,6 +95,12 @@ class Util {
 					break;
 				case 'quote':
 					option.quote = args[1] || option.quote;
+					break;
+				case 'contractType':
+					option.contractType = args[1] || option.contractType;
+					break;
+				case 'maturity':
+					option.maturity = args[1] || option.maturity;
 					break;
 				default:
 					break;

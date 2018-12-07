@@ -1,5 +1,5 @@
 // import moment from 'moment';
-import BeethovenWapper from '../../../duo-contract-wrapper/src/BeethovenWapper';
+import DualClassCustodianWapper from '../../../duo-contract-wrapper/src/DualClassCustodianWrapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
@@ -58,7 +58,7 @@ class PriceUtil {
 	public async fetchPrice(
 		address: string,
 		key: string,
-		beethovenWappers: BeethovenWapper[],
+		beethovenWappers: DualClassCustodianWapper[],
 		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
@@ -72,7 +72,7 @@ class PriceUtil {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			const promiseList: Array<Promise<void>> = [];
-			const wrappersToCall: BeethovenWapper[] = [];
+			const wrappersToCall: DualClassCustodianWapper[] = [];
 
 			for (const bw of beethovenWappers) {
 				const btvStates: IBeethovenStates = await bw.getStates();

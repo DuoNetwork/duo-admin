@@ -1,6 +1,8 @@
-import BeethovenWapper from '../../duo-contract-wrapper/src/BeethovenWapper';
+// import * as CST from '../../duo-contract-wrapper/src/constants';
+import DualClassCustodianWapper from '../../duo-contract-wrapper/src/DualClassCustodianWrapper';
 import EsplanadeWrapper from '../../duo-contract-wrapper/src/EsplanadeWrapper';
 import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
+import { ICustodianWrappers } from '../../duo-contract-wrapper/src/types';
 import Web3Wrapper from '../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from './common/constants';
 import dbUtil from './utils/dbUtil';
@@ -31,17 +33,33 @@ util.logInfo(
 	using provider ${option.provider}`
 );
 
-// option.provider = '';
+const kovanManagerAccount = require('./static/kovanManagerAccount.json');
 
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
-const btvPerpWapper = new BeethovenWapper(
-	web3Wrapper,
-	web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-);
-const btvM19Wapper = new BeethovenWapper(
-	web3Wrapper,
-	web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
-);
+
+const dualClassCustodianWrappers: ICustodianWrappers = {
+	Beethoven: {
+		Perpetual: new DualClassCustodianWapper(
+			web3Wrapper,
+			web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
+		),
+		M19: new DualClassCustodianWapper(
+			web3Wrapper,
+			web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
+		)
+	},
+	Mozart: {
+		Perpetual: new DualClassCustodianWapper(
+			web3Wrapper,
+			web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
+		),
+		M19: new DualClassCustodianWapper(
+			web3Wrapper,
+			web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
+		)
+	}
+};
+
 const magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
 const esplanadeWrapper = new EsplanadeWrapper(
 	web3Wrapper,
@@ -57,14 +75,26 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				eventUtil.trigger(
 					key.publicKey,
 					key.privateKey,
-					[btvPerpWapper, btvM19Wapper],
+					[
+						dualClassCustodianWrappers.Beethoven.Perpetual,
+						dualClassCustodianWrappers.Beethoven.M19,
+						dualClassCustodianWrappers.Mozart.Perpetual,
+						dualClassCustodianWrappers.Mozart.M19
+					],
 					option
 				);
 			});
 			break;
 		case CST.FETCH_EVENTS:
 			eventUtil.fetch(
-				[btvPerpWapper, btvM19Wapper, magiWrapper, esplanadeWrapper],
+				[
+					dualClassCustodianWrappers.Beethoven.Perpetual,
+					dualClassCustodianWrappers.Beethoven.M19,
+					dualClassCustodianWrappers.Mozart.Perpetual,
+					dualClassCustodianWrappers.Mozart.M19,
+					magiWrapper,
+					esplanadeWrapper
+				],
 				option.force
 			);
 			break;
@@ -99,7 +129,12 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				priceUtil.fetchPrice(
 					key.publicKey,
 					key.privateKey,
-					[btvPerpWapper, btvM19Wapper],
+					[
+						dualClassCustodianWrappers.Beethoven.Perpetual,
+						dualClassCustodianWrappers.Beethoven.M19,
+						dualClassCustodianWrappers.Mozart.Perpetual,
+						dualClassCustodianWrappers.Mozart.M19
+					],
 					magiWrapper,
 					option
 				);
@@ -110,6 +145,31 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			dbUtil.cleanDB();
 			setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
+			break;
+		case CST.START_CUSTODIAN:
+			const type = option.contractType;
+			const maturity = option.maturity;
+			if (
+				![CST.BEETHOVEN, CST.MOZART].includes(type) ||
+				![CST.TENOR_PPT, CST.TENOR_M19].includes(maturity)
+			) {
+				util.logDebug('no contract type or maturity specified');
+				return;
+			}
+			const contractWrapper: DualClassCustodianWapper =
+				dualClassCustodianWrappers[type][maturity];
+
+			contractWrapper.startCustodianRaw(
+				kovanManagerAccount.Beethoven.operator.address,
+				kovanManagerAccount.Beethoven.operator.privateKey,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][maturity].aToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians.Beethoven.M19.bToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
+				option.gasPrice || 2000000000,
+				option.gasLimit || 1000000
+			);
 			break;
 		default:
 			util.logInfo('no such tool ' + tool);

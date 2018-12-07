@@ -7,6 +7,7 @@ export const HOURLY = 'hourly';
 export const NODE = 'node';
 export const CLEAN_DB = 'cleanDB';
 export const FETCH_PRICE = 'fetchPrice';
+export const START_CUSTODIAN = 'startCustodian';
 export const FETCH_EVENTS = 'fetchEvents';
 export const API_BITFINEX = 'bitfinex';
 export const API_GEMINI = 'gemini';

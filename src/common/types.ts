@@ -109,6 +109,8 @@ export interface IOption {
 	period: number;
 	base: string;
 	quote: string;
+	contractType: string;
+	maturity: string;
 }
 
 export interface ISourceSettings {
