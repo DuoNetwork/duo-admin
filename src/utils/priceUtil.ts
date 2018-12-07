@@ -3,7 +3,7 @@ import DualClassCustodianWapper from '../../../duo-contract-wrapper/src/DualClas
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
-import { IBeethovenStates, IContractPrice, IOption, IPrice } from '../common/types';
+import { IContractPrice, IDualClassStates, IOption, IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
@@ -75,7 +75,7 @@ class PriceUtil {
 			const wrappersToCall: DualClassCustodianWapper[] = [];
 
 			for (const bw of beethovenWappers) {
-				const btvStates: IBeethovenStates = await bw.getStates();
+				const btvStates: IDualClassStates = await bw.getStates();
 				if (
 					btvStates.state === CST.CTD_TRADING &&
 					lastPrice.timestamp - btvStates.lastPriceTime > 3000000

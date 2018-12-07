@@ -17,4 +17,4 @@ lilithEquities.json
 sachielAssets.json
 *.txt
 keys
-static/kovanManagerAccount.json
+*kovan*.json
