@@ -14,7 +14,8 @@
 		"node": "ts-node ./src/index node",
 		"cleanDB": "ts-node ./src/index cleanDB",
 		"fetchPrice": "ts-node ./src/index fetchPrice",
-		"fetchEvents": "ts-node ./src/index fetchEvents"
+		"fetchEvents": "ts-node ./src/index fetchEvents",
+		"startCustodian": "ts-node ./src/index startCustodian"
 	},
 	"jest": {
 		"roots": [
