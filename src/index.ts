@@ -33,8 +33,6 @@ util.logInfo(
 	using provider ${option.provider}`
 );
 
-const kovanManagerAccount = require('./static/kovanManagerAccount.json');
-
 const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
 
 const dualClassCustodianWrappers: ICustodianWrappers = {
@@ -147,6 +145,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
 		case CST.START_CUSTODIAN:
+			const kovanManagerAccount = require('./static/kovanManagerAccount.json');
 			const type = option.contractType;
 			const maturity = option.maturity;
 			if (
