@@ -1,5 +1,5 @@
 import BaseContractWrapper from '../../../duo-contract-wrapper/src/BaseContractWrapper';
-import DualClassCustodianWrapper from '../../../duo-contract-wrapper/src/DualClassCustodianWrapper';
+import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import { IEvent, IOption } from '../common/types';
@@ -10,7 +10,7 @@ class EventUtil {
 	public async trigger(
 		address: string,
 		privateKey: string,
-		beethovenWappers: DualClassCustodianWrapper[],
+		dualClassWrappers: DualClassWrapper[],
 		option: IOption
 	) {
 		util.logInfo('subscribing to ' + option.event);
@@ -21,37 +21,37 @@ class EventUtil {
 
 		if (option.source)
 			setInterval(async () => {
-				const promiseList = beethovenWappers.map(async bw => {
-					const sysState = await bw.getStates();
+				const promiseList = dualClassWrappers.map(async dcw => {
+					const sysState = await dcw.getStates();
 					const state = sysState.state;
-					util.logDebug('current state is ' + state + ' for ' + bw.address);
+					util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-						await bw.triggerPreReset(address, privateKey);
+						await dcw.triggerPreReset(address, privateKey);
 					else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
-						await bw.triggerReset(address, privateKey);
+						await dcw.triggerReset(address, privateKey);
 
 					dynamoUtil.insertHeartbeat();
 				});
 				await Promise.all(promiseList);
 			}, 15000);
 		else {
-			for (const bw of beethovenWappers) {
-				util.logInfo('starting listening ' + option.event + ' for ' + bw.address);
+			for (const dcw of dualClassWrappers) {
+				util.logInfo('starting listening ' + option.event + ' for ' + dcw.address);
 				let tg: () => Promise<any> = () => Promise.resolve();
-				const sysState = await bw.getStates();
+				const sysState = await dcw.getStates();
 				const state = sysState.state;
-				util.logInfo('current state is ' + state + ' for ' + bw.address);
+				util.logInfo('current state is ' + state + ' for ' + dcw.address);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
-					tg = () => bw.triggerPreReset(address, privateKey);
+					tg = () => dcw.triggerPreReset(address, privateKey);
 					if (state === CST.CTD_PRERESET) await tg();
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => bw.triggerReset(address, privateKey);
+					tg = () => dcw.triggerReset(address, privateKey);
 					if (state === CST.CTD_RESET) await tg();
 				}
 
-				bw.contract.events[option.event]({}, async (error, evt) => {
+				dcw.contract.events[option.event]({}, async (error, evt) => {
 					if (error) util.logInfo(error);
 					else {
 						util.logInfo(evt);

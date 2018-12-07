@@ -1,5 +1,5 @@
 // import moment from 'moment';
-import DualClassCustodianWapper from '../../../duo-contract-wrapper/src/DualClassCustodianWrapper';
+import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
@@ -58,7 +58,7 @@ class PriceUtil {
 	public async fetchPrice(
 		address: string,
 		key: string,
-		beethovenWappers: DualClassCustodianWapper[],
+		dualClassWrappers: DualClassWrapper[],
 		magiWrapper: MagiWrapper,
 		option: IOption
 	) {
@@ -67,14 +67,14 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		let nounce = await beethovenWappers[0].web3Wrapper.getTransactionCount(address);
+		let nounce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(address);
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			const promiseList: Array<Promise<void>> = [];
-			const wrappersToCall: DualClassCustodianWapper[] = [];
+			const wrappersToCall: DualClassWrapper[] = [];
 
-			for (const bw of beethovenWappers) {
+			for (const bw of dualClassWrappers) {
 				const btvStates: IDualClassStates = await bw.getStates();
 				if (
 					btvStates.state === CST.CTD_TRADING &&

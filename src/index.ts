@@ -1,5 +1,5 @@
 // import * as CST from '../../duo-contract-wrapper/src/constants';
-import DualClassCustodianWapper from '../../duo-contract-wrapper/src/DualClassCustodianWrapper';
+import DualClassWrapper from '../../duo-contract-wrapper/src/DualClassWrapper';
 import EsplanadeWrapper from '../../duo-contract-wrapper/src/EsplanadeWrapper';
 import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
 import { ICustodianWrappers } from '../../duo-contract-wrapper/src/types';
@@ -39,21 +39,21 @@ const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option
 
 const dualClassCustodianWrappers: ICustodianWrappers = {
 	Beethoven: {
-		Perpetual: new DualClassCustodianWapper(
+		Perpetual: new DualClassWrapper(
 			web3Wrapper,
 			web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
 		),
-		M19: new DualClassCustodianWapper(
+		M19: new DualClassWrapper(
 			web3Wrapper,
 			web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
 		)
 	},
 	Mozart: {
-		Perpetual: new DualClassCustodianWapper(
+		Perpetual: new DualClassWrapper(
 			web3Wrapper,
 			web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
 		),
-		M19: new DualClassCustodianWapper(
+		M19: new DualClassWrapper(
 			web3Wrapper,
 			web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
 		)
@@ -156,7 +156,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				util.logDebug('no contract type or maturity specified');
 				return;
 			}
-			const contractWrapper: DualClassCustodianWapper =
+			const contractWrapper: DualClassWrapper =
 				dualClassCustodianWrappers[type][maturity];
 
 			contractWrapper.startCustodianRaw(
