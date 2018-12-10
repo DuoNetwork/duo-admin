@@ -1,4 +1,5 @@
-// import * as CST from '../../duo-contract-wrapper/src/constants';
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import DualClassWrapper from '../../duo-contract-wrapper/src/DualClassWrapper';
 import EsplanadeWrapper from '../../duo-contract-wrapper/src/EsplanadeWrapper';
 import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
