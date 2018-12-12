@@ -148,23 +148,23 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 		case CST.START_CUSTODIAN:
 			const kovanManagerAccount = require('./static/kovanManagerAccount.json');
 			const type = option.contractType;
-			const maturity = option.maturity;
+			const tenor = option.tenor;
 			if (
 				![CST.BEETHOVEN, CST.MOZART].includes(type) ||
-				![CST.TENOR_PPT, CST.TENOR_M19].includes(maturity)
+				![CST.TENOR_PPT, CST.TENOR_M19].includes(tenor)
 			) {
-				util.logDebug('no contract type or maturity specified');
+				util.logDebug('no contract type or tenor specified');
 				return;
 			}
 			const contractWrapper: DualClassWrapper =
-				dualClassCustodianWrappers[type][maturity];
+				dualClassCustodianWrappers[type][tenor];
 
 			contractWrapper.startCustodianRaw(
 				kovanManagerAccount.Beethoven.operator.address,
 				kovanManagerAccount.Beethoven.operator.privateKey,
-				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][maturity].aToken
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken
 					.address,
-				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][maturity].bToken
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken
 					.address,
 				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
 				option.gasPrice || 2000000000,

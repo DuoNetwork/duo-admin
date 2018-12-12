@@ -118,7 +118,6 @@ Object {
   "gasPrice": 5000000000,
   "gcp": false,
   "live": false,
-  "maturity": "Perpetual",
   "pair": "",
   "period": 10,
   "provider": "",
@@ -128,6 +127,7 @@ Object {
   "sources": Array [
     "",
   ],
+  "tenor": "Perpetual",
   "ws": false,
 }
 `;

@@ -44,7 +44,7 @@ class Util {
 			force: process.argv.includes('force'),
 			pair: '',
 			contractType: 'Beethoven',
-			maturity: 'Perpetual',
+			tenor: 'Perpetual',
 			assets: [''],
 			sources: [''],
 			exSources: [''],
@@ -99,8 +99,8 @@ class Util {
 				case 'contractType':
 					option.contractType = args[1] || option.contractType;
 					break;
-				case 'maturity':
-					option.maturity = args[1] || option.maturity;
+				case 'tenor':
+					option.tenor = args[1] || option.tenor;
 					break;
 				default:
 					break;

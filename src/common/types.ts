@@ -110,7 +110,7 @@ export interface IOption {
 	base: string;
 	quote: string;
 	contractType: string;
-	maturity: string;
+	tenor: string;
 }
 
 export interface ISourceSettings {
