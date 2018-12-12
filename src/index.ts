@@ -164,7 +164,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				kovanManagerAccount.Beethoven.operator.privateKey,
 				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][maturity].aToken
 					.address,
-				contractWrapper.web3Wrapper.contractAddresses.Custodians.Beethoven.M19.bToken
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][maturity].bToken
 					.address,
 				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
 				option.gasPrice || 2000000000,
