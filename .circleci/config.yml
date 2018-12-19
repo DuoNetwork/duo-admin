@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+      docker: 
+        - image: circleci/node:8.11.1 
+      steps:
+        - checkout # check out the code in the project directory
+        - run: npm install
+        - run: npm test
