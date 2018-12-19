@@ -20,5 +20,3 @@ jobs:
         - run: # run tests
             name: test
             command: npm test
-
-            duo-admin/package.json
