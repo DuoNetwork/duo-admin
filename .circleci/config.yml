@@ -4,6 +4,11 @@ jobs:
       docker: 
         - image: circleci/node:8.11.1 
       steps:
+        - run: cd ..
+        - run: git clone https://github.com/FinBook/duo-contract-wrapper.git
+        - run: cd duo-contrac-wrapper
+        - run: npm install
+        - run: cd ..
         - checkout # check out the code in the project directory
         - run: npm install
         - run: npm test
