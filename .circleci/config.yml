@@ -8,14 +8,14 @@ jobs:
         - run: git clone https://github.com/FinBook/duo-contract-wrapper.git
         - run: cd duo-contract-wrapper
         - run:
-          name: install-npm
-          command: npm install
+            name: install-npm
+            command: npm install
         - run: cd ..
         - run: git clone https://github.com/FinBook/duo-admin.git
         - run: cd duo-admin
         - run:
-          name: install-npm-wee
-          command: npm install
+            name: install-npm-wee
+            command: npm install
         - run: # run tests
-          name: test
-          command: npm test
+            name: test
+            command: npm test
