@@ -10,8 +10,8 @@ jobs:
             name: install-npm-wee
             command: npm install
         - run: cd /home/circleci
-        - run: git clone https://github.com/FinBook/duo-contract-wrapper.git
-        - run: cd duo-contract-wrapper
+        - run: git clone https://github.com/FinBook/duo-contract-wrapper.git /home/circleci/duo-contract-wrapper
+        - run: cd /home/circleci/duo-contract-wrapper
         - run:
             name: install-npm
             command: npm install
