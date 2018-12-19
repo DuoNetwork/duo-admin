@@ -28,7 +28,7 @@ class DynamoUtil {
 	private ddb: undefined | DynamoDB = undefined;
 	private process: string = 'UNKNOWN';
 	private live: boolean = false;
-	private fromWei: (input: string | number) => number = (input) => Number(input) / 1e18;
+	private fromWei: (input: string | number) => number = input => Number(input) / 1e18;
 	private getTxStatus: (txHash: string) => Promise<{ status: string } | null> = () =>
 		Promise.resolve(null);
 	public init(
@@ -332,6 +332,18 @@ class DynamoUtil {
 		};
 	}
 
+	public parseTrade(data: AttributeMap): ITrade {
+		return {
+			id: (data[CST.DB_TX_QUOTE_BASE_ID].S || '').split('|')[2],
+			price: Number(data[CST.DB_TX_PRICE].N),
+			amount: Number(data[CST.DB_TX_AMOUNT].N),
+			source: (data[CST.DB_SRC_DHM].S || '').split('|')[0],
+			base: (data[CST.DB_TX_PAIR].S || '').split('|')[1],
+			quote: (data[CST.DB_TX_PAIR].S || '').split('|')[0],
+			timestamp: Number(data[CST.DB_TX_TS].N)
+		};
+	}
+
 	public parseTradedPrice(data: AttributeMap): IPrice {
 		const price = Number(data[CST.DB_TX_PRICE].N);
 		return {
@@ -428,6 +440,39 @@ class DynamoUtil {
 
 		util.logDebug(`...... prices:${String(prices.length)}`);
 		return prices;
+	}
+
+	public async getTrades(
+		src: string,
+		dateHourMinute: string,
+		pair: string = ''
+	) {
+		let params: QueryInput;
+		params = {
+			TableName: `${CST.DB_DUO}.${CST.DB_TRADES}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
+			KeyConditionExpression: `${CST.DB_SRC_DHM} = :${CST.DB_SRC_DHM}`,
+			ExpressionAttributeValues: {
+				[':' + CST.DB_SRC_DHM]: {
+					S: `${src}|${dateHourMinute}`
+				}
+			}
+		};
+
+		if (pair) {
+			params.KeyConditionExpression += ` AND ${
+				CST.DB_TX_QUOTE_BASE_ID
+			} BETWEEN :start AND :end`;
+			if (params.ExpressionAttributeValues) {
+				params.ExpressionAttributeValues[':start'] = { S: `${pair}|` };
+				params.ExpressionAttributeValues[':end'] = { S: `${pair}|z` };
+			}
+		}
+
+		const data = await this.queryData(params);
+		if (!data.Items || !data.Items.length) return [];
+		return data.Items.map(p =>
+			this.parseTrade(p)
+		);
 	}
 
 	public async queryAcceptPriceEvent(contractAddress: string, dates: string[]) {
