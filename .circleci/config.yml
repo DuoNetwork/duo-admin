@@ -1,14 +1,21 @@
 version: 2
 jobs:
   build:
+      working_directory: ~/duo-admin
       docker: 
         - image: circleci/node:8.11.1 
       steps:
         - run: git clone https://github.com/FinBook/duo-contract-wrapper.git
         - run: cd duo-contract-wrapper
-        - run: npm install
+        - run:
+          name: install-npm
+          command: npm install
         - run: cd ..
         - run: git clone https://github.com/FinBook/duo-admin.git
         - run: cd duo-admin
-        - run: npm install
-        - run: npm test
+        - run:
+          name: install-npm-wee
+          command: npm install
+        - run: # run tests
+          name: test
+          command: npm test
