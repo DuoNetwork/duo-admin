@@ -16,6 +16,6 @@ jobs:
             name: install-npm
             command: npm install
         - run: cd ~/duo-admin
-        - run: # run tests
+        - run: 
             name: test
-            command: npm test
+            command: npm test -- -u
