@@ -17,8 +17,17 @@ const tool = process.argv[2];
 util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
 
+let infura = {
+	token: '',
+};
+
+try {
+	infura = require('./keys/infura.json');
+} catch (e) {
+	console.log(e)
+}
+
 if (!option.provider) {
-	const infura = require('./keys/infura.json');
 	if (option.source === CST.SRC_INFURA && !option.ws)
 		option.provider =
 			(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
