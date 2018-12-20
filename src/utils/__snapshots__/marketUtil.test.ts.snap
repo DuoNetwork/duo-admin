@@ -1,15 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`launchSource debug 1`] = `
+exports[`launchSource debug not windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
-    Object {},
+    "npm run tool source=source assets=asset1,asset2,asset3 &> tool.source.asset1.asset2.asset3.log",
+    Object {
+      "shell": "/bin/bash",
+    },
   ],
 ]
 `;
 
-exports[`launchSource debug 2`] = `
+exports[`launchSource debug not windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
@@ -20,7 +22,7 @@ Object {
 }
 `;
 
-exports[`launchSource fail 1`] = `
+exports[`launchSource debug windows 1`] = `
 Array [
   Array [
     "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
@@ -29,7 +31,7 @@ Array [
 ]
 `;
 
-exports[`launchSource fail 2`] = `
+exports[`launchSource debug windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
@@ -40,7 +42,29 @@ Object {
 }
 `;
 
-exports[`launchSource fail 3`] = `
+exports[`launchSource fail not windows 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 &> tool.source.asset1.asset2.asset3.log",
+    Object {
+      "shell": "/bin/bash",
+    },
+  ],
+]
+`;
+
+exports[`launchSource fail not windows 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource fail not windows 3`] = `
 Array [
   Array [
     "tool",
@@ -59,7 +83,68 @@ Array [
 ]
 `;
 
-exports[`launchSource forceREST 1`] = `
+exports[`launchSource fail windows 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource fail windows 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource fail windows 3`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "forceREST": false,
+      "live": false,
+    },
+    "source",
+    Array [
+      "asset1",
+      "asset2",
+      "asset3",
+    ],
+  ],
+]
+`;
+
+exports[`launchSource forceREST not windows 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 rest&> tool.source.asset1.asset2.asset3.log",
+    Object {
+      "shell": "/bin/bash",
+    },
+  ],
+]
+`;
+
+exports[`launchSource forceREST not windows 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource forceREST windows 1`] = `
 Array [
   Array [
     "npm run tool source=source assets=asset1,asset2,asset3 rest>> tool.source.asset1.asset2.asset3.log",
@@ -68,7 +153,7 @@ Array [
 ]
 `;
 
-exports[`launchSource forceREST 2`] = `
+exports[`launchSource forceREST windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
@@ -79,16 +164,18 @@ Object {
 }
 `;
 
-exports[`launchSource live 1`] = `
+exports[`launchSource live not windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
-    Object {},
+    "npm run tool source=source assets=asset1,asset2,asset3 &> tool.source.asset1.asset2.asset3.log",
+    Object {
+      "shell": "/bin/bash",
+    },
   ],
 ]
 `;
 
-exports[`launchSource live 2`] = `
+exports[`launchSource live not windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
@@ -99,7 +186,7 @@ Object {
 }
 `;
 
-exports[`launchSource success 1`] = `
+exports[`launchSource live windows 1`] = `
 Array [
   Array [
     "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
@@ -108,7 +195,29 @@ Array [
 ]
 `;
 
-exports[`launchSource success 2`] = `
+exports[`launchSource live windows 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource success not windows 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 &> tool.source.asset1.asset2.asset3.log",
+    Object {
+      "shell": "/bin/bash",
+    },
+  ],
+]
+`;
+
+exports[`launchSource success not windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
@@ -134,7 +243,51 @@ Object {
 }
 `;
 
-exports[`launchSource success 3`] = `
+exports[`launchSource success not windows 3`] = `
+Array [
+  Array [
+    "exit",
+    [Function],
+  ],
+]
+`;
+
+exports[`launchSource success windows 1`] = `
+Array [
+  Array [
+    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    Object {},
+  ],
+]
+`;
+
+exports[`launchSource success windows 2`] = `
+Object {
+  "source": Object {
+    "failCount": 0,
+    "instance": Object {
+      "on": [MockFunction] {
+        "calls": Array [
+          Array [
+            "exit",
+            [Function],
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+    },
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchSource success windows 3`] = `
 Array [
   Array [
     "exit",
