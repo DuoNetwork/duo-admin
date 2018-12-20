@@ -1,6 +1,7 @@
 import child_process from 'child_process';
 import apis from '../apis';
 import { IOption, ISubProcess } from '../common/types';
+import osUtil from './osUtil';
 import util from './util';
 
 class MarketUtil {
@@ -52,14 +53,14 @@ class MarketUtil {
 			}${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
 				option.server ? ' server' : ''
 			} ${option.forceREST ? 'rest' : ''}` +
-			(process.platform === 'win32' ? '>>' : '&>') +
+			(osUtil.isWindows() ? '>>' : '&>') +
 			` ${tool}.${source}.${assets.join('.')}.log`;
 
 		util.logInfo(`[${source}]: ${cmd}`);
 
 		const procInstance = child_process.exec(
 			cmd,
-			process.platform === 'win32' ? {} : { shell: '/bin/bash' }
+			osUtil.isWindows() ? {} : { shell: '/bin/bash' }
 		);
 
 		this.subProcesses[source].instance = procInstance;

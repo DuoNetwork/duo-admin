@@ -1,6 +1,7 @@
 import child_process from 'child_process';
 import geminiApi from '../apis/geminiApi';
 import marketUtil from './marketUtil';
+import osUtil from './osUtil';
 import util from './util';
 
 test('retry after long enought time', () => {
@@ -49,7 +50,8 @@ test('retry within short time', () => {
 	expect(marketUtil.subProcesses['source']).toMatchSnapshot();
 });
 
-test('launchSource fail', () => {
+test('launchSource fail windows', () => {
+	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	marketUtil.retry = jest.fn();
@@ -69,7 +71,8 @@ test('launchSource fail', () => {
 	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
 
-test('launchSource success', () => {
+test('launchSource success windows', () => {
+	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn(() => {
 		return {
 			on: jest.fn()
@@ -95,7 +98,8 @@ test('launchSource success', () => {
 	).toMatchSnapshot();
 });
 
-test('launchSource forceREST', () => {
+test('launchSource forceREST windows', () => {
+	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	marketUtil.subProcesses['source'] = {
@@ -113,7 +117,8 @@ test('launchSource forceREST', () => {
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
-test('launchSource debug', () => {
+test('launchSource debug windows', () => {
+	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	marketUtil.subProcesses['source'] = {
@@ -131,7 +136,113 @@ test('launchSource debug', () => {
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
-test('launchSource live', () => {
+test('launchSource live windows', () => {
+	osUtil.isWindows = jest.fn(() => true);
+	child_process.exec = jest.fn() as any;
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketUtil.subProcesses['source'] = {
+		source: 'source',
+		lastFailTimestamp: 0,
+		failCount: 0,
+		instance: undefined as any
+	};
+	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+		forceREST: false,
+		debug: false,
+		live: true
+	} as any);
+	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(marketUtil.subProcesses).toMatchSnapshot();
+});
+
+test('launchSource fail not windows', () => {
+	osUtil.isWindows = jest.fn(() => false);
+	child_process.exec = jest.fn() as any;
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketUtil.retry = jest.fn();
+	marketUtil.subProcesses['source'] = {
+		source: 'source',
+		lastFailTimestamp: 0,
+		failCount: 0,
+		instance: undefined as any
+	};
+	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+		forceREST: false,
+		debug: false,
+		live: false
+	} as any);
+	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
+});
+
+test('launchSource success not windows', () => {
+	osUtil.isWindows = jest.fn(() => false);
+	child_process.exec = jest.fn(() => {
+		return {
+			on: jest.fn()
+		};
+	}) as any;
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketUtil.retry = jest.fn();
+	marketUtil.subProcesses['source'] = {
+		source: 'source',
+		lastFailTimestamp: 5,
+		failCount: 0,
+		instance: undefined as any
+	};
+	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+		forceREST: false,
+		debug: false,
+		live: false
+	} as any);
+	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(
+		(marketUtil.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
+	).toMatchSnapshot();
+});
+
+test('launchSource forceREST not windows', () => {
+	osUtil.isWindows = jest.fn(() => false);
+	child_process.exec = jest.fn() as any;
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketUtil.subProcesses['source'] = {
+		source: 'source',
+		lastFailTimestamp: 0,
+		failCount: 0,
+		instance: undefined as any
+	};
+	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+		forceREST: true,
+		debug: false,
+		live: false
+	} as any);
+	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(marketUtil.subProcesses).toMatchSnapshot();
+});
+
+test('launchSource debug not windows', () => {
+	osUtil.isWindows = jest.fn(() => false);
+	child_process.exec = jest.fn() as any;
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketUtil.subProcesses['source'] = {
+		source: 'source',
+		lastFailTimestamp: 0,
+		failCount: 0,
+		instance: undefined as any
+	};
+	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+		forceREST: false,
+		debug: true,
+		live: false
+	} as any);
+	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(marketUtil.subProcesses).toMatchSnapshot();
+});
+
+test('launchSource live not windows', () => {
+	osUtil.isWindows = jest.fn(() => false);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	marketUtil.subProcesses['source'] = {
