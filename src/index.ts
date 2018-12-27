@@ -17,24 +17,15 @@ const tool = process.argv[2];
 util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
 
-let infura = {
-	token: '',
-};
-
-try {
-	infura = require('./keys/infura.json');
-} catch (e) {
-	console.log(e)
-}
-
-if (!option.provider) {
-	if (option.source === CST.SRC_INFURA && !option.ws)
+if (!option.provider)
+	if (option.source === CST.SRC_INFURA && !option.ws) {
+		const infura = require('./keys/infura.json');
 		option.provider =
 			(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
 			'/' +
 			infura.token;
-	else option.provider = option.live ? CST.PROVIDER_INFURA_MAIN_WS : CST.PROVIDER_INFURA_KOVAN_WS;
-}
+	} else
+		option.provider = option.live ? CST.PROVIDER_INFURA_MAIN_WS : CST.PROVIDER_INFURA_KOVAN_WS;
 
 util.logInfo(
 	`using ${option.live ? 'live' : 'dev'}
@@ -165,8 +156,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 				util.logDebug('no contract type or tenor specified');
 				return;
 			}
-			const contractWrapper: DualClassWrapper =
-				dualClassCustodianWrappers[type][tenor];
+			const contractWrapper: DualClassWrapper = dualClassCustodianWrappers[type][tenor];
 
 			contractWrapper.startCustodianRaw(
 				kovanManagerAccount.Beethoven.operator.address,
