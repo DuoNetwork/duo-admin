@@ -42,9 +42,6 @@ workflows:
     build_and_test:
         jobs:
             - build
-            - deploy:
-                requires:
-                    - build
     schedule_deploy:
         triggers:
             - schedule:
