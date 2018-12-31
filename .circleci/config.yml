@@ -19,3 +19,40 @@ jobs:
         - run: 
             name: test
             command: npm test
+        - run:
+            name: test coverage
+            command: npm test -- --coverage
+        - save_cache:
+            key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
+            paths:
+                - /home/circleci/duo-admin
+    deploy:
+        docker:
+            - image: circleci/python:2.7-jessie
+        working_directory: /home/circleci/test
+        steps:
+            - run:
+                  name: Install awscli
+                  command: sudo pip install awscli
+            - restore_cache:
+                  key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
+            - run: aws s3 sync /home/circleci/duo-admin/coverage/lcov-report s3://duo-coverage
+workflows:
+    version: 2
+        jobs:
+            - build
+            - deploy
+                requires:
+                    - build
+    schedule_deploy:
+        triggers:
+            - schedule:
+                  cron: '0 4 * * *'
+                  filters:
+                      branches:
+                          only: master
+        jobs:
+            - build
+            - deploy
+                requires:
+                    - build
