@@ -42,7 +42,7 @@ workflows:
     build_and_test:
         jobs:
             - build
-            - deploy
+            - deploy:
                 requires:
                     - build
     schedule_deploy:
@@ -54,6 +54,6 @@ workflows:
                           only: master
         jobs:
             - build
-            - deploy
+            - deploy:
                 requires:
                     - build
