@@ -39,6 +39,7 @@ jobs:
             - run: aws s3 sync /home/circleci/duo-admin/coverage/lcov-report s3://duo-admin
 workflows:
     version: 2
+    build_and_test:
         jobs:
             - build
             - deploy
