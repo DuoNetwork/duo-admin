@@ -36,7 +36,7 @@ jobs:
                   command: sudo pip install awscli
             - restore_cache:
                   key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
-            - run: aws s3 sync /home/circleci/duo-admin/coverage/lcov-report s3://duo-coverage
+            - run: aws s3 sync /home/circleci/duo-admin/coverage/lcov-report s3://duo-admin
 workflows:
     version: 2
         jobs:
