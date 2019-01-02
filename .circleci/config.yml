@@ -22,6 +22,9 @@ jobs:
         - run:
             name: test coverage
             command: npm test -- --coverage
+        -  run : 
+                name :  post coverage
+                command: cat ./coverage/lcov.info | ./node_modules/.bin/coveralls 
         - save_cache:
             key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
             paths:

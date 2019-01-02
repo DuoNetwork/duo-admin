@@ -39,7 +39,9 @@
 		"@types/mysql": "^2.15.5",
 		"@types/request": "^2.47.1",
 		"@types/ws": "^6.0.0",
+		"coveralls": "^3.0.2",
 		"jest": "^23.6.0",
+		"overalls": "^1.0.4",
 		"pre-commit": "^1.2.2",
 		"ts-jest": "^23.10.2",
 		"tslint": "^5.11.0"
