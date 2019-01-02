@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/FinBook/duo-admin.svg?style=svg)](https://circleci.com/gh/FinBook/duo-admin)
+[![Coverage Status](https://coveralls.io/repos/github/FinBook/duo-admin/badge.svg)](https://coveralls.io/github/FinBook/duo-admin)
 # Introduction
 Supporting process and utilities for DUO Network modules.
 
