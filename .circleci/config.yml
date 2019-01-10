@@ -1,34 +1,34 @@
 version: 2
 jobs:
     build:
-      working_directory: /home/circleci/duo-admin
-      docker: 
-        - image: circleci/node:8.11.1 
-      steps:
-        - checkout
-        - run:
-            name: npm install admin
-            command: npm install
-        - run: cd /home/circleci
-        - run: git clone https://github.com/FinBook/duo-contract-wrapper.git /home/circleci/duo-contract-wrapper
-        - run: cd /home/circleci/duo-contract-wrapper
-        - run:
-            name: install npm cpnstract wrapper
-            command: npm install
-        - run: cd ~/duo-admin
-        - run: 
-            name: test
-            command: npm test
-        - run:
-            name: test coverage
-            command: npm test -- --coverage
-        -  run : 
-                name :  post coverage
-                command: cat ./coverage/lcov.info | ./node_modules/.bin/coveralls 
-        - save_cache:
-            key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
-            paths:
-                - /home/circleci/duo-admin
+        working_directory: /home/circleci/duo-admin
+        docker:
+            - image: circleci/node:8.11.1
+        steps:
+            - checkout
+            - run:
+                  name: npm install admin
+                  command: npm install
+            - run: cd /home/circleci
+            - run: git clone https://github.com/FinBook/duo-contract-wrapper.git /home/circleci/duo-contract-wrapper
+            - run: cd /home/circleci/duo-contract-wrapper
+            - run:
+                  name: install npm cpnstract wrapper
+                  command: npm install
+            - run: cd ~/duo-admin
+            - run:
+                  name: test
+                  command: npm test -- -w 1 --forceExit
+            - run:
+                  name: test coverage
+                  command: npm test -- --coverage
+            - run:
+                  name: post coverage
+                  command: cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+            - save_cache:
+                  key: dependency-test-{{ .Environment.CIRCLE_SHA1 }}
+                  paths:
+                      - /home/circleci/duo-admin
     deploy:
         docker:
             - image: circleci/python:2.7-jessie
@@ -55,5 +55,5 @@ workflows:
         jobs:
             - build
             - deploy:
-                requires:
-                    - build
+                  requires:
+                      - build
