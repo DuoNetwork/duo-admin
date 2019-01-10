@@ -122,6 +122,7 @@ export const API_BFX_BASE_URL = 'https://api.bitfinex.com';
 export const API_BFX_VERSION = '/v1';
 export const API_BFX_ORDER_BOOK = '/book/';
 export const API_BFX_TRADE = '/trades/';
+export const API_BST_PUSHER_APP_KEY = 'de504dc5763aeef9ff52';
 export const API_BST_BASE_URL = 'https://www.bitstamp.net/api';
 export const API_BST_VERSION = '/v2';
 export const API_BST_TRANSACTIONS = '/transactions/';
