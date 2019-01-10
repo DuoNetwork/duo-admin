@@ -58,7 +58,7 @@ Object {
 exports[`getPriceFix case 2 1`] = `
 Object {
   "base": "USD",
-  "price": 639.1480000000001,
+  "price": 636.3295173979046,
   "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
@@ -112,10 +112,10 @@ Object {
 
 exports[`modifyWeights 1`] = `
 Array [
+  0.4,
   0.35,
-  0.3,
-  0.17500000000000004,
-  0.17500000000000004,
+  0.125,
+  0.125,
 ]
 `;
 

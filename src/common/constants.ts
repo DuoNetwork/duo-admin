@@ -135,8 +135,8 @@ export const API_GDAX_TRADE = '/trades';
 
 export const API_LIST = [API_KRAKEN, API_GEMINI, API_GDAX, API_BITSTAMP];
 export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {
-	5: [0.3, 0.28, 0.26, 0.24, 0.22],
-	4: [0.35, 0.3, 0.25, 0.2],
+	5: [0.35, 0.3, 0.25, 0.2, 0.2],
+	4: [0.4, 0.35, 0.3, 0.25],
 	3: [0.55, 0.45, 0.35],
 	2: [0.65, 0.5]
 };
