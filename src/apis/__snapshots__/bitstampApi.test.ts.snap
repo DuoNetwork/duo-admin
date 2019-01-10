@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchTradesREST spot 1`] = `
+Array [
+  Array [
+    "https://www.bitstamp.net/api/v2/transactions/ethusd",
+  ],
+]
+`;
+
+exports[`fetchTradesREST spot 2`] = `
+Array [
+  Array [
+    Object {
+      "amount": 2.4861,
+      "base": "USD",
+      "id": "81273079",
+      "price": 149.42,
+      "quote": "ETH",
+      "source": "bitstamp",
+      "timestamp": 1547099274000,
+    },
+    true,
+  ],
+  Array [
+    Object {
+      "amount": 2.4191,
+      "base": "USD",
+      "id": "81273073",
+      "price": 149.4,
+      "quote": "ETH",
+      "source": "bitstamp",
+      "timestamp": 1547099246000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.07883289,
+      "base": "USD",
+      "id": "81273071",
+      "price": 149.43,
+      "quote": "ETH",
+      "source": "bitstamp",
+      "timestamp": 1547099230000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 0.9357,
+      "base": "USD",
+      "id": "81273060",
+      "price": 149.45,
+      "quote": "ETH",
+      "source": "bitstamp",
+      "timestamp": 1547099166000,
+    },
+    false,
+  ],
+]
+`;
+
+exports[`handleWSTradeMessage spot 1`] = `
+Array [
+  Array [
+    Object {
+      "amount": 0.533,
+      "base": "USD",
+      "id": "81273582",
+      "price": 149.16,
+      "quote": "ETH",
+      "source": "bitstamp",
+      "timestamp": 1547100261000,
+    },
+    true,
+  ],
+]
+`;

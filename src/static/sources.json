@@ -125,5 +125,37 @@
 			"wsLink": "",
 			"inflationRequired": false
 		}
+	},
+	"bitstamp": {
+		"assets": {
+			"ETH": {
+				"base": {
+					"USD": true
+				},
+				"quote": {},
+				"name": "Ethereum",
+				"mapping": "ETH"
+			},
+			"USD": {
+				"base": {},
+				"quote": {
+					"ETH": true
+				},
+				"name": "US dollar",
+				"mapping": "USD"
+			}
+		},
+		"settings": {
+			"priceInversed": false,
+			"quoteInversed": false,
+			"separator": "",
+			"isLowercase": true,
+			"tradesInterval": 2,
+			"orderBooksInterval": 2,
+			"supportWS": true,
+			"filterByTimestamp": false,
+			"wsLink": "",
+			"inflationRequired": false
+		}
 	}
 }

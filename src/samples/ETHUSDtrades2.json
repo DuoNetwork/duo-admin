@@ -96,5 +96,26 @@
 		"timestamp": 1524546600940,
 		"quote": "ETH",
 		"base": "USD"
+	},
+	{
+		"source": "bitstamp",
+		"id": "2706549505",
+		"price": 635,
+		"amount": 0.4,
+		"timestamp": 1524547909000
+	},
+	{
+		"source": "bitstamp",
+		"tradeId": "2706549506",
+		"price": 637,
+		"amount": 1.65308079,
+		"timestamp": 1524547880940
+	},
+	{
+		"source": "bitstamp",
+		"tradeId": "2706549507",
+		"price": 638,
+		"amount": 1.1,
+		"timestamp": 1524547860940
 	}
 ]

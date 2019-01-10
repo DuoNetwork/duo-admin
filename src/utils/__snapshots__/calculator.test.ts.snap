@@ -33,25 +33,36 @@ Object {
 }
 `;
 
+exports[`getExchangePriceFix 4`] = `
+Object {
+  "base": "USD",
+  "price": 150,
+  "quote": "ETH",
+  "source": "",
+  "timestamp": 1524547898561,
+  "volume": 0.02,
+}
+`;
+
 exports[`getPriceFix case 1 1`] = `
 Object {
   "base": "USD",
-  "price": 666.98,
+  "price": 332.243,
   "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
-  "volume": 0.16599999999999998,
+  "volume": 0.806,
 }
 `;
 
 exports[`getPriceFix case 2 1`] = `
 Object {
   "base": "USD",
-  "price": 635.974008870658,
+  "price": 639.1480000000001,
   "quote": "ETH",
   "source": "",
   "timestamp": 1524547909941,
-  "volume": 32.579553000000004,
+  "volume": 35.73263379,
 }
 `;
 
@@ -85,6 +96,17 @@ Object {
   "source": "",
   "timestamp": 1234567890,
   "volume": 12.835600000000001,
+}
+`;
+
+exports[`getVolumeMedianPrice 4`] = `
+Object {
+  "base": "USD",
+  "price": 152,
+  "quote": "ETH",
+  "source": "",
+  "timestamp": 1234567890,
+  "volume": 0.64,
 }
 `;
 

@@ -10,6 +10,7 @@ export const FETCH_PRICE = 'fetchPrice';
 export const START_CUSTODIAN = 'startCustodian';
 export const FETCH_EVENTS = 'fetchEvents';
 export const API_BITFINEX = 'bitfinex';
+export const API_BITSTAMP = 'bitstamp';
 export const API_GEMINI = 'gemini';
 export const API_KRAKEN = 'kraken';
 export const API_GDAX = 'gdax';
@@ -121,6 +122,9 @@ export const API_BFX_BASE_URL = 'https://api.bitfinex.com';
 export const API_BFX_VERSION = '/v1';
 export const API_BFX_ORDER_BOOK = '/book/';
 export const API_BFX_TRADE = '/trades/';
+export const API_BST_BASE_URL = 'https://www.bitstamp.net/api';
+export const API_BST_VERSION = '/v2';
+export const API_BST_TRANSACTIONS = '/transactions/';
 export const API_KRK_BASE_URL = 'https://api.kraken.com';
 export const API_KRK_VERSION = '/0/public';
 export const API_KRK_ORDER_BOOK = '/Depth';
@@ -128,8 +132,9 @@ export const API_KRK_TRADE = '/Trades';
 export const API_GDAX_BASE_URL = 'https://api.gdax.com:443/products';
 export const API_GDAX_TRADE = '/trades';
 
-export const API_LIST = [API_KRAKEN, API_GEMINI, API_GDAX];
+export const API_LIST = [API_KRAKEN, API_GEMINI, API_GDAX, API_BITSTAMP];
 export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {
+	5: [0.3, 0.28, 0.26, 0.24, 0.22],
 	4: [0.35, 0.3, 0.25, 0.2],
 	3: [0.55, 0.45, 0.35],
 	2: [0.65, 0.5]

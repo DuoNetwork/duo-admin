@@ -122,7 +122,8 @@ class Calculateor {
 			[CST.API_BITFINEX]: [],
 			[CST.API_GEMINI]: [],
 			[CST.API_GDAX]: [],
-			[CST.API_KRAKEN]: []
+			[CST.API_KRAKEN]: [],
+			[CST.API_BITSTAMP]: []
 		};
 
 		trades.forEach(item => {
@@ -134,6 +135,8 @@ class Calculateor {
 				EXCHANGES_TRADES[CST.API_GDAX].push(item);
 			else if (item.source === CST.API_KRAKEN)
 				EXCHANGES_TRADES[CST.API_KRAKEN].push(item);
+			else if (item.source === CST.API_BITSTAMP)
+				EXCHANGES_TRADES[CST.API_BITSTAMP].push(item);
 		});
 
 		const exchangePriceVolume = CST.API_LIST.map(src =>

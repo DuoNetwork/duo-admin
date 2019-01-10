@@ -375,6 +375,25 @@ Array [
   ],
   Array [
     "tool",
+    "bitstamp",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [],
+    },
+  ],
+  Array [
+    "tool",
     "gemini",
     Array [
       "quote",
@@ -441,6 +460,28 @@ Array [
   ],
   Array [
     "tool",
+    "bitstamp",
+    Array [
+      "quote",
+      "base",
+    ],
+    Object {
+      "assets": Array [
+        "quote",
+        "base",
+      ],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "source": "",
+      "sources": Array [
+        "gemini",
+        "kraken",
+      ],
+    },
+  ],
+  Array [
+    "tool",
     "gemini",
     Array [
       "someQuote",
@@ -482,6 +523,26 @@ Array [
   Array [
     "tool",
     "gdax",
+    Array [
+      "someQuote",
+      "someBase",
+    ],
+    Object {
+      "assets": Array [],
+      "debug": false,
+      "exSources": Array [],
+      "forceREST": false,
+      "pair": "someQuote|someBase",
+      "source": "",
+      "sources": Array [
+        "gemini",
+        "kraken",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "bitstamp",
     Array [
       "someQuote",
       "someBase",

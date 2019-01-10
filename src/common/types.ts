@@ -149,6 +149,27 @@ export interface IBitfinexRawTradeWS {
 	amount: string;
 }
 
+export interface IBitstampRawTradeRest {
+	date: number;
+	tid: number;
+	price: number;
+	type: string;
+	amount: number;
+}
+
+export interface IBitstampRawTradeWs {
+	microtimestamp: string;
+	amount: number;
+	buy_order_id: number;
+	sell_order_id: number;
+	amount_str: string;
+	price_str: string;
+	timestamp: string;
+	price: number;
+	type: number;
+	id: number;
+}
+
 export interface IBitfinexRawTradeRest {
 	timestamp: number;
 	tid: number;

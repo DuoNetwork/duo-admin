@@ -106,6 +106,33 @@
 		"timestamp": 1524547909941,
 		"quote": "ETH",
 		"base": "USD"
+	},
+	{
+		"source": "bitstamp",
+		"id": "",
+		"price": 150,
+		"amount": 0.12,
+		"timestamp": 1524547909941,
+		"quote": "ETH",
+		"base": "USD"
+	},
+	{
+		"source": "bitstamp",
+		"id": "",
+		"price": 150,
+		"amount": 0.02,
+		"timestamp": 1524547898561,
+		"quote": "ETH",
+		"base": "USD"
+	},
+	{
+		"source": "bitstamp",
+		"id": "",
+		"price": 152,
+		"amount": 0.5,
+		"timestamp": 1524547909941,
+		"quote": "ETH",
+		"base": "USD"
 	}
 
 ]
