@@ -8,8 +8,6 @@ import util from './util';
 
 class EventUtil {
 	public async trigger(
-		address: string,
-		privateKey: string,
 		dualClassWrappers: DualClassWrapper[],
 		option: IOption
 	) {
@@ -27,9 +25,9 @@ class EventUtil {
 					util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
 					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-						await dcw.triggerPreReset(address, privateKey);
+						await dcw.triggerPreReset();
 					else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
-						await dcw.triggerReset(address, privateKey);
+						await dcw.triggerReset();
 
 					dynamoUtil.insertHeartbeat();
 				});
@@ -44,10 +42,10 @@ class EventUtil {
 				util.logInfo('current state is ' + state + ' for ' + dcw.address);
 
 				if (option.event === CST.EVENT_START_PRE_RESET) {
-					tg = () => dcw.triggerPreReset(address, privateKey);
+					tg = () => dcw.triggerPreReset();
 					if (state === CST.CTD_PRERESET) await tg();
 				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => dcw.triggerReset(address, privateKey);
+					tg = () => dcw.triggerReset();
 					if (state === CST.CTD_RESET) await tg();
 				}
 
