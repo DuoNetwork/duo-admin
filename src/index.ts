@@ -35,6 +35,7 @@ util.logInfo(
 );
 
 const initContracts = (provider: string, privateKey: string, live: boolean) => {
+	console.log('start initializing');
 	const web3wrapper = new Web3Wrapper(null, provider, privateKey, live);
 
 	const dualClassWrappers: ICustodianWrappers = {
@@ -59,6 +60,7 @@ const initContracts = (provider: string, privateKey: string, live: boolean) => {
 			)
 		}
 	};
+	console.log('end initializing');
 	return dualClassWrappers;
 };
 
@@ -77,11 +79,15 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.TRIGGER:
 			keyUtil.getKey(option).then(key => {
+				console.log('start initializing contracts');
+				console.log('provider: ' + option.provider);
+				console.log('privatekey: ' + key.privateKey);
 				dualClassCustodianWrappers = initContracts(
 					option.provider,
 					key.privateKey,
 					option.live
 				);
+				console.log('start triggering');
 				eventUtil.trigger(
 					[
 						dualClassCustodianWrappers.Beethoven.Perpetual,
