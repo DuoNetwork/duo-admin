@@ -17,14 +17,11 @@ const tool = process.argv[2];
 util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
 
-if (!option.provider)
-	if (option.source === CST.SRC_INFURA) {
-		const infura = require('./keys/infura.json');
-		option.provider =
-			(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) +
-			'/' +
-			infura.token;
-	}
+if (!option.provider) {
+	const infura = require('./keys/infura.json');
+	option.provider =
+		(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) + '/' + infura.token;
+}
 
 util.logInfo(
 	`using ${option.live ? 'live' : 'dev'}
