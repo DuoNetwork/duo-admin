@@ -180,11 +180,11 @@ class SqlUtil {
 		const queryString =
 			'DELETE FROM ' +
 			CST.DB_SQL_TRADE +
-			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
+			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) * 1000';
 		util.logInfo(queryString);
-		await this.executeQuery(queryString);
+		this.executeQuery(queryString);
 		const res = await this.getTradeCounts();
-		util.logDebug(`num of trades existing in db ${res}`);
+		util.logDebug(`num of trades existing in db ${JSON.stringify(res)}`);
 	}
 }
 

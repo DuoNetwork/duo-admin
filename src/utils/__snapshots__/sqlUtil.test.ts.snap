@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cleanDB 1`] = `"DELETE FROM trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))"`;
+exports[`cleanDB 1`] = `"DELETE FROM trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) * 1000"`;
 
 exports[`connection initalization 1`] = `"sql db connection is not initialized"`;
 
