@@ -17,23 +17,23 @@ class EventUtil {
 			return Promise.resolve();
 		}
 
-		if (option.source)
-			setInterval(async () => {
-				const promiseList = dualClassWrappers.map(async dcw => {
-					const sysState = await dcw.getStates();
-					const state = sysState.state;
-					util.logDebug('current state is ' + state + ' for ' + dcw.address);
+		// if (option.source)
+		setInterval(async () => {
+			const promiseList = dualClassWrappers.map(async dcw => {
+				const sysState = await dcw.getStates();
+				const state = sysState.state;
+				util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
-					if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-						await dcw.triggerPreReset('');
-					else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
-						await dcw.triggerReset('');
+				if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
+					await dcw.triggerPreReset('');
+				else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
+					await dcw.triggerReset('');
 
-					dynamoUtil.insertHeartbeat();
-				});
-				await Promise.all(promiseList);
-			}, 15000);
-		else util.logDebug(`please check provider source`);
+				dynamoUtil.insertHeartbeat();
+			});
+			await Promise.all(promiseList);
+		}, 15000);
+		// else util.logDebug(`please check provider source`);
 	}
 
 	public async fetch(BaseContractWrappers: BaseContractWrapper[], force: boolean) {
