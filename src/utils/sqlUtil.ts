@@ -13,17 +13,21 @@ class SqlUtil {
 			password: pwd,
 			database: CST.DB_SQL_SCHEMA_PRICEFEED
 		});
-
-		this.conn.connect(err => {
-			if (err) throw err;
-			util.logInfo('Connected!');
-		});
-
 		this.conn.on('error', err => {
 			if (err.code === 'PROTOCOL_CONNECTION_LOST') {
 				util.logInfo('ERROR: Server Disconnects. Reconnecting');
 				this.init(host, user, pwd);
 			} else throw err;
+		});
+
+		return new Promise<void>((resolve, reject) => {
+			if (this.conn)
+				this.conn.connect(err => {
+					if (err) reject(err);
+					util.logInfo('Connected!');
+					resolve();
+				});
+			else reject('no connection');
 		});
 	}
 

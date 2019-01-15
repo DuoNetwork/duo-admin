@@ -16,20 +16,26 @@ class DbUtil {
 		util.logInfo('process: ' + process);
 
 		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
-		dynamoUtil.init(config, option.live, process, (value: string | number) => web3Wrapper.fromWei(value), async txHash => {
-			const txReceipt = await web3Wrapper.getTransactionReceipt(txHash);
-			if (!txReceipt) return null;
-			return {
-				status: txReceipt.status
-			};
-		});
+		await dynamoUtil.init(
+			config,
+			option.live,
+			process,
+			(value: string | number) => web3Wrapper.fromWei(value),
+			async txHash => {
+				const txReceipt = await web3Wrapper.getTransactionReceipt(txHash);
+				if (!txReceipt) return null;
+				return {
+					status: txReceipt.status
+				};
+			}
+		);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
 			if (option.server) {
 				const sqlAuth = await keyUtil.getSqlAuth(option);
-				sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
+				return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
 			} else {
 				const localSQLauth = require('../keys/mysql.json');
-				sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
+				return sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
 			}
 	}
 
