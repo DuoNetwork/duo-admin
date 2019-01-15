@@ -8,7 +8,6 @@ import util from './util';
 
 class EventUtil {
 	public async trigger(
-		// account: string,
 		dualClassWrappers: DualClassWrapper[],
 		option: IOption
 	) {
@@ -34,33 +33,7 @@ class EventUtil {
 				});
 				await Promise.all(promiseList);
 			}, 15000);
-		else {
-			for (const dcw of dualClassWrappers) {
-				util.logInfo('starting listening ' + option.event + ' for ' + dcw.address);
-				let tg: () => Promise<any> = () => Promise.resolve();
-				const sysState = await dcw.getStates();
-				const state = sysState.state;
-				util.logInfo('current state is ' + state + ' for ' + dcw.address);
-
-				if (option.event === CST.EVENT_START_PRE_RESET) {
-					tg = () => dcw.triggerPreReset('');
-					if (state === CST.CTD_PRERESET) await tg();
-				} else if (option.event === CST.EVENT_START_RESET) {
-					tg = () => dcw.triggerReset('');
-					if (state === CST.CTD_RESET) await tg();
-				}
-				console.log('start subscribe to evnet');
-				dcw.contract.events[option.event]({}, async (error, evt) => {
-					if (error) util.logInfo(error);
-					else {
-						util.logInfo(evt);
-						await tg();
-					}
-				});
-			}
-
-			setInterval(() => dynamoUtil.insertHeartbeat(), 30000);
-		}
+		else util.logDebug(`please check provider source`);
 	}
 
 	public async fetch(BaseContractWrappers: BaseContractWrapper[], force: boolean) {

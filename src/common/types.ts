@@ -88,7 +88,6 @@ export interface ISqlAuth {
 
 export interface IOption {
 	forceREST: boolean;
-	ws: boolean;
 	pair: string;
 	sources: string[];
 	exSources: string[];

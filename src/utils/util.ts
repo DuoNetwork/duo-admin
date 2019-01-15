@@ -33,7 +33,6 @@ class Util {
 	public parseOptions(argv: string[]): IOption {
 		const option = {
 			forceREST: argv.includes('rest'),
-			ws: argv.includes('ws'),
 			live: process.argv.includes('live'),
 			dbLive: process.argv.includes('dbLive'),
 			server: process.argv.includes('server'),
