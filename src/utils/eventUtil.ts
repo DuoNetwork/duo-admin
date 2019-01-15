@@ -49,7 +49,7 @@ class EventUtil {
 					tg = () => dcw.triggerReset('');
 					if (state === CST.CTD_RESET) await tg();
 				}
-
+				console.log('start subscribe to evnet');
 				dcw.contract.events[option.event]({}, async (error, evt) => {
 					if (error) util.logInfo(error);
 					else {
