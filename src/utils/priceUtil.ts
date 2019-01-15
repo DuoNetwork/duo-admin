@@ -10,12 +10,7 @@ import util from './util';
 const schedule = require('node-schedule');
 
 class PriceUtil {
-	public async startCommitPrices(
-		address: string,
-		key: string,
-		magiWrapper: MagiWrapper,
-		option: IOption
-	) {
+	public async startCommitPrices(magiWrapper: MagiWrapper, option: IOption) {
 		const startTime = new Date();
 		const endTime = new Date(startTime.getTime() + 3500000);
 		const commitStart = new Date(endTime.getTime() + 50000);
@@ -31,12 +26,13 @@ class PriceUtil {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return magiWrapper.startMagi(
-					address,
-					key,
+					'',
 					currentPrice.price,
 					Math.floor(currentPrice.timestamp / 1000),
-					gasPrice,
-					option.gasLimit + 50000
+					{
+						gasPrice: gasPrice,
+						gasLimit: option.gasLimit + 50000
+					}
 				);
 			});
 
@@ -45,19 +41,18 @@ class PriceUtil {
 			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 			return magiWrapper.commitPrice(
-				address,
-				key,
+				'',
 				currentPrice.price,
 				Math.floor(currentPrice.timestamp / 1000),
-				gasPrice,
-				option.gasLimit
+				{
+					gasPrice: gasPrice,
+					gasLimit: option.gasLimit
+				}
 			);
 		});
 	}
 
 	public async fetchPrice(
-		address: string,
-		key: string,
 		dualClassWrappers: DualClassWrapper[],
 		magiWrapper: MagiWrapper,
 		option: IOption
@@ -67,7 +62,7 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		let nounce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(address);
+		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(magiWrapper.address);
 		setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
@@ -87,9 +82,13 @@ class PriceUtil {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				for (const bw of wrappersToCall) {
 					promiseList.push(
-						bw.fetchPriceRaw(address, key, gasPrice, option.gasLimit, nounce)
+						bw.fetchPrice('', {
+							gasPrice: gasPrice,
+							gasLimit: option.gasLimit,
+							nonce: nonce
+						})
 					);
-					nounce++;
+					nonce++;
 				}
 
 				await Promise.all(promiseList);
