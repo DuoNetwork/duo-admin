@@ -10,10 +10,7 @@ import util from './util';
 const schedule = require('node-schedule');
 
 class PriceUtil {
-	public async startCommitPrices(
-		magiWrapper: MagiWrapper,
-		option: IOption
-	) {
+	public async startCommitPrices(magiWrapper: MagiWrapper, option: IOption) {
 		const startTime = new Date();
 		const endTime = new Date(startTime.getTime() + 3500000);
 		const commitStart = new Date(endTime.getTime() + 50000);
@@ -29,6 +26,7 @@ class PriceUtil {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 				return magiWrapper.startMagi(
+					'',
 					currentPrice.price,
 					Math.floor(currentPrice.timestamp / 1000),
 					{
@@ -43,6 +41,7 @@ class PriceUtil {
 			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
 			return magiWrapper.commitPrice(
+				'',
 				currentPrice.price,
 				Math.floor(currentPrice.timestamp / 1000),
 				{
@@ -83,7 +82,7 @@ class PriceUtil {
 				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
 				for (const bw of wrappersToCall) {
 					promiseList.push(
-						bw.fetchPrice({
+						bw.fetchPrice('', {
 							gasPrice: gasPrice,
 							gasLimit: option.gasLimit,
 							nonce: nonce
