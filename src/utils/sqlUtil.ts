@@ -43,6 +43,11 @@ class SqlUtil {
 		});
 	}
 
+	public getTradeCounts() {
+		const sql = `SELECT COUNT(*) FROM ${CST.DB_SQL_TRADE} WHERE 1`;
+		return this.executeQuery(sql);
+	}
+
 	public async insertTradeData(trade: ITrade, insertStatus: boolean) {
 		const systemTimestamp = util.getUTCNowTimestamp(); // record down the MTS
 
@@ -174,6 +179,8 @@ class SqlUtil {
 			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY))';
 		util.logInfo(queryString);
 		await this.executeQuery(queryString);
+		const res = await this.getTradeCounts();
+		util.logDebug(`num of trades existing in db ${res}`);
 	}
 }
 
