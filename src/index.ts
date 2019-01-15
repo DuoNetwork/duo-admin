@@ -34,32 +34,38 @@ util.logInfo(
 	using provider ${option.provider}`
 );
 
-const web3Wrapper = new Web3Wrapper(null, option.source, option.provider, option.live);
+const initContracts = (provider: string, privateKey: string, live: boolean) => {
+	const web3wrapper = new Web3Wrapper(null, provider, privateKey, live);
 
-const dualClassCustodianWrappers: ICustodianWrappers = {
-	Beethoven: {
-		Perpetual: new DualClassWrapper(
-			web3Wrapper,
-			web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-		),
-		M19: new DualClassWrapper(
-			web3Wrapper,
-			web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
-		)
-	},
-	Mozart: {
-		Perpetual: new DualClassWrapper(
-			web3Wrapper,
-			web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
-		),
-		M19: new DualClassWrapper(
-			web3Wrapper,
-			web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
-		)
-	}
+	const dualClassWrappers: ICustodianWrappers = {
+		Beethoven: {
+			Perpetual: new DualClassWrapper(
+				web3wrapper,
+				web3wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
+			),
+			M19: new DualClassWrapper(
+				web3wrapper,
+				web3wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
+			)
+		},
+		Mozart: {
+			Perpetual: new DualClassWrapper(
+				web3wrapper,
+				web3wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
+			),
+			M19: new DualClassWrapper(
+				web3wrapper,
+				web3wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
+			)
+		}
+	};
+	return dualClassWrappers;
 };
 
-const magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
+let dualClassCustodianWrappers = initContracts(option.provider, '', option.live);
+const web3Wrapper = dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper;
+
+let magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
 const esplanadeWrapper = new EsplanadeWrapper(
 	web3Wrapper,
 	web3Wrapper.contractAddresses.MultiSigManagers[0].address
@@ -71,9 +77,12 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.TRIGGER:
 			keyUtil.getKey(option).then(key => {
-				eventUtil.trigger(
-					key.publicKey,
+				dualClassCustodianWrappers = initContracts(
+					option.provider,
 					key.privateKey,
+					option.live
+				);
+				eventUtil.trigger(
 					[
 						dualClassCustodianWrappers.Beethoven.Perpetual,
 						dualClassCustodianWrappers.Beethoven.M19,
@@ -99,8 +108,18 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			break;
 		case CST.COMMIT:
 			util.logInfo('starting commit process');
+
 			keyUtil.getKey(option).then(key => {
-				priceUtil.startCommitPrices(key.publicKey, key.privateKey, magiWrapper, option);
+				dualClassCustodianWrappers = initContracts(
+					option.provider,
+					key.privateKey,
+					option.live
+				);
+				magiWrapper = new MagiWrapper(
+					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper,
+					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
+				);
+				priceUtil.startCommitPrices(magiWrapper, option);
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
@@ -125,9 +144,16 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 		case CST.FETCH_PRICE:
 			util.logInfo('starting fetchPrice process');
 			keyUtil.getKey(option).then(key => {
-				priceUtil.fetchPrice(
-					key.publicKey,
+				dualClassCustodianWrappers = initContracts(
+					option.provider,
 					key.privateKey,
+					option.live
+				);
+				magiWrapper = new MagiWrapper(
+					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper,
+					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
+				);
+				priceUtil.fetchPrice(
 					[
 						dualClassCustodianWrappers.Beethoven.Perpetual,
 						dualClassCustodianWrappers.Beethoven.M19,
