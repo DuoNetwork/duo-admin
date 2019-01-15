@@ -182,9 +182,8 @@ class SqlUtil {
 			CST.DB_SQL_TRADE +
 			' WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) * 1000';
 		util.logInfo(queryString);
-		this.executeQuery(queryString);
-		const res = await this.getTradeCounts();
-		util.logDebug(`num of trades existing in db ${JSON.stringify(res)}`);
+		util.logDebug(JSON.stringify(await this.executeQuery(queryString)));
+		util.logInfo(JSON.stringify(await this.getTradeCounts()));
 	}
 }
 
