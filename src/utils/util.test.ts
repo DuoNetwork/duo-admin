@@ -69,7 +69,16 @@ test('getPeriodStartTimestamp', () => {
 	expect(util.getPeriodStartTimestamp(1234567890, 1440)).toBe(1123200000);
 });
 
-const toolToTest = [CST.TRADES, CST.COMMIT, CST.CLEAN_DB, CST.NODE, CST.TRIGGER, CST.FETCH_EVENTS, CST.FETCH_PRICE, CST.DB_PRICES];
+const toolToTest = [
+	CST.TRADES,
+	CST.COMMIT,
+	CST.CLEAN_DB,
+	CST.NODE,
+	CST.TRIGGER,
+	CST.FETCH_EVENTS,
+	CST.FETCH_PRICE,
+	CST.DB_PRICES
+];
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
 
@@ -91,3 +100,36 @@ for (const platform of platforms) {
 		});
 	}
 }
+
+test('log error', () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	console.log = jest.fn();
+
+	util.logLevel = CST.LOG_ERROR;
+	util.logError('error');
+	util.logInfo('info');
+	util.logDebug('debug');
+	expect((console.log as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('log info', () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	console.log = jest.fn();
+
+	util.logLevel = CST.LOG_INFO;
+	util.logError('error');
+	util.logInfo('info');
+	util.logDebug('debug');
+	expect((console.log as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('log debug', () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	console.log = jest.fn();
+
+	util.logLevel = CST.LOG_DEBUG;
+	util.logError('error');
+	util.logInfo('info');
+	util.logDebug('debug');
+	expect((console.log as jest.Mock).mock.calls).toMatchSnapshot();
+});

@@ -96,6 +96,39 @@ exports[`getStatusProcess gcp useDynamo 7`] = `"FETCH_AZURE_PUBLIC"`;
 
 exports[`getStatusProcess gcp useDynamo 8`] = `"PRICE_AZURE_PUBLIC_MINUTELY"`;
 
+exports[`log debug 1`] = `
+Array [
+  Array [
+    "15 06:56:07.890 [ERROR]: error",
+  ],
+  Array [
+    "15 06:56:07.890 [INFO]: info",
+  ],
+  Array [
+    "15 06:56:07.890 [DEBUG]: debug",
+  ],
+]
+`;
+
+exports[`log error 1`] = `
+Array [
+  Array [
+    "15 06:56:07.890 [ERROR]: error",
+  ],
+]
+`;
+
+exports[`log info 1`] = `
+Array [
+  Array [
+    "15 06:56:07.890 [ERROR]: error",
+  ],
+  Array [
+    "15 06:56:07.890 [INFO]: info",
+  ],
+]
+`;
+
 exports[`parseOptions 1`] = `
 Object {
   "assets": Array [

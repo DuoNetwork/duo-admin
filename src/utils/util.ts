@@ -6,21 +6,24 @@ import { IOption } from '../common/types';
 class Util {
 	public logLevel: string = CST.LOG_INFO;
 
-	private log(text: any, level?: string): void {
-		if (level && CST.LOG_RANKING[this.logLevel] >= CST.LOG_RANKING[level])
-			console.log(`${moment().format('HH:mm:ss.SSS')} [${level}]: ` + text);
-	}
-
-	public logInfo(text: any): void {
+	public logInfo(text: any) {
 		this.log(text, CST.LOG_INFO);
 	}
 
-	public logDebug(text: any): void {
+	public logDebug(text: any) {
 		this.log(text, CST.LOG_DEBUG);
 	}
 
-	public logError(text: any): void {
+	public logError(text: any) {
 		this.log(text, CST.LOG_ERROR);
+	}
+
+	private log(text: any, level: string) {
+		if (CST.LOG_RANKING[this.logLevel] >= CST.LOG_RANKING[level])
+			console.log(
+				`${moment.utc(util.getUTCNowTimestamp()).format('DD HH:mm:ss.SSS')} [${level}]: ` +
+					text
+			);
 	}
 
 	public composeQuery(paras: { [key: string]: any }): string {
