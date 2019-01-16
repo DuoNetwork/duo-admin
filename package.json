@@ -59,7 +59,7 @@
 		"pusher-js": "^4.3.1",
 		"request": "^2.88.0",
 		"ts-node": "^7.0.1",
-		"typescript": "^3.2.2",
+		"typescript": "^3.1.6",
 		"ws": "^6.1.2"
 	}
 }
