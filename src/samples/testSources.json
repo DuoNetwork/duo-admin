@@ -25,7 +25,7 @@
 			"isLowercase": false,
 			"tradesInterval": 2,
 			"orderBooksInterval": 0.5,
-			"supportWS": false,
+			"supportWS": true,
 			"filterByTimestamp": false,
 			"wsLink": ""
 		}
@@ -157,5 +157,38 @@
 			"wsLink": "",
 			"inflationRequired": false
 		}
+	},
+	"source" : {
+		"assets": {
+			"quote": {
+				"base": {
+					"base": true
+				},
+				"quote": {},
+				"name": "quoteName",
+				"mapping": "quote"
+			},
+			"base": {
+				"base": {},
+				"quote": {
+					"quote": true
+				},
+				"name": "baseName",
+				"mapping": "base"
+			}
+		},
+		"settings": {
+			"priceInversed": false,
+			"quoteInversed": true,
+			"separator": "",
+			"isLowercase": false,
+			"tradesInterval": 2,
+			"orderBooksInterval": 2,
+			"supportWS": true,
+			"filterByTimestamp": true,
+			"wsLink": "",
+			"inflationRequired": false
+		}
+
 	}
 }
