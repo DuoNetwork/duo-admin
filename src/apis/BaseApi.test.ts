@@ -27,6 +27,13 @@ const parsedTrades = [
 
 for (const source in apis) {
 	const api = apis[source];
+	api.isInitialized = true;
+	api.init();
+	expect(api.settings).toMatchSnapshot();
+}
+
+for (const source in apis) {
+	const api = apis[source];
 	api.isInitialized = false;
 	api.init();
 

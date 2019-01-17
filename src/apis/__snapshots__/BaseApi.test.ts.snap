@@ -1,5 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[` 1`] = `
+Object {
+  "filterByTimestamp": false,
+  "isLowercase": false,
+  "priceInversed": false,
+  "quoteInversed": false,
+  "separator": "separator",
+  "supportWS": false,
+  "tradesInterval": 1,
+  "wsLink": "",
+}
+`;
+
+exports[` 2`] = `
+Object {
+  "filterByTimestamp": false,
+  "isLowercase": false,
+  "priceInversed": false,
+  "quoteInversed": false,
+  "separator": "separator",
+  "supportWS": false,
+  "tradesInterval": 1,
+  "wsLink": "",
+}
+`;
+
+exports[` 3`] = `
+Object {
+  "filterByTimestamp": false,
+  "isLowercase": false,
+  "priceInversed": false,
+  "quoteInversed": false,
+  "separator": "separator",
+  "supportWS": false,
+  "tradesInterval": 1,
+  "wsLink": "",
+}
+`;
+
+exports[` 4`] = `
+Object {
+  "filterByTimestamp": false,
+  "isLowercase": false,
+  "priceInversed": false,
+  "quoteInversed": false,
+  "separator": "separator",
+  "supportWS": false,
+  "tradesInterval": 1,
+  "wsLink": "",
+}
+`;
+
 exports[`addTrades REST bitstamp - filterBy (id > ID_1)  1`] = `
 Array [
   Array [

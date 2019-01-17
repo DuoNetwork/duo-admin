@@ -182,16 +182,17 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 			}
 			const contractWrapper: DualClassWrapper = dualClassCustodianWrappers[type][tenor];
 
-			contractWrapper.startCustodianRaw(
+			contractWrapper.startCustodian(
 				kovanManagerAccount.Beethoven.operator.address,
-				kovanManagerAccount.Beethoven.operator.privateKey,
 				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken
 					.address,
 				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken
 					.address,
 				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
-				option.gasPrice || 2000000000,
-				option.gasLimit || 1000000
+				{
+					gasPrice: option.gasPrice || 2000000000,
+					gasLimit: option.gasLimit || 1000000
+				}
 			);
 			break;
 		default:
