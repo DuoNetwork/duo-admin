@@ -3,12 +3,14 @@
 exports[` 1`] = `
 Object {
   "filterByTimestamp": false,
-  "isLowercase": false,
+  "inflationRequired": false,
+  "isLowercase": true,
+  "orderBooksInterval": 2,
   "priceInversed": false,
   "quoteInversed": false,
-  "separator": "separator",
-  "supportWS": false,
-  "tradesInterval": 1,
+  "separator": "",
+  "supportWS": true,
+  "tradesInterval": 2,
   "wsLink": "",
 }
 `;
@@ -16,12 +18,14 @@ Object {
 exports[` 2`] = `
 Object {
   "filterByTimestamp": false,
+  "inflationRequired": false,
   "isLowercase": false,
+  "orderBooksInterval": 2,
   "priceInversed": false,
   "quoteInversed": false,
-  "separator": "separator",
+  "separator": "",
   "supportWS": false,
-  "tradesInterval": 1,
+  "tradesInterval": 2,
   "wsLink": "",
 }
 `;
@@ -29,40 +33,44 @@ Object {
 exports[` 3`] = `
 Object {
   "filterByTimestamp": false,
-  "isLowercase": false,
+  "inflationRequired": false,
+  "isLowercase": true,
+  "orderBooksInterval": 2,
   "priceInversed": false,
-  "quoteInversed": false,
-  "separator": "separator",
+  "quoteInversed": true,
+  "separator": "-",
   "supportWS": false,
-  "tradesInterval": 1,
+  "tradesInterval": 2,
   "wsLink": "",
 }
 `;
 
 exports[` 4`] = `
 Object {
-  "filterByTimestamp": false,
+  "filterByTimestamp": true,
+  "inflationRequired": false,
   "isLowercase": false,
+  "orderBooksInterval": 2,
   "priceInversed": false,
-  "quoteInversed": false,
-  "separator": "separator",
-  "supportWS": false,
-  "tradesInterval": 1,
+  "quoteInversed": true,
+  "separator": "",
+  "supportWS": true,
+  "tradesInterval": 2,
   "wsLink": "",
 }
 `;
 
-exports[`addTrades REST bitstamp - filterBy (id > ID_1)  1`] = `
+exports[`addTrades REST bitstamp - filterBy (timestamp > 1234567891)  1`] = `
 Array [
   Array [
     Object {
       "amount": 1,
       "base": "USD",
-      "id": "ID_2",
+      "id": "ID_1",
       "price": 0.05,
       "quote": "ETH",
       "source": "source",
-      "timestamp": 1234567891,
+      "timestamp": 1234567892,
     },
     true,
   ],
@@ -126,14 +134,33 @@ Array [
     Object {
       "amount": 1,
       "base": "USD",
+      "id": "ID_1",
+      "price": 0.05,
+      "quote": "ETH",
+      "source": "source",
+      "timestamp": 1234567892,
+    },
+    true,
+  ],
+  Array [
+    Object {
+      "amount": 1,
+      "base": "USD",
       "id": "ID_2",
       "price": 0.05,
       "quote": "ETH",
       "source": "source",
       "timestamp": 1234567891,
     },
-    true,
+    false,
   ],
+]
+`;
+
+exports[`addTrades WS bitstamp no trade 1`] = `Array []`;
+
+exports[`addTrades WS bitstamp no tradeStatusLastUpdatedAt 1`] = `
+Array [
   Array [
     Object {
       "amount": 1,
@@ -143,6 +170,18 @@ Array [
       "quote": "ETH",
       "source": "source",
       "timestamp": 1234567892,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 1,
+      "base": "USD",
+      "id": "ID_2",
+      "price": 0.05,
+      "quote": "ETH",
+      "source": "source",
+      "timestamp": 1234567891,
     },
     false,
   ],
@@ -178,15 +217,66 @@ Array [
 ]
 `;
 
+exports[`addTrades WS gemini no trade 1`] = `Array []`;
+
+exports[`addTrades WS gemini no tradeStatusLastUpdatedAt 1`] = `
+Array [
+  Array [
+    Object {
+      "amount": 1,
+      "base": "USD",
+      "id": "ID_2",
+      "price": 0.05,
+      "quote": "ETH",
+      "source": "source",
+      "timestamp": 1234567891,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 1,
+      "base": "USD",
+      "id": "ID_1",
+      "price": 0.05,
+      "quote": "ETH",
+      "source": "source",
+      "timestamp": 1234567892,
+    },
+    false,
+  ],
+]
+`;
+
+exports[`fetchTrades bitstamp  1`] = `Array []`;
+
+exports[`fetchTrades gdax  1`] = `
+Array [
+  Array [
+    "gdaxquote-gdaxbase",
+  ],
+]
+`;
+
+exports[`fetchTrades gemini  1`] = `Array []`;
+
+exports[`fetchTrades kraken  1`] = `
+Array [
+  Array [
+    "krakenquote-krakenbase",
+  ],
+]
+`;
+
 exports[`getSourcePairs bitstamp  1`] = `
 Array [
-  "quotetickerbaseticker",
+  "BASETICKERQUOTETICKER",
 ]
 `;
 
 exports[`getSourcePairs gdax  1`] = `
 Array [
-  "quoteticker-baseticker",
+  "baseticker-quoteticker",
 ]
 `;
 

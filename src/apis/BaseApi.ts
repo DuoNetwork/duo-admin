@@ -6,7 +6,7 @@ import dbUtil from '../utils/dbUtil';
 import util from '../utils/util';
 
 export default abstract class BaseApi {
-	protected source: string = 'source';
+	public source: string = 'source';
 
 	public settings: ISourceSettings = {
 		priceInversed: false,
@@ -156,7 +156,7 @@ export default abstract class BaseApi {
 			util.logInfo('Using REST');
 			for (const sourcePair of sourcePairs) {
 				await this.fetchTradesREST(sourcePair);
-				setInterval(
+				global.setInterval(
 					() => this.fetchTradesREST(sourcePair),
 					this.settings.tradesInterval * 1000
 				);
@@ -176,6 +176,7 @@ export default abstract class BaseApi {
 	}
 
 	public fetchTradesWS(sourcePairs: string[]): void {
+		console.log('################ startFetchTradesWs');
 		const w = new ws(this.settings.wsLink);
 
 		w.on('open', () => this.handleWSTradeOpen(sourcePairs, w));
@@ -186,14 +187,14 @@ export default abstract class BaseApi {
 			util.logError('connection closed ' + code + ' ' + reason);
 			w.removeAllListeners();
 			w.terminate();
-			setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
+			global.setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
 
 		w.on('error', (error: Error) => {
 			util.logError(error);
 			w.removeAllListeners();
 			w.terminate();
-			setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
+			global.setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
 	}
 
