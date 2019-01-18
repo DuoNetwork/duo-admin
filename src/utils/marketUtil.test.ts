@@ -5,9 +5,12 @@ import osUtil from './osUtil';
 import util from './util';
 
 test('retry after long enought time', () => {
+	const launchMock = jest.fn();
+	const launchOriginal = marketUtil.launchSource;
+	marketUtil.launchSource = launchMock;
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	child_process.exec = jest.fn() as any;
+	global.setTimeout = jest.fn();
 	marketUtil.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: util.getUTCNowTimestamp() - (30000 + 1),
@@ -25,6 +28,10 @@ test('retry after long enought time', () => {
 		['asset1', 'asset2', 'asset3']
 	);
 	expect(marketUtil.subProcesses['source']).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
+	(global.setTimeout as jest.Mock).mock.calls[0][0]();
+	expect(launchMock.mock.calls).toMatchSnapshot();
+	marketUtil.launchSource = launchOriginal;
 });
 
 test('retry within short time', () => {
@@ -64,18 +71,21 @@ test('launchSource fail windows', () => {
 	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
-		live: false
+		live: false,
+		dynamo: true,
+		azure: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
 
 test('launchSource success windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
+	const execOn = jest.fn();
 	child_process.exec = jest.fn(() => {
 		return {
-			on: jest.fn()
+			on: execOn
 		};
 	}) as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
@@ -89,13 +99,15 @@ test('launchSource success windows', () => {
 	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
-		live: false
+		live: false,
+		aws: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
-	expect(
-		(marketUtil.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
-	).toMatchSnapshot();
+	expect(execOn.mock.calls).toMatchSnapshot();
+	execOn.mock.calls[0][1]();
+	execOn.mock.calls[0][1](1);
+	expect((marketUtil.retry as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('launchSource forceREST windows', () => {
@@ -111,9 +123,11 @@ test('launchSource forceREST windows', () => {
 	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: true,
 		debug: false,
-		live: false
+		live: false,
+		gcp: true,
+		server: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -132,7 +146,7 @@ test('launchSource debug windows', () => {
 		debug: true,
 		live: false
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -151,7 +165,7 @@ test('launchSource live windows', () => {
 		debug: false,
 		live: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -171,7 +185,7 @@ test('launchSource fail not windows', () => {
 		debug: false,
 		live: false
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
@@ -196,7 +210,7 @@ test('launchSource success not windows', () => {
 		debug: false,
 		live: false
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 	expect(
 		(marketUtil.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
@@ -218,7 +232,7 @@ test('launchSource forceREST not windows', () => {
 		debug: false,
 		live: false
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -237,7 +251,7 @@ test('launchSource debug not windows', () => {
 		debug: true,
 		live: false
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -256,7 +270,7 @@ test('launchSource live not windows', () => {
 		debug: false,
 		live: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketUtil.subProcesses).toMatchSnapshot();
 });
 
@@ -292,7 +306,7 @@ test('startFetching no source', async () => {
 		debug: false
 	} as any);
 
-	expect((marketUtil.launchSource as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect((marketUtil.launchSource as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('startFetching source', async () => {
@@ -305,5 +319,34 @@ test('startFetching source', async () => {
 		forceREST: true,
 		debug: false
 	} as any);
-	expect((geminiApi.fetchTrades as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+
+	try {
+		await marketUtil.startFetching('tool', {
+			source: 'gemini1',
+			sources: [],
+			exSources: [],
+			pair: 'someQuote|someBase',
+			assets: [],
+			forceREST: false,
+			debug: false
+		} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+
+	expect((geminiApi.fetchTrades as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startFetching source no sourcePairs', async () => {
+	util.sleep = jest.fn();
+	geminiApi.getSourcePairs = jest.fn(() => []);
+	geminiApi.fetchTrades = jest.fn();
+	await marketUtil.startFetching('tool', {
+		source: 'gemini',
+		assets: ['quote', 'base'],
+		forceREST: true,
+		debug: false
+	} as any);
+
+	expect(geminiApi.fetchTrades as jest.Mock).not.toBeCalled();
 });

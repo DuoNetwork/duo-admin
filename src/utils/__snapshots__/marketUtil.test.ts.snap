@@ -86,7 +86,7 @@ Array [
 exports[`launchSource fail windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    "npm run tool source=source assets=asset1,asset2,asset3 dynamo azure >> tool.source.asset1.asset2.asset3.log",
     Object {},
   ],
 ]
@@ -108,7 +108,9 @@ Array [
   Array [
     "tool",
     Object {
+      "azure": true,
       "debug": false,
+      "dynamo": true,
       "forceREST": false,
       "live": false,
     },
@@ -147,7 +149,7 @@ Object {
 exports[`launchSource forceREST windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 rest>> tool.source.asset1.asset2.asset3.log",
+    "npm run tool source=source assets=asset1,asset2,asset3 gcp server rest>> tool.source.asset1.asset2.asset3.log",
     Object {},
   ],
 ]
@@ -255,7 +257,7 @@ Array [
 exports[`launchSource success windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    "npm run tool source=source assets=asset1,asset2,asset3 aws >> tool.source.asset1.asset2.asset3.log",
     Object {},
   ],
 ]
@@ -296,6 +298,26 @@ Array [
 ]
 `;
 
+exports[`launchSource success windows 4`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "aws": true,
+      "debug": false,
+      "forceREST": false,
+      "live": false,
+    },
+    "source",
+    Array [
+      "asset1",
+      "asset2",
+      "asset3",
+    ],
+  ],
+]
+`;
+
 exports[`retry after long enought time 1`] = `
 Object {
   "failCount": 1,
@@ -303,6 +325,34 @@ Object {
   "lastFailTimestamp": 1234567890,
   "source": "source",
 }
+`;
+
+exports[`retry after long enought time 2`] = `
+Array [
+  Array [
+    [Function],
+    5000,
+  ],
+]
+`;
+
+exports[`retry after long enought time 3`] = `
+Array [
+  Array [
+    "tool",
+    "source",
+    Array [
+      "asset1",
+      "asset2",
+      "asset3",
+    ],
+    Object {
+      "debug": false,
+      "forceREST": false,
+      "live": false,
+    },
+  ],
+]
 `;
 
 exports[`retry within short time 1`] = `
@@ -563,7 +613,9 @@ Array [
 ]
 `;
 
-exports[`startFetching source 1`] = `
+exports[`startFetching source 1`] = `[Error: invalid source]`;
+
+exports[`startFetching source 2`] = `
 Array [
   Array [
     Array [

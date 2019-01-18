@@ -32,7 +32,7 @@ class MarketUtil {
 			const sourceInstruments = api.getSourcePairs(assetIds);
 			if (!sourceInstruments.length) {
 				util.logInfo(`[${option.source}]: No sourceInstruments to fetch. Process.exit()`);
-				process.exit(0);
+				return;
 			}
 			util.logInfo(
 				`[${option.source}]:` +
@@ -88,7 +88,7 @@ class MarketUtil {
 		this.subProcesses[source].lastFailTimestamp = now;
 
 		if (this.subProcesses[source].failCount < 3)
-			setTimeout(() => this.launchSource(tool, source, assets, option), 5000);
+			global.setTimeout(() => this.launchSource(tool, source, assets, option), 5000);
 		else util.logError('Retry Aborted ' + source);
 	}
 }
