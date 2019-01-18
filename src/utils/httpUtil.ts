@@ -22,7 +22,7 @@ class HttpUtil {
 		);
 	}
 
-	public postJson(url: string, json: object): Promise<object> {
+	public postJson(url: string, json: object): Promise<any> {
 		return new Promise((resolve, reject) =>
 			request(
 				{

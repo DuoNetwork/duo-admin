@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get not 200 1`] = `"Error status 201 statusMessage"`;
+
+exports[`post not 200 1`] = `"Error status 201 statusMessage"`;
