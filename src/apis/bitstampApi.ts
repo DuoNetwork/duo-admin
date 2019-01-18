@@ -60,33 +60,34 @@ export class BitfinexApi extends BaseApi {
 		);
 	}
 
+	public fetchTradesSinglePairWS(sourcePair: string): any {
+		const socket = new Pusher(CST.API_BST_PUSHER_APP_KEY);
+		socket.bind('trade', trade => {
+			this.handleWSTradeMessage(JSON.stringify(trade), sourcePair);
+		});
+
+		util.logInfo(`Subscribed to trades ${sourcePair}`);
+		socket.subscribe(`live_trades_${sourcePair}`);
+		socket.connection.bind('error', err => {
+			util.logError(`connection error, error: ${JSON.stringify(err)}`);
+			let timeOutDuration = 1000;
+			if (err.error.data.code === 4004) {
+				util.logError('Over limit!');
+				timeOutDuration = 30000;
+			}
+			socket.disconnect();
+			global.setTimeout(() => socket.connect(), timeOutDuration);
+		});
+
+		socket.connection.bind('closed', () => {
+			util.logError('connection closed');
+			global.setTimeout(() => socket.connect(), 1000);
+		});
+		return socket;
+	}
+
 	public fetchTradesWS(sourcePairs: string[]) {
-		for (const sourcePair of sourcePairs) {
-			const socket = new Pusher(CST.API_BST_PUSHER_APP_KEY);
-
-			socket.bind('trade', trade => {
-				this.handleWSTradeMessage(JSON.stringify(trade), sourcePair);
-			});
-
-			util.logInfo(`Subscribed to trades ${sourcePair}`);
-			socket.subscribe(`live_trades_${sourcePair}`);
-
-			socket.connection.bind('error', err => {
-				util.logError(`connection error, error: ${JSON.stringify(err)}`);
-				let timeOutDuration = 1000;
-				if (err.error.data.code === 4004) {
-					util.logError('Over limit!');
-					timeOutDuration = 30000;
-				}
-				socket.disconnect();
-				setTimeout(() => socket.connect(), timeOutDuration);
-			});
-
-			socket.connection.bind('closed', () => {
-				util.logError('connection closed');
-				setTimeout(() => socket.connect(), 1000);
-			});
-		}
+		for (const sourcePair of sourcePairs) this.fetchTradesSinglePairWS(sourcePair);
 	}
 }
 const bitfinexApi = new BitfinexApi();

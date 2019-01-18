@@ -24,74 +24,54 @@ if (api.settings.isLowercase) sourcePair = sourcePair.toLowerCase();
 const localCashPair = 'ETH|USD';
 api.sourcePairMapping[sourcePair] = localCashPair;
 
-let testCases: { [key: string]: any };
-testCases = {
-	'fetchTradesREST spot': {
-		sourceInstrument: sourcePair,
-		tradesRest: tradesRest
-	}
-};
-for (const testName in testCases) {
-	const testCase = testCases[testName];
-	test(testName, async () => {
-		api.settings.supportWS = false;
-		api.last = {};
-		api.tradeStatusLastUpdatedAt = {};
+test('fetchTradesREST spot', async () => {
+	api.settings.supportWS = false;
+	api.last = {};
+	api.tradeStatusLastUpdatedAt = {};
 
-		httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(testCase.tradesRest)));
-		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
 
-		await api.fetchTradesREST(testCase.sourceInstrument);
-		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
-		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
-		expect(calls).toMatchSnapshot();
-		expect(calls.length).toEqual(testCase.tradesRest.length);
-	});
+	await api.fetchTradesREST(sourcePair);
+	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
+	expect(calls).toMatchSnapshot();
+	expect(calls.length).toEqual(tradesRest.length);
+});
 
-	test(testName + 'with last localPair', async () => {
-		api.settings.supportWS = false;
-		api.last = {};
-		api.tradeStatusLastUpdatedAt = {};
+test('fetchTradesREST spot with last localPair', async () => {
+	api.settings.supportWS = false;
+	api.last = {};
+	api.tradeStatusLastUpdatedAt = {};
 
-		httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(testCase.tradesRest)));
-		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
-		api.last[localCashPair] = '1234567890';
-		await api.fetchTradesREST(testCase.sourceInstrument);
-		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
-		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
-		expect(calls).toMatchSnapshot();
-		expect(calls.length).toEqual(testCase.tradesRest.length);
-	});
-}
+	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	api.last[localCashPair] = '1234567890';
+	await api.fetchTradesREST(sourcePair);
+	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
+	expect(calls).toMatchSnapshot();
+	expect(calls.length).toEqual(tradesRest.length);
+});
 
-testCases = {
-	'handleWSTradeMessage spot': {
-		sourceInstrument: sourcePair,
-		msgTradesWS: [
-			tradesWsSnapshot,
-			tradesWsUpdate,
-			{ seq: '13224213-ETHBTC', timestamp: 1535617645, price: 0.040479, amount: 0.21911125 } //'te
-		]
-	}
-};
-for (const testName in testCases) {
-	const testCase = testCases[testName];
-	test(testName, async () => {
-		api.settings.supportWS = true;
-		api.last = {};
-		api.tradeStatusLastUpdatedAt = {};
+test('handleWSTradeMessage spot', async () => {
+	api.settings.supportWS = true;
+	api.last = {};
+	api.tradeStatusLastUpdatedAt = {};
 
-		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
-		util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	const msgTradesWS = [
+		tradesWsSnapshot,
+		tradesWsUpdate,
+		{ seq: '13224213-ETHBTC', timestamp: 1535617645, price: 0.040479, amount: 0.21911125 } //'te
+	];
+	for (const m of msgTradesWS) await api.handleWSTradeMessage(JSON.stringify(m), sourcePair);
 
-		for (const m of testCase.msgTradesWS)
-			await api.handleWSTradeMessage(JSON.stringify(m), testCase.sourceInstrument);
-
-		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
-		expect(calls).toMatchSnapshot();
-		expect(calls.length).toEqual(1);
-	});
-}
+	const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
+	expect(calls).toMatchSnapshot();
+	expect(calls.length).toEqual(1);
+});
 
 test(`fetchTrades WS `, async () => {
 	api.settings.supportWS = true;

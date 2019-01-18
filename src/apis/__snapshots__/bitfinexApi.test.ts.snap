@@ -123,7 +123,7 @@ Array [
 ]
 `;
 
-exports[`fetchTradesREST spotwith last localPair 1`] = `
+exports[`fetchTradesREST spot with last localPair 1`] = `
 Array [
   Array [
     "https://api.bitfinex.com/v1/trades/ETHUSD?since=1234567890",
@@ -131,7 +131,7 @@ Array [
 ]
 `;
 
-exports[`fetchTradesREST spotwith last localPair 2`] = `
+exports[`fetchTradesREST spot with last localPair 2`] = `
 Array [
   Array [
     Object {

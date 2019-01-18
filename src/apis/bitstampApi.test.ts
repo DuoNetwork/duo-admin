@@ -5,6 +5,17 @@ import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import api from './bitstampApi';
 
+jest.mock('pusher-js', () =>
+	jest.fn().mockImplementation(() => ({
+		bind: jest.fn(),
+		subscribe: jest.fn(),
+		connection: {
+			bind: jest.fn()
+		},
+		disconnect: jest.fn()
+	}))
+);
+
 api.init();
 
 let sourcePair = ['ETH', 'USD']
@@ -37,6 +48,21 @@ for (const testName in testCases) {
 		expect(calls).toMatchSnapshot();
 		expect(calls.length).toEqual(testCase.tradesRest.length);
 	});
+
+	test(testName + 'with last localPair', async () => {
+		api.settings.supportWS = false;
+		api.last = {};
+		api.tradeStatusLastUpdatedAt = {};
+
+		httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(testCase.tradesRest)));
+		dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+		api.last[localCashPair] = '1234567890';
+		await api.fetchTradesREST(testCase.sourceInstrument);
+		expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+		const calls = (dbUtil.insertTradeData as jest.Mock<Promise<void>>).mock.calls;
+		expect(calls).toMatchSnapshot();
+		expect(calls.length).toEqual(testCase.tradesRest.length);
+	});
 }
 
 testCases = {
@@ -62,3 +88,49 @@ for (const testName in testCases) {
 		expect(calls.length).toEqual(1);
 	});
 }
+
+test(`fetchTradesSinglePairWS `, async () => {
+	api.settings.supportWS = true;
+	api.settings.wsLink = 'bitstampWsLink';
+
+	api.handleWSTradeMessage = jest.fn();
+	global.setTimeout = jest.fn();
+	const socket = api.fetchTradesSinglePairWS(`quote-base`);
+	expect((socket.bind as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((socket.connection.bind as jest.Mock).mock.calls).toMatchSnapshot();
+
+	(socket.bind as jest.Mock).mock.calls[0][1]({ price: 1, id: 1234, amount: 12 });
+	expect((api.handleWSTradeMessage as jest.Mock).mock.calls).toMatchSnapshot();
+
+	(socket.connection.bind as jest.Mock).mock.calls[0][1]({
+		error: {
+			data: {
+				code: 4004
+			}
+		}
+	});
+	expect(socket.disconnect as jest.Mock).toBeCalledTimes(1);
+
+	(socket.connection.bind as jest.Mock).mock.calls[0][1]({
+		error: {
+			data: {
+				code: 4000
+			}
+		}
+	});
+	expect(socket.disconnect as jest.Mock).toBeCalledTimes(2);
+
+	(socket.connection.bind as jest.Mock).mock.calls[1][1]();
+	expect(socket.disconnect as jest.Mock).toBeCalledTimes(2);
+});
+
+test('fetchTradesWS', async () => {
+	api.settings.supportWS = true;
+	api.last = {};
+	api.tradeStatusLastUpdatedAt = {};
+	global.setTimeout = jest.fn();
+	api.handleWSTradeMessage = jest.fn();
+	api.fetchTradesSinglePairWS = jest.fn();
+	api.fetchTradesWS([sourcePair]);
+	expect(api.fetchTradesSinglePairWS).toBeCalledTimes(1);
+});
