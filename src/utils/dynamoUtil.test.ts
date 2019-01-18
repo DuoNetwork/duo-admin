@@ -10,6 +10,147 @@ import uiRedeem from '../samples/dynamo/uiRedeem.json';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
 
+jest.mock('aws-sdk/clients/dynamodb', () => jest.fn().mockImplementation(() => ({})));
+jest.mock('aws-sdk/global', () => ({
+	config: {
+		update: jest.fn()
+	}
+}));
+
+import AWS from 'aws-sdk/global';
+
+test('init', async () => {
+	await dynamoUtil.init('config' as any, true, 'process', () => 0, () => ({} as any));
+	expect(dynamoUtil.ddb).toBeTruthy();
+	expect(dynamoUtil.live).toBeTruthy();
+	expect(dynamoUtil.process).toBe('process');
+	expect((AWS.config.update as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('insertData no ddb', async () => {
+	dynamoUtil.ddb = undefined;
+	try {
+		await dynamoUtil.insertData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('queryData no ddb', async () => {
+	try {
+		await dynamoUtil.queryData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('scanData no ddb', async () => {
+	try {
+		await dynamoUtil.scanData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('deleteData no ddb', async () => {
+	try {
+		await dynamoUtil.deleteData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('insertData error', async () => {
+	const mock = jest.fn((params: any, cb: any) => cb(params));
+	dynamoUtil.ddb = {
+		putItem: mock
+	} as any;
+	try {
+		await dynamoUtil.insertData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('queryData error', async () => {
+	const mock = jest.fn((params: any, cb: any) => cb(params));
+	dynamoUtil.ddb = {
+		query: mock
+	} as any;
+	try {
+		await dynamoUtil.queryData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('scanData error', async () => {
+	const mock = jest.fn((params: any, cb: any) => cb(params));
+	dynamoUtil.ddb = {
+		scan: mock
+	} as any;
+	try {
+		await dynamoUtil.scanData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('deleteData error', async () => {
+	const mock = jest.fn((params: any, cb: any) => cb(params));
+	dynamoUtil.ddb = {
+		deleteItem: mock
+	} as any;
+	try {
+		await dynamoUtil.deleteData({} as any);
+	} catch (error) {
+		expect(error).toMatchSnapshot();
+	}
+});
+
+test('insertData', async () => {
+	const mock = jest.fn((params: any, cb: any) => params && cb());
+	dynamoUtil.ddb = {
+		putItem: mock
+	} as any;
+	await dynamoUtil.insertData({} as any);
+	expect(mock.mock.calls).toMatchSnapshot();
+});
+
+test('queryData', async () => {
+	const mock = jest.fn((params: any, cb: any) => params && cb());
+	dynamoUtil.ddb = {
+		query: mock
+	} as any;
+	await dynamoUtil.queryData({} as any);
+	expect(mock.mock.calls).toMatchSnapshot();
+});
+
+test('scanData', async () => {
+	const mock = jest.fn((params: any, cb: any) => params && cb());
+	dynamoUtil.ddb = {
+		scan: mock
+	} as any;
+	await dynamoUtil.scanData({} as any);
+	expect(mock.mock.calls).toMatchSnapshot();
+});
+
+test('deleteData', async () => {
+	const mock = jest.fn((params: any, cb: any) => params && cb());
+	dynamoUtil.ddb = {
+		deleteItem: mock
+	} as any;
+	await dynamoUtil.deleteData({} as any);
+	expect(mock.mock.calls).toMatchSnapshot();
+});
+
+test('getPriceKeyField', () => {
+	expect(dynamoUtil.getPriceKeyField(0)).toBe(CST.DB_SRC_DHM);
+	expect(dynamoUtil.getPriceKeyField(1)).toBe(CST.DB_SRC_DH);
+	expect(dynamoUtil.getPriceKeyField(60)).toBe(CST.DB_SRC_DATE);
+	expect(() => dynamoUtil.getPriceKeyField(2)).toThrowErrorMatchingSnapshot();
+});
+
 const trade = {
 	quote: 'quote',
 	base: 'base',
@@ -78,17 +219,31 @@ test('insertEventsData', async () => {
 });
 
 test('insertHeartbeat', async () => {
+	dynamoUtil.live = false;
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	await dynamoUtil.insertHeartbeat();
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
+test('insertHeartbeat error', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.insertData = jest.fn(() => Promise.reject());
+	await dynamoUtil.insertHeartbeat({});
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('insertStatusData', async () => {
+	dynamoUtil.live = false;
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	await dynamoUtil.insertStatusData({ test: 'test' });
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
+test('insertStatusData error', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.insertData = jest.fn(() => Promise.reject());
+	await dynamoUtil.insertStatusData({ test: 'test' });
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('scanStatus', async () => {
@@ -230,7 +385,16 @@ test('addPrice', async () => {
 test('insertUIConversion', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	await dynamoUtil.insertUIConversion(CST.DUMMY_ADDR, CST.DUMMY_ADDR, '0x123', true, 123, 456, 456, 0.123);
+	await dynamoUtil.insertUIConversion(
+		CST.DUMMY_ADDR,
+		CST.DUMMY_ADDR,
+		'0x123',
+		true,
+		123,
+		456,
+		456,
+		0.123
+	);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 

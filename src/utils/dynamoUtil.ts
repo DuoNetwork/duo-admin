@@ -25,9 +25,9 @@ import {
 import util from './util';
 
 class DynamoUtil {
-	private ddb: undefined | DynamoDB = undefined;
-	private process: string = 'UNKNOWN';
-	private live: boolean = false;
+	public ddb: undefined | DynamoDB = undefined;
+	public process: string = 'UNKNOWN';
+	public live: boolean = false;
 	private fromWei: (input: string | number) => number = input => Number(input) / 1e18;
 	private getTxStatus: (txHash: string) => Promise<{ status: string } | null> = () =>
 		Promise.resolve(null);
@@ -54,18 +54,6 @@ class DynamoUtil {
 				: reject('dynamo db connection is not initialized')
 		);
 	}
-
-	// public batchInsertData(params: BatchWriteItemInput): Promise<BatchWriteItemOutput> {
-	// 	return new Promise(
-	// 		(resolve, reject) =>
-	// 			this.ddb
-	// 				? this.ddb.batchWriteItem(
-	// 						params,
-	// 						(err, data) => (err ? reject(err) : resolve(data))
-	// 				  )
-	// 				: reject('dynamo db connection is not initialized')
-	// 	);
-	// }
 
 	public queryData(params: QueryInput): Promise<QueryOutput> {
 		return new Promise((resolve, reject) =>
@@ -171,34 +159,6 @@ class DynamoUtil {
 			await this.insertData(params);
 		});
 	}
-
-	// public async batchInsertEventData(events: IEvent[]) {
-	// 	const systime = util.getUTCNowTimestamp();
-	// 	const TableName = this.live ? CST.DB_AWS_EVENTS_LIVE : CST.DB_AWS_EVENTS_DEV;
-	// 	const putItems: any[] = [];
-	// 	events.forEach(async event => {
-	// 		putItems.push({
-	// 			PutRequest: {
-	// 				Item: {
-	// 					...this.convertEventToDynamo(event, systime)
-	// 				}
-	// 			}
-	// 		});
-	// 	});
-
-	// 	const params = {
-	// 		RequestItems: {
-	// 			[TableName]: putItems
-	// 		}
-	// 	};
-	// 	console.logInfo(JSON.stringify(params, null, 4));
-	// 	let data = await this.batchInsertData(params);
-	// 	while (data.UnprocessedItems && !util.isEmptyObject(data.UnprocessedItems) && data.UnprocessedItems.length)
-	// 		data = await this.batchInsertData({
-	// 			RequestItems: data.UnprocessedItems
-	// 		});
-	// 	console.logInfo('done');
-	// }
 
 	public getPriceKeyField(period: number) {
 		if (period === 0) return CST.DB_SRC_DHM;

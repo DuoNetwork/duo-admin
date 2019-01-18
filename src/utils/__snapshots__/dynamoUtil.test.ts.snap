@@ -36,7 +36,7 @@ Array [
           "N": "5",
         },
       },
-      "TableName": "duo.prices.1.dev",
+      "TableName": "duo.prices.1.live",
     },
   ],
   Array [
@@ -73,7 +73,7 @@ Array [
           "N": "5",
         },
       },
-      "TableName": "duo.prices.10.dev",
+      "TableName": "duo.prices.10.live",
     },
   ],
   Array [
@@ -110,7 +110,7 @@ Array [
           "N": "5",
         },
       },
-      "TableName": "duo.prices.60.dev",
+      "TableName": "duo.prices.60.live",
     },
   ],
   Array [
@@ -147,7 +147,7 @@ Array [
           "N": "5",
         },
       },
-      "TableName": "duo.prices.360.dev",
+      "TableName": "duo.prices.360.live",
     },
   ],
   Array [
@@ -184,13 +184,13 @@ Array [
           "N": "5",
         },
       },
-      "TableName": "duo.prices.1440.dev",
+      "TableName": "duo.prices.1440.live",
     },
   ],
 ]
 `;
 
-exports[`connection initalization 1`] = `"dynamo db connection is not initialized"`;
+exports[`connection initalization 1`] = `[TypeError: _this.ddb.putItem is not a function]`;
 
 exports[`convertEventToDynamo 1`] = `
 Object {
@@ -273,6 +273,19 @@ Object {
 }
 `;
 
+exports[`deleteData 1`] = `
+Array [
+  Array [
+    Object {},
+    [Function],
+  ],
+]
+`;
+
+exports[`deleteData error 1`] = `Object {}`;
+
+exports[`deleteData no ddb 1`] = `"dynamo db connection is not initialized"`;
+
 exports[`deleteUIConversionEvent 1`] = `
 Array [
   Array [
@@ -285,11 +298,13 @@ Array [
           "S": "txHash",
         },
       },
-      "TableName": "duo.uiEvents.dev",
+      "TableName": "duo.uiEvents.live",
     },
   ],
 ]
 `;
+
+exports[`getPriceKeyField 1`] = `"invalid period"`;
 
 exports[`getPrices 1`] = `
 Array [
@@ -340,6 +355,27 @@ Array [
 
 exports[`getSingleKeyPeriodPrices 1`] = `Array []`;
 
+exports[`init 1`] = `
+Array [
+  Array [
+    "config",
+  ],
+]
+`;
+
+exports[`insertData 1`] = `
+Array [
+  Array [
+    Object {},
+    [Function],
+  ],
+]
+`;
+
+exports[`insertData error 1`] = `Object {}`;
+
+exports[`insertData no ddb 1`] = `"dynamo db connection is not initialized"`;
+
 exports[`insertEventsData 1`] = `
 Object {
   "Item": Object {
@@ -368,7 +404,7 @@ Object {
       "S": "txHash",
     },
   },
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -400,34 +436,76 @@ Object {
       "S": "txHash",
     },
   },
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
 exports[`insertHeartbeat 1`] = `
-Object {
-  "Item": Object {
-    "process": Object {
-      "S": "UNKNOWN",
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "process": Object {
+          "S": "process",
+        },
+        "timestamp": Object {
+          "N": "0",
+        },
+      },
+      "TableName": "duo.status.dev",
     },
-    "timestamp": Object {
-      "N": "0",
+  ],
+]
+`;
+
+exports[`insertHeartbeat error 1`] = `
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "process": Object {
+          "S": "process",
+        },
+        "timestamp": Object {
+          "N": "0",
+        },
+      },
+      "TableName": "duo.status.live",
     },
-  },
-  "TableName": "duo.status.dev",
-}
+  ],
+]
 `;
 
 exports[`insertStatusData 1`] = `
-Object {
-  "Item": Object {
-    "process": Object {
-      "S": "UNKNOWN",
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "process": Object {
+          "S": "process",
+        },
+        "test": "test",
+      },
+      "TableName": "duo.status.dev",
     },
-    "test": "test",
-  },
-  "TableName": "duo.status.dev",
-}
+  ],
+]
+`;
+
+exports[`insertStatusData error 1`] = `
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "process": Object {
+          "S": "process",
+        },
+        "test": "test",
+      },
+      "TableName": "duo.status.live",
+    },
+  ],
+]
 `;
 
 exports[`insertTradeData 1`] = `
@@ -455,7 +533,7 @@ Object {
       "N": "1234567890",
     },
   },
-  "TableName": "duo.trades.dev",
+  "TableName": "duo.trades.live",
 }
 `;
 
@@ -472,7 +550,7 @@ Object {
       "N": "123",
     },
     "process": Object {
-      "S": "UNKNOWN",
+      "S": "process",
     },
     "quoteBaseId": Object {
       "S": "quote|base|id",
@@ -484,7 +562,7 @@ Object {
       "N": "1234567890",
     },
   },
-  "TableName": "duo.status.dev",
+  "TableName": "duo.status.live",
 }
 `;
 
@@ -515,7 +593,7 @@ Array [
           "S": "0x123",
         },
       },
-      "TableName": "duo.uiEvents.dev",
+      "TableName": "duo.uiEvents.live",
     },
   ],
 ]
@@ -526,45 +604,45 @@ Array [
   Object {
     "blockNumber": 7722428,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "navA": 1.000595,
-    "navB": 1.0080258291803725,
-    "price": 525.4697714145971,
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
     "timestamp": 1529625600000,
     "transactionHash": "0x180245f592adfd86dfb49a48c6c9b59d6be7a8d9c897ebd5492f0823c5196008",
   },
   Object {
     "blockNumber": 7722781,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "navA": 1.000612,
-    "navB": 1.0035985102209515,
-    "price": 524.316,
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
     "timestamp": 1529629200000,
     "transactionHash": "0x4da754a05a29dd84a26a81db5a6d437be018971c652a94d0c706128bad63dc87",
   },
   Object {
     "blockNumber": 7723130,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "navA": 1.000629,
-    "navB": 0.9550144311357961,
-    "price": 511.6105,
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
     "timestamp": 1529632800000,
     "transactionHash": "0x298dc4d2771805df61894777a6a2eee702d222ab51c1c5239d890d66412b64e0",
   },
   Object {
     "blockNumber": 7723483,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "navA": 1.000646,
-    "navB": 0.9702581491704366,
-    "price": 515.6028144780677,
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
     "timestamp": 1529636400000,
     "transactionHash": "0xef0aab40c21251ddbed21d03f43f81a0e000b651a355dc2e0ac6bdd2934e449d",
   },
   Object {
     "blockNumber": 7723836,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "navA": 1.000663,
-    "navB": 0.9728057034275613,
-    "price": 516.2737204647499,
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
     "timestamp": 1529640000000,
     "transactionHash": "0x060f2496b45b7d11908549bb4e3e1a6cc789692caf24c9f632daf5e23ce3a481",
   },
@@ -576,11 +654,11 @@ Array [
   Object {
     "blockNumber": 7715602,
     "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "eth": 0.1,
-    "fee": 0.001,
+    "eth": 0,
+    "fee": 0,
     "timestamp": 1529559912000,
-    "tokenA": 26.160725,
-    "tokenB": 26.160725,
+    "tokenA": 0,
+    "tokenB": 0,
     "transactionHash": "0x7283db82115b77c3fa055ec1553acf7c16d3ba1e2db5b2cea1974ba32bad29dc",
     "type": "Create",
   },
@@ -800,7 +878,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -812,7 +890,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -824,7 +902,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -836,7 +914,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -848,7 +926,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -860,9 +938,22 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
+
+exports[`queryData 1`] = `
+Array [
+  Array [
+    Object {},
+    [Function],
+  ],
+]
+`;
+
+exports[`queryData error 1`] = `Object {}`;
+
+exports[`queryData no ddb 1`] = `"dynamo db connection is not initialized"`;
 
 exports[`queryTotalSupplyEvent 1`] = `
 Object {
@@ -872,7 +963,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -884,7 +975,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.dev",
+  "TableName": "duo.events.live",
 }
 `;
 
@@ -896,7 +987,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.uiEvents.dev",
+  "TableName": "duo.uiEvents.live",
 }
 `;
 
@@ -908,12 +999,25 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.uiEvents.dev",
+  "TableName": "duo.uiEvents.live",
 }
 `;
 
+exports[`scanData 1`] = `
+Array [
+  Array [
+    Object {},
+    [Function],
+  ],
+]
+`;
+
+exports[`scanData error 1`] = `Object {}`;
+
+exports[`scanData no ddb 1`] = `"dynamo db connection is not initialized"`;
+
 exports[`scanStatus 1`] = `
 Object {
-  "TableName": "duo.status.dev",
+  "TableName": "duo.status.live",
 }
 `;
