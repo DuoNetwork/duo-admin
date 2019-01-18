@@ -250,6 +250,122 @@ Object {
 }
 `;
 
+exports[`convertEventToDynamo 3`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Create|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "sender": Object {
+    "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
+exports[`convertEventToDynamo 4`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Transfer|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "from": Object {
+    "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
+exports[`convertEventToDynamo 5`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Approval|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "tokenOwner": Object {
+    "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
+exports[`convertEventToDynamo 6`] = `
+Object {
+  "blockHash": Object {
+    "S": "blockHash",
+  },
+  "blockNumber": Object {
+    "N": "123",
+  },
+  "eventKey": Object {
+    "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|1970-01-06",
+  },
+  "logStatus": Object {
+    "S": "logStatus",
+  },
+  "sender": Object {
+    "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+  },
+  "systime": Object {
+    "N": "9876543210",
+  },
+  "timestampId": Object {
+    "S": "1234567890|id",
+  },
+  "transactionHash": Object {
+    "S": "txHash",
+  },
+}
+`;
+
 exports[`convertTradeToDynamo 1`] = `
 Object {
   "amount": Object {
@@ -355,6 +471,232 @@ Array [
 
 exports[`getSingleKeyPeriodPrices 1`] = `Array []`;
 
+exports[`getSingleKeyPeriodPrices, dev 1`] = `
+Array [
+  Object {
+    "base": "Base",
+    "close": 100,
+    "high": 100,
+    "low": 100,
+    "open": 100,
+    "period": 0,
+    "quote": "quote",
+    "source": "source",
+    "timestamp": 1234567890000,
+    "volume": 12,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, dev 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|z",
+    },
+    ":sourceDateHourMinute": Object {
+      "S": "source|2009-02-13-23-31",
+    },
+    ":start": Object {
+      "S": "quote|base|",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute AND quoteBaseId BETWEEN :start AND :end",
+  "TableName": "duo.trades.dev",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, dev 3`] = `
+Array [
+  Object {
+    "base": "base",
+    "close": 110,
+    "high": 120,
+    "low": 80,
+    "open": 100,
+    "period": 1,
+    "quote": "quote",
+    "source": "source",
+    "timestamp": 1234567890000,
+    "volume": 20000,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, dev 4`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|0",
+    },
+    ":primaryValue": Object {
+      "S": "source|2009-02-13-23",
+    },
+    ":start": Object {
+      "S": "quote|base|1234567890000",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHour = :primaryValue AND quoteBaseTimestamp BETWEEN :start AND :end",
+  "TableName": "duo.prices.1.live",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, no data 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|z",
+    },
+    ":sourceDateHourMinute": Object {
+      "S": "source|2009-02-13-23-31",
+    },
+    ":start": Object {
+      "S": "quote|base|",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute AND quoteBaseId BETWEEN :start AND :end",
+  "TableName": "duo.trades.live",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 0 1`] = `
+Array [
+  Object {
+    "base": "Base",
+    "close": 100,
+    "high": 100,
+    "low": 100,
+    "open": 100,
+    "period": 0,
+    "quote": "quote",
+    "source": "source",
+    "timestamp": 1234567890000,
+    "volume": 12,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 0 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|z",
+    },
+    ":sourceDateHourMinute": Object {
+      "S": "source|2009-02-13-23-31",
+    },
+    ":start": Object {
+      "S": "quote|base|",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute AND quoteBaseId BETWEEN :start AND :end",
+  "TableName": "duo.trades.live",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 0, no pair 1`] = `
+Array [
+  Object {
+    "base": "Base",
+    "close": 100,
+    "high": 100,
+    "low": 100,
+    "open": 100,
+    "period": 0,
+    "quote": "quote",
+    "source": "source",
+    "timestamp": 1234567890000,
+    "volume": 12,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 0, no pair 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|2009-02-13-23-31",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "duo.trades.dev",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 1 1`] = `
+Array [
+  Object {
+    "base": "base",
+    "close": 110,
+    "high": 120,
+    "low": 80,
+    "open": 100,
+    "period": 1,
+    "quote": "quote",
+    "source": "source",
+    "timestamp": 1234567890000,
+    "volume": 20000,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 1 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|0",
+    },
+    ":primaryValue": Object {
+      "S": "source|2009-02-13-23",
+    },
+    ":start": Object {
+      "S": "quote|base|1234567890000",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHour = :primaryValue AND quoteBaseTimestamp BETWEEN :start AND :end",
+  "TableName": "duo.prices.1.dev",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 60 1`] = `
+Array [
+  Object {
+    "base": "",
+    "close": 110,
+    "high": 120,
+    "low": 80,
+    "open": 100,
+    "period": 60,
+    "quote": "",
+    "source": "",
+    "timestamp": NaN,
+    "volume": 20000,
+  },
+]
+`;
+
+exports[`getSingleKeyPeriodPrices, period = 60 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|0",
+    },
+    ":primaryValue": Object {
+      "S": "source|2009-02-13",
+    },
+    ":start": Object {
+      "S": "quote|base|1234567890000",
+    },
+  },
+  "KeyConditionExpression": "sourceDate = :primaryValue AND quoteBaseTimestamp BETWEEN :start AND :end",
+  "TableName": "duo.prices.60.live",
+}
+`;
+
+exports[`getSingleKeyPeriodPrices, period > 60 1`] = `[TypeError: Cannot read property 'S' of undefined]`;
+
+exports[`getSingleKeyPeriodPrices, period invalid 1`] = `[Error: invalid period]`;
+
 exports[`init 1`] = `
 Array [
   Array [
@@ -404,7 +746,7 @@ Object {
       "S": "txHash",
     },
   },
-  "TableName": "duo.events.live",
+  "TableName": "duo.events.dev",
 }
 `;
 
@@ -419,6 +761,326 @@ Object {
     },
     "eventKey": Object {
       "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|CommitPrice|1970-01-15",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`insertEventsData 3`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Create|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`insertEventsData 4`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Transfer|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "from": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`insertEventsData 5`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Approval|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "tokenOwner": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`insertEventsData 6`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|1970-01-06",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`insertEventsData live 1`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "contractAddress|type|1970-01-15",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "test": Object {
+      "S": "test",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`insertEventsData live 2`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|CommitPrice|1970-01-15",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`insertEventsData live 3`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Create|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "sender": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`insertEventsData live 4`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Transfer|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "from": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`insertEventsData live 5`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|Approval|1970-01-15|0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "logStatus": Object {
+      "S": "logStatus",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestampId": Object {
+      "S": "1234567890|id",
+    },
+    "tokenOwner": Object {
+      "S": "0x00D8d0660b243452fC2f996A892D3083A903576F",
+    },
+    "transactionHash": Object {
+      "S": "txHash",
+    },
+  },
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`insertEventsData live 6`] = `
+Object {
+  "Item": Object {
+    "blockHash": Object {
+      "S": "blockHash",
+    },
+    "blockNumber": Object {
+      "N": "123",
+    },
+    "eventKey": Object {
+      "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|1970-01-06",
     },
     "logStatus": Object {
       "S": "logStatus",
@@ -563,6 +1225,93 @@ Object {
     },
   },
   "TableName": "duo.status.live",
+}
+`;
+
+exports[`insertTradeData dev 1`] = `
+Object {
+  "Item": Object {
+    "amount": Object {
+      "N": "456",
+    },
+    "pair": Object {
+      "S": "quote|base",
+    },
+    "price": Object {
+      "N": "123",
+    },
+    "quoteBaseId": Object {
+      "S": "quote|base|id",
+    },
+    "sourceDateHourMinute": Object {
+      "S": "src|1970-01-15-06-56",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+  },
+  "TableName": "duo.trades.dev",
+}
+`;
+
+exports[`insertTradeData dev 2`] = `
+Object {
+  "Item": Object {
+    "amount": Object {
+      "N": "456",
+    },
+    "pair": Object {
+      "S": "quote|base",
+    },
+    "price": Object {
+      "N": "123",
+    },
+    "process": Object {
+      "S": "process",
+    },
+    "quoteBaseId": Object {
+      "S": "quote|base|id",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+  },
+  "TableName": "duo.status.dev",
+}
+`;
+
+exports[`insertTradeData insertStatus 1`] = `
+Object {
+  "Item": Object {
+    "amount": Object {
+      "N": "456",
+    },
+    "pair": Object {
+      "S": "quote|base",
+    },
+    "price": Object {
+      "N": "123",
+    },
+    "quoteBaseId": Object {
+      "S": "quote|base|id",
+    },
+    "sourceDateHourMinute": Object {
+      "S": "src|1970-01-15-06-56",
+    },
+    "systime": Object {
+      "N": "0",
+    },
+    "timestamp": Object {
+      "N": "1234567890",
+    },
+  },
+  "TableName": "duo.trades.dev",
 }
 `;
 
@@ -1000,6 +1749,48 @@ Object {
   },
   "KeyConditionExpression": "eventKey = :eventKey",
   "TableName": "duo.uiEvents.live",
+}
+`;
+
+exports[`readLastBlock 1`] = `1000000`;
+
+exports[`readLastBlock 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":process": Object {
+      "S": "EVENT_AWS_PUBLIC_OTHERS",
+    },
+  },
+  "KeyConditionExpression": "process = :process",
+  "TableName": "duo.status.live",
+}
+`;
+
+exports[`readLastBlock, dev 1`] = `1000000`;
+
+exports[`readLastBlock, dev 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":process": Object {
+      "S": "EVENT_AWS_PUBLIC_OTHERS",
+    },
+  },
+  "KeyConditionExpression": "process = :process",
+  "TableName": "duo.status.dev",
+}
+`;
+
+exports[`readLastBlock, no Item 1`] = `0`;
+
+exports[`readLastBlock, no Item 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":process": Object {
+      "S": "EVENT_AWS_PUBLIC_OTHERS",
+    },
+  },
+  "KeyConditionExpression": "process = :process",
+  "TableName": "duo.status.live",
 }
 `;
 
