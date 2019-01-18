@@ -65,7 +65,7 @@ export class BitfinexApi extends BaseApi {
 		);
 	}
 
-	public fetchTradesWS(sourcePairs: string[]) {
+	public fetchTradesWS(sourcePairs: string[]): any {
 		const bfx = new BFX(null, null, {
 			version: 1,
 			transform: true
@@ -87,7 +87,7 @@ export class BitfinexApi extends BaseApi {
 		w.on('close', (code: number, reason: string) => {
 			util.logError('connection closed ' + code + ' ' + reason);
 			w.close();
-			setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
+			global.setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
 
 		w.on('error', (error: Error) => {
@@ -95,6 +95,7 @@ export class BitfinexApi extends BaseApi {
 			w.close();
 			setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
+		return w;
 	}
 }
 const bitfinexApi = new BitfinexApi();

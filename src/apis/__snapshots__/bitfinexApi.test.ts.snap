@@ -1,5 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`fetchTrades WS  1`] = `
+Array [
+  Array [
+    "open",
+    [Function],
+  ],
+  Array [
+    "trade",
+    [Function],
+  ],
+  Array [
+    "close",
+    [Function],
+  ],
+  Array [
+    "error",
+    [Function],
+  ],
+]
+`;
+
+exports[`fetchTrades WS  2`] = `
+Array [
+  Array [
+    "quote-base",
+  ],
+]
+`;
+
+exports[`fetchTrades WS  3`] = `
+Array [
+  Array [
+    "\\"{price: 1, id: 1234, amount: 12}\\"",
+    "symbol",
+  ],
+]
+`;
+
 exports[`fetchTradesREST spot 1`] = `
 Array [
   Array [
@@ -9,6 +47,91 @@ Array [
 `;
 
 exports[`fetchTradesREST spot 2`] = `
+Array [
+  Array [
+    Object {
+      "amount": 0.003221,
+      "base": "USD",
+      "id": "4604340357",
+      "price": 221.55,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532896000,
+    },
+    true,
+  ],
+  Array [
+    Object {
+      "amount": 0.017065,
+      "base": "USD",
+      "id": "4604340340",
+      "price": 221.55,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532896000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 9.999916,
+      "base": "USD",
+      "id": "4604334709",
+      "price": 221.46,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532822000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 1,
+      "base": "USD",
+      "id": "4604329605",
+      "price": 221.47,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532738000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 3.382034,
+      "base": "USD",
+      "id": "4604328102",
+      "price": 221.71,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532707000,
+    },
+    false,
+  ],
+  Array [
+    Object {
+      "amount": 2.328196,
+      "base": "USD",
+      "id": "4604326668",
+      "price": 221.64,
+      "quote": "ETH",
+      "source": "bitfinex",
+      "timestamp": 1538532671000,
+    },
+    false,
+  ],
+]
+`;
+
+exports[`fetchTradesREST spotwith last localPair 1`] = `
+Array [
+  Array [
+    "https://api.bitfinex.com/v1/trades/ETHUSD?since=1234567890",
+  ],
+]
+`;
+
+exports[`fetchTradesREST spotwith last localPair 2`] = `
 Array [
   Array [
     Object {
