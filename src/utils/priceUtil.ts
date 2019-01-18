@@ -11,9 +11,9 @@ const schedule = require('node-schedule');
 
 class PriceUtil {
 	public async startCommitPrices(magiWrapper: MagiWrapper, option: IOption) {
-		const startTime = new Date();
-		const endTime = new Date(startTime.getTime() + 3500000);
-		const commitStart = new Date(endTime.getTime() + 50000);
+		const startTime = util.getUTCNowTimestamp();
+		const endTime = startTime.valueOf() + 3500000;
+		const commitStart = endTime + 50000;
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = 0;
 
@@ -63,7 +63,7 @@ class PriceUtil {
 			return;
 		}
 		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(magiWrapper.address);
-		setInterval(async () => {
+		global.setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
 			const promiseList: Array<Promise<void>> = [];

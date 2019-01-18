@@ -33,6 +33,21 @@ Array [
 ]
 `;
 
+exports[`fetchPrice 1`] = `Array []`;
+
+exports[`fetchPrice, no gasPrice 1`] = `
+Array [
+  Array [
+    "",
+    Object {
+      "gasLimit": undefined,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+]
+`;
+
 exports[`getBasePeriod 1`] = `"invalid period"`;
 
 exports[`getPeriodPrice 1 1`] = `
