@@ -47,59 +47,64 @@ export class GeminiApi extends BaseApi {
 			result.map(trade => this.parseTradeREST(sourcePair, trade))
 		);
 	}
+	public fetchTradesSinglePairWS(sourcePair: string): any {
+		const paras = {
+			bids: false,
+			offers: false,
+			trades: true,
+			auctions: false,
+			heartbeat: true,
+			top_of_book: false
+		};
+		const w = new ws(
+			CST.API_GMN_WS_LINK +
+				CST.API_GMN_VERSION +
+				'/marketdata/' +
+				sourcePair +
+				util.composeQuery(paras)
+		);
+
+		w.on('open', () => {
+			util.logInfo('Connected');
+			util.logInfo(`Subscribed trades ${sourcePair}`);
+		});
+
+		w.on('message', (m: any) => this.handleWSTradeMessage(m.toString(), sourcePair));
+
+		w.on('close', (code: number, reason: string) => {
+			util.logError('connection closed ' + code + ' ' + reason);
+			w.removeAllListeners();
+			w.terminate();
+			global.setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
+		});
+
+		w.on('error', (error: Error) => {
+			util.logError(error);
+			w.removeAllListeners();
+			w.terminate();
+			global.setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
+		});
+		return w;
+	}
 
 	public fetchTradesWS(sourcePairs: string[]) {
-		for (const sourcePair of sourcePairs) {
-			const paras = {
-				bids: false,
-				offers: false,
-				trades: true,
-				auctions: false,
-				heartbeat: true,
-				top_of_book: false
-			};
-			const w = new ws(
-				CST.API_GMN_WS_LINK +
-					CST.API_GMN_VERSION +
-					'/marketdata/' +
-					sourcePair +
-					util.composeQuery(paras)
-			);
-
-			w.on('open', () => {
-				util.logInfo('Connected');
-				util.logInfo(`Subscribed trades ${sourcePair}`);
-			});
-
-			w.on('message', (m: any) => this.handleWSTradeMessage(m.toString(), sourcePair));
-
-			w.on('close', (code: number, reason: string) => {
-				util.logError('connection closed ' + code + ' ' + reason);
-				w.removeAllListeners();
-				w.terminate();
-				setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
-			});
-
-			w.on('error', (error: Error) => {
-				util.logError(error);
-				w.removeAllListeners();
-				w.terminate();
-				setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
-			});
-		}
+		for (const sourcePair of sourcePairs) this.fetchTradesSinglePairWS(sourcePair);
 	}
 
 	public async handleWSTradeMessage(m: string, sourcePair: string) {
 		const result: IGeminiTradeWs = JSON.parse(m);
 		if (result.type === 'heartbeat')
 			util.logInfo(`${this.sourcePairMapping[sourcePair]}: ${m}`);
-		else if (result.type === 'update')
-			if (result.events.length && result.events[0].type === 'trade')
-				await this.addTrades(
-					this.sourcePairMapping[sourcePair],
-					[this.parseTradeWS(sourcePair, result)],
-					false
-				);
+		else if (
+			result.type === 'update' &&
+			result.events.length &&
+			result.events[0].type === 'trade'
+		)
+			await this.addTrades(
+				this.sourcePairMapping[sourcePair],
+				[this.parseTradeWS(sourcePair, result)],
+				false
+			);
 	}
 }
 

@@ -133,19 +133,50 @@ Array [
 ]
 `;
 
-exports[`handleWSTradeMessage spot 1`] = `
+exports[`fetchTradesSinglePairWS 1`] = `
 Array [
   Array [
-    Object {
-      "amount": 0.97,
-      "base": "USD",
-      "id": "4236821242",
-      "price": 219.88,
-      "quote": "ETH",
-      "source": "gemini",
-      "timestamp": 1533550482737,
-    },
-    true,
+    "open",
+    [Function],
+  ],
+  Array [
+    "message",
+    [Function],
+  ],
+  Array [
+    "close",
+    [Function],
+  ],
+  Array [
+    "error",
+    [Function],
+  ],
+]
+`;
+
+exports[`fetchTradesSinglePairWS 2`] = `
+Array [
+  "message from ws server",
+  "ethusd",
+]
+`;
+
+exports[`handleWSTradeMessage update trade 1`] = `
+Array [
+  Array [
+    "ETH|USD",
+    Array [
+      Object {
+        "amount": 0.97,
+        "base": "USD",
+        "id": "4236821242",
+        "price": 219.88,
+        "quote": "ETH",
+        "source": "gemini",
+        "timestamp": 1533550482737,
+      },
+    ],
+    false,
   ],
 ]
 `;

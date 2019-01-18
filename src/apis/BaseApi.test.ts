@@ -140,7 +140,7 @@ test(`addTrades WS no tradeStatusLastUpdatedAt`, async () => {
 	expect((dbUtil.insertTradeData as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
 
-test(`fetchTrades WS `, async () => {
+test.only(`fetchTrades WS `, async () => {
 	api.settings.supportWS = true;
 	api.settings.wsLink = 'ws://localhost:8080';
 
