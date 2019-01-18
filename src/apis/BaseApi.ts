@@ -175,13 +175,14 @@ export default abstract class BaseApi {
 		throw new Error('' + sourcePairs.join(',') + w.url);
 	}
 
-	public fetchTradesWS(sourcePairs: string[]): void {
-		console.log('################ startFetchTradesWs');
-		const w = new ws(this.settings.wsLink);
-		console.log(w);
-		console.log('successfully conencted');
+	public fetchTradesWS(sourcePairs: string[]): any {
 
-		w.on('open', () => this.handleWSTradeOpen(sourcePairs, w));
+		const w = new ws(this.settings.wsLink);
+
+		w.on('open', () => {
+			console.log('start opening');
+			this.handleWSTradeOpen(sourcePairs, w)
+		});
 
 		w.on('message', m => this.handleWSTradeMessage(m.toString(), w));
 
@@ -201,6 +202,7 @@ export default abstract class BaseApi {
 			global.setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
 		// console.log()
+		return w;
 	}
 
 	public abstract fetchTradesREST(sourcePair: string): Promise<void>;

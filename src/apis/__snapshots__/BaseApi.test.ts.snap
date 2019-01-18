@@ -75,6 +75,125 @@ Object {
 }
 `;
 
+exports[`fetchTrades WS  1`] = `
+Array [
+  Array [
+    "open",
+    [Function],
+  ],
+  Array [
+    "message",
+    [Function],
+  ],
+  Array [
+    "close",
+    [Function],
+  ],
+  Array [
+    "error",
+    [Function],
+  ],
+]
+`;
+
+exports[`fetchTrades WS  2`] = `
+Array [
+  Array [
+    "quote-base",
+  ],
+  Object {
+    "on": [MockFunction] {
+      "calls": Array [
+        Array [
+          "open",
+          [Function],
+        ],
+        Array [
+          "message",
+          [Function],
+        ],
+        Array [
+          "close",
+          [Function],
+        ],
+        Array [
+          "error",
+          [Function],
+        ],
+      ],
+      "results": Array [
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+      ],
+    },
+    "removeAllListeners": [MockFunction],
+    "terminate": [MockFunction],
+  },
+]
+`;
+
+exports[`fetchTrades WS  3`] = `
+Array [
+  "message from ws server",
+  Object {
+    "on": [MockFunction] {
+      "calls": Array [
+        Array [
+          "open",
+          [Function],
+        ],
+        Array [
+          "message",
+          [Function],
+        ],
+        Array [
+          "close",
+          [Function],
+        ],
+        Array [
+          "error",
+          [Function],
+        ],
+      ],
+      "results": Array [
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+      ],
+    },
+    "removeAllListeners": [MockFunction],
+    "terminate": [MockFunction],
+  },
+]
+`;
+
 exports[`fetchTrades, supportWs false 1`] = `
 Array [
   Array [
@@ -108,3 +227,9 @@ Array [
 `;
 
 exports[`getSourcePairs, assetId wrong  1`] = `Array []`;
+
+exports[`handleWSTradeMessage 1`] = `"tradeMessage[object Object]"`;
+
+exports[`handleWSTradeMessage, with extra 1`] = `"tradeMessageExtra"`;
+
+exports[`handleWSTradeOpen 1`] = `"pair1,pair2url"`;
