@@ -27,17 +27,6 @@ test('init only dynamo', async () => {
 	expect(keyUtil.getSqlAuth as jest.Mock).not.toBeCalled();
 });
 
-test('init local', async () => {
-	dynamoUtil.init = jest.fn(() => Promise.resolve());
-	sqlUtil.init = jest.fn(() => Promise.resolve());
-	keyUtil.getSqlAuth = jest.fn(() => Promise.resolve());
-	util.getStatusProcess = jest.fn(() => 'process');
-	await dbUtil.init('trades', { live: false } as any, web3Mock);
-	expect((dynamoUtil.init as jest.Mock).mock.calls[0].slice(1)).toMatchSnapshot();
-	expect(sqlUtil.init as jest.Mock).toBeCalledTimes(1);
-	expect(keyUtil.getSqlAuth as jest.Mock).not.toBeCalled();
-});
-
 test('init server', async () => {
 	dynamoUtil.init = jest.fn(() => Promise.resolve());
 	sqlUtil.init = jest.fn(() => Promise.resolve());

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getKey server and live 1`] = `
+Array [
+  Array [
+    "price-feed-private",
+  ],
+]
+`;
+
+exports[`getKey server and live 2`] = `
+Array [
+  Array [
+    "price-feed-private",
+  ],
+]
+`;
+
+exports[`getKey server and live 3`] = `
+Array [
+  Array [
+    "price-feed-private",
+  ],
+]
+`;
+
+exports[`getSqlAuth server and live 1`] = `
+Array [
+  Array [
+    "MySQL-DB-Dev",
+  ],
+]
+`;
+
+exports[`getSqlAuth server and live 2`] = `
+Array [
+  Array [
+    "MySQL-DB-Dev",
+  ],
+]
+`;
+
+exports[`getSqlAuth server and live 3`] = `
+Array [
+  Array [
+    "MySQL-DB-Dev",
+  ],
+]
+`;

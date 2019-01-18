@@ -34,20 +34,7 @@ class DbUtil {
 			}
 		);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo) {
-			let sqlAuth = {
-				host: '',
-				user: '',
-				password: ''
-			};
-			if (option.server) sqlAuth = await keyUtil.getSqlAuth(option);
-			else {
-				try {
-					sqlAuth = require('../keys/mysql.json');
-				} catch (error) {
-					util.logError(error);
-				}
-				return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
-			}
+			const sqlAuth = await keyUtil.getSqlAuth(option);
 			return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
 		}
 	}

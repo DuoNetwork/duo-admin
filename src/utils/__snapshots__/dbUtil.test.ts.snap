@@ -2,15 +2,6 @@
 
 exports[`cleanDB 1`] = `undefined`;
 
-exports[`init local 1`] = `
-Array [
-  false,
-  "process",
-  [Function],
-  [Function],
-]
-`;
-
 exports[`init only dynamo 1`] = `
 Array [
   true,
