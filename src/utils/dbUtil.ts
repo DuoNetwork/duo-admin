@@ -1,21 +1,25 @@
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
 import { IOption, IPriceFix, ITrade } from '../common/types';
-// import localSQLauth from '../keys/mysql.json';
 import dynamoUtil from './dynamoUtil';
 import keyUtil from './keyUtil';
 import sqlUtil from './sqlUtil';
 import util from './util';
 
 class DbUtil {
-	private dynamo: boolean = false;
+	public dynamo: boolean = false;
 
 	public async init(tool: string, option: IOption, web3Wrapper: Web3Wrapper) {
 		this.dynamo = option.dynamo;
 		const process = util.getStatusProcess(tool, option);
 		util.logInfo('process: ' + process);
 
-		const config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
+		let config = {};
+		try {
+			config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
+		} catch (error) {
+			util.logError(error);
+		}
 		await dynamoUtil.init(
 			config,
 			option.live,
@@ -29,14 +33,23 @@ class DbUtil {
 				};
 			}
 		);
-		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo)
-			if (option.server) {
-				const sqlAuth = await keyUtil.getSqlAuth(option);
+		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo) {
+			let sqlAuth = {
+				host: '',
+				user: '',
+				password: ''
+			};
+			if (option.server) sqlAuth = await keyUtil.getSqlAuth(option);
+			else {
+				try {
+					sqlAuth = require('../keys/mysql.json');
+				} catch (error) {
+					util.logError(error);
+				}
 				return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
-			} else {
-				const localSQLauth = require('../keys/mysql.json');
-				return sqlUtil.init(localSQLauth.host, localSQLauth.user, localSQLauth.password);
 			}
+			return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
+		}
 	}
 
 	public insertTradeData(trade: ITrade, insertStatus: boolean) {
