@@ -5,7 +5,7 @@ import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class SqlUtil {
-	private conn: undefined | mysql.Connection = undefined;
+	public conn: undefined | mysql.Connection = undefined;
 	public init(host: string, user: string, pwd: string) {
 		this.conn = mysql.createConnection({
 			host: host,
@@ -13,32 +13,29 @@ class SqlUtil {
 			password: pwd,
 			database: CST.DB_SQL_SCHEMA_PRICEFEED
 		});
-		this.conn.on('error', err => {
-			if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-				util.logInfo('ERROR: Server Disconnects. Reconnecting');
-				this.init(host, user, pwd);
-			} else throw err;
-		});
 
 		return new Promise<void>((resolve, reject) => {
-			if (this.conn)
+			if (this.conn) {
+				this.conn.on('error', err => {
+					if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+						util.logInfo('ERROR: Server Disconnects. Reconnecting');
+						this.init(host, user, pwd);
+					} else throw err;
+				});
 				this.conn.connect(err => {
 					if (err) reject(err);
 					util.logInfo('Connected!');
 					resolve();
 				});
-			else reject('no connection');
+			} else reject('no connection');
 		});
 	}
 
 	public executeQuery(sqlQuery: string): Promise<any> {
-		// util.logInfo(sqlQuery);
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
 					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY')
-						// util.logInfo('.');
-						// rocess.stdout.write(".");
 						reject(err);
 					else if (err) reject(err);
 					else resolve(result);
@@ -53,22 +50,7 @@ class SqlUtil {
 	}
 
 	public async insertTradeData(trade: ITrade, insertStatus: boolean) {
-		const systemTimestamp = util.getUTCNowTimestamp(); // record down the MTS
-
-		// To do the checking for out of boundary data.
-		// if(isNaN(trade.price)){
-		// 	util.logInfo('Price is NaN!');
-		// 	return;
-		// }
-
-		// if(isNaN(trade.amount)){
-		// 	util.logInfo('Amount is NaN!');
-		// 	return;
-		// }
-
-		// let price_str = math.format(price, { exponential: { lower: 1e-100, upper: 1e100 } });
-		// let amount_str = math.format(amount, { exponential: { lower: 1e-100, upper: 1e100 } });
-
+		const systemTimestamp = util.getUTCNowTimestamp();
 		const priceStr = trade.price.toString();
 		const amountStr = trade.amount.toString();
 
@@ -90,7 +72,6 @@ class SqlUtil {
 			"','" +
 			(trade.quote + '|' + trade.base) +
 			"')";
-		// util.logInfo(await this.executeQuery(sql));
 		await this.executeQuery(sql);
 		if (insertStatus)
 			await dynamoUtil.insertStatusData(

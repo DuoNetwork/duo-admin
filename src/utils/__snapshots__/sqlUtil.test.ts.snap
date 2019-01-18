@@ -2,13 +2,72 @@
 
 exports[`cleanDB 1`] = `"DELETE FROM trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) * 1000"`;
 
-exports[`connection initalization 1`] = `"sql db connection is not initialized"`;
+exports[`executeQuery error 1`] = `"test"`;
+
+exports[`executeQuery error ER_DUP_ENTRY 1`] = `
+Object {
+  "code": "ER_DUP_ENTRY",
+}
+`;
+
+exports[`executeQuery no conn 1`] = `"sql db connection is not initialized"`;
+
+exports[`init 1`] = `
+Array [
+  Array [
+    Object {
+      "database": "priceFeedDB",
+      "host": "host",
+      "password": "pwd",
+      "user": "user",
+    },
+  ],
+  Array [
+    Object {
+      "database": "priceFeedDB",
+      "host": "host",
+      "password": "pwd",
+      "user": "user",
+    },
+  ],
+]
+`;
+
+exports[`init 2`] = `
+Array [
+  Array [
+    "error",
+    [Function],
+  ],
+]
+`;
+
+exports[`init 3`] = `
+Array [
+  Array [
+    "host",
+    "user",
+    "pwd",
+  ],
+]
+`;
+
+exports[`init failed 1`] = `"no connection"`;
 
 exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','123','456','ETH|USD')"`;
 
-exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','0','quote|base')"`;
+exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','1234567890','quote|base')"`;
 
-exports[`readLastPrice 1`] = `"SELECT * FROM historical_price order by timestamp WHERE pair = 'ETH|USD' DESC LIMIT 1"`;
+exports[`readLastPrice 1`] = `
+Object {
+  "base": "USD",
+  "price": 0,
+  "quote": "ETH",
+  "source": "",
+  "timestamp": 0,
+  "volume": 0,
+}
+`;
 
 exports[`readLastPrice 2`] = `
 Object {
@@ -19,6 +78,14 @@ Object {
   "timestamp": 1234567890,
   "volume": 456,
 }
+`;
+
+exports[`readLastPrice 3`] = `
+Array [
+  Array [
+    "SELECT * FROM historical_price order by timestamp WHERE pair = 'ETH|USD' DESC LIMIT 1",
+  ],
+]
 `;
 
 exports[`readSourceData 1`] = `"SELECT * FROM trades WHERE timestamp >= 1230967890 AND timestamp <= 1234567890 AND pair = 'ETH|USD';"`;
