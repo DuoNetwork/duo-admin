@@ -17,6 +17,24 @@
 			"transactionHash": {
 				"S": "0x7283db82115b77c3fa055ec1553acf7c16d3ba1e2db5b2cea1974ba32bad29dc"
 			}
+		},
+		{
+			"tokenAInWei": { "S": "" },
+			"timestampId": { "S": "" },
+			"blockNumber": { "N": "7715602" },
+			"logStatus": { "S": "" },
+			"systime": { "N": "1529560019579" },
+			"tokenBInWei": { "S": "" },
+			"sender": { "S": "" },
+			"feeInWei": { "S": "" },
+			"eventKey": { "S": "" },
+			"ethAmtInWei": { "S": "" },
+			"blockHash": {
+				"S": ""
+			},
+			"transactionHash": {
+				"S": ""
+			}
 		}
 	],
 	"Count": 1,

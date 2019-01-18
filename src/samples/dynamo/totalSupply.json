@@ -1,7 +1,9 @@
 {
 	"Items": [
 		{
-			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|2018-06-13-03" },
+			"eventKey": {
+				"S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|2018-06-13-03"
+			},
 			"timestampId": { "S": "1528862200000|log_a3d23f19" },
 			"totalSupplyA": { "S": "0" },
 			"blockNumber": { "N": "7650502" },
@@ -16,18 +18,18 @@
 			}
 		},
 		{
-			"eventKey": { "S": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309|TotalSupply|2018-06-13-05" },
-			"timestampId": { "S": "1528867600000|log_7f2a9c1c" },
-			"totalSupplyA": { "S": "0" },
+			"eventKey": { "S": "" },
+			"timestampId": { "S": "" },
+			"totalSupplyA": { "S": "" },
 			"blockNumber": { "N": "7651095" },
-			"logStatus": { "S": "mined" },
-			"totalSupplyB": { "S": "0" },
+			"logStatus": { "S": "" },
+			"totalSupplyB": { "S": "" },
 			"systime": { "N": "1528868188513" },
 			"blockHash": {
-				"S": "0xb93a39f826e881fdbc8e53e934948b2a436ea302fbe9dd5d484fda2efdaf60c5"
+				"S": ""
 			},
 			"transactionHash": {
-				"S": "0xe35137d392e20dd2025cd996de73a271ebcea23128a89f7f423b326ce20893e5"
+				"S": ""
 			}
 		}
 	],

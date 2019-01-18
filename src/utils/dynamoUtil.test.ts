@@ -343,7 +343,25 @@ test('getSingleKeyPeriodPrices, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() =>
 		Promise.resolve({
-			Items: [dynamoTrade]
+			Items: [
+				{
+					price: {
+						N: 100
+					},
+					quoteBaseId: {
+						S: ''
+					},
+					sourceDateHourMinute: {
+						S: ''
+					},
+					timestamp: {
+						N: 1234567890000
+					},
+					amount: {
+						N: 12
+					}
+				}
+			]
 		})
 	);
 	expect(
@@ -484,7 +502,112 @@ test('getSingleKeyPeriodPrices, period invalid', async () => {
 	}
 });
 
+const tradeData = {
+	quoteBaseId: {
+		S: 'quote|base|Id'
+	},
+	price: {
+		N: 120
+	},
+	amount: {
+		N: 10
+	},
+	sourceDateHourMinute: {
+		S: '2018-10-01|01|01'
+	},
+	pair: {
+		S: 'quote|base'
+	},
+	timestamp: {
+		N: 1234567890000
+	}
+};
+test('getTrades', async () => {
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [tradeData]
+		})
+	);
+	expect(
+		await dynamoUtil.getTrades('source', '2018-10-01|01|01', 'quote|base')
+	).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getTrades, no pair', async () => {
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [tradeData]
+		})
+	);
+	expect(await dynamoUtil.getTrades('source', '2018-10-01|01|01')).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getTrades, no pair', async () => {
+	dynamoUtil.live = false;
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [tradeData]
+		})
+	);
+	expect(await dynamoUtil.getTrades('source', '2018-10-01|01|01')).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getTrades, no trade', async () => {
+	dynamoUtil.live = false;
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: []
+		})
+	);
+	expect((await dynamoUtil.getTrades('source', '2018-10-01|01|01')).length).toBe(0);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getTrades, invalid type', async () => {
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [
+				{
+					quoteBaseId: {
+						S: ''
+					},
+					price: {
+						N: 120
+					},
+					amount: {
+						N: 10
+					},
+					sourceDateHourMinute: {
+						S: ''
+					},
+					pair: {
+						S: ''
+					},
+					timestamp: {
+						N: 1234567890000
+					}
+				}
+			]
+		})
+	);
+	expect(
+		await dynamoUtil.getTrades('source', '2018-10-01|01|01', 'quote|base')
+	).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
 test('scanStatus', async () => {
+	dynamoUtil.scanData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.scanStatus();
+	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
+	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('scanStatus, live', async () => {
+	dynamoUtil.live = true;
 	dynamoUtil.scanData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.scanStatus();
 	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
@@ -502,9 +625,84 @@ test('queryAcceptPriceEvent', async () => {
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
 });
 
+test('queryAcceptPriceEvent, dev', async () => {
+	dynamoUtil.live = false;
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.queryAcceptPriceEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+});
+
 test('parseAcceptedPrices', () => expect(dynamoUtil.parseAcceptedPrice(prices)).toMatchSnapshot());
+test('parseAcceptedPrices, invalid type', () =>
+	expect(
+		dynamoUtil.parseAcceptedPrice({
+			Items: [
+				{
+					timeInSecond: { S: '1529625600' },
+					sender: { S: '0x00476E55e02673B0E4D2B474071014D5a366Ed4E' },
+					eventKey: {
+						S: ''
+					},
+					navAInWei: { S: '' },
+					timestampId: { S: '1529625612000|log_f7abca98' },
+					blockNumber: { N: '7722428' },
+					logStatus: { S: 'mined' },
+					systime: { N: '1529625989069' },
+					priceInWei: { S: '' },
+					navBInWei: { S: '' },
+					blockHash: {
+						S: '0xdb41c94c37dad7feb9959c98c70bdaecb82022dd2484d27188452d559cd71eb5'
+					},
+					transactionHash: {
+						S: ''
+					}
+				}
+			]
+		})
+	).toMatchSnapshot());
+test('parseAcceptedPrices, invalid type', () =>
+	expect(
+		dynamoUtil.parseAcceptedPrice({
+			Items: [
+				{
+					timeInSecond: { S: '1529625600' },
+					sender: { S: '0x00476E55e02673B0E4D2B474071014D5a366Ed4E' },
+					eventKey: {
+						S: ''
+					},
+					// navAInWei: { S: '' },
+					timestampId: { S: '1529625612000|log_f7abca98' },
+					blockNumber: { N: '7722428' },
+					logStatus: { S: 'mined' },
+					systime: { N: '1529625989069' },
+					priceInWei: { S: '' },
+					// navBInWei: { S: '' },
+					blockHash: {
+						S: '0xdb41c94c37dad7feb9959c98c70bdaecb82022dd2484d27188452d559cd71eb5'
+					},
+					transactionHash: {
+						S: ''
+					}
+				}
+			]
+		})
+	).toMatchSnapshot());
 
 test('queryConversionEvent', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(4);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[2][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[3][0]).toMatchSnapshot();
+});
+
+test('queryConversionEvent, dev', async () => {
+	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(4);
@@ -516,7 +714,17 @@ test('queryConversionEvent', async () => {
 
 test('parseConversion', () => expect(dynamoUtil.parseConversion(conversion)).toMatchSnapshot());
 
+test('queryTotalSupplyEvent, live', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
+	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+});
+
 test('queryTotalSupplyEvent', async () => {
+	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
@@ -532,6 +740,66 @@ test('queryUIConversionEvent', async () => {
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+});
+
+const uiConversionData = {
+	eventKey: {
+		S: 'eventKey'
+	},
+
+	transactionHash: {
+		S: 'txHash'
+	},
+	systime: {
+		N: 1234567890000
+	},
+	eth: {
+		N: 12
+	},
+	tokenA: {
+		N: 12
+	},
+	tokenB: {
+		N: 12
+	},
+	fee: {
+		N: 1
+	}
+};
+
+test('queryUIConversionEvent, status', async () => {
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [uiConversionData]
+		})
+	);
+
+	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+});
+
+test('queryUIConversionEvent, status', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [uiConversionData]
+		})
+	);
+
+	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+});
+
+test('queryUIConversionEvent, status', async () => {
+	dynamoUtil.queryData = jest.fn(() =>
+		Promise.resolve({
+			Items: [uiConversionData]
+		})
+	);
+	dynamoUtil.getTxStatus = jest.fn(() => Promise.reject('getStatus error!'));
+	try {
+		await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+	} catch (err) {
+		util.logError(JSON.stringify(err));
+	}
 });
 
 test('parseUIConversion', () => {
@@ -617,7 +885,16 @@ test('addPrice', async () => {
 	await dynamoUtil.addPrice(price);
 	price.period = 1440;
 	await dynamoUtil.addPrice(price);
+	price.period = 1440;
+	dynamoUtil.live = false;
+	await dynamoUtil.addPrice(price);
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	price.period = 40;
+	try {
+		await dynamoUtil.addPrice(price);
+	} catch (err) {
+		expect(err).toMatchSnapshot();
+	}
 });
 
 test('insertUIConversion', async () => {
@@ -636,7 +913,41 @@ test('insertUIConversion', async () => {
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
+test('insertUIConversion, live', async () => {
+	dynamoUtil.live = true;
+	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	await dynamoUtil.insertUIConversion(
+		CST.DUMMY_ADDR,
+		CST.DUMMY_ADDR,
+		'0x123',
+		false,
+		123,
+		456,
+		456,
+		0.123
+	);
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
 test('deleteUIConversionEvent', async () => {
+	dynamoUtil.deleteData = jest.fn(() => Promise.resolve());
+	await dynamoUtil.deleteUIConversionEvent(CST.DUMMY_ADDR, {
+		contractAddress: 'contractAddress',
+		type: 'type',
+		transactionHash: 'txHash',
+		eth: 0,
+		tokenA: 0,
+		tokenB: 0,
+		timestamp: 0,
+		blockNumber: 0,
+		fee: 0
+	});
+	expect((dynamoUtil.deleteData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
+test('deleteUIConversionEvent, dev', async () => {
+	dynamoUtil.live = false;
 	dynamoUtil.deleteData = jest.fn(() => Promise.resolve());
 	await dynamoUtil.deleteUIConversionEvent(CST.DUMMY_ADDR, {
 		contractAddress: 'contractAddress',

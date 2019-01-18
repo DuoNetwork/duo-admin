@@ -29,7 +29,7 @@ class DynamoUtil {
 	public process: string = 'UNKNOWN';
 	public live: boolean = false;
 	private fromWei: (input: string | number) => number = input => Number(input) / 1e18;
-	private getTxStatus: (txHash: string) => Promise<{ status: string } | null> = () =>
+	public getTxStatus: (txHash: string) => Promise<{ status: string } | null> = () =>
 		Promise.resolve(null);
 	public init(
 		config: object,

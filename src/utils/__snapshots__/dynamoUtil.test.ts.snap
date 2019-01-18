@@ -187,8 +187,47 @@ Array [
       "TableName": "duo.prices.1440.live",
     },
   ],
+  Array [
+    Object {
+      "Item": Object {
+        "base": Object {
+          "S": "base",
+        },
+        "close": Object {
+          "N": "3",
+        },
+        "high": Object {
+          "N": "4",
+        },
+        "low": Object {
+          "N": "0",
+        },
+        "open": Object {
+          "N": "2",
+        },
+        "quote": Object {
+          "S": "quote",
+        },
+        "quoteBaseTimestamp": Object {
+          "S": "quote|base|1234567890",
+        },
+        "sourceYearMonth": Object {
+          "S": "source|1970-01",
+        },
+        "updatedAt": Object {
+          "N": "1234567890",
+        },
+        "volume": Object {
+          "N": "5",
+        },
+      },
+      "TableName": "duo.prices.1440.dev",
+    },
+  ],
 ]
 `;
+
+exports[`addPrice 2`] = `[Error: invalid period]`;
 
 exports[`connection initalization 1`] = `[TypeError: _this.ddb.putItem is not a function]`;
 
@@ -420,6 +459,24 @@ Array [
 ]
 `;
 
+exports[`deleteUIConversionEvent, dev 1`] = `
+Array [
+  Array [
+    Object {
+      "Key": Object {
+        "eventKey": Object {
+          "S": "contractAddress|type|0x0",
+        },
+        "transactionHash": Object {
+          "S": "txHash",
+        },
+      },
+      "TableName": "duo.uiEvents.dev",
+    },
+  ],
+]
+`;
+
 exports[`getPriceKeyField 1`] = `"invalid period"`;
 
 exports[`getPrices 1`] = `
@@ -474,14 +531,14 @@ exports[`getSingleKeyPeriodPrices 1`] = `Array []`;
 exports[`getSingleKeyPeriodPrices, dev 1`] = `
 Array [
   Object {
-    "base": "Base",
+    "base": undefined,
     "close": 100,
     "high": 100,
     "low": 100,
     "open": 100,
     "period": 0,
-    "quote": "quote",
-    "source": "source",
+    "quote": "",
+    "source": "",
     "timestamp": 1234567890000,
     "volume": 12,
   },
@@ -696,6 +753,134 @@ Object {
 exports[`getSingleKeyPeriodPrices, period > 60 1`] = `[TypeError: Cannot read property 'S' of undefined]`;
 
 exports[`getSingleKeyPeriodPrices, period invalid 1`] = `[Error: invalid period]`;
+
+exports[`getTrades 1`] = `
+Array [
+  Object {
+    "amount": 10,
+    "base": "base",
+    "id": "Id",
+    "price": 120,
+    "quote": "quote",
+    "source": "2018-10-01",
+    "timestamp": 1234567890000,
+  },
+]
+`;
+
+exports[`getTrades 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|z",
+    },
+    ":sourceDateHourMinute": Object {
+      "S": "source|2018-10-01|01|01",
+    },
+    ":start": Object {
+      "S": "quote|base|",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute AND quoteBaseId BETWEEN :start AND :end",
+  "TableName": "duo.trades.live",
+}
+`;
+
+exports[`getTrades, invalid type 1`] = `
+Array [
+  Object {
+    "amount": 10,
+    "base": undefined,
+    "id": undefined,
+    "price": 120,
+    "quote": "",
+    "source": "",
+    "timestamp": 1234567890000,
+  },
+]
+`;
+
+exports[`getTrades, invalid type 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":end": Object {
+      "S": "quote|base|z",
+    },
+    ":sourceDateHourMinute": Object {
+      "S": "source|2018-10-01|01|01",
+    },
+    ":start": Object {
+      "S": "quote|base|",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute AND quoteBaseId BETWEEN :start AND :end",
+  "TableName": "duo.trades.dev",
+}
+`;
+
+exports[`getTrades, no pair 1`] = `
+Array [
+  Object {
+    "amount": 10,
+    "base": "base",
+    "id": "Id",
+    "price": 120,
+    "quote": "quote",
+    "source": "2018-10-01",
+    "timestamp": 1234567890000,
+  },
+]
+`;
+
+exports[`getTrades, no pair 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|2018-10-01|01|01",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "duo.trades.live",
+}
+`;
+
+exports[`getTrades, no pair 3`] = `
+Array [
+  Object {
+    "amount": 10,
+    "base": "base",
+    "id": "Id",
+    "price": 120,
+    "quote": "quote",
+    "source": "2018-10-01",
+    "timestamp": 1234567890000,
+  },
+]
+`;
+
+exports[`getTrades, no pair 4`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|2018-10-01|01|01",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "duo.trades.dev",
+}
+`;
+
+exports[`getTrades, no trade 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":sourceDateHourMinute": Object {
+      "S": "source|2018-10-01|01|01",
+    },
+  },
+  "KeyConditionExpression": "sourceDateHourMinute = :sourceDateHourMinute",
+  "TableName": "duo.trades.dev",
+}
+`;
 
 exports[`init 1`] = `
 Array [
@@ -1342,6 +1527,39 @@ Array [
           "S": "0x123",
         },
       },
+      "TableName": "duo.uiEvents.dev",
+    },
+  ],
+]
+`;
+
+exports[`insertUIConversion, live 1`] = `
+Array [
+  Array [
+    Object {
+      "Item": Object {
+        "eth": Object {
+          "N": "123",
+        },
+        "eventKey": Object {
+          "S": "0x0|Redeem|0x0",
+        },
+        "fee": Object {
+          "N": "0.123",
+        },
+        "systime": Object {
+          "N": "1234567890",
+        },
+        "tokenA": Object {
+          "N": "456",
+        },
+        "tokenB": Object {
+          "N": "456",
+        },
+        "transactionHash": Object {
+          "S": "0x123",
+        },
+      },
       "TableName": "duo.uiEvents.live",
     },
   ],
@@ -1398,6 +1616,34 @@ Array [
 ]
 `;
 
+exports[`parseAcceptedPrices, invalid type 1`] = `
+Array [
+  Object {
+    "blockNumber": 7722428,
+    "contractAddress": "",
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
+    "timestamp": 1529625600000,
+    "transactionHash": "",
+  },
+]
+`;
+
+exports[`parseAcceptedPrices, invalid type 2`] = `
+Array [
+  Object {
+    "blockNumber": 7722428,
+    "contractAddress": "",
+    "navA": 0,
+    "navB": 0,
+    "price": 0,
+    "timestamp": 1529625600000,
+    "transactionHash": "",
+  },
+]
+`;
+
 exports[`parseConversion 1`] = `
 Array [
   Object {
@@ -1411,11 +1657,26 @@ Array [
     "transactionHash": "0x7283db82115b77c3fa055ec1553acf7c16d3ba1e2db5b2cea1974ba32bad29dc",
     "type": "Create",
   },
+  Object {
+    "blockNumber": 7715602,
+    "contractAddress": "",
+    "eth": 0,
+    "fee": 0,
+    "timestamp": 0,
+    "tokenA": 0,
+    "tokenB": 0,
+    "transactionHash": "",
+    "type": "",
+  },
 ]
 `;
 
 exports[`parseStatus 1`] = `
 Array [
+  Object {
+    "process": "",
+    "timestamp": 1527757500018,
+  },
   Object {
     "process": "EVENT_AWS_PRIVATE_STARTPRERESET",
     "timestamp": 1527751553589,
@@ -1452,10 +1713,6 @@ Array [
   Object {
     "process": "FEED_AZURE_PRIVATE",
     "timestamp": 1527758100003,
-  },
-  Object {
-    "process": "FEED_GCP_PRIVATE",
-    "timestamp": 1527757500018,
   },
   Object {
     "process": "HOURLY_AWS_PUBLIC",
@@ -1576,11 +1833,11 @@ Array [
   },
   Object {
     "blockNumber": 7651095,
-    "contractAddress": "0x0f80F055c7482b919183EcD06e0dd5FD7991D309",
-    "timestamp": 1528867600000,
+    "contractAddress": "",
+    "timestamp": 0,
     "tokenA": 0,
     "tokenB": 0,
-    "transactionHash": "0xe35137d392e20dd2025cd996de73a271ebcea23128a89f7f423b326ce20893e5",
+    "transactionHash": "",
   },
 ]
 `;
@@ -1599,6 +1856,18 @@ Array [
     "transactionHash": "0x8e59dff2458a76b2ba0a9e11413e603cddc227d663a8bf7b45e0241f3896424d",
     "type": "Create",
   },
+  Object {
+    "blockNumber": 0,
+    "contractAddress": "",
+    "eth": 0.21704519241528358,
+    "fee": 0.0021704519241528357,
+    "pending": true,
+    "timestamp": 1529317121530,
+    "tokenA": 36.9599025612444,
+    "tokenB": 36.9599025612444,
+    "transactionHash": "",
+    "type": "",
+  },
 ]
 `;
 
@@ -1615,6 +1884,18 @@ Array [
     "tokenB": 34.14530889109876,
     "transactionHash": "0x94ea38c42188eaacfa75ad0a091866b46f4c75993d33c94c8cc22822433ca244",
     "type": "Redeem",
+  },
+  Object {
+    "blockNumber": 0,
+    "contractAddress": "",
+    "eth": 0.20051663085602844,
+    "fee": NaN,
+    "pending": true,
+    "timestamp": 0,
+    "tokenA": 34.14530889109876,
+    "tokenB": 34.14530889109876,
+    "transactionHash": "",
+    "type": "",
   },
 ]
 `;
@@ -1640,6 +1921,30 @@ Object {
   },
   "KeyConditionExpression": "eventKey = :eventKey",
   "TableName": "duo.events.live",
+}
+`;
+
+exports[`queryAcceptPriceEvent, dev 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|AcceptPrice|date1",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`queryAcceptPriceEvent, dev 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|AcceptPrice|date2",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
 }
 `;
 
@@ -1691,6 +1996,54 @@ Object {
 }
 `;
 
+exports[`queryConversionEvent, dev 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|Create|date1|0x0",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`queryConversionEvent, dev 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|Redeem|date1|0x0",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`queryConversionEvent, dev 3`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|Create|date2|0x0",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`queryConversionEvent, dev 4`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|Redeem|date2|0x0",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
 exports[`queryData 1`] = `
 Array [
   Array [
@@ -1712,11 +2065,35 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.events.live",
+  "TableName": "duo.events.dev",
 }
 `;
 
 exports[`queryTotalSupplyEvent 2`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|TotalSupply|date2",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.dev",
+}
+`;
+
+exports[`queryTotalSupplyEvent, live 1`] = `
+Object {
+  "ExpressionAttributeValues": Object {
+    ":eventKey": Object {
+      "S": "0x0|TotalSupply|date1",
+    },
+  },
+  "KeyConditionExpression": "eventKey = :eventKey",
+  "TableName": "duo.events.live",
+}
+`;
+
+exports[`queryTotalSupplyEvent, live 2`] = `
 Object {
   "ExpressionAttributeValues": Object {
     ":eventKey": Object {
@@ -1736,7 +2113,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.uiEvents.live",
+  "TableName": "duo.uiEvents.dev",
 }
 `;
 
@@ -1748,7 +2125,7 @@ Object {
     },
   },
   "KeyConditionExpression": "eventKey = :eventKey",
-  "TableName": "duo.uiEvents.live",
+  "TableName": "duo.uiEvents.dev",
 }
 `;
 
@@ -1808,6 +2185,12 @@ exports[`scanData error 1`] = `Object {}`;
 exports[`scanData no ddb 1`] = `"dynamo db connection is not initialized"`;
 
 exports[`scanStatus 1`] = `
+Object {
+  "TableName": "duo.status.dev",
+}
+`;
+
+exports[`scanStatus, live 1`] = `
 Object {
   "TableName": "duo.status.live",
 }

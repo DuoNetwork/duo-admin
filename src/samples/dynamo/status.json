@@ -425,7 +425,7 @@
         },
         {
             "process": {
-                "S": "FEED_GCP_PRIVATE"
+                "S": ""
             },
             "volume": {
                 "N": "1085.5908951400004"
