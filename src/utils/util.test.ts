@@ -39,6 +39,35 @@ test('{test: true} is not empty', () => {
 	expect(util.isEmptyObject({ test: true })).toBe(false);
 });
 
+test('composeQuery', () => {
+	expect(
+		util.composeQuery({
+			key1: 'value1',
+			key2: 'value2'
+		})
+	).toMatchSnapshot();
+});
+
+test('parseOptions default', () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	const command = [
+		'npm',
+		'run',
+		'trades',
+		'source=',
+		'pair=',
+		'gasPrice=',
+		'gasLimit=',
+		'event=',
+		'provider=',
+		'base=',
+		'quote=',
+		'contractType=',
+		'tenor='
+	];
+	expect(util.parseOptions(command)).toMatchSnapshot();
+});
+
 test('parseOptions', () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	const command = [
@@ -49,7 +78,18 @@ test('parseOptions', () => {
 		'assets=quote,base',
 		'period=10',
 		'start=20180930T080000',
-		'end=20180930T100000'
+		'end=20180930T100000',
+		'exSources=ex1,ex2',
+		'sources=s1,s2',
+		'pair=pair',
+		'gasPrice=123',
+		'gasLimit=456',
+		'event=event',
+		'provider=provider',
+		'base=base',
+		'quote=quote',
+		'contractType=contractType',
+		'tenor=tenor'
 	];
 	expect(util.parseOptions(command)).toMatchSnapshot();
 });
@@ -58,6 +98,7 @@ test('getPeriodStartTimestamp', () => {
 	// 1970-01-15 6:56:07
 	// util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	// 1970-01-15 6:55:00
+	expect(util.getPeriodStartTimestamp(1234567890)).toBe(1234500000);
 	expect(util.getPeriodStartTimestamp(1234567890, 1)).toBe(1234500000);
 	// 1970-01-15 6:40:00
 	expect(util.getPeriodStartTimestamp(1234567890, 10)).toBe(1233600000);
@@ -82,24 +123,46 @@ const toolToTest = [
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
 
-const platforms = ['aws', 'gcp', 'azure'];
+for (const tool of toolToTest) {
+	test(`getStatusProcess ${tool} useDynamo`, () => {
+		option.dynamo = true;
+		expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
+	});
 
-for (const platform of platforms) {
-	if (platform === 'azure') option.azure = true;
-	else if (platform === 'gcp') option.gcp = true;
-	else option.aws = true;
-	for (const tool of toolToTest) {
-		test(`getStatusProcess ${platform} useDynamo`, () => {
-			option.dynamo = true;
-			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
-		});
-
-		test(`getStatusProcess ${platform} do not useDynamo`, () => {
-			option.dynamo = false;
-			expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
-		});
-	}
+	test(`getStatusProcess ${tool} do not useDynamo`, () => {
+		option.dynamo = false;
+		expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
+	});
 }
+
+test(`getStatusProcess PRICE`, () => {
+	option.aws = true;
+	option.gcp = false;
+	option.azure = false;
+	option.dynamo = true;
+	option.period = 60;
+	expect(util.getStatusProcess(CST.DB_PRICES, option)).toMatchSnapshot();
+	option.period = 10;
+	expect(util.getStatusProcess(CST.DB_PRICES, option)).toMatchSnapshot();
+});
+
+test(`getStatusProcess EVENT`, () => {
+	option.gcp = true;
+	option.aws = false;
+	option.azure = false;
+	option.dynamo = true;
+	option.event = 'StartPreReset';
+	expect(util.getStatusProcess(CST.FETCH_EVENTS, option)).toMatchSnapshot();
+});
+
+test(`getStatusProcess TRADES`, () => {
+	option.azure = true;
+	option.gcp = false;
+	option.aws = false;
+	option.dynamo = true;
+	option.source = 'source';
+	expect(util.getStatusProcess(CST.TRADES, option)).toMatchSnapshot();
+});
 
 test('log error', () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
@@ -132,4 +195,10 @@ test('log debug', () => {
 	util.logInfo('info');
 	util.logDebug('debug');
 	expect((console.log as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('sleep', async () => {
+	global.setTimeout = jest.fn(resolve => resolve());
+	await util.sleep(1);
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });

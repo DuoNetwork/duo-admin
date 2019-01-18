@@ -1,100 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getStatusProcess aws do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
+exports[`composeQuery 1`] = `"?key1=value1&key2=value2"`;
 
-exports[`getStatusProcess aws do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
+exports[`getStatusProcess EVENT 1`] = `"EVENT_GCP_PUBLIC_STARTPRERESET"`;
 
-exports[`getStatusProcess aws do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
+exports[`getStatusProcess PRICE 1`] = `"PRICE_AWS_PUBLIC_HOURLY"`;
 
-exports[`getStatusProcess aws do not useDynamo 4`] = `""`;
+exports[`getStatusProcess PRICE 2`] = `"PRICE_AWS_PUBLIC"`;
 
-exports[`getStatusProcess aws do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
+exports[`getStatusProcess TRADES 1`] = `"TRADE_AZURE_PUBLIC_SOURCE"`;
 
-exports[`getStatusProcess aws do not useDynamo 6`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
+exports[`getStatusProcess cleanDB do not useDynamo 1`] = `"CLEANDB_AWS_PRIVATE"`;
 
-exports[`getStatusProcess aws do not useDynamo 7`] = `"FETCH_AZURE_PRIVATE"`;
+exports[`getStatusProcess cleanDB useDynamo 1`] = `"CLEANDB_AWS_PUBLIC"`;
 
-exports[`getStatusProcess aws do not useDynamo 8`] = `"PRICE_AZURE_PRIVATE_MINUTELY"`;
+exports[`getStatusProcess commit do not useDynamo 1`] = `"FEED_AWS_PRIVATE"`;
 
-exports[`getStatusProcess aws useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
+exports[`getStatusProcess commit useDynamo 1`] = `"FEED_AWS_PUBLIC"`;
 
-exports[`getStatusProcess aws useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
+exports[`getStatusProcess fetchEvents do not useDynamo 1`] = `"EVENT_AWS_PRIVATE_OTHERS"`;
 
-exports[`getStatusProcess aws useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
+exports[`getStatusProcess fetchEvents useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
 
-exports[`getStatusProcess aws useDynamo 4`] = `""`;
+exports[`getStatusProcess fetchPrice do not useDynamo 1`] = `"FETCH_AWS_PRIVATE"`;
 
-exports[`getStatusProcess aws useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
+exports[`getStatusProcess fetchPrice useDynamo 1`] = `"FETCH_AWS_PUBLIC"`;
 
-exports[`getStatusProcess aws useDynamo 6`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
+exports[`getStatusProcess node do not useDynamo 1`] = `""`;
 
-exports[`getStatusProcess aws useDynamo 7`] = `"FETCH_AZURE_PUBLIC"`;
+exports[`getStatusProcess node useDynamo 1`] = `""`;
 
-exports[`getStatusProcess aws useDynamo 8`] = `"PRICE_AZURE_PUBLIC_MINUTELY"`;
+exports[`getStatusProcess prices do not useDynamo 1`] = `"PRICE_AWS_PRIVATE_MINUTELY"`;
 
-exports[`getStatusProcess azure do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
+exports[`getStatusProcess prices useDynamo 1`] = `"PRICE_AWS_PUBLIC_MINUTELY"`;
 
-exports[`getStatusProcess azure do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
+exports[`getStatusProcess trades do not useDynamo 1`] = `"TRADE_AWS_PRIVATE"`;
 
-exports[`getStatusProcess azure do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
+exports[`getStatusProcess trades useDynamo 1`] = `"TRADE_AWS_PUBLIC"`;
 
-exports[`getStatusProcess azure do not useDynamo 4`] = `""`;
+exports[`getStatusProcess trigger do not useDynamo 1`] = `"EVENT_AWS_PRIVATE_OTHERS"`;
 
-exports[`getStatusProcess azure do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
-
-exports[`getStatusProcess azure do not useDynamo 6`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
-
-exports[`getStatusProcess azure do not useDynamo 7`] = `"FETCH_AZURE_PRIVATE"`;
-
-exports[`getStatusProcess azure do not useDynamo 8`] = `"PRICE_AZURE_PRIVATE_MINUTELY"`;
-
-exports[`getStatusProcess azure useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess azure useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess azure useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess azure useDynamo 4`] = `""`;
-
-exports[`getStatusProcess azure useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
-
-exports[`getStatusProcess azure useDynamo 6`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
-
-exports[`getStatusProcess azure useDynamo 7`] = `"FETCH_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess azure useDynamo 8`] = `"PRICE_AZURE_PUBLIC_MINUTELY"`;
-
-exports[`getStatusProcess gcp do not useDynamo 1`] = `"TRADE_AZURE_PRIVATE"`;
-
-exports[`getStatusProcess gcp do not useDynamo 2`] = `"FEED_AZURE_PRIVATE"`;
-
-exports[`getStatusProcess gcp do not useDynamo 3`] = `"CLEANDB_AZURE_PRIVATE"`;
-
-exports[`getStatusProcess gcp do not useDynamo 4`] = `""`;
-
-exports[`getStatusProcess gcp do not useDynamo 5`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
-
-exports[`getStatusProcess gcp do not useDynamo 6`] = `"EVENT_AZURE_PRIVATE_OTHERS"`;
-
-exports[`getStatusProcess gcp do not useDynamo 7`] = `"FETCH_AZURE_PRIVATE"`;
-
-exports[`getStatusProcess gcp do not useDynamo 8`] = `"PRICE_AZURE_PRIVATE_MINUTELY"`;
-
-exports[`getStatusProcess gcp useDynamo 1`] = `"TRADE_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess gcp useDynamo 2`] = `"FEED_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess gcp useDynamo 3`] = `"CLEANDB_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess gcp useDynamo 4`] = `""`;
-
-exports[`getStatusProcess gcp useDynamo 5`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
-
-exports[`getStatusProcess gcp useDynamo 6`] = `"EVENT_AZURE_PUBLIC_OTHERS"`;
-
-exports[`getStatusProcess gcp useDynamo 7`] = `"FETCH_AZURE_PUBLIC"`;
-
-exports[`getStatusProcess gcp useDynamo 8`] = `"PRICE_AZURE_PUBLIC_MINUTELY"`;
+exports[`getStatusProcess trigger useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
 
 exports[`log debug 1`] = `
 Array [
@@ -137,6 +83,42 @@ Object {
   ],
   "aws": false,
   "azure": false,
+  "base": "base",
+  "contractType": "contractType",
+  "dbLive": false,
+  "dynamo": false,
+  "event": "event",
+  "exSources": Array [
+    "ex1",
+    "ex2",
+  ],
+  "force": false,
+  "forceREST": false,
+  "gasLimit": 456,
+  "gasPrice": 123,
+  "gcp": false,
+  "live": false,
+  "pair": "pair",
+  "period": 10,
+  "provider": "provider",
+  "quote": "quote",
+  "server": false,
+  "source": "source",
+  "sources": Array [
+    "s1",
+    "s2",
+  ],
+  "tenor": "tenor",
+}
+`;
+
+exports[`parseOptions default 1`] = `
+Object {
+  "assets": Array [
+    "",
+  ],
+  "aws": false,
+  "azure": false,
   "base": "USD",
   "contractType": "Beethoven",
   "dbLive": false,
@@ -152,14 +134,23 @@ Object {
   "gcp": false,
   "live": false,
   "pair": "",
-  "period": 10,
+  "period": 1,
   "provider": "",
   "quote": "ETH",
   "server": false,
-  "source": "source",
+  "source": "",
   "sources": Array [
     "",
   ],
   "tenor": "Perpetual",
 }
+`;
+
+exports[`sleep 1`] = `
+Array [
+  Array [
+    [Function],
+    1,
+  ],
+]
 `;

@@ -1,7 +1,6 @@
 import moment from 'moment';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
-// import { Options } from 'aws-cli-js';
 
 class Util {
 	public logLevel: string = CST.LOG_INFO;
@@ -154,9 +153,6 @@ class Util {
 				if (option.period === 1) source = '_MINUTELY';
 				else if (option.period === 60) source = '_HOURLY';
 				else source = '';
-				break;
-			case 'minutely':
-				type = 'MINUTELY';
 				break;
 			case CST.FETCH_PRICE:
 				type = 'FETCH';
