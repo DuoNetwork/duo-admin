@@ -180,7 +180,6 @@ export default abstract class BaseApi {
 		const w = new ws(this.settings.wsLink);
 
 		w.on('open', () => {
-			console.log('start opening');
 			this.handleWSTradeOpen(sourcePairs, w)
 		});
 
@@ -194,14 +193,11 @@ export default abstract class BaseApi {
 		});
 
 		w.on('error', (error: Error) => {
-			console.log('#####connection closed');
-			console.log(error);
 			util.logError(error);
 			w.removeAllListeners();
 			w.terminate();
 			global.setTimeout(() => this.fetchTradesWS(sourcePairs), 1000);
 		});
-		// console.log()
 		return w;
 	}
 
