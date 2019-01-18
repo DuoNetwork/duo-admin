@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cleanDB 1`] = `undefined`;
+
+exports[`init local 1`] = `
+Array [
+  false,
+  "process",
+  [Function],
+  [Function],
+]
+`;
+
+exports[`init only dynamo 1`] = `
+Array [
+  true,
+  "process",
+  [Function],
+  [Function],
+]
+`;
+
+exports[`init only dynamo 2`] = `
+Object {
+  "status": "status",
+}
+`;
+
+exports[`init only dynamo 3`] = `
+Array [
+  Array [
+    123,
+  ],
+]
+`;
+
+exports[`init only dynamo 4`] = `
+Array [
+  Array [
+    "txHash",
+  ],
+  Array [
+    "txHash",
+  ],
+]
+`;
+
+exports[`init server 1`] = `
+Array [
+  true,
+  "process",
+  [Function],
+  [Function],
+]
+`;
+
+exports[`insertHeartbeat 1`] = `
+Array [
+  Array [
+    Object {},
+  ],
+  Array [
+    "data",
+  ],
+]
+`;
+
+exports[`insertPrice 1`] = `"invalid"`;
+
+exports[`insertPrice 2`] = `
+Array [
+  Array [
+    "price",
+  ],
+]
+`;
+
+exports[`insertTradeData 1`] = `
+Array [
+  Array [
+    "trade",
+    true,
+  ],
+]
+`;
+
+exports[`insertTradeData 2`] = `
+Array [
+  Array [
+    "trade",
+    false,
+  ],
+]
+`;
+
+exports[`readLastPrice 1`] = `"invalid"`;
+
+exports[`readLastPrice 2`] = `
+Array [
+  Array [
+    "base",
+    "quote",
+  ],
+]
+`;
+
+exports[`readSourceData 1`] = `"invalid"`;
+
+exports[`readSourceData 2`] = `
+Array [
+  Array [
+    123,
+    "base",
+    "quote",
+  ],
+]
+`;
