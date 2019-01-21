@@ -233,16 +233,24 @@ Array [
       },
     },
   ],
+  Array [
+    Object {
+      "period": Object {
+        "N": "10",
+      },
+    },
+  ],
 ]
 `;
 
 exports[`startAggregate 2`] = `
 Array [
-  Object {
-    "period": Object {
-      "N": "10",
-    },
-  },
+  Array [
+    10,
+  ],
+  Array [
+    10,
+  ],
 ]
 `;
 

@@ -243,9 +243,11 @@ test('startMagi, no gasPrice', async () => {
 test('startAggregate', async () => {
 	global.setInterval = jest.fn();
 	dynamoUtil.insertHeartbeat = jest.fn();
+	priceUtil.aggregatePrice = jest.fn();
 	await priceUtil.startAggregate(10);
 
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls[1]).toMatchSnapshot();
+	(global.setInterval as jest.Mock).mock.calls[1][0]();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((priceUtil.aggregatePrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

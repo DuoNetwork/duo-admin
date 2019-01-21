@@ -86,21 +86,19 @@ class PriceUtil {
 					wrappersToCall.push(bw);
 			}
 
-			if (wrappersToCall.length) {
-				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-				for (const bw of wrappersToCall) {
-					promiseList.push(
-						bw.fetchPrice('', {
-							gasPrice: gasPrice,
-							gasLimit: option.gasLimit,
-							nonce: nonce
-						})
-					);
-					nonce++;
-				}
-
-				await Promise.all(promiseList);
+			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+			for (const bw of wrappersToCall) {
+				promiseList.push(
+					bw.fetchPrice('', {
+						gasPrice: gasPrice,
+						gasLimit: option.gasLimit,
+						nonce: nonce
+					})
+				);
+				nonce++;
 			}
+
+			await Promise.all(promiseList);
 		}, 15000);
 	}
 
@@ -190,9 +188,9 @@ class PriceUtil {
 		util.logInfo('all source processed');
 	}
 
-	public startAggregate(period: number) {
-		// console.log({ period: period + '' });
-		dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
+	public async startAggregate(period: number) {
+		await dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
+		await this.aggregatePrice(period);
 
 		global.setInterval(
 			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' } }),
