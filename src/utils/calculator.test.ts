@@ -1,4 +1,3 @@
-
 import * as CST from '../common/constants';
 import { ITrade } from '../common/types';
 import trades from '../samples/ETHUSDtrades.json';
@@ -50,4 +49,37 @@ test('getPriceFix case 2', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1524547909941);
 	await calculator.getPriceFix('USD', 'ETH');
 	expect((dbUtil.insertPrice as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+});
+
+test('getPriceFix, no priceFix', async () => {
+	dbUtil.readSourceData = jest.fn(() => Promise.resolve([]));
+	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
+	util.getUTCNowTimestamp = jest.fn(() => 1524547909941);
+	dbUtil.readLastPrice = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			volume: 1000
+		})
+	);
+	await calculator.getPriceFix('USD', 'ETH');
+	expect((dbUtil.readSourceData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+});
+
+test('getWeights', () => {
+	expect(calculator.getWeights([1, 2, 3, 4])).toMatchSnapshot();
+});
+
+test('consolidatePriceFix', () => {
+	expect(
+		calculator.consolidatePriceFix([
+			{
+				source: 'source',
+				base: 'base',
+				quote: 'quote',
+				timestamp: 1234567890000,
+				price: 100,
+				volume: 10000
+			}
+		])
+	).toMatchSnapshot();
 });

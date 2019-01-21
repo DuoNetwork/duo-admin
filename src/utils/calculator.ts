@@ -49,8 +49,8 @@ class Calculateor {
 			volume: 0,
 			timestamp: currentTimestamp,
 			source: '',
-			base: trades[0].base,
-			quote: trades[0].quote
+			base: '',
+			quote: ''
 		};
 	}
 

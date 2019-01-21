@@ -20,7 +20,7 @@
 	{
 		"source": "bitfinex",
 		"id": "231224853",
-		"price": 635.00,
+		"price": 635.0,
 		"amount": 1.1,
 		"timestamp": 1524453966454,
 		"quote": "ETH",
@@ -29,7 +29,7 @@
 	{
 		"source": "gemini",
 		"id": "3558353197",
-		"price": 637.00,
+		"price": 637.0,
 		"amount": 6.002117,
 		"timestamp": 1524465953111,
 		"quote": "ETH",
@@ -38,7 +38,7 @@
 	{
 		"source": "gemini",
 		"id": "3558353662",
-		"price": 638.00,
+		"price": 638.0,
 		"amount": 9.339818,
 		"timestamp": 1524465956869,
 		"quote": "ETH",
@@ -47,7 +47,7 @@
 	{
 		"source": "gemini",
 		"id": "3558353662",
-		"price": 639.00,
+		"price": 639.0,
 		"amount": 7.339818,
 		"timestamp": 1524465956869,
 		"quote": "ETH",
@@ -56,8 +56,8 @@
 	{
 		"source": "gdax",
 		"id": "32589198",
-		"price": 633.00000000,
-		"amount": 8.67000000,
+		"price": 633.0,
+		"amount": 8.67,
 		"timestamp": 1524463065507,
 		"quote": "ETH",
 		"base": "USD"
@@ -65,8 +65,8 @@
 	{
 		"source": "gdax",
 		"id": "32589199",
-		"price": 634.00000000,
-		"amount": 1.08280000,
+		"price": 634.0,
+		"amount": 1.0828,
 		"timestamp": 1524463071695,
 		"quote": "ETH",
 		"base": "USD"
@@ -74,8 +74,8 @@
 	{
 		"source": "gdax",
 		"id": "32589199",
-		"price": 635.00000000,
-		"amount": 3.08280000,
+		"price": 635.0,
+		"amount": 3.0828,
 		"timestamp": 1524463071695,
 		"quote": "ETH",
 		"base": "USD"
@@ -83,8 +83,8 @@
 	{
 		"source": "kraken",
 		"id": "",
-		"price": 666.98000,
-		"amount": 0.12100000,
+		"price": 666.98,
+		"amount": 0.121,
 		"timestamp": 1524547909941,
 		"quote": "ETH",
 		"base": "USD"
@@ -92,8 +92,8 @@
 	{
 		"source": "kraken",
 		"id": "",
-		"price": 667.00000,
-		"amount": 0.02400000,
+		"price": 667.0,
+		"amount": 0.024,
 		"timestamp": 1524547898561,
 		"quote": "ETH",
 		"base": "USD"
@@ -101,8 +101,8 @@
 	{
 		"source": "kraken",
 		"id": "",
-		"price": 669.98000,
-		"amount": 0.02100000,
+		"price": 669.98,
+		"amount": 0.021,
 		"timestamp": 1524547909941,
 		"quote": "ETH",
 		"base": "USD"
@@ -133,6 +133,14 @@
 		"timestamp": 1524547909941,
 		"quote": "ETH",
 		"base": "USD"
+	},
+	{
+		"source": "other",
+		"id": "231224852",
+		"price": 634.7,
+		"amount": 0.4,
+		"timestamp": 1524453966393,
+		"quote": "ETH",
+		"base": "USD"
 	}
-
 ]
