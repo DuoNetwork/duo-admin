@@ -117,7 +117,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper,
 					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
 				);
-				priceUtil.startCommitPrices(magiWrapper, option);
+				priceUtil.startCommitPrices(key.publicKey, magiWrapper, option);
 			});
 			setInterval(() => dbUtil.insertHeartbeat(), 30000);
 			break;
@@ -152,6 +152,7 @@ dbUtil.init(tool, option, web3Wrapper).then(() => {
 					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
 				);
 				priceUtil.fetchPrice(
+					key.publicKey,
 					[
 						dualClassCustodianWrappers.Beethoven.Perpetual,
 						dualClassCustodianWrappers.Beethoven.M19,

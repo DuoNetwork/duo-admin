@@ -114,7 +114,7 @@ const dualClassWrapper = {
 test('fetchPrice, not started', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => false);
-	await priceUtil.fetchPrice([dualClassWrapper], magiWrapper, {
+	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, {
 		gasPrice: 1000000000
 	} as any);
 	expect(dualClassWrapper.web3Wrapper.getTransactionCount as jest.Mock).not.toBeCalled();
@@ -124,7 +124,7 @@ test('fetchPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
 
-	await priceUtil.fetchPrice([dualClassWrapper], magiWrapper, {
+	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, {
 		gasPrice: 1000000000
 	} as any);
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
@@ -135,7 +135,7 @@ test('fetchPrice, no gasPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve());
-	await priceUtil.fetchPrice([dualClassWrapper], magiWrapper, {
+	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, {
 		gasPrice: 1000000000
 	} as any);
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
@@ -153,7 +153,7 @@ test('startCommitPrices', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => ({
 		valueOf: jest.fn(() => 1234567890000)
 	}));
-	await priceUtil.startCommitPrices(magiWrapper, { gasPrice: 1000000000 } as any);
+	await priceUtil.startCommitPrices('account', magiWrapper, { gasPrice: 1000000000 } as any);
 });
 
 test('startCommitPrices', async () => {
@@ -161,7 +161,7 @@ test('startCommitPrices', async () => {
 		valueOf: jest.fn(() => 1234567890000)
 	}));
 	magiWrapper.isStarted = jest.fn(() => false);
-	await priceUtil.startCommitPrices(magiWrapper, { gasPrice: 1000000000 } as any);
+	await priceUtil.startCommitPrices('account', magiWrapper, { gasPrice: 1000000000 } as any);
 });
 
 test('commitPrice', async () => {
@@ -173,7 +173,7 @@ test('commitPrice', async () => {
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
 
-	await priceUtil.commitPrice(magiWrapper, {
+	await priceUtil.commitPrice('account', magiWrapper, {
 		gasPrice: 1000000000,
 		base: 'base',
 		quote: 'quote',
@@ -192,7 +192,7 @@ test('commitPrice,no gasPrice', async () => {
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => null);
 
-	await priceUtil.commitPrice(magiWrapper, {
+	await priceUtil.commitPrice('account', magiWrapper, {
 		gasPrice: 1000000000,
 		base: 'base',
 		quote: 'quote',
@@ -211,7 +211,7 @@ test('startMagi', async () => {
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
 
-	await priceUtil.startMagi(magiWrapper, {
+	await priceUtil.startMagi('account', magiWrapper, {
 		gasPrice: 1000000000,
 		base: 'base',
 		quote: 'quote',
@@ -230,7 +230,7 @@ test('startMagi, no gasPrice', async () => {
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => null);
 
-	await priceUtil.startMagi(magiWrapper, {
+	await priceUtil.startMagi('account', magiWrapper, {
 		gasPrice: 1000000000,
 		base: 'base',
 		quote: 'quote',

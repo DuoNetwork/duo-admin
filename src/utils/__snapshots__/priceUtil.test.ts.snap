@@ -36,7 +36,7 @@ Array [
 exports[`commitPrice 1`] = `
 Array [
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
@@ -50,7 +50,7 @@ Array [
 exports[`commitPrice,no gasPrice 1`] = `
 Array [
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
@@ -59,7 +59,7 @@ Array [
     },
   ],
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
@@ -75,7 +75,7 @@ exports[`fetchPrice 1`] = `Array []`;
 exports[`fetchPrice, no gasPrice 1`] = `
 Array [
   Array [
-    "",
+    "account",
     Object {
       "gasLimit": undefined,
       "gasPrice": 1000000000,
@@ -257,7 +257,7 @@ Array [
 exports[`startMagi 1`] = `
 Array [
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
@@ -271,7 +271,7 @@ Array [
 exports[`startMagi, no gasPrice 1`] = `
 Array [
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
@@ -280,7 +280,7 @@ Array [
     },
   ],
   Array [
-    "",
+    "account",
     100,
     1234567890,
     Object {
