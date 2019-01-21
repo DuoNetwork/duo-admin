@@ -71,7 +71,7 @@ class PriceUtil {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(magiWrapper.address);
+		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(account);
 		global.setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
