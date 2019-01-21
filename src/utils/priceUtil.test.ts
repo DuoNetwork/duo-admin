@@ -1,3 +1,4 @@
+import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import priceUtil from './priceUtil';
 import util from './util';
@@ -92,7 +93,9 @@ const magiWrapper = {
 	getLastPrice: jest.fn(() => ({
 		price: 100,
 		timestamp: 2234567890000
-	}))
+	})),
+	commitPrice: jest.fn(),
+	startMagi: jest.fn()
 } as any;
 const dualClassWrapper = {
 	web3Wrapper: {
@@ -139,6 +142,110 @@ test('fetchPrice, no gasPrice', async () => {
 	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
-// test('startCommitPrices', async () => {
-// 	await priceUtil.startCommitPrices(magiWrapper, {gasPrice: 1000000000})
-// });
+jest.mock('node-schedule', () => ({
+	RecurrenceRule: jest.fn(() => ({
+		minute: 0
+	})),
+	scheduleJob: jest.fn()
+}));
+
+test('startCommitPrices', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => ({
+		valueOf: jest.fn(() => 1234567890000)
+	}));
+	await priceUtil.startCommitPrices(magiWrapper, { gasPrice: 1000000000 } as any);
+});
+
+test('startCommitPrices', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => ({
+		valueOf: jest.fn(() => 1234567890000)
+	}));
+	magiWrapper.isStarted = jest.fn(() => false);
+	await priceUtil.startCommitPrices(magiWrapper, { gasPrice: 1000000000 } as any);
+});
+
+test('commitPrice', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		})
+	);
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
+
+	await priceUtil.commitPrice(magiWrapper, {
+		gasPrice: 1000000000,
+		base: 'base',
+		quote: 'quote',
+		gasLimit: 20000
+	} as any);
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('commitPrice,no gasPrice', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		})
+	);
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => null);
+
+	await priceUtil.commitPrice(magiWrapper, {
+		gasPrice: 1000000000,
+		base: 'base',
+		quote: 'quote',
+		gasLimit: 20000
+	} as any);
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startMagi', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		})
+	);
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
+
+	await priceUtil.startMagi(magiWrapper, {
+		gasPrice: 1000000000,
+		base: 'base',
+		quote: 'quote',
+		gasLimit: 20000
+	} as any);
+
+	expect((magiWrapper.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startMagi, no gasPrice', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		})
+	);
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => null);
+
+	await priceUtil.startMagi(magiWrapper, {
+		gasPrice: 1000000000,
+		base: 'base',
+		quote: 'quote',
+		gasLimit: 20000
+	} as any);
+
+	expect((magiWrapper.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startAggregate', async () => {
+	global.setInterval = jest.fn();
+	dynamoUtil.insertHeartbeat = jest.fn();
+	await priceUtil.startAggregate(10);
+
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls[1]).toMatchSnapshot();
+});

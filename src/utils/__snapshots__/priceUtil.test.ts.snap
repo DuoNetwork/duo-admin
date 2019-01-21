@@ -33,6 +33,43 @@ Array [
 ]
 `;
 
+exports[`commitPrice 1`] = `
+Array [
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 20000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
+exports[`commitPrice,no gasPrice 1`] = `
+Array [
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 20000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 20000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
 exports[`fetchPrice 1`] = `Array []`;
 
 exports[`fetchPrice, no gasPrice 1`] = `
@@ -185,4 +222,63 @@ Object {
     ],
   },
 }
+`;
+
+exports[`startAggregate 1`] = `
+Array [
+  Array [
+    Object {
+      "period": Object {
+        "N": "10",
+      },
+    },
+  ],
+]
+`;
+
+exports[`startAggregate 2`] = `
+Array [
+  Object {
+    "period": Object {
+      "N": "10",
+    },
+  },
+]
+`;
+
+exports[`startMagi 1`] = `
+Array [
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 70000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
+exports[`startMagi, no gasPrice 1`] = `
+Array [
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 70000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 70000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
 `;

@@ -21,35 +21,43 @@ class PriceUtil {
 
 		if (!isStarted)
 			// contract is in inception state; start contract first and then commit price
-			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () => {
-				const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-				const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-				util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-				return magiWrapper.startMagi(
-					'',
-					currentPrice.price,
-					Math.floor(currentPrice.timestamp / 1000),
-					{
-						gasPrice: gasPrice,
-						gasLimit: option.gasLimit + 50000
-					}
-				);
-			});
-
-		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () => {
-			const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-			util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
-			return magiWrapper.commitPrice(
-				'',
-				currentPrice.price,
-				Math.floor(currentPrice.timestamp / 1000),
-				{
-					gasPrice: gasPrice,
-					gasLimit: option.gasLimit
-				}
+			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () =>
+				this.startMagi(magiWrapper, option)
 			);
-		});
+
+		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () =>
+			this.commitPrice(magiWrapper, option)
+		);
+	}
+
+	public async startMagi(magiWrapper: MagiWrapper, option: IOption) {
+		const currentPrice = await calculator.getPriceFix(option.base, option.quote);
+		const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+		return magiWrapper.startMagi(
+			'',
+			currentPrice.price,
+			Math.floor(currentPrice.timestamp / 1000),
+			{
+				gasPrice: gasPrice,
+				gasLimit: option.gasLimit + 50000
+			}
+		);
+	}
+
+	public async commitPrice(magiWrapper: MagiWrapper, option: IOption) {
+		const currentPrice = await calculator.getPriceFix(option.base, option.quote);
+		const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+		return magiWrapper.commitPrice(
+			'',
+			currentPrice.price,
+			Math.floor(currentPrice.timestamp / 1000),
+			{
+				gasPrice: gasPrice,
+				gasLimit: option.gasLimit
+			}
+		);
 	}
 
 	public async fetchPrice(
@@ -186,11 +194,11 @@ class PriceUtil {
 		// console.log({ period: period + '' });
 		dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
 
-		setInterval(
+		global.setInterval(
 			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' } }),
 			CST.STATUS_INTERVAL * 1000
 		);
-		setInterval(() => this.aggregatePrice(period), 30000);
+		global.setInterval(() => this.aggregatePrice(period), 30000);
 	}
 }
 
