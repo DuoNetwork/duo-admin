@@ -197,6 +197,18 @@ Array [
 exports[`fetchTrades, supportWs false 1`] = `
 Array [
   Array [
+    [Function],
+    2000,
+  ],
+]
+`;
+
+exports[`fetchTrades, supportWs false 2`] = `
+Array [
+  Array [
+    "quote-base",
+  ],
+  Array [
     "quote-base",
   ],
 ]

@@ -170,6 +170,8 @@ test(`fetchTrades, supportWs false`, async () => {
 	api.fetchTradesREST = jest.fn(() => Promise.resolve({}));
 	global.setInterval = jest.fn();
 	await api.fetchTrades([`quote-base`]);
+	expect((global.setInterval as jest.Mock).mock.calls).toMatchSnapshot();
+	(global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect((api.fetchTradesREST as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
