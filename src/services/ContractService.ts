@@ -22,6 +22,7 @@ export default class ContractService extends BaseService {
 		this.address = this.web3Wrapper.web3.eth.accounts.privateKeyToAccount(
 			this.key.startsWith('0x') ? this.key : '0x' + this.key
 		).address;
+		util.logInfo('loaded key for ' + this.address);
 	}
 
 	public async trigger() {
