@@ -83,7 +83,6 @@ Object {
   ],
   "aws": false,
   "azure": false,
-  "base": "base",
   "contractType": "contractType",
   "dbLive": false,
   "dynamo": false,
@@ -101,7 +100,6 @@ Object {
   "pair": "pair",
   "period": 10,
   "provider": "provider",
-  "quote": "quote",
   "server": false,
   "source": "source",
   "sources": Array [
@@ -119,7 +117,6 @@ Object {
   ],
   "aws": false,
   "azure": false,
-  "base": "USD",
   "contractType": "Beethoven",
   "dbLive": false,
   "dynamo": false,
@@ -136,7 +133,6 @@ Object {
   "pair": "",
   "period": 1,
   "provider": "",
-  "quote": "ETH",
   "server": false,
   "source": "",
   "sources": Array [

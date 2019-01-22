@@ -55,8 +55,6 @@ class Util {
 			event: '',
 			provider: '',
 			period: 1,
-			base: 'USD',
-			quote: 'ETH'
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -90,12 +88,6 @@ class Util {
 					break;
 				case 'period':
 					option.period = Number(args[1]);
-					break;
-				case 'base':
-					option.base = args[1] || option.base;
-					break;
-				case 'quote':
-					option.quote = args[1] || option.quote;
 					break;
 				case 'contractType':
 					option.contractType = args[1] || option.contractType;

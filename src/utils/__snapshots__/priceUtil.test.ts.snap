@@ -40,21 +40,21 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 20000,
+      "gasLimit": 60000,
       "gasPrice": 1000000000,
     },
   ],
 ]
 `;
 
-exports[`commitPrice,no gasPrice 1`] = `
+exports[`commitPrice gasPrice 1`] = `
 Array [
   Array [
     "account",
     100,
     1234567890,
     Object {
-      "gasLimit": 20000,
+      "gasLimit": 60000,
       "gasPrice": 1000000000,
     },
   ],
@@ -63,27 +63,27 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 20000,
+      "gasLimit": 60000,
       "gasPrice": 1000000000,
     },
   ],
 ]
 `;
 
-exports[`fetchPrice 1`] = `Array []`;
-
-exports[`fetchPrice, no gasPrice 1`] = `
+exports[`fetchPrice 1`] = `
 Array [
   Array [
     "account",
     Object {
-      "gasLimit": undefined,
+      "gasLimit": 150000,
       "gasPrice": 1000000000,
       "nonce": 100,
     },
   ],
 ]
 `;
+
+exports[`fetchPrice gasPrice 1`] = `Array []`;
 
 exports[`getBasePeriod 1`] = `"invalid period"`;
 
@@ -261,21 +261,21 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 70000,
+      "gasLimit": 1000000,
       "gasPrice": 1000000000,
     },
   ],
 ]
 `;
 
-exports[`startMagi, no gasPrice 1`] = `
+exports[`startMagi gasPrice 1`] = `
 Array [
   Array [
     "account",
     100,
     1234567890,
     Object {
-      "gasLimit": 70000,
+      "gasLimit": 1000000,
       "gasPrice": 1000000000,
     },
   ],
@@ -284,7 +284,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 70000,
+      "gasLimit": 1000000,
       "gasPrice": 1000000000,
     },
   ],
