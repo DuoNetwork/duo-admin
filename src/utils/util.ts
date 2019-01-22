@@ -116,7 +116,6 @@ class Util {
 	public getStatusProcess(tool: string, option: IOption) {
 		let type = '';
 		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
-		console.log('dynamo', option.dynamo);
 		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
 		let source = '';
 
