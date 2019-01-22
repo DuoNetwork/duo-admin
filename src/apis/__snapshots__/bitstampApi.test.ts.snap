@@ -122,7 +122,7 @@ Array [
 ]
 `;
 
-exports[`fetchTradesSinglePairWS  1`] = `
+exports[`fetchTradesWSForPair  1`] = `
 Array [
   Array [
     "trade",
@@ -131,7 +131,7 @@ Array [
 ]
 `;
 
-exports[`fetchTradesSinglePairWS  2`] = `
+exports[`fetchTradesWSForPair  2`] = `
 Array [
   Array [
     "error",
@@ -144,10 +144,41 @@ Array [
 ]
 `;
 
-exports[`fetchTradesSinglePairWS  3`] = `
+exports[`fetchTradesWSForPair  3`] = `
 Array [
   Array [
     "{\\"price\\":1,\\"id\\":1234,\\"amount\\":12}",
+    "quote-base",
+  ],
+]
+`;
+
+exports[`fetchTradesWSForPair  4`] = `
+Array [
+  Array [
+    [Function],
+    30000,
+  ],
+  Array [
+    [Function],
+    1000,
+  ],
+  Array [
+    [Function],
+    1000,
+  ],
+]
+`;
+
+exports[`fetchTradesWSForPair  5`] = `
+Array [
+  Array [
+    "quote-base",
+  ],
+  Array [
+    "quote-base",
+  ],
+  Array [
     "quote-base",
   ],
 ]

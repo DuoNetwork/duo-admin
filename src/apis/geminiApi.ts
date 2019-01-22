@@ -47,7 +47,7 @@ export class GeminiApi extends BaseApi {
 			result.map(trade => this.parseTradeREST(sourcePair, trade))
 		);
 	}
-	public fetchTradesSinglePairWS(sourcePair: string): any {
+	public fetchTradesWSForPair(sourcePair: string): any {
 		const paras = {
 			bids: false,
 			offers: false,
@@ -75,20 +75,20 @@ export class GeminiApi extends BaseApi {
 			util.logError('connection closed ' + code + ' ' + reason);
 			w.removeAllListeners();
 			w.terminate();
-			global.setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
+			global.setTimeout(() => this.fetchTradesWSForPair(sourcePair), 1000);
 		});
 
 		w.on('error', (error: Error) => {
 			util.logError(error);
 			w.removeAllListeners();
 			w.terminate();
-			global.setTimeout(() => this.fetchTradesWS([sourcePair]), 1000);
+			global.setTimeout(() => this.fetchTradesWSForPair(sourcePair), 1000);
 		});
 		return w;
 	}
 
 	public fetchTradesWS(sourcePairs: string[]) {
-		for (const sourcePair of sourcePairs) this.fetchTradesSinglePairWS(sourcePair);
+		for (const sourcePair of sourcePairs) this.fetchTradesWSForPair(sourcePair);
 	}
 
 	public async handleWSTradeMessage(m: string, sourcePair: string) {

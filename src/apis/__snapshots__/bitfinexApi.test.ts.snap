@@ -38,6 +38,34 @@ Array [
 ]
 `;
 
+exports[`fetchTrades WS  4`] = `
+Array [
+  Array [
+    [Function],
+    1000,
+  ],
+  Array [
+    [Function],
+    1000,
+  ],
+]
+`;
+
+exports[`fetchTrades WS  5`] = `
+Array [
+  Array [
+    Array [
+      "quote-base",
+    ],
+  ],
+  Array [
+    Array [
+      "quote-base",
+    ],
+  ],
+]
+`;
+
 exports[`fetchTradesREST spot 1`] = `
 Array [
   Array [

@@ -76,13 +76,13 @@ test('handleWSTradeMessage other type', async () => {
 	expect(api.addTrades as jest.Mock).not.toBeCalled();
 });
 
-test('fetchTradesSinglePairWS', async () => {
+test('fetchTradesWSForPair', async () => {
 	api.settings.supportWS = true;
 	api.last = {};
 	api.tradeStatusLastUpdatedAt = {};
 	global.setTimeout = jest.fn();
 	api.handleWSTradeMessage = jest.fn();
-	const ws = api.fetchTradesSinglePairWS(sourcePair);
+	const ws = api.fetchTradesWSForPair(sourcePair);
 
 	expect((ws.on as jest.Mock).mock.calls).toMatchSnapshot();
 	(ws.on as jest.Mock).mock.calls[0][1]();
@@ -95,6 +95,12 @@ test('fetchTradesSinglePairWS', async () => {
 	(ws.on as jest.Mock).mock.calls[3][1]('close');
 	expect(ws.removeAllListeners as jest.Mock).toBeCalledTimes(2);
 	expect(ws.terminate as jest.Mock).toBeCalledTimes(2);
+
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
+	api.fetchTradesWSForPair = jest.fn();
+	(global.setTimeout as jest.Mock).mock.calls[0][0]();
+	(global.setTimeout as jest.Mock).mock.calls[1][0]();
+	expect((api.fetchTradesWSForPair as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('fetchTradesWS', async () => {
@@ -103,7 +109,7 @@ test('fetchTradesWS', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 	global.setTimeout = jest.fn();
 	api.handleWSTradeMessage = jest.fn();
-	api.fetchTradesSinglePairWS = jest.fn();
+	api.fetchTradesWSForPair = jest.fn();
 	api.fetchTradesWS([sourcePair]);
-	expect(api.fetchTradesSinglePairWS).toBeCalledTimes(1);
+	expect(api.fetchTradesWSForPair).toBeCalledTimes(1);
 });

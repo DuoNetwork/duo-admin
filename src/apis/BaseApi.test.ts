@@ -162,6 +162,12 @@ test(`fetchTrades WS `, async () => {
 	(w.on as jest.Mock).mock.calls[3][1]('close');
 	expect(w.removeAllListeners as jest.Mock).toBeCalledTimes(2);
 	expect(w.terminate as jest.Mock).toBeCalledTimes(2);
+
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
+	api.fetchTradesWS = jest.fn();
+	(global.setTimeout as jest.Mock).mock.calls[0][0]();
+	(global.setTimeout as jest.Mock).mock.calls[1][0]();
+	expect((api.fetchTradesWS as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test(`fetchTrades, supportWs false`, async () => {
