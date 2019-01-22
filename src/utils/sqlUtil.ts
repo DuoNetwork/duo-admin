@@ -35,8 +35,7 @@ class SqlUtil {
 		return new Promise((resolve, reject) => {
 			if (this.conn)
 				this.conn.query(sqlQuery, (err, result) => {
-					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY')
-						reject(err);
+					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY') reject(err);
 					else if (err) reject(err);
 					else resolve(result);
 				});
@@ -100,11 +99,9 @@ class SqlUtil {
 	public async readLastPrice(quote: string, base: string): Promise<IPriceFix> {
 		const pair = quote + '|' + base;
 		const res = await this.executeQuery(
-			'SELECT * FROM ' +
-				CST.DB_SQL_HISTORY +
-				' order by ' +
-				CST.DB_HISTORY_TIMESTAMP +
-				` WHERE pair = '${pair}' DESC LIMIT 1`
+			`SELECT * FROM ${CST.DB_SQL_HISTORY} WHERE pair='${pair}' ORDER BY ${
+				CST.DB_HISTORY_TIMESTAMP
+			} DESC LIMIT 1;`
 		);
 		return res[0]
 			? {
@@ -128,7 +125,7 @@ class SqlUtil {
 	public async readSourceData(
 		currentTimestamp: number,
 		quote: string,
-		base: string,
+		base: string
 	): Promise<ITrade[]> {
 		const pair = quote + '|' + base;
 		const lowerTime = currentTimestamp - 3600000 + '';

@@ -83,7 +83,7 @@ Object {
 exports[`readLastPrice 3`] = `
 Array [
   Array [
-    "SELECT * FROM historical_price order by timestamp WHERE pair = 'ETH|USD' DESC LIMIT 1",
+    "SELECT * FROM historical_price WHERE pair='ETH|USD' ORDER BY timestamp DESC LIMIT 1;",
   ],
 ]
 `;
