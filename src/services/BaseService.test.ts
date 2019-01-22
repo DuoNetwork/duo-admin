@@ -1,21 +1,39 @@
-// // import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
-// import BaseService from './BaseService';
-test('test', () => expect(true).toBeTruthy());
-// jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () => jest.fn());
+import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
+import BaseService from './BaseService';
+jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
+	jest.fn(() => ({
+		contractAddresses: kovan
+	}))
+);
+jest.mock('../../../duo-contract-wrapper/src/DualClassWrapper', () =>
+	jest.fn(() => ({
+		contract: 'dualClassWrapper'
+	}))
+);
+jest.mock('../../../duo-contract-wrapper/src/EsplanadeWrapper', () =>
+	jest.fn(() => ({
+		contract: 'EsplanadeWrapper'
+	}))
+);
+jest.mock('../../../duo-contract-wrapper/src/MagiWrapper', () =>
+	jest.fn(() => ({
+		contract: 'MagiWrapper'
+	}))
+);
 
-// // jest.mock('../../../duo-contract-wrapper/node @ledgerhq/hw-transport-u2f', () => ({
-// // 	default: {
-// // 		create: jest.fn()
-// // 	}
-// // }));
+const service = new BaseService('tool', {
+	live: false,
+	provider: 'provider'
+} as any);
 
-// jest.mock('../../../duo-contract-wrapper/src/DualClassWrapper', () => jest.fn());
+test('createDuoWrappers', () => {
+	expect(service.createDuoWrappers()).toMatchSnapshot();
+});
 
-// const service = new BaseService('tool', {
-// 	live: false,
-// 	provider: 'provider'
-// } as any);
+test('createMagiWrapper', () => {
+	expect(service.createMagiWrapper()).toMatchSnapshot();
+});
 
-// test('createDuoWrappers', () => {
-// 	service.createDuoWrappers();
-// });
+test('createEsplanadeWrapper', () => {
+	expect(service.createEsplanadeWrapper()).toMatchSnapshot();
+});

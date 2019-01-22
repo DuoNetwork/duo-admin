@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createDuoWrappers 1`] = `
+Object {
+  "Beethoven": Object {
+    "M19": Object {
+      "contract": "dualClassWrapper",
+    },
+    "Perpetual": Object {
+      "contract": "dualClassWrapper",
+    },
+  },
+  "Mozart": Object {
+    "M19": Object {
+      "contract": "dualClassWrapper",
+    },
+    "Perpetual": Object {
+      "contract": "dualClassWrapper",
+    },
+  },
+}
+`;
+
+exports[`createEsplanadeWrapper 1`] = `
+Object {
+  "contract": "EsplanadeWrapper",
+}
+`;
+
+exports[`createMagiWrapper 1`] = `
+Object {
+  "contract": "MagiWrapper",
+}
+`;
