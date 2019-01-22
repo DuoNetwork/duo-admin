@@ -129,7 +129,7 @@ const magiWrapper = {
 	commitPrice: jest.fn(),
 	startMagi: jest.fn()
 } as any;
-const dualClassWrapper = {
+const tradingDualClassWrapper = {
 	web3Wrapper: {
 		getTransactionCount: jest.fn(() => 100),
 		getGasPrice: jest.fn(() => Promise.resolve(1000000000))
@@ -142,30 +142,45 @@ const dualClassWrapper = {
 	),
 	fetchPrice: jest.fn()
 } as any;
+const resetDualClassWrapper = {
+	web3Wrapper: {
+		getTransactionCount: jest.fn(() => 100),
+		getGasPrice: jest.fn(() => Promise.resolve(1000000000))
+	},
+	getStates: jest.fn(() =>
+		Promise.resolve({
+			state: '',
+			lastPriceTime: 1234567890000
+		} as any)
+	),
+	fetchPrice: jest.fn()
+} as any;
 
 test('fetchPrice, not started', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => false);
-	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, 1000000000);
-	expect(dualClassWrapper.web3Wrapper.getTransactionCount as jest.Mock).not.toBeCalled();
+	await priceUtil.fetchPrice('account', [tradingDualClassWrapper, resetDualClassWrapper], magiWrapper, 1000000000);
+	expect(tradingDualClassWrapper.web3Wrapper.getTransactionCount as jest.Mock).not.toBeCalled();
 });
 
 test('fetchPrice gasPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
 
-	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, 1000000000);
+	await priceUtil.fetchPrice('account', [tradingDualClassWrapper, resetDualClassWrapper], magiWrapper, 1000000000);
 	await (global.setInterval as jest.Mock).mock.calls[0][0]();
-	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((tradingDualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect(resetDualClassWrapper.fetchPrice as jest.Mock).not.toBeCalled();
 });
 
 test('fetchPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve(1000000000));
-	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper);
+	await priceUtil.fetchPrice('account', [tradingDualClassWrapper, resetDualClassWrapper], magiWrapper);
 	await (global.setInterval as jest.Mock).mock.calls[0][0]();
-	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((tradingDualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect(resetDualClassWrapper.fetchPrice as jest.Mock).not.toBeCalled();
 });
 
 test('commitPrice', async () => {
