@@ -43,7 +43,7 @@ class KeyUtil {
 			.download() as any).then((data: any) => data.toString());
 	}
 
-	public async getKey(option: IOption): Promise<IKey> {
+	public async getKey(tool: string, option: IOption): Promise<IKey> {
 		let key = {
 			publicKey: '',
 			privateKey: ''
@@ -63,13 +63,13 @@ class KeyUtil {
 				privateKey: key.privateKey
 			};
 		} else {
-			if (option.aws) key = JSON.parse(await this.getAwsKey('price-feed-private'));
-			else if (option.azure) key = JSON.parse(await this.getAzureKey('price-feed-private'));
-			else if (option.gcp) key = JSON.parse(await this.getGcpKey('price-feed-private'));
+			if (option.aws) key = JSON.parse(await this.getAwsKey('price-feed-private'))[tool];
+			else if (option.azure) key = JSON.parse(await this.getAzureKey('price-feed-private'))[tool];
+			else if (option.gcp) key = JSON.parse(await this.getGcpKey('price-feed-private'))[tool];
 
 			return {
-				publicKey: key['publicKey'],
-				privateKey: key['privateKey']
+				publicKey: key.publicKey,
+				privateKey: key.privateKey
 			};
 		}
 	}

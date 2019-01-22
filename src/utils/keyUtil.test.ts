@@ -2,28 +2,30 @@ import keyUtil from './keyUtil';
 
 test('getKey server and live', async () => {
 	const keyString = JSON.stringify({
-		publicKey: 'publicKey',
-		privateKey: 'privateKey'
+		tool: {
+			publicKey: 'publicKey',
+			privateKey: 'privateKey'
+		}
 	});
 	keyUtil.getAwsKey = jest.fn(() => Promise.resolve(keyString));
 	keyUtil.getAzureKey = jest.fn(() => Promise.resolve(keyString));
 	keyUtil.getGcpKey = jest.fn(() => Promise.resolve(keyString));
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		live: true,
 		server: true,
 		aws: true
 	} as any);
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		live: true,
 		server: true,
 		azure: true
 	} as any);
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		live: true,
 		server: true,
 		gcp: true
 	} as any);
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		live: true,
 		server: true
 	} as any);
@@ -40,13 +42,13 @@ test('getKey dev', async () => {
 	keyUtil.getAwsKey = jest.fn(() => Promise.resolve(keyString));
 	keyUtil.getAzureKey = jest.fn(() => Promise.resolve(keyString));
 	keyUtil.getGcpKey = jest.fn(() => Promise.resolve(keyString));
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		aws: true
 	} as any);
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		azure: true
 	} as any);
-	await keyUtil.getKey({
+	await keyUtil.getKey('tool', {
 		gcp: true
 	} as any);
 	expect(keyUtil.getAwsKey as jest.Mock).not.toBeCalled();
