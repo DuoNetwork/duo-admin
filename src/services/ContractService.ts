@@ -17,7 +17,7 @@ export default class ContractService extends BaseService {
 	}
 
 	public async fetchKey() {
-		this.key = (await keyUtil.getKey(this.option)).privateKey;
+		this.key = (await keyUtil.getKey(this.tool, this.option)).privateKey;
 		this.web3Wrapper = new Web3Wrapper(null, this.option.provider, this.key, this.option.live);
 		this.address = this.web3Wrapper.web3.eth.accounts.privateKeyToAccount(
 			this.key.startsWith('0x') ? this.key : '0x' + this.key

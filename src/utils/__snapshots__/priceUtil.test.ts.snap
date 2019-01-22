@@ -80,10 +80,29 @@ Array [
       "nonce": 100,
     },
   ],
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
 ]
 `;
 
-exports[`fetchPrice gasPrice 1`] = `Array []`;
+exports[`fetchPrice gasPrice 1`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+]
+`;
 
 exports[`getBasePeriod 1`] = `"invalid period"`;
 

@@ -123,7 +123,7 @@ test('fetchPrice gasPrice', async () => {
 	magiWrapper.isStarted = jest.fn(() => true);
 
 	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper, 1000000000);
-	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	await (global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -132,7 +132,7 @@ test('fetchPrice', async () => {
 	magiWrapper.isStarted = jest.fn(() => true);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve(1000000000));
 	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper);
-	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	await (global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
