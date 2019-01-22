@@ -359,6 +359,7 @@ Array [
 exports[`trigger 1`] = `
 Array [
   Array [
+    "0xpublicKey",
     Array [
       Object {
         "contract": "dualClassWrapper",

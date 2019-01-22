@@ -30,6 +30,7 @@ export default class ContractService extends BaseService {
 		const dualClassCustodianWrappers = this.createDuoWrappers();
 
 		eventUtil.trigger(
+			this.address,
 			[
 				dualClassCustodianWrappers.Beethoven.Perpetual,
 				dualClassCustodianWrappers.Beethoven.M19,

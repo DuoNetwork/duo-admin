@@ -7,23 +7,23 @@ import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class EventUtil {
-	public async trigger(dualClassWrappers: DualClassWrapper[], event: string) {
+	public async trigger(account: string, dualClassWrappers: DualClassWrapper[], event: string) {
 		util.logInfo('subscribing to ' + event);
 		if (![CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(event)) {
 			util.logError('invalid event, exit');
 			return Promise.resolve();
 		}
 
-		setInterval(async () => {
+		global.setInterval(async () => {
 			const promiseList = dualClassWrappers.map(async dcw => {
 				const sysState = await dcw.getStates();
 				const state = sysState.state;
 				util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
 				if (event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
-					await dcw.triggerPreReset('');
+					await dcw.triggerPreReset(account);
 				else if (event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
-					await dcw.triggerReset('');
+					await dcw.triggerReset(account);
 
 				dynamoUtil.insertHeartbeat();
 			});
@@ -79,7 +79,7 @@ class EventUtil {
 			isProcessing = false;
 		};
 		fetch();
-		setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
+		global.setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
 	}
 }
 
