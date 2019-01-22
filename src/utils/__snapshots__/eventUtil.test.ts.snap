@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetch, 1`] = `Array []`;
+
+exports[`trigger, StartPreReset 1`] = `15000`;
+
+exports[`trigger, StartPreReset 2`] = `
+Array [
+  Array [
+    "account",
+  ],
+]
+`;
+
+exports[`trigger, StartPreReset 3`] = `
+Array [
+  Array [
+    "account",
+  ],
+]
+`;
+
+exports[`trigger, StartReset 1`] = `15000`;
+
+exports[`trigger, StartReset 2`] = `
+Array [
+  Array [
+    "account",
+  ],
+]
+`;
+
+exports[`trigger, StartReset 3`] = `
+Array [
+  Array [
+    "account",
+  ],
+]
+`;
+
+exports[`trigger, StartReset, wrong state 1`] = `15000`;

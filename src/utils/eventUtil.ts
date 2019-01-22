@@ -24,6 +24,7 @@ class EventUtil {
 					await dcw.triggerPreReset(account);
 				else if (event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
 					await dcw.triggerReset(account);
+				else util.logDebug('state not matched!');
 
 				dynamoUtil.insertHeartbeat();
 			});
