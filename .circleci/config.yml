@@ -7,12 +7,12 @@ jobs:
         steps:
             - run: git clone https://github.com/FinBook/duo-admin.git /home/circleci/duo-admin
             - run:
-                  name: cd /home/circleci/duo-admin && npm install admin
-                  command: npm install
+                  name: npm install admin
+                  command: cd /home/circleci/duo-admin && npm install
             - run: git clone https://github.com/FinBook/duo-contract-wrapper.git /home/circleci/duo-contract-wrapper
             - run:
-                  name: cd /home/circleci/duo-contract-wrapper && install npm cpnstract wrapper
-                  command: npm install
+                  name: install npm cpnstract wrapper
+                  command: cd /home/circleci/duo-contract-wrapper && npm i -f
             - run: cd ~/duo-admin
             - run:
                   name: test
