@@ -139,5 +139,5 @@ test('fetchTradesWS', async () => {
 	api.handleWSTradeMessage = jest.fn();
 	api.fetchTradesWSForPair = jest.fn();
 	api.fetchTradesWS([sourcePair]);
-	expect(api.fetchTradesWSForPair).toBeCalledTimes(1);
+	expect((api.fetchTradesWSForPair as jest.Mock).mock.calls).toMatchSnapshot();
 });

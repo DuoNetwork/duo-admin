@@ -133,6 +133,14 @@ Array [
 ]
 `;
 
+exports[`fetchTradesWS 1`] = `
+Array [
+  Array [
+    "ethusd",
+  ],
+]
+`;
+
 exports[`fetchTradesWSForPair 1`] = `
 Array [
   Array [
