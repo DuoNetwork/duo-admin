@@ -190,9 +190,7 @@ test('insertTradeData', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 0);
 	await dynamoUtil.insertTradeData(trade, true);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('insertTradeData dev', async () => {
@@ -200,9 +198,7 @@ test('insertTradeData dev', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => 0);
 	dynamoUtil.live = false;
 	await dynamoUtil.insertTradeData(trade, true);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('insertTradeData insertStatus', async () => {
@@ -211,8 +207,7 @@ test('insertTradeData insertStatus', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.insertStatusData = jest.fn();
 	await dynamoUtil.insertTradeData(trade, false);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 	expect(dynamoUtil.insertStatusData as jest.Mock).not.toBeCalled();
 });
 
@@ -222,8 +217,7 @@ test('insertEventsData', async () => {
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(
 		events.length
 	);
-	const mockCalls = (dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls;
-	for (const call of mockCalls) expect(call[0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('insertEventsData live', async () => {
@@ -233,8 +227,7 @@ test('insertEventsData live', async () => {
 	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls.length).toBe(
 		events.length
 	);
-	const mockCalls = (dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls;
-	for (const call of mockCalls) expect(call[0]).toMatchSnapshot();
+	expect((dynamoUtil.insertData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('insertHeartbeat', async () => {
@@ -265,8 +258,7 @@ test('readLastBlock, dev', async () => {
 		})
 	);
 	expect(await dynamoUtil.readLastBlock()).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('readLastBlock', async () => {
@@ -283,8 +275,7 @@ test('readLastBlock', async () => {
 		})
 	);
 	expect(await dynamoUtil.readLastBlock()).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('readLastBlock, no Item', async () => {
@@ -294,8 +285,7 @@ test('readLastBlock, no Item', async () => {
 		})
 	);
 	expect(await dynamoUtil.readLastBlock()).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 const dynamoTrade = {
@@ -324,7 +314,7 @@ test('getSingleKeyPeriodPrices, period = 0', async () => {
 	expect(
 		await dynamoUtil.getSingleKeyPeriodPrices('source', 0, 1234567890000, 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, no data', async () => {
@@ -336,7 +326,7 @@ test('getSingleKeyPeriodPrices, no data', async () => {
 	expect(
 		(await dynamoUtil.getSingleKeyPeriodPrices('source', 0, 1234567890000, 'quote|base')).length
 	).toBe(0);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, dev', async () => {
@@ -367,7 +357,7 @@ test('getSingleKeyPeriodPrices, dev', async () => {
 	expect(
 		await dynamoUtil.getSingleKeyPeriodPrices('source', 0, 1234567890000, 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, period = 0, no pair', async () => {
@@ -377,7 +367,7 @@ test('getSingleKeyPeriodPrices, period = 0, no pair', async () => {
 		})
 	);
 	expect(await dynamoUtil.getSingleKeyPeriodPrices('source', 0, 1234567890000)).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 const dynamoPrice1 = {
@@ -418,7 +408,7 @@ test('getSingleKeyPeriodPrices, period = 1', async () => {
 	expect(
 		await dynamoUtil.getSingleKeyPeriodPrices('source', 1, 1234567890000, 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, dev', async () => {
@@ -431,7 +421,7 @@ test('getSingleKeyPeriodPrices, dev', async () => {
 	expect(
 		await dynamoUtil.getSingleKeyPeriodPrices('source', 1, 1234567890000, 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, period = 60', async () => {
@@ -472,7 +462,7 @@ test('getSingleKeyPeriodPrices, period = 60', async () => {
 	expect(
 		await dynamoUtil.getSingleKeyPeriodPrices('source', 60, 1234567890000, 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getSingleKeyPeriodPrices, period > 60', async () => {
@@ -531,7 +521,7 @@ test('getTrades', async () => {
 	expect(
 		await dynamoUtil.getTrades('source', '2018-10-01|01|01', 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getTrades, no pair', async () => {
@@ -541,7 +531,7 @@ test('getTrades, no pair', async () => {
 		})
 	);
 	expect(await dynamoUtil.getTrades('source', '2018-10-01|01|01')).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getTrades, no pair', async () => {
@@ -552,7 +542,7 @@ test('getTrades, no pair', async () => {
 		})
 	);
 	expect(await dynamoUtil.getTrades('source', '2018-10-01|01|01')).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getTrades, no trade', async () => {
@@ -563,7 +553,7 @@ test('getTrades, no trade', async () => {
 		})
 	);
 	expect((await dynamoUtil.getTrades('source', '2018-10-01|01|01')).length).toBe(0);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('getTrades, invalid type', async () => {
@@ -596,22 +586,20 @@ test('getTrades, invalid type', async () => {
 	expect(
 		await dynamoUtil.getTrades('source', '2018-10-01|01|01', 'quote|base')
 	).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('scanStatus', async () => {
 	dynamoUtil.scanData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.scanStatus();
-	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('scanStatus, live', async () => {
 	dynamoUtil.live = true;
 	dynamoUtil.scanData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.scanStatus();
-	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls.length).toBe(1);
-	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
+	expect((dynamoUtil.scanData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 const convertedStatus = dynamoUtil.parseStatus(status);
@@ -620,18 +608,14 @@ test('parseStatus', () => expect(convertedStatus).toMatchSnapshot());
 test('queryAcceptPriceEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryAcceptPriceEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryAcceptPriceEvent, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryAcceptPriceEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('parseAcceptedPrices', () => expect(dynamoUtil.parseAcceptedPrice(prices)).toMatchSnapshot());
@@ -672,13 +656,11 @@ test('parseAcceptedPrices, invalid type', () =>
 					eventKey: {
 						S: ''
 					},
-					// navAInWei: { S: '' },
 					timestampId: { S: '1529625612000|log_f7abca98' },
 					blockNumber: { N: '7722428' },
 					logStatus: { S: 'mined' },
 					systime: { N: '1529625989069' },
 					priceInWei: { S: '' },
-					// navBInWei: { S: '' },
 					blockHash: {
 						S: '0xdb41c94c37dad7feb9959c98c70bdaecb82022dd2484d27188452d559cd71eb5'
 					},
@@ -694,22 +676,14 @@ test('queryConversionEvent', async () => {
 	dynamoUtil.live = true;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(4);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[2][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[3][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryConversionEvent, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(4);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[2][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[3][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('parseConversion', () => expect(dynamoUtil.parseConversion(conversion)).toMatchSnapshot());
@@ -718,18 +692,14 @@ test('queryTotalSupplyEvent, live', async () => {
 	dynamoUtil.live = true;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryTotalSupplyEvent', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('parseTotalSupply', () => expect(dynamoUtil.parseTotalSupply(totalSupply)).toMatchSnapshot());
@@ -737,9 +707,7 @@ test('parseTotalSupply', () => expect(dynamoUtil.parseTotalSupply(totalSupply)).
 test('queryUIConversionEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
 	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls.length).toBe(2);
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
-	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls[1][0]).toMatchSnapshot();
+	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 const uiConversionData = {
