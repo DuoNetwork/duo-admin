@@ -33,10 +33,6 @@ switch (tool) {
 	case CST.DB_PRICES:
 		priceUtil.startAggregate(option.period);
 		break;
-	case CST.NODE:
-		util.logInfo('starting node hear beat');
-		new ContractService(tool, option).checkNodeStatus();
-		break;
 	case CST.CLEAN_DB:
 		new MarketDataService(tool, option).cleanDb();
 		break;

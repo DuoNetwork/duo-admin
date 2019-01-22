@@ -261,7 +261,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 1000000,
+      "gasLimit": 120000,
       "gasPrice": 1000000000,
     },
   ],
@@ -275,7 +275,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 1000000,
+      "gasLimit": 120000,
       "gasPrice": 1000000000,
     },
   ],
@@ -284,7 +284,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 1000000,
+      "gasLimit": 120000,
       "gasPrice": 1000000000,
     },
   ],

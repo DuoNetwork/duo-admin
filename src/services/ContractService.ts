@@ -115,20 +115,4 @@ export default class ContractService extends BaseService {
 			this.option.force
 		);
 	}
-
-	public async checkNodeStatus() {
-		await dbUtil.init(this.tool, this.option, this.web3Wrapper);
-		global.setInterval(
-			() =>
-				this.web3Wrapper
-					.getCurrentBlockNumber()
-					.then(bn =>
-						dbUtil.insertHeartbeat({
-							block: { N: bn + '' }
-						})
-					)
-					.catch(error => util.logInfo(error)),
-			30000
-		);
-	}
 }
