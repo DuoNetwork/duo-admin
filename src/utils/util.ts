@@ -55,8 +55,6 @@ class Util {
 			event: '',
 			provider: '',
 			period: 1,
-			base: 'USD',
-			quote: 'ETH'
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -91,12 +89,6 @@ class Util {
 				case 'period':
 					option.period = Number(args[1]);
 					break;
-				case 'base':
-					option.base = args[1] || option.base;
-					break;
-				case 'quote':
-					option.quote = args[1] || option.quote;
-					break;
 				case 'contractType':
 					option.contractType = args[1] || option.contractType;
 					break;
@@ -124,7 +116,6 @@ class Util {
 	public getStatusProcess(tool: string, option: IOption) {
 		let type = '';
 		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
-		console.log('dynamo', option.dynamo);
 		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
 		let source = '';
 

@@ -2,38 +2,33 @@ import BaseContractWrapper from '../../../duo-contract-wrapper/src/BaseContractW
 import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from '../common/constants';
-import { IEvent, IOption } from '../common/types';
+import { IEvent } from '../common/types';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class EventUtil {
-	public async trigger(
-		dualClassWrappers: DualClassWrapper[],
-		option: IOption
-	) {
-		util.logInfo('subscribing to ' + option.event);
-		if (![CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)) {
+	public async trigger(dualClassWrappers: DualClassWrapper[], event: string) {
+		util.logInfo('subscribing to ' + event);
+		if (![CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(event)) {
 			util.logError('invalid event, exit');
 			return Promise.resolve();
 		}
 
-		// if (option.source)
 		setInterval(async () => {
 			const promiseList = dualClassWrappers.map(async dcw => {
 				const sysState = await dcw.getStates();
 				const state = sysState.state;
 				util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
-				if (option.event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
+				if (event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
 					await dcw.triggerPreReset('');
-				else if (option.event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
+				else if (event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
 					await dcw.triggerReset('');
 
 				dynamoUtil.insertHeartbeat();
 			});
 			await Promise.all(promiseList);
 		}, 15000);
-		// else util.logDebug(`please check provider source`);
 	}
 
 	public async fetch(BaseContractWrappers: BaseContractWrapper[], force: boolean) {

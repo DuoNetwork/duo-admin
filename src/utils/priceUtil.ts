@@ -1,16 +1,20 @@
-// import moment from 'moment';
 import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import apis from '../apis';
 import * as CST from '../common/constants';
-import { IContractPrice, IDualClassStates, IOption, IPrice } from '../common/types';
+import { IContractPrice, IDualClassStates, IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
 const schedule = require('node-schedule');
 
 class PriceUtil {
-	public async startCommitPrices(magiWrapper: MagiWrapper, option: IOption) {
+	public async startCommitPrices(
+		account: string,
+		magiWrapper: MagiWrapper,
+		pair: string,
+		gasPrice: number = 0
+	) {
 		const startTime = util.getUTCNowTimestamp();
 		const endTime = startTime.valueOf() + 3500000;
 		const commitStart = endTime + 50000;
@@ -22,55 +26,70 @@ class PriceUtil {
 		if (!isStarted)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () =>
-				this.startMagi(magiWrapper, option)
+				this.startMagi(account, magiWrapper, pair, gasPrice)
 			);
 
 		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () =>
-			this.commitPrice(magiWrapper, option)
+			this.commitPrice(account, magiWrapper, pair, gasPrice)
 		);
 	}
 
-	public async startMagi(magiWrapper: MagiWrapper, option: IOption) {
-		const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-		const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+	public async startMagi(
+		account: string,
+		magiWrapper: MagiWrapper,
+		pair: string,
+		gasPrice: number = 0,
+		gasLimit: number = 0
+	) {
+		const [base, quote] = pair.split('|');
+		const currentPrice = await calculator.getPriceFix(base, quote);
+		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
 		return magiWrapper.startMagi(
-			'',
+			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
 			{
 				gasPrice: gasPrice,
-				gasLimit: option.gasLimit + 50000
+				gasLimit: CST.START_MAGI_GAS
 			}
 		);
 	}
 
-	public async commitPrice(magiWrapper: MagiWrapper, option: IOption) {
-		const currentPrice = await calculator.getPriceFix(option.base, option.quote);
-		const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + option.gasLimit);
+	public async commitPrice(
+		account: string,
+		magiWrapper: MagiWrapper,
+		pair: string,
+		gasPrice: number = 0,
+		gasLimit: number = 0
+	) {
+		const [base, quote] = pair.split('|');
+		const currentPrice = await calculator.getPriceFix(base, quote);
+		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
 		return magiWrapper.commitPrice(
-			'',
+			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
 			{
 				gasPrice: gasPrice,
-				gasLimit: option.gasLimit
+				gasLimit: CST.COMMIT_PRICE_GAS
 			}
 		);
 	}
 
 	public async fetchPrice(
+		account: string,
 		dualClassWrappers: DualClassWrapper[],
 		magiWrapper: MagiWrapper,
-		option: IOption
+		gasPrice: number = 0
 	) {
 		const isStarted = await magiWrapper.isStarted();
 		if (!isStarted) {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
-		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(magiWrapper.address);
+		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(account);
 		global.setInterval(async () => {
 			// first checking Magi current time is set correctly
 			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
@@ -86,12 +105,12 @@ class PriceUtil {
 					wrappersToCall.push(bw);
 			}
 
-			const gasPrice = (await magiWrapper.web3Wrapper.getGasPrice()) || option.gasPrice;
+			if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
 			for (const bw of wrappersToCall) {
 				promiseList.push(
-					bw.fetchPrice('', {
+					bw.fetchPrice(account, {
 						gasPrice: gasPrice,
-						gasLimit: option.gasLimit,
+						gasLimit: CST.FETCH_PRICE_GAS,
 						nonce: nonce
 					})
 				);

@@ -92,4 +92,10 @@ test(`fetchTrades WS `, async () => {
 	expect(w.close as jest.Mock).toBeCalledTimes(1);
 	(w.on as jest.Mock).mock.calls[3][1]('error');
 	expect(w.close as jest.Mock).toBeCalledTimes(2);
+
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
+	api.fetchTradesWS = jest.fn();
+	(global.setTimeout as jest.Mock).mock.calls[0][0]();
+	(global.setTimeout as jest.Mock).mock.calls[1][0]();
+	expect((api.fetchTradesWS as jest.Mock).mock.calls).toMatchSnapshot();
 });

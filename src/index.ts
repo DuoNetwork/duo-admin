@@ -1,15 +1,8 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
-import DualClassWrapper from '../../duo-contract-wrapper/src/DualClassWrapper';
-import EsplanadeWrapper from '../../duo-contract-wrapper/src/EsplanadeWrapper';
-import MagiWrapper from '../../duo-contract-wrapper/src/MagiWrapper';
-import { ICustodianWrappers } from '../../duo-contract-wrapper/src/types';
-import Web3Wrapper from '../../duo-contract-wrapper/src/Web3Wrapper';
 import * as CST from './common/constants';
-import dbUtil from './utils/dbUtil';
-import eventUtil from './utils/eventUtil';
-import keyUtil from './utils/keyUtil';
-import marketUtil from './utils/marketUtil';
+import ContractService from './services/ContractService';
+import MarketDataService from './services/MarketDataService';
 import priceUtil from './utils/priceUtil';
 import util from './utils/util';
 
@@ -30,173 +23,37 @@ util.logInfo(
 	using provider ${option.provider}`
 );
 
-const initContracts = (provider: string, privateKey: string, live: boolean) => {
-	const web3wrapper = new Web3Wrapper(null, provider, privateKey, live);
-
-	const dualClassWrappers: ICustodianWrappers = {
-		Beethoven: {
-			Perpetual: new DualClassWrapper(
-				web3wrapper,
-				web3wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-			),
-			M19: new DualClassWrapper(
-				web3wrapper,
-				web3wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
-			)
-		},
-		Mozart: {
-			Perpetual: new DualClassWrapper(
-				web3wrapper,
-				web3wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
-			),
-			M19: new DualClassWrapper(
-				web3wrapper,
-				web3wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
-			)
-		}
-	};
-	return dualClassWrappers;
-};
-
-let dualClassCustodianWrappers = initContracts(option.provider, '', option.live);
-const web3Wrapper = dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper;
-
-let magiWrapper = new MagiWrapper(web3Wrapper, web3Wrapper.contractAddresses.Oracles[0].address);
-const esplanadeWrapper = new EsplanadeWrapper(
-	web3Wrapper,
-	web3Wrapper.contractAddresses.MultiSigManagers[0].address
-);
-
-dbUtil.init(tool, option, web3Wrapper).then(() => {
-	switch (tool) {
-		case CST.TRADES:
-			marketUtil.startFetching(tool, option);
-			break;
-		case CST.TRIGGER:
-			keyUtil.getKey(option).then(key => {
-				dualClassCustodianWrappers = initContracts(
-					option.provider,
-					key.privateKey,
-					option.live
-				);
-
-				eventUtil.trigger(
-					[
-						dualClassCustodianWrappers.Beethoven.Perpetual,
-						dualClassCustodianWrappers.Beethoven.M19,
-						dualClassCustodianWrappers.Mozart.Perpetual,
-						dualClassCustodianWrappers.Mozart.M19
-					],
-					option
-				);
-			});
-			break;
-		case CST.FETCH_EVENTS:
-			eventUtil.fetch(
-				[
-					dualClassCustodianWrappers.Beethoven.Perpetual,
-					dualClassCustodianWrappers.Beethoven.M19,
-					dualClassCustodianWrappers.Mozart.Perpetual,
-					dualClassCustodianWrappers.Mozart.M19,
-					magiWrapper,
-					esplanadeWrapper
-				],
-				option.force
-			);
-			break;
-		case CST.COMMIT:
-			util.logInfo('starting commit process');
-
-			keyUtil.getKey(option).then(key => {
-				dualClassCustodianWrappers = initContracts(
-					option.provider,
-					key.privateKey,
-					option.live
-				);
-				magiWrapper = new MagiWrapper(
-					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper,
-					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
-				);
-				priceUtil.startCommitPrices(magiWrapper, option);
-			});
-			setInterval(() => dbUtil.insertHeartbeat(), 30000);
-			break;
-		case CST.DB_PRICES:
-			priceUtil.startAggregate(option.period);
-			break;
-		case CST.NODE:
-			util.logInfo('starting node hear beat');
-			setInterval(
-				() =>
-					web3Wrapper
-						.getCurrentBlockNumber()
-						.then(bn =>
-							dbUtil.insertHeartbeat({
-								block: { N: bn + '' }
-							})
-						)
-						.catch(error => util.logInfo(error)),
-				30000
-			);
-			break;
-		case CST.FETCH_PRICE:
-			util.logInfo('starting fetchPrice process');
-			keyUtil.getKey(option).then(key => {
-				dualClassCustodianWrappers = initContracts(
-					option.provider,
-					key.privateKey,
-					option.live
-				);
-				magiWrapper = new MagiWrapper(
-					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper,
-					dualClassCustodianWrappers.Beethoven.Perpetual.web3Wrapper.contractAddresses.Oracles[0].address
-				);
-				priceUtil.fetchPrice(
-					[
-						dualClassCustodianWrappers.Beethoven.Perpetual,
-						dualClassCustodianWrappers.Beethoven.M19,
-						dualClassCustodianWrappers.Mozart.Perpetual,
-						dualClassCustodianWrappers.Mozart.M19
-					],
-					magiWrapper,
-					option
-				);
-			});
-			setInterval(() => dbUtil.insertHeartbeat(), 30000);
-			break;
-		case CST.CLEAN_DB:
-			dbUtil.cleanDB();
-			setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
-			setInterval(() => dbUtil.insertHeartbeat(), 30000);
-			break;
-		case CST.START_CUSTODIAN:
-			const kovanManagerAccount = require('./static/kovanManagerAccount.json');
-			const type = option.contractType;
-			const tenor = option.tenor;
-			if (
-				![CST.BEETHOVEN, CST.MOZART].includes(type) ||
-				![CST.TENOR_PPT, CST.TENOR_M19].includes(tenor)
-			) {
-				util.logDebug('no contract type or tenor specified');
-				break;
-			}
-			const contractWrapper: DualClassWrapper = dualClassCustodianWrappers[type][tenor];
-
-			contractWrapper.startCustodian(
-				kovanManagerAccount.Beethoven.operator.address,
-				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken
-					.address,
-				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken
-					.address,
-				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
-				{
-					gasPrice: option.gasPrice || 2000000000,
-					gasLimit: option.gasLimit || 1000000
-				}
-			);
-			break;
-		default:
-			util.logInfo('no such tool ' + tool);
-			break;
-	}
-});
+switch (tool) {
+	case CST.TRADES:
+		new MarketDataService(tool, option).startFetching(tool, option);
+		break;
+	case CST.FETCH_EVENTS:
+		new ContractService(tool, option).fetchEvent();
+		break;
+	case CST.DB_PRICES:
+		priceUtil.startAggregate(option.period);
+		break;
+	case CST.CLEAN_DB:
+		new MarketDataService(tool, option).cleanDb();
+		break;
+	case CST.START_CUSTODIAN:
+		const kovanManagerAccount = require('./static/kovanManagerAccount.json');
+		const optAddr = kovanManagerAccount.Beethoven.operator.address;
+		new ContractService(tool, option).startCustodian(optAddr);
+		break;
+	case CST.TRIGGER:
+		util.logInfo('starting trigger process');
+		new ContractService(tool, option).trigger();
+		break;
+	case CST.COMMIT:
+		util.logInfo('starting commit process');
+		new ContractService(tool, option).commitPrice();
+		break;
+	case CST.FETCH_PRICE:
+		util.logInfo('starting fetchPrice process');
+		new ContractService(tool, option).fetchPrice();
+		break;
+	default:
+		util.logInfo('no such tool ' + tool);
+		break;
+}

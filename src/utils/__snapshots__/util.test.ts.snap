@@ -26,10 +26,6 @@ exports[`getStatusProcess fetchPrice do not useDynamo 1`] = `"FETCH_AWS_PRIVATE"
 
 exports[`getStatusProcess fetchPrice useDynamo 1`] = `"FETCH_AWS_PUBLIC"`;
 
-exports[`getStatusProcess node do not useDynamo 1`] = `""`;
-
-exports[`getStatusProcess node useDynamo 1`] = `""`;
-
 exports[`getStatusProcess prices do not useDynamo 1`] = `"PRICE_AWS_PRIVATE_MINUTELY"`;
 
 exports[`getStatusProcess prices useDynamo 1`] = `"PRICE_AWS_PUBLIC_MINUTELY"`;
@@ -83,7 +79,6 @@ Object {
   ],
   "aws": false,
   "azure": false,
-  "base": "base",
   "contractType": "contractType",
   "dbLive": false,
   "dynamo": false,
@@ -101,7 +96,6 @@ Object {
   "pair": "pair",
   "period": 10,
   "provider": "provider",
-  "quote": "quote",
   "server": false,
   "source": "source",
   "sources": Array [
@@ -119,7 +113,6 @@ Object {
   ],
   "aws": false,
   "azure": false,
-  "base": "USD",
   "contractType": "Beethoven",
   "dbLive": false,
   "dynamo": false,
@@ -136,7 +129,6 @@ Object {
   "pair": "",
   "period": 1,
   "provider": "",
-  "quote": "ETH",
   "server": false,
   "source": "",
   "sources": Array [

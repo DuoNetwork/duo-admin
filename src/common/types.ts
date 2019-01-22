@@ -106,8 +106,6 @@ export interface IOption {
 	event: string;
 	provider: string;
 	period: number;
-	base: string;
-	quote: string;
 	contractType: string;
 	tenor: string;
 }

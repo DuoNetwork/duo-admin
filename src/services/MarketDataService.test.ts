@@ -1,23 +1,26 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import child_process from 'child_process';
 import geminiApi from '../apis/geminiApi';
-import marketUtil from './marketUtil';
-import osUtil from './osUtil';
-import util from './util';
+import osUtil from '../utils/osUtil';
+import util from '../utils/util';
+import MarketDataService from './MarketDataService';
 
+const marketDataService = new MarketDataService('tool', {} as any);
 test('retry after long enought time', () => {
 	const launchMock = jest.fn();
-	const launchOriginal = marketUtil.launchSource;
-	marketUtil.launchSource = launchMock;
+	const launchOriginal = marketDataService.launchSource;
+	marketDataService.launchSource = launchMock;
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	global.setTimeout = jest.fn();
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: util.getUTCNowTimestamp() - (30000 + 1),
 		failCount: 2,
 		instance: undefined as any
 	};
-	marketUtil.retry(
+	marketDataService.retry(
 		'tool',
 		{
 			forceREST: false,
@@ -27,24 +30,24 @@ test('retry after long enought time', () => {
 		'source',
 		['asset1', 'asset2', 'asset3']
 	);
-	expect(marketUtil.subProcesses['source']).toMatchSnapshot();
+	expect(marketDataService.subProcesses['source']).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 	(global.setTimeout as jest.Mock).mock.calls[0][0]();
 	expect(launchMock.mock.calls).toMatchSnapshot();
-	marketUtil.launchSource = launchOriginal;
+	marketDataService.launchSource = launchOriginal;
 });
 
 test('retry within short time', () => {
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	child_process.exec = jest.fn() as any;
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: util.getUTCNowTimestamp() - (30000 - 1),
 		failCount: 2,
 		instance: undefined as any
 	};
-	marketUtil.retry(
+	marketDataService.retry(
 		'tool',
 		{
 			forceREST: false,
@@ -54,21 +57,21 @@ test('retry within short time', () => {
 		'source',
 		['asset1', 'asset2', 'asset3']
 	);
-	expect(marketUtil.subProcesses['source']).toMatchSnapshot();
+	expect(marketDataService.subProcesses['source']).toMatchSnapshot();
 });
 
 test('launchSource fail windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.retry = jest.fn();
-	marketUtil.subProcesses['source'] = {
+	marketDataService.retry = jest.fn();
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: false,
@@ -76,8 +79,8 @@ test('launchSource fail windows', () => {
 		azure: true
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
-	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
+	expect((marketDataService.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
 
 test('launchSource success windows', () => {
@@ -89,38 +92,38 @@ test('launchSource success windows', () => {
 		};
 	}) as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.retry = jest.fn();
-	marketUtil.subProcesses['source'] = {
+	marketDataService.retry = jest.fn();
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 5,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: false,
 		aws: true
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect(execOn.mock.calls).toMatchSnapshot();
 	execOn.mock.calls[0][1]();
 	execOn.mock.calls[0][1](1);
-	expect((marketUtil.retry as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((marketDataService.retry as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('launchSource forceREST windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: true,
 		debug: false,
 		live: false,
@@ -128,66 +131,66 @@ test('launchSource forceREST windows', () => {
 		server: true
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('launchSource debug windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: true,
 		live: false
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('launchSource live windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: true
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('launchSource fail not windows', () => {
 	osUtil.isWindows = jest.fn(() => false);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.retry = jest.fn();
-	marketUtil.subProcesses['source'] = {
+	marketDataService.retry = jest.fn();
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: false
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
-	expect((marketUtil.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
+	expect((marketDataService.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
 });
 
 test('launchSource success not windows', () => {
@@ -198,22 +201,22 @@ test('launchSource success not windows', () => {
 		};
 	}) as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.retry = jest.fn();
-	marketUtil.subProcesses['source'] = {
+	marketDataService.retry = jest.fn();
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 5,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: false
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect(
-		(marketUtil.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
+		(marketDataService.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
 	).toMatchSnapshot();
 });
 
@@ -221,64 +224,64 @@ test('launchSource forceREST not windows', () => {
 	osUtil.isWindows = jest.fn(() => false);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: true,
 		debug: false,
 		live: false
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('launchSource debug not windows', () => {
 	osUtil.isWindows = jest.fn(() => false);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: true,
 		live: false
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('launchSource live not windows', () => {
 	osUtil.isWindows = jest.fn(() => false);
 	child_process.exec = jest.fn() as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
-	marketUtil.subProcesses['source'] = {
+	marketDataService.subProcesses['source'] = {
 		source: 'source',
 		lastFailTimestamp: 0,
 		failCount: 0,
 		instance: undefined as any
 	};
-	marketUtil.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
+	marketDataService.launchSource('tool', 'source', ['asset1', 'asset2', 'asset3'], {
 		forceREST: false,
 		debug: false,
 		live: true
 	} as any);
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketUtil.subProcesses).toMatchSnapshot();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
 });
 
 test('startFetching no source', async () => {
 	util.sleep = jest.fn();
-	marketUtil.launchSource = jest.fn();
+	marketDataService.launchSource = jest.fn();
 
-	await marketUtil.startFetching('tool', {
+	await marketDataService.startFetching('tool', {
 		source: '',
 		sources: [],
 		exSources: [],
@@ -287,7 +290,7 @@ test('startFetching no source', async () => {
 		debug: false
 	} as any);
 
-	await marketUtil.startFetching('tool', {
+	await marketDataService.startFetching('tool', {
 		source: '',
 		sources: ['gemini', 'kraken'],
 		exSources: [],
@@ -296,7 +299,7 @@ test('startFetching no source', async () => {
 		debug: false
 	} as any);
 
-	await marketUtil.startFetching('tool', {
+	await marketDataService.startFetching('tool', {
 		source: '',
 		sources: ['gemini', 'kraken'],
 		exSources: [],
@@ -306,14 +309,14 @@ test('startFetching no source', async () => {
 		debug: false
 	} as any);
 
-	expect((marketUtil.launchSource as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((marketDataService.launchSource as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('startFetching source', async () => {
 	util.sleep = jest.fn();
 	geminiApi.getSourcePairs = jest.fn(() => ['quote|base']);
 	geminiApi.fetchTrades = jest.fn();
-	await marketUtil.startFetching('tool', {
+	await marketDataService.startFetching('tool', {
 		source: 'gemini',
 		assets: ['quote', 'base'],
 		forceREST: true,
@@ -321,7 +324,7 @@ test('startFetching source', async () => {
 	} as any);
 
 	try {
-		await marketUtil.startFetching('tool', {
+		await marketDataService.startFetching('tool', {
 			source: 'gemini1',
 			sources: [],
 			exSources: [],
@@ -341,7 +344,7 @@ test('startFetching source no sourcePairs', async () => {
 	util.sleep = jest.fn();
 	geminiApi.getSourcePairs = jest.fn(() => []);
 	geminiApi.fetchTrades = jest.fn();
-	await marketUtil.startFetching('tool', {
+	await marketDataService.startFetching('tool', {
 		source: 'gemini',
 		assets: ['quote', 'base'],
 		forceREST: true,

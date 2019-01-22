@@ -60,7 +60,7 @@ export class BitfinexApi extends BaseApi {
 		);
 	}
 
-	public fetchTradesSinglePairWS(sourcePair: string): any {
+	public fetchTradesWSForPair(sourcePair: string): any {
 		const socket = new Pusher(CST.API_BST_PUSHER_APP_KEY);
 		socket.bind('trade', trade => {
 			this.handleWSTradeMessage(JSON.stringify(trade), sourcePair);
@@ -76,18 +76,18 @@ export class BitfinexApi extends BaseApi {
 				timeOutDuration = 30000;
 			}
 			socket.disconnect();
-			global.setTimeout(() => socket.connect(), timeOutDuration);
+			global.setTimeout(() => this.fetchTradesWSForPair(sourcePair), timeOutDuration);
 		});
 
 		socket.connection.bind('closed', () => {
 			util.logError('connection closed');
-			global.setTimeout(() => socket.connect(), 1000);
+			global.setTimeout(() => this.fetchTradesWSForPair(sourcePair), 1000);
 		});
 		return socket;
 	}
 
 	public fetchTradesWS(sourcePairs: string[]) {
-		for (const sourcePair of sourcePairs) this.fetchTradesSinglePairWS(sourcePair);
+		for (const sourcePair of sourcePairs) this.fetchTradesWSForPair(sourcePair);
 	}
 }
 const bitfinexApi = new BitfinexApi();

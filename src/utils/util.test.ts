@@ -60,8 +60,6 @@ test('parseOptions default', () => {
 		'gasLimit=',
 		'event=',
 		'provider=',
-		'base=',
-		'quote=',
 		'contractType=',
 		'tenor='
 	];
@@ -86,8 +84,6 @@ test('parseOptions', () => {
 		'gasLimit=456',
 		'event=event',
 		'provider=provider',
-		'base=base',
-		'quote=quote',
 		'contractType=contractType',
 		'tenor=tenor'
 	];
@@ -114,7 +110,6 @@ const toolToTest = [
 	CST.TRADES,
 	CST.COMMIT,
 	CST.CLEAN_DB,
-	CST.NODE,
 	CST.TRIGGER,
 	CST.FETCH_EVENTS,
 	CST.FETCH_PRICE,
