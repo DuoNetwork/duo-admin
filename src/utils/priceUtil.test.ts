@@ -167,7 +167,7 @@ test('commitPrice', async () => {
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
 
-	await priceUtil.commitPrice('account', magiWrapper, 'base|quote');
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base');
 
 	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -180,7 +180,7 @@ test('commitPrice gasPrice', async () => {
 		})
 	);
 
-	await priceUtil.commitPrice('account', magiWrapper, 'base|quote', 1000000000);
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
 
 	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -193,7 +193,7 @@ test('startMagi', async () => {
 		})
 	);
 
-	await priceUtil.startMagi('account', magiWrapper, 'base|quote');
+	await priceUtil.startMagi('account', magiWrapper, 'quote|base');
 
 	expect((magiWrapper.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -206,7 +206,7 @@ test('startMagi gasPrice', async () => {
 		})
 	);
 
-	await priceUtil.startMagi('account', magiWrapper, 'base|quote', 1000000000);
+	await priceUtil.startMagi('account', magiWrapper, 'quote|base', 1000000000);
 
 	expect((magiWrapper.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
 });

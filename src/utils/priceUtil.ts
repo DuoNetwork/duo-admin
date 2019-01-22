@@ -41,7 +41,7 @@ class PriceUtil {
 		gasPrice: number = 0,
 		gasLimit: number = 0
 	) {
-		const [base, quote] = pair.split('|');
+		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(base, quote);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
 		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
@@ -63,7 +63,7 @@ class PriceUtil {
 		gasPrice: number = 0,
 		gasLimit: number = 0
 	) {
-		const [base, quote] = pair.split('|');
+		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(base, quote);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
 		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
