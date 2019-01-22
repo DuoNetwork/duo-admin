@@ -97,7 +97,7 @@ export default class MarketDataService extends BaseService {
 	public async cleanDb() {
 		await dbUtil.init(this.tool, this.option, this.web3Wrapper);
 		dbUtil.cleanDB();
-		setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
-		setInterval(() => dbUtil.insertHeartbeat(), 30000);
+		global.setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
+		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 }

@@ -52,6 +52,7 @@ test('fetchKey', async () => {
 		})
 	);
 	await contractService.fetchKey();
+	expect((keyUtil.getKey as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(contractService.key).toMatchSnapshot();
 	expect(contractService.address).toMatchSnapshot();
 });
@@ -63,6 +64,7 @@ test('fetchKey, key not start with 0x', async () => {
 		})
 	);
 	await contractService.fetchKey();
+	expect((keyUtil.getKey as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(contractService.key).toMatchSnapshot();
 	expect(contractService.address).toMatchSnapshot();
 });
@@ -82,7 +84,9 @@ test('commitPrice', async () => {
 	global.setInterval = jest.fn();
 
 	await contractService.commitPrice();
+	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
 	expect((dbUtil.init as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.startCommitPrices as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -95,7 +99,9 @@ test('fetchPrice', async () => {
 	global.setInterval = jest.fn();
 
 	await contractService.fetchPrice();
+	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
 	expect((dbUtil.init as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

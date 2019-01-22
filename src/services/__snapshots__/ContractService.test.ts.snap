@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`commitPrice 1`] = `
+exports[`commitPrice 1`] = `30000`;
+
+exports[`commitPrice 2`] = `
 Array [
   Array [
     "tool",
@@ -117,7 +119,7 @@ Array [
 ]
 `;
 
-exports[`commitPrice 2`] = `
+exports[`commitPrice 3`] = `
 Array [
   Array [
     "0xpublicKey",
@@ -150,15 +152,53 @@ Array [
 ]
 `;
 
-exports[`fetchKey 1`] = `"0xprivateKey"`;
+exports[`fetchKey 1`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "contractType": "type",
+      "event": "event",
+      "force": false,
+      "gasPrice": 1000000000,
+      "live": false,
+      "pair": "quote|base",
+      "provider": "provider",
+      "tenor": "tenor",
+    },
+  ],
+]
+`;
 
-exports[`fetchKey 2`] = `"0xpublicKey"`;
+exports[`fetchKey 2`] = `"0xprivateKey"`;
 
-exports[`fetchKey, key not start with 0x 1`] = `"privateKey"`;
+exports[`fetchKey 3`] = `"0xpublicKey"`;
 
-exports[`fetchKey, key not start with 0x 2`] = `"0xpublicKey"`;
+exports[`fetchKey, key not start with 0x 1`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "contractType": "type",
+      "event": "event",
+      "force": false,
+      "gasPrice": 1000000000,
+      "live": false,
+      "pair": "quote|base",
+      "provider": "provider",
+      "tenor": "tenor",
+    },
+  ],
+]
+`;
 
-exports[`fetchPrice 1`] = `
+exports[`fetchKey, key not start with 0x 2`] = `"privateKey"`;
+
+exports[`fetchKey, key not start with 0x 3`] = `"0xpublicKey"`;
+
+exports[`fetchPrice 1`] = `30000`;
+
+exports[`fetchPrice 2`] = `
 Array [
   Array [
     "tool",
@@ -275,7 +315,7 @@ Array [
 ]
 `;
 
-exports[`fetchPrice 2`] = `
+exports[`fetchPrice 3`] = `
 Array [
   Array [
     "0xpublicKey",

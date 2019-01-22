@@ -1,10 +1,17 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
 import child_process from 'child_process';
+import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
 import geminiApi from '../apis/geminiApi';
+import dbUtil from '../utils/dbUtil';
 import osUtil from '../utils/osUtil';
 import util from '../utils/util';
 import MarketDataService from './MarketDataService';
+jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
+	jest.fn(() => ({
+		contractAddresses: kovan
+	}))
+);
 
 const marketDataService = new MarketDataService('tool', {} as any);
 test('retry after long enought time', () => {
@@ -352,4 +359,20 @@ test('startFetching source no sourcePairs', async () => {
 	} as any);
 
 	expect(geminiApi.fetchTrades as jest.Mock).not.toBeCalled();
+});
+
+test('cleanDb', async () => {
+	dbUtil.init = jest.fn();
+	dbUtil.cleanDB = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
+	global.setInterval = jest.fn();
+	await marketDataService.cleanDb();
+	expect(dbUtil.cleanDB as jest.Mock).toBeCalledTimes(1);
+	for (const call of (global.setInterval as jest.Mock).mock.calls)
+		expect(call[1]).toMatchSnapshot();
+
+	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect(dbUtil.cleanDB as jest.Mock).toBeCalledTimes(2);
+	(global.setInterval as jest.Mock).mock.calls[1][0]();
+	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
 });

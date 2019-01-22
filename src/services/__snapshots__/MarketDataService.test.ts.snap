@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`cleanDb 1`] = `86400000`;
+
+exports[`cleanDb 2`] = `30000`;
+
 exports[`launchSource debug not windows 1`] = `
 Array [
   Array [
