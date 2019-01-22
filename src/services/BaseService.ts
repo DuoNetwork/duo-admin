@@ -3,6 +3,7 @@ import EsplanadeWrapper from '../../../duo-contract-wrapper/src/EsplanadeWrapper
 import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
 import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
 import { IOption } from '../common/types';
+import dbUtil from '../utils/dbUtil';
 
 export default class BaseService {
 	public web3Wrapper: Web3Wrapper;
@@ -13,6 +14,10 @@ export default class BaseService {
 		this.option = option;
 		this.tool = tool;
 		this.web3Wrapper = new Web3Wrapper(null, option.provider, '', option.live);
+	}
+
+	public init() {
+		return dbUtil.init(this.tool, this.option, this.web3Wrapper);
 	}
 
 	public createDuoWrappers(): {[type: string]: {[tenor: string]: DualClassWrapper}} {

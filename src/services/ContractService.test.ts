@@ -108,7 +108,7 @@ test('fetchPrice', async () => {
 
 test('startCustodian, worng type', async () => {
 	contractService.createDuoWrappers = jest.fn();
-	await contractService.startCustodian('account');
+	await contractService.startCustodian();
 	expect(contractService.createDuoWrappers as jest.Mock).not.toBeCalled();
 });
 
@@ -151,6 +151,6 @@ test('startCustodian', async () => {
 			}
 		}
 	}));
-	await contractService1.startCustodian('account');
+	await contractService1.startCustodian();
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });

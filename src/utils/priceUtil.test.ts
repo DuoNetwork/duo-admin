@@ -236,18 +236,6 @@ test('startMagi gasPrice', async () => {
 	expect((magiWrapper.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
-test('startAggregate', async () => {
-	global.setInterval = jest.fn();
-	dynamoUtil.insertHeartbeat = jest.fn();
-	priceUtil.aggregatePrice = jest.fn();
-	await priceUtil.startAggregate(10);
-
-	(global.setInterval as jest.Mock).mock.calls[0][0]();
-	(global.setInterval as jest.Mock).mock.calls[1][0]();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((priceUtil.aggregatePrice as jest.Mock).mock.calls).toMatchSnapshot();
-});
-
 test('startCommitPrices', async () => {
 	schedule.RecurrenceRule = jest.fn().mockImplementation(() => ({}));
 	schedule.scheduleJob = jest.fn();

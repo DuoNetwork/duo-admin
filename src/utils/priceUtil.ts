@@ -204,17 +204,6 @@ class PriceUtil {
 
 		util.logInfo('all source processed');
 	}
-
-	public async startAggregate(period: number) {
-		await dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
-		await this.aggregatePrice(period);
-
-		global.setInterval(
-			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' } }),
-			CST.STATUS_INTERVAL * 1000
-		);
-		global.setInterval(() => this.aggregatePrice(period), 30000);
-	}
 }
 
 const priceUtil = new PriceUtil();

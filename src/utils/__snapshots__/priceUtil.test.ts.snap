@@ -344,36 +344,6 @@ Object {
 }
 `;
 
-exports[`startAggregate 1`] = `
-Array [
-  Array [
-    Object {
-      "period": Object {
-        "N": "10",
-      },
-    },
-  ],
-  Array [
-    Object {
-      "period": Object {
-        "N": "10",
-      },
-    },
-  ],
-]
-`;
-
-exports[`startAggregate 2`] = `
-Array [
-  Array [
-    10,
-  ],
-  Array [
-    10,
-  ],
-]
-`;
-
 exports[`startCommitPrices 1`] = `
 Array [
   Array [

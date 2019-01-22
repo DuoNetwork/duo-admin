@@ -4,7 +4,9 @@ import child_process from 'child_process';
 import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
 import geminiApi from '../apis/geminiApi';
 import dbUtil from '../utils/dbUtil';
+import dynamoUtil from '../utils/dynamoUtil';
 import osUtil from '../utils/osUtil';
+import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
 import MarketDataService from './MarketDataService';
 jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
@@ -375,4 +377,16 @@ test('cleanDb', async () => {
 	expect(dbUtil.cleanDB as jest.Mock).toBeCalledTimes(2);
 	(global.setInterval as jest.Mock).mock.calls[1][0]();
 	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
+});
+
+test('startAggregate', async () => {
+	global.setInterval = jest.fn();
+	dynamoUtil.insertHeartbeat = jest.fn();
+	priceUtil.aggregatePrice = jest.fn();
+	await marketDataService.startAggregate(10);
+
+	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	(global.setInterval as jest.Mock).mock.calls[1][0]();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((priceUtil.aggregatePrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

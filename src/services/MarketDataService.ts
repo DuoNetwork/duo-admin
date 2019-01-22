@@ -1,8 +1,11 @@
 import child_process from 'child_process';
 import apis from '../apis';
+import * as CST from '../common/constants';
 import { IOption, ISubProcess } from '../common/types';
 import dbUtil from '../utils/dbUtil';
+import dynamoUtil from '../utils/dynamoUtil';
 import osUtil from '../utils/osUtil';
+import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
 import BaseService from './BaseService';
 
@@ -99,5 +102,16 @@ export default class MarketDataService extends BaseService {
 		dbUtil.cleanDB();
 		global.setInterval(() => dbUtil.cleanDB(), 60000 * 60 * 24);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
+	}
+
+	public async startAggregate(period: number) {
+		await dynamoUtil.insertHeartbeat({ period: { N: period + '' } });
+		await priceUtil.aggregatePrice(period);
+
+		global.setInterval(
+			() => dynamoUtil.insertHeartbeat({ period: { N: period + '' } }),
+			CST.STATUS_INTERVAL * 1000
+		);
+		global.setInterval(() => priceUtil.aggregatePrice(period), 30000);
 	}
 }

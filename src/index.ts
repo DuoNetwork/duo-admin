@@ -3,7 +3,6 @@ import '@babel/polyfill';
 import * as CST from './common/constants';
 import ContractService from './services/ContractService';
 import MarketDataService from './services/MarketDataService';
-import priceUtil from './utils/priceUtil';
 import util from './utils/util';
 
 const tool = process.argv[2];
@@ -25,33 +24,36 @@ util.logInfo(
 
 switch (tool) {
 	case CST.TRADES:
-		new MarketDataService(tool, option).startFetching(tool, option);
+		const tradeMds = new MarketDataService(tool, option);
+		tradeMds.init().then(() => tradeMds.startFetching(tool, option));
 		break;
 	case CST.FETCH_EVENTS:
-		new ContractService(tool, option).fetchEvent();
+		const eventCs = new ContractService(tool, option);
+		eventCs.init().then(() => eventCs.fetchEvent());
 		break;
 	case CST.DB_PRICES:
-		priceUtil.startAggregate(option.period);
+		const priceMds = new MarketDataService(tool, option);
+		priceMds.init().then(() => priceMds.startFetching(tool, option));
 		break;
 	case CST.CLEAN_DB:
-		new MarketDataService(tool, option).cleanDb();
+		const dbMds = new MarketDataService(tool, option);
+		dbMds.init().then(() => dbMds.cleanDb());
 		break;
 	case CST.START_CUSTODIAN:
-		const kovanManagerAccount = require('./static/kovanManagerAccount.json');
-		const optAddr = kovanManagerAccount.Beethoven.operator.address;
-		new ContractService(tool, option).startCustodian(optAddr);
+		const startCs = new ContractService(tool, option);
+		startCs.init().then(() => startCs.startCustodian());
 		break;
 	case CST.TRIGGER:
-		util.logInfo('starting trigger process');
-		new ContractService(tool, option).trigger();
+		const triggerCs = new ContractService(tool, option);
+		triggerCs.init().then(() => triggerCs.trigger());
 		break;
 	case CST.COMMIT:
-		util.logInfo('starting commit process');
-		new ContractService(tool, option).commitPrice();
+		const commitCs = new ContractService(tool, option);
+		commitCs.init().then(() => commitCs.commitPrice());
 		break;
 	case CST.FETCH_PRICE:
-		util.logInfo('starting fetchPrice process');
-		new ContractService(tool, option).fetchPrice();
+		const fetchCs = new ContractService(tool, option);
+		fetchCs.init().then(() => fetchCs.fetchPrice());
 		break;
 	default:
 		util.logInfo('no such tool ' + tool);

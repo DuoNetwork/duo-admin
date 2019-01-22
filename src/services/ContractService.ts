@@ -76,7 +76,27 @@ export default class ContractService extends BaseService {
 		setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
-	public async startCustodian(account: string) {
+	public async startCustodian() {
+		let kovanManagerAccount = {
+			Beethoven: {
+				operator: {
+					address: 'account',
+					privateKey: ''
+				}
+			}
+		};
+		try {
+			kovanManagerAccount = require('../static/kovanManagerAccount.json');
+		} catch (error) {
+			console.log(error);
+		}
+		this.web3Wrapper = new Web3Wrapper(
+			null,
+			this.option.provider,
+			kovanManagerAccount.Beethoven.operator.privateKey,
+			this.option.live
+		);
+		const account = kovanManagerAccount.Beethoven.operator.address;
 		const type = this.option.contractType;
 		const tenor = this.option.tenor;
 		if (
