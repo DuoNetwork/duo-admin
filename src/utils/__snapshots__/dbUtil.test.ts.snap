@@ -89,8 +89,8 @@ exports[`readLastPrice 1`] = `"invalid"`;
 exports[`readLastPrice 2`] = `
 Array [
   Array [
-    "base",
     "quote",
+    "base",
   ],
 ]
 `;

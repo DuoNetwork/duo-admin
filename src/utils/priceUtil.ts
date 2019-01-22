@@ -25,11 +25,11 @@ class PriceUtil {
 
 		if (!isStarted)
 			// contract is in inception state; start contract first and then commit price
-			schedule.scheduleJob({ start: startTime, end: endTime, rule }, async () =>
+			schedule.scheduleJob({ start: startTime, end: endTime, rule }, () =>
 				this.startMagi(account, magiWrapper, pair, gasPrice)
 			);
 
-		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, async () =>
+		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, () =>
 			this.commitPrice(account, magiWrapper, pair, gasPrice)
 		);
 	}
@@ -38,13 +38,12 @@ class PriceUtil {
 		account: string,
 		magiWrapper: MagiWrapper,
 		pair: string,
-		gasPrice: number = 0,
-		gasLimit: number = 0
+		gasPrice: number = 0
 	) {
 		const [quote, base] = pair.split('|');
-		const currentPrice = await calculator.getPriceFix(base, quote);
+		const currentPrice = await calculator.getPriceFix(quote, base);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.START_MAGI_GAS);
 		return magiWrapper.startMagi(
 			account,
 			currentPrice.price,
@@ -60,13 +59,12 @@ class PriceUtil {
 		account: string,
 		magiWrapper: MagiWrapper,
 		pair: string,
-		gasPrice: number = 0,
-		gasLimit: number = 0
+		gasPrice: number = 0
 	) {
 		const [quote, base] = pair.split('|');
-		const currentPrice = await calculator.getPriceFix(base, quote);
+		const currentPrice = await calculator.getPriceFix(quote, base);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + gasLimit);
+		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.COMMIT_PRICE_GAS);
 		return magiWrapper.commitPrice(
 			account,
 			currentPrice.price,

@@ -3,31 +3,60 @@
 exports[`aggregatePrice 1`] = `
 Array [
   Array [
+    "gemini",
+    0,
+    1535958600000,
+    1535958681002,
+  ],
+  Array [
+    "kraken",
+    0,
+    1535958600000,
+    1535958681002,
+  ],
+  Array [
+    "gdax",
+    0,
+    1535958600000,
+    1535958681002,
+  ],
+  Array [
+    "bitstamp",
+    0,
+    1535958600000,
+    1535958681002,
+  ],
+]
+`;
+
+exports[`aggregatePrice 2`] = `
+Array [
+  Array [
     Object {
       "base": "USD",
-      "close": 215,
-      "high": 220,
+      "close": 210,
+      "high": 214,
       "low": 210,
       "open": 214,
       "period": 1,
       "quote": "ETH",
       "source": "gemini",
       "timestamp": 1535958600000,
-      "volume": 0.0013,
+      "volume": 0.0026,
     },
   ],
   Array [
     Object {
       "base": "USD",
       "close": 210,
-      "high": 213,
-      "low": 200,
+      "high": 210,
+      "low": 207,
       "open": 207,
       "period": 1,
       "quote": "ETH",
       "source": "kraken",
       "timestamp": 1535958660000,
-      "volume": 17.6757,
+      "volume": 35.3514,
     },
   ],
 ]
@@ -109,15 +138,15 @@ exports[`getBasePeriod 1`] = `"invalid period"`;
 exports[`getPeriodPrice 1 1`] = `
 Object {
   "base": "USD",
-  "close": 215,
-  "high": 220,
+  "close": 210,
+  "high": 214,
   "low": 210,
   "open": 214,
   "period": 1,
   "quote": "ETH",
   "source": "gemini",
   "timestamp": 1535958600000,
-  "volume": 0.0013,
+  "volume": 0.0026,
 }
 `;
 
@@ -125,14 +154,14 @@ exports[`getPeriodPrice 1 2`] = `
 Object {
   "base": "USD",
   "close": 210,
-  "high": 213,
-  "low": 200,
+  "high": 210,
+  "low": 202,
   "open": 202,
   "period": 1,
   "quote": "ETH",
   "source": "bitfinex",
   "timestamp": 1535958660000,
-  "volume": 17.676399999999997,
+  "volume": 35.3528,
 }
 `;
 
@@ -140,14 +169,14 @@ exports[`getPeriodPrice 60 1`] = `
 Object {
   "base": "USD",
   "close": 210,
-  "high": 220,
-  "low": 200,
+  "high": 214,
+  "low": 202,
   "open": 214,
   "period": 60,
   "quote": "ETH",
   "source": "gemini",
   "timestamp": 1535958000000,
-  "volume": 17.677699999999998,
+  "volume": 35.3554,
 }
 `;
 
@@ -157,9 +186,9 @@ Object {
     "25599310": Array [
       Object {
         "base": "USD",
-        "close": 215,
-        "high": 220,
-        "low": 210,
+        "close": 214,
+        "high": 214,
+        "low": 214,
         "open": 214,
         "period": 0,
         "quote": "ETH",
@@ -167,13 +196,25 @@ Object {
         "timestamp": 1535958609000,
         "volume": 0.0013,
       },
+      Object {
+        "base": "USD",
+        "close": 210,
+        "high": 210,
+        "low": 210,
+        "open": 210,
+        "period": 0,
+        "quote": "ETH",
+        "source": "gemini",
+        "timestamp": 1535958609001,
+        "volume": 0.0013,
+      },
     ],
     "25599311": Array [
       Object {
         "base": "USD",
-        "close": 205,
-        "high": 210,
-        "low": 200,
+        "close": 202,
+        "high": 202,
+        "low": 202,
         "open": 202,
         "period": 0,
         "quote": "ETH",
@@ -183,14 +224,38 @@ Object {
       },
       Object {
         "base": "USD",
-        "close": 210,
-        "high": 213,
-        "low": 200,
+        "close": 205,
+        "high": 205,
+        "low": 205,
+        "open": 205,
+        "period": 0,
+        "quote": "ETH",
+        "source": "bitfinex",
+        "timestamp": 1535958681001,
+        "volume": 0.0007,
+      },
+      Object {
+        "base": "USD",
+        "close": 207,
+        "high": 207,
+        "low": 207,
         "open": 207,
         "period": 0,
         "quote": "ETH",
         "source": "kraken",
         "timestamp": 1535958681000,
+        "volume": 17.6757,
+      },
+      Object {
+        "base": "USD",
+        "close": 210,
+        "high": 210,
+        "low": 210,
+        "open": 210,
+        "period": 0,
+        "quote": "ETH",
+        "source": "kraken",
+        "timestamp": 1535958681001,
         "volume": 17.6757,
       },
     ],
@@ -204,9 +269,9 @@ Object {
     "426655": Array [
       Object {
         "base": "USD",
-        "close": 205,
-        "high": 210,
-        "low": 200,
+        "close": 202,
+        "high": 202,
+        "low": 202,
         "open": 202,
         "period": 0,
         "quote": "ETH",
@@ -216,9 +281,21 @@ Object {
       },
       Object {
         "base": "USD",
-        "close": 210,
-        "high": 213,
-        "low": 200,
+        "close": 205,
+        "high": 205,
+        "low": 205,
+        "open": 205,
+        "period": 0,
+        "quote": "ETH",
+        "source": "bitfinex",
+        "timestamp": 1535958681001,
+        "volume": 0.0007,
+      },
+      Object {
+        "base": "USD",
+        "close": 207,
+        "high": 207,
+        "low": 207,
         "open": 207,
         "period": 0,
         "quote": "ETH",
@@ -228,14 +305,38 @@ Object {
       },
       Object {
         "base": "USD",
-        "close": 215,
-        "high": 220,
+        "close": 210,
+        "high": 210,
         "low": 210,
+        "open": 210,
+        "period": 0,
+        "quote": "ETH",
+        "source": "kraken",
+        "timestamp": 1535958681001,
+        "volume": 17.6757,
+      },
+      Object {
+        "base": "USD",
+        "close": 214,
+        "high": 214,
+        "low": 214,
         "open": 214,
         "period": 0,
         "quote": "ETH",
         "source": "gemini",
         "timestamp": 1535958609000,
+        "volume": 0.0013,
+      },
+      Object {
+        "base": "USD",
+        "close": 210,
+        "high": 210,
+        "low": 210,
+        "open": 210,
+        "period": 0,
+        "quote": "ETH",
+        "source": "gemini",
+        "timestamp": 1535958609001,
         "volume": 0.0013,
       },
     ],
@@ -269,6 +370,436 @@ Array [
   ],
   Array [
     10,
+  ],
+]
+`;
+
+exports[`startCommitPrices 1`] = `
+Array [
+  Array [
+    Object {
+      "rule": Object {
+        "minute": 0,
+      },
+      "start": 1234567890000,
+    },
+    [Function],
+  ],
+]
+`;
+
+exports[`startCommitPrices 2`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "address": "magiAddress",
+      "commitPrice": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "getLastPrice": [MockFunction] {
+        "calls": Array [
+          Array [],
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+        ],
+      },
+      "isStarted": [MockFunction] {
+        "calls": Array [
+          Array [],
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": true,
+          },
+          Object {
+            "isThrow": false,
+            "value": true,
+          },
+        ],
+      },
+      "startMagi": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "web3Wrapper": Object {
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+          ],
+        },
+        "getTransactionCount": [MockFunction],
+      },
+    },
+    "ETH|USD",
+    0,
+  ],
+]
+`;
+
+exports[`startCommitPrices not started 1`] = `
+Array [
+  Array [
+    Object {
+      "end": 1234571390000,
+      "rule": Object {
+        "minute": 0,
+      },
+      "start": 1234567890000,
+    },
+    [Function],
+  ],
+  Array [
+    Object {
+      "rule": Object {
+        "minute": 0,
+      },
+      "start": 1234571440000,
+    },
+    [Function],
+  ],
+]
+`;
+
+exports[`startCommitPrices not started 2`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "address": "magiAddress",
+      "commitPrice": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "getLastPrice": [MockFunction] {
+        "calls": Array [
+          Array [],
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+        ],
+      },
+      "isStarted": [MockFunction] {
+        "calls": Array [
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": false,
+          },
+        ],
+      },
+      "startMagi": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "web3Wrapper": Object {
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+          ],
+        },
+        "getTransactionCount": [MockFunction],
+      },
+    },
+    "ETH|USD",
+    1000000000,
+  ],
+]
+`;
+
+exports[`startCommitPrices not started 3`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "address": "magiAddress",
+      "commitPrice": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 60000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "getLastPrice": [MockFunction] {
+        "calls": Array [
+          Array [],
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
+        ],
+      },
+      "isStarted": [MockFunction] {
+        "calls": Array [
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": false,
+          },
+        ],
+      },
+      "startMagi": [MockFunction] {
+        "calls": Array [
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 120000,
+              "gasPrice": 1000000000,
+            },
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+      "web3Wrapper": Object {
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+            Object {
+              "isThrow": false,
+              "value": 1000000000,
+            },
+          ],
+        },
+        "getTransactionCount": [MockFunction],
+      },
+    },
+    "ETH|USD",
+    1000000000,
   ],
 ]
 `;

@@ -97,7 +97,7 @@ class SqlUtil {
 		);
 	}
 
-	public async readLastPrice(base: string, quote: string): Promise<IPriceFix> {
+	public async readLastPrice(quote: string, base: string): Promise<IPriceFix> {
 		const pair = quote + '|' + base;
 		const res = await this.executeQuery(
 			'SELECT * FROM ' +
@@ -127,8 +127,8 @@ class SqlUtil {
 
 	public async readSourceData(
 		currentTimestamp: number,
+		quote: string,
 		base: string,
-		quote: string
 	): Promise<ITrade[]> {
 		const pair = quote + '|' + base;
 		const lowerTime = currentTimestamp - 3600000 + '';

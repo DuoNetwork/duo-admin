@@ -115,7 +115,7 @@ class Calculateor {
 		}
 	}
 
-	public async getPriceFix(base: string, quote: string): Promise<IPriceFix> {
+	public async getPriceFix(quote: string, base: string): Promise<IPriceFix> {
 		const currentTimestamp: number = util.getUTCNowTimestamp();
 		const trades = await dbUtil.readSourceData(currentTimestamp, base, quote);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {

@@ -126,7 +126,7 @@ test('insertPrice', async () => {
 
 test('readLastPrice', async () => {
 	sqlUtil.executeQuery = jest.fn(() => Promise.resolve([]));
-	expect(await sqlUtil.readLastPrice('USD', 'ETH')).toMatchSnapshot();
+	expect(await sqlUtil.readLastPrice('ETH', 'USD')).toMatchSnapshot();
 	sqlUtil.executeQuery = jest.fn(() =>
 		Promise.resolve([
 			{
@@ -136,7 +136,7 @@ test('readLastPrice', async () => {
 			}
 		])
 	);
-	expect(await sqlUtil.readLastPrice('USD', 'ETH')).toMatchSnapshot();
+	expect(await sqlUtil.readLastPrice('ETH', 'USD')).toMatchSnapshot();
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<IPrice[]>>).mock.calls).toMatchSnapshot();
 });
 
@@ -159,7 +159,7 @@ test('readSourceData', async () => {
 			}
 		])
 	);
-	const trades = await sqlUtil.readSourceData(1234567890, 'USD', 'ETH');
+	const trades = await sqlUtil.readSourceData(1234567890, 'ETH', 'USD');
 	expect((sqlUtil.executeQuery as jest.Mock<Promise<void>>).mock.calls[0][0]).toMatchSnapshot();
 	expect(trades).toMatchSnapshot();
 });

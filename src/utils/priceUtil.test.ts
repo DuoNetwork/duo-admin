@@ -3,12 +3,7 @@ import dynamoUtil from './dynamoUtil';
 import priceUtil from './priceUtil';
 import util from './util';
 
-jest.mock('node-schedule', () =>
-	jest.fn().mockImplementation(() => ({
-		RecurrenceRule: jest.fn(),
-		scheduleJob: jest.fn()
-	}))
-);
+const schedule = require('node-schedule');
 
 test('getBasePeriod', () => {
 	expect(priceUtil.getBasePeriod(1)).toBe(0);
@@ -24,8 +19,20 @@ const prices = [
 		timestamp: 1535958681000,
 		period: 0,
 		open: 202,
-		high: 210,
-		low: 200,
+		high: 202,
+		low: 202,
+		close: 202,
+		volume: 0.0007
+	},
+	{
+		source: 'bitfinex',
+		base: 'USD',
+		quote: 'ETH',
+		timestamp: 1535958681001,
+		period: 0,
+		open: 205,
+		high: 205,
+		low: 205,
 		close: 205,
 		volume: 0.0007
 	},
@@ -36,8 +43,20 @@ const prices = [
 		timestamp: 1535958681000,
 		period: 0,
 		open: 207,
-		high: 213,
-		low: 200,
+		high: 207,
+		low: 207,
+		close: 207,
+		volume: 17.6757
+	},
+	{
+		source: 'kraken',
+		base: 'USD',
+		quote: 'ETH',
+		timestamp: 1535958681001,
+		period: 0,
+		open: 210,
+		high: 210,
+		low: 210,
 		close: 210,
 		volume: 17.6757
 	},
@@ -48,9 +67,21 @@ const prices = [
 		timestamp: 1535958609000,
 		period: 0,
 		open: 214,
-		high: 220,
+		high: 214,
+		low: 214,
+		close: 214,
+		volume: 0.0013
+	},
+	{
+		source: 'gemini',
+		base: 'USD',
+		quote: 'ETH',
+		timestamp: 1535958609001,
+		period: 0,
+		open: 210,
+		high: 210,
 		low: 210,
-		close: 215,
+		close: 210,
 		volume: 0.0013
 	}
 ];
@@ -76,11 +107,12 @@ test('aggregatePrice', async () => {
 	dynamoUtil.getPrices = jest.fn((src: string) =>
 		Promise.resolve(prices.filter(price => price.source === src))
 	);
-	dynamoUtil.addPrice = jest.fn();
+	dynamoUtil.addPrice = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => Math.max(...prices.map(price => price.timestamp)) + 1);
 
 	await priceUtil.aggregatePrice(1);
-	expect((dynamoUtil.addPrice as jest.Mock<Promise<boolean>>).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.getPrices as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.addPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 const magiWrapper = {
@@ -134,28 +166,6 @@ test('fetchPrice', async () => {
 	await priceUtil.fetchPrice('account', [dualClassWrapper], magiWrapper);
 	await (global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect((dualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
-});
-
-jest.mock('node-schedule', () => ({
-	RecurrenceRule: jest.fn(() => ({
-		minute: 0
-	})),
-	scheduleJob: jest.fn()
-}));
-
-test('startCommitPrices', async () => {
-	util.getUTCNowTimestamp = jest.fn(() => ({
-		valueOf: jest.fn(() => 1234567890000)
-	}));
-	await priceUtil.startCommitPrices('account', magiWrapper, { gasPrice: 1000000000 } as any);
-});
-
-test('startCommitPrices', async () => {
-	util.getUTCNowTimestamp = jest.fn(() => ({
-		valueOf: jest.fn(() => 1234567890000)
-	}));
-	magiWrapper.isStarted = jest.fn(() => false);
-	await priceUtil.startCommitPrices('account', magiWrapper, { gasPrice: 1000000000 } as any);
 });
 
 test('commitPrice', async () => {
@@ -221,4 +231,32 @@ test('startAggregate', async () => {
 	(global.setInterval as jest.Mock).mock.calls[1][0]();
 	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.aggregatePrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startCommitPrices', async () => {
+	schedule.RecurrenceRule = jest.fn().mockImplementation(() => ({}));
+	schedule.scheduleJob = jest.fn();
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890000);
+	priceUtil.startMagi = jest.fn(() => Promise.resolve());
+	priceUtil.commitPrice = jest.fn(() => Promise.resolve());
+	await priceUtil.startCommitPrices('account', magiWrapper, 'ETH|USD');
+	expect((schedule.scheduleJob as jest.Mock).mock.calls).toMatchSnapshot();
+	await (schedule.scheduleJob as jest.Mock).mock.calls[0][1]();
+	expect(priceUtil.startMagi as jest.Mock).not.toBeCalled();
+	expect((priceUtil.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('startCommitPrices not started', async () => {
+	schedule.RecurrenceRule = jest.fn().mockImplementation(() => ({}));
+	schedule.scheduleJob = jest.fn();
+	util.getUTCNowTimestamp = jest.fn(() => 1234567890000);
+	priceUtil.startMagi = jest.fn(() => Promise.resolve());
+	priceUtil.commitPrice = jest.fn(() => Promise.resolve());
+	magiWrapper.isStarted = jest.fn(() => false);
+	await priceUtil.startCommitPrices('account', magiWrapper, 'ETH|USD', 1000000000);
+	expect((schedule.scheduleJob as jest.Mock).mock.calls).toMatchSnapshot();
+	await (schedule.scheduleJob as jest.Mock).mock.calls[0][1]();
+	await (schedule.scheduleJob as jest.Mock).mock.calls[1][1]();
+	expect((priceUtil.startMagi as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((priceUtil.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

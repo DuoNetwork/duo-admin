@@ -72,12 +72,12 @@ test('readLastPrice', async () => {
 	sqlUtil.readLastPrice = jest.fn();
 	dbUtil.dynamo = true;
 	try {
-		await dbUtil.readLastPrice('base', 'quote');
+		await dbUtil.readLastPrice('quote', 'base');
 	} catch (error) {
 		expect(error).toMatchSnapshot();
 	}
 	dbUtil.dynamo = false;
-	await dbUtil.readLastPrice('base', 'quote');
+	await dbUtil.readLastPrice('quote', 'base');
 	expect((sqlUtil.readLastPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -85,12 +85,12 @@ test('readSourceData', async () => {
 	sqlUtil.readSourceData = jest.fn();
 	dbUtil.dynamo = true;
 	try {
-		await dbUtil.readSourceData(123, 'base', 'quote');
+		await dbUtil.readSourceData(123, 'quote', 'base');
 	} catch (error) {
 		expect(error).toMatchSnapshot();
 	}
 	dbUtil.dynamo = false;
-	await dbUtil.readSourceData(123, 'base', 'quote');
+	await dbUtil.readSourceData(123, 'quote', 'base');
 	expect((sqlUtil.readSourceData as jest.Mock).mock.calls).toMatchSnapshot();
 });
 

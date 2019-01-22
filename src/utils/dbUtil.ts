@@ -49,14 +49,14 @@ class DbUtil {
 		return this.dynamo ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
 	}
 
-	public readLastPrice(base: string, quote: string): Promise<IPriceFix> {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(base, quote);
+	public readLastPrice(quote: string, base: string): Promise<IPriceFix> {
+		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(quote, base);
 	}
 
 	public readSourceData(
 		currentTimestamp: number,
-		base: string,
-		quote: string
+		quote: string,
+		base: string
 	): Promise<ITrade[]> {
 		return this.dynamo
 			? Promise.reject('invalid')
