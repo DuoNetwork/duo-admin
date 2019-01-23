@@ -26,7 +26,6 @@ class KeyUtil {
 		const bodyKey: any = await httpUtil.get(url, { Authorization: savedAccessToken });
 
 		const responseKeyJson = JSON.parse(bodyKey);
-		// console.log('Private Key: ' + responseKeyJson.value);
 		return responseKeyJson.value;
 	}
 

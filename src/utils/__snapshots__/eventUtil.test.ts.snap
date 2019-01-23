@@ -154,7 +154,14 @@ Array [
 ]
 `;
 
-exports[`fetch, force 4`] = `0`;
+exports[`fetch, force 4`] = `
+Array [
+  Array [
+    [Function],
+    600000,
+  ],
+]
+`;
 
 exports[`fetch, no events 1`] = `
 Array [
@@ -168,7 +175,14 @@ Array [
 ]
 `;
 
-exports[`fetch, no events 2`] = `0`;
+exports[`fetch, no events 2`] = `
+Array [
+  Array [
+    [Function],
+    600000,
+  ],
+]
+`;
 
 exports[`fetch, no force 1`] = `
 Array [
@@ -324,7 +338,14 @@ Array [
 ]
 `;
 
-exports[`fetch, no force 4`] = `0`;
+exports[`fetch, no force 4`] = `
+Array [
+  Array [
+    [Function],
+    600000,
+  ],
+]
+`;
 
 exports[`fetch, no force, continuous call 1`] = `
 Array [
@@ -480,9 +501,23 @@ Array [
 ]
 `;
 
-exports[`fetch, no force, continuous call 4`] = `0`;
+exports[`fetch, no force, continuous call 4`] = `
+Array [
+  Array [
+    [Function],
+    600000,
+  ],
+]
+`;
 
-exports[`trigger, StartPreReset 1`] = `15000`;
+exports[`trigger, StartPreReset 1`] = `
+Array [
+  Array [
+    [Function],
+    15000,
+  ],
+]
+`;
 
 exports[`trigger, StartPreReset 2`] = `
 Array [
@@ -497,6 +532,12 @@ Array [
   Array [
     "account",
   ],
+]
+`;
+
+exports[`trigger, StartPreReset 4`] = `
+Array [
+  Array [],
 ]
 `;
 
@@ -518,4 +559,16 @@ Array [
 ]
 `;
 
+exports[`trigger, StartReset 4`] = `
+Array [
+  Array [],
+]
+`;
+
 exports[`trigger, StartReset, wrong state 1`] = `15000`;
+
+exports[`trigger, StartReset, wrong state 2`] = `
+Array [
+  Array [],
+]
+`;

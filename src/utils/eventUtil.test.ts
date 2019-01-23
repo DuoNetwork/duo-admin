@@ -59,7 +59,7 @@ test('trigger, StartPreReset', async () => {
 		} as any
 	];
 	await eventUtil.trigger('account', dualClassWrappers, 'StartPreReset');
-	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+	expect((global.setInterval as jest.Mock).mock.calls).toMatchSnapshot();
 	await (global.setInterval as jest.Mock).mock.calls[0][0]();
 
 	for (const dcw of dualClassWrappers) {
@@ -67,7 +67,7 @@ test('trigger, StartPreReset', async () => {
 		expect((dcw.triggerPreReset as jest.Mock).mock.calls).toMatchSnapshot();
 		expect(dcw.triggerReset as jest.Mock).not.toBeCalled();
 	}
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(dualClassWrappers.length);
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('trigger, StartReset', async () => {
@@ -104,7 +104,7 @@ test('trigger, StartReset', async () => {
 		expect((dcw.triggerReset as jest.Mock).mock.calls).toMatchSnapshot();
 		expect(dcw.triggerPreReset as jest.Mock).not.toBeCalled();
 	}
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(dualClassWrappers.length);
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('trigger, StartReset, wrong state', async () => {
@@ -141,7 +141,7 @@ test('trigger, StartReset, wrong state', async () => {
 		expect(dcw.triggerReset as jest.Mock).not.toBeCalled();
 		expect(dcw.triggerPreReset as jest.Mock).not.toBeCalled();
 	}
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(dualClassWrappers.length);
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 const contractEvents: { [contract: string]: { [event: string]: object } } = {
@@ -306,7 +306,7 @@ test('fetch, force', async () => {
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('fetch, no force', async () => {
@@ -345,7 +345,7 @@ test('fetch, no force', async () => {
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('fetch, no force, continuous call', async () => {
@@ -385,7 +385,7 @@ test('fetch, no force, continuous call', async () => {
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 
 	await (global.setTimeout as jest.Mock).mock.calls[0][0]();
 
@@ -430,7 +430,7 @@ test('fetch, no events', async () => {
 	// expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(dynamoUtil.insertEventsData as jest.Mock).not.toBeCalled();
 	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('fetch, no contractWrappers', async () => {

@@ -15,6 +15,7 @@ class EventUtil {
 		}
 
 		global.setInterval(async () => {
+			dynamoUtil.insertHeartbeat();
 			const promiseList = dualClassWrappers.map(async dcw => {
 				const sysState = await dcw.getStates();
 				const state = sysState.state;
@@ -25,8 +26,6 @@ class EventUtil {
 				else if (event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
 					await dcw.triggerReset(account);
 				else util.logDebug('state not matched!');
-
-				dynamoUtil.insertHeartbeat();
 			});
 			await Promise.all(promiseList);
 		}, 15000);
@@ -45,11 +44,7 @@ class EventUtil {
 			? web3Wrapper.inceptionBlockNumber
 			: Math.max(await dynamoUtil.readLastBlock(), web3Wrapper.inceptionBlockNumber);
 		util.logInfo('starting blk number: ' + startBlk);
-		let isProcessing = false;
-		const fetch = async () => {
-			if (isProcessing) return;
-
-			isProcessing = true;
+		const loop = async () => {
 			const blockTimestampMap: { [blk: number]: number } = {};
 			const currentBlk = await web3Wrapper.getCurrentBlockNumber();
 			while (startBlk <= currentBlk) {
@@ -75,21 +70,16 @@ class EventUtil {
 				util.logInfo(
 					'total ' + allEvents.length + ' events from block ' + startBlk + ' to ' + end
 				);
-				if (allEvents.length > 0) {
-					console.log('insertEvents');
-					await dynamoUtil.insertEventsData(allEvents);
-				}
+				if (allEvents.length > 0) await dynamoUtil.insertEventsData(allEvents);
 
 				await dynamoUtil.insertHeartbeat({
 					[CST.DB_ST_BLOCK]: { N: end + '' }
 				});
 				startBlk = end + 1;
 			}
-			isProcessing = false;
-			global.setTimeout(async () => fetch(), 0);
+			global.setTimeout(() => loop(), CST.EVENT_FETCH_TIME_INVERVAL);
 		};
-		await fetch();
-		// global.setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
+		await loop();
 	}
 }
 
