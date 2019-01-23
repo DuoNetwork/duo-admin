@@ -1,6 +1,486 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fetch, 1`] = `Array []`;
+exports[`fetch, force 1`] = `
+Array [
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash1",
+      "blockNumber": 1001,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "event": "event1",
+        "id": "id1",
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      "transactionHash": "txHash1",
+      "transactionIndex": 0,
+    },
+    1235801567,
+  ],
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash2",
+      "blockNumber": 1002,
+      "event": "event2",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address2",
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "event": "event2",
+        "id": "id2",
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      "transactionHash": "txHash2",
+      "transactionIndex": 0,
+    },
+    1237036134,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash3",
+      "blockNumber": 1003,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "event": "event1",
+        "id": "id3",
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      "transactionHash": "txHash3",
+      "transactionIndex": 0,
+    },
+    1238270701,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash4",
+      "blockNumber": 1004,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "event": "event1",
+        "id": "id4",
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+      "transactionHash": "txHash4",
+      "transactionIndex": 0,
+    },
+    1239505268,
+  ],
+]
+`;
+
+exports[`fetch, force 2`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "contractAddress": "contractAddress1",
+        "id": "id1",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      Object {
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "contractAddress": "contractAddress2",
+        "id": "id2",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      Object {
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "contractAddress": "contractAddress3",
+        "id": "id3",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      Object {
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "contractAddress": "contractAddress4",
+        "id": "id4",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+    ],
+  ],
+]
+`;
+
+exports[`fetch, force 3`] = `
+Array [
+  Array [
+    Object {
+      "block": Object {
+        "N": "1050",
+      },
+    },
+  ],
+]
+`;
+
+exports[`fetch, force 4`] = `0`;
+
+exports[`fetch, no events 1`] = `
+Array [
+  Array [
+    Object {
+      "block": Object {
+        "N": "1050",
+      },
+    },
+  ],
+]
+`;
+
+exports[`fetch, no events 2`] = `0`;
+
+exports[`fetch, no force 1`] = `
+Array [
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash1",
+      "blockNumber": 1001,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "event": "event1",
+        "id": "id1",
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      "transactionHash": "txHash1",
+      "transactionIndex": 0,
+    },
+    1235801567,
+  ],
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash2",
+      "blockNumber": 1002,
+      "event": "event2",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address2",
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "event": "event2",
+        "id": "id2",
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      "transactionHash": "txHash2",
+      "transactionIndex": 0,
+    },
+    1237036134,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash3",
+      "blockNumber": 1003,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "event": "event1",
+        "id": "id3",
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      "transactionHash": "txHash3",
+      "transactionIndex": 0,
+    },
+    1238270701,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash4",
+      "blockNumber": 1004,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "event": "event1",
+        "id": "id4",
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+      "transactionHash": "txHash4",
+      "transactionIndex": 0,
+    },
+    1239505268,
+  ],
+]
+`;
+
+exports[`fetch, no force 2`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "contractAddress": "contractAddress1",
+        "id": "id1",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      Object {
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "contractAddress": "contractAddress2",
+        "id": "id2",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      Object {
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "contractAddress": "contractAddress3",
+        "id": "id3",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      Object {
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "contractAddress": "contractAddress4",
+        "id": "id4",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+    ],
+  ],
+]
+`;
+
+exports[`fetch, no force 3`] = `
+Array [
+  Array [
+    Object {
+      "block": Object {
+        "N": "1050",
+      },
+    },
+  ],
+]
+`;
+
+exports[`fetch, no force 4`] = `0`;
+
+exports[`fetch, no force, continuous call 1`] = `
+Array [
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash1",
+      "blockNumber": 1001,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "event": "event1",
+        "id": "id1",
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      "transactionHash": "txHash1",
+      "transactionIndex": 0,
+    },
+    1235801567,
+  ],
+  Array [
+    Object {
+      "address": "contract1",
+      "blockHash": "blockHash2",
+      "blockNumber": 1002,
+      "event": "event2",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address2",
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "event": "event2",
+        "id": "id2",
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      "transactionHash": "txHash2",
+      "transactionIndex": 0,
+    },
+    1237036134,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash3",
+      "blockNumber": 1003,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "event": "event1",
+        "id": "id3",
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      "transactionHash": "txHash3",
+      "transactionIndex": 0,
+    },
+    1238270701,
+  ],
+  Array [
+    Object {
+      "address": "contract2",
+      "blockHash": "blockHash4",
+      "blockNumber": 1004,
+      "event": "event1",
+      "logIndex": 0,
+      "returnValues": Object {
+        "address": "address1",
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "event": "event1",
+        "id": "id4",
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+      "transactionHash": "txHash4",
+      "transactionIndex": 0,
+    },
+    1239505268,
+  ],
+]
+`;
+
+exports[`fetch, no force, continuous call 2`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "blockHash": "blockHash1",
+        "blockNumber": 1001,
+        "contractAddress": "contractAddress1",
+        "id": "id1",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash1",
+        "type": "type1",
+      },
+      Object {
+        "blockHash": "blockHash2",
+        "blockNumber": 1002,
+        "contractAddress": "contractAddress2",
+        "id": "id2",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash2",
+        "type": "type2",
+      },
+      Object {
+        "blockHash": "blockHash3",
+        "blockNumber": 1003,
+        "contractAddress": "contractAddress3",
+        "id": "id3",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash3",
+        "type": "type3",
+      },
+      Object {
+        "blockHash": "blockHash4",
+        "blockNumber": 1004,
+        "contractAddress": "contractAddress4",
+        "id": "id4",
+        "logStatus": "mined",
+        "parameters": Object {},
+        "timestamp": 1234567890,
+        "transactionHash": "txHash4",
+        "type": "type4",
+      },
+    ],
+  ],
+]
+`;
+
+exports[`fetch, no force, continuous call 3`] = `
+Array [
+  Array [
+    Object {
+      "block": Object {
+        "N": "1050",
+      },
+    },
+  ],
+]
+`;
+
+exports[`fetch, no force, continuous call 4`] = `0`;
 
 exports[`trigger, StartPreReset 1`] = `15000`;
 

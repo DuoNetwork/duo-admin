@@ -270,11 +270,11 @@ const parsedEvents: { [txHash: string]: object } = {
 	}
 };
 
-test('fetch,', async () => {
+test('fetch, force', async () => {
 	const baseContractWrappers = [
 		{
 			web3Wrapper: {
-				inceptionBlockNumber: 900,
+				inceptionBlockNumber: 999,
 				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050)),
 				getBlockTimestamp: jest.fn((blkNum: number) => Promise.resolve(1234567 * blkNum))
 			},
@@ -283,7 +283,7 @@ test('fetch,', async () => {
 		} as any,
 		{
 			web3Wrapper: {
-				inceptionBlockNumber: 900,
+				inceptionBlockNumber: 999,
 				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050))
 			},
 			events: ['event1', 'event2'],
@@ -293,18 +293,157 @@ test('fetch,', async () => {
 
 	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
 
-	global.setInterval = jest.fn();
+	global.setTimeout = jest.fn();
 
 	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
 		console.log(start, end);
 		return Promise.resolve([contractEvents[contract][event]]);
 	});
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	await eventUtil.fetch(baseContractWrappers, true);
+	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+});
+
+test('fetch, no force', async () => {
+	const baseContractWrappers = [
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050)),
+				getBlockTimestamp: jest.fn((blkNum: number) => Promise.resolve(1234567 * blkNum))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract1'
+		} as any,
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract2'
+		} as any
+	];
+
+	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
+
+	global.setTimeout = jest.fn();
+
+	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
+		console.log(start, end);
+		return Promise.resolve([contractEvents[contract][event]]);
+	});
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	await eventUtil.fetch(baseContractWrappers, false);
+	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+});
+
+test('fetch, no force, continuous call', async () => {
+	const baseContractWrappers = [
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050)),
+				getBlockTimestamp: jest.fn((blkNum: number) => Promise.resolve(1234567 * blkNum))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract1'
+		} as any,
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract2'
+		} as any
+	];
+
+	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
+
+	global.setTimeout = jest.fn();
+
+	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
+		console.log(start, end);
+		return Promise.resolve([contractEvents[contract][event]]);
+	});
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	await eventUtil.fetch(baseContractWrappers, false);
+	expect(Web3Wrapper.parseEvent as jest.Mock).toBeCalledTimes(4);
+	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+
+	await (global.setTimeout as jest.Mock).mock.calls[0][0]();
+
+	expect(dynamoUtil.insertEventsData as jest.Mock).toBeCalledTimes(1);
+	expect(dynamoUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
+	expect(global.setTimeout as jest.Mock).toBeCalledTimes(2);
+});
+
+test('fetch, no events', async () => {
+	const baseContractWrappers = [
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050)),
+				getBlockTimestamp: jest.fn((blkNum: number) => Promise.resolve(1234567 * blkNum))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract1'
+		} as any,
+		{
+			web3Wrapper: {
+				inceptionBlockNumber: 999,
+				getCurrentBlockNumber: jest.fn(() => Promise.resolve(1050))
+			},
+			events: ['event1', 'event2'],
+			contract: 'contract2'
+		} as any
+	];
+
+	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
+
+	global.setTimeout = jest.fn();
+
+	Web3Wrapper.pullEvents = jest.fn(() => Promise.resolve([]));
 
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
 
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve({}));
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch(baseContractWrappers, true);
 
-	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	// expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	expect(dynamoUtil.insertEventsData as jest.Mock).not.toBeCalled();
+	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((global.setTimeout as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
+});
+
+test('fetch, no contractWrappers', async () => {
+	// const baseContractWrappers = [];
+	global.setTimeout = jest.fn();
+	Web3Wrapper.pullEvents = jest.fn(() => Promise.resolve([]));
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	await eventUtil.fetch([], true);
+
+	expect(Web3Wrapper.parseEvent as jest.Mock).not.toBeCalled();
+	expect(dynamoUtil.insertEventsData as jest.Mock).not.toBeCalled();
+	expect(dynamoUtil.insertHeartbeat as jest.Mock).not.toBeCalled();
+	expect(global.setTimeout as jest.Mock).not.toBeCalled();
 });

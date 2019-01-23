@@ -34,6 +34,10 @@ class EventUtil {
 
 	public async fetch(BaseContractWrappers: BaseContractWrapper[], force: boolean) {
 		util.logInfo('fetching events');
+		if (BaseContractWrappers.length <= 0) {
+			util.logDebug('no contractWrappers initiated');
+			return;
+		}
 
 		const web3Wrapper = BaseContractWrappers[0].web3Wrapper;
 
@@ -71,16 +75,21 @@ class EventUtil {
 				util.logInfo(
 					'total ' + allEvents.length + ' events from block ' + startBlk + ' to ' + end
 				);
-				if (allEvents.length > 0) await dynamoUtil.insertEventsData(allEvents);
+				if (allEvents.length > 0) {
+					console.log('insertEvents');
+					await dynamoUtil.insertEventsData(allEvents);
+				}
+
 				await dynamoUtil.insertHeartbeat({
 					[CST.DB_ST_BLOCK]: { N: end + '' }
 				});
 				startBlk = end + 1;
 			}
 			isProcessing = false;
+			global.setTimeout(async () => fetch(), 0);
 		};
-		fetch();
-		global.setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
+		await fetch();
+		// global.setInterval(() => fetch(), CST.EVENT_FETCH_TIME_INVERVAL);
 	}
 }
 
