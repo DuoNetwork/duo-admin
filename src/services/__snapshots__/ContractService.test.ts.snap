@@ -127,7 +127,6 @@ Array [
       "contract": "MagiWrapper",
     },
     "quote|base",
-    1000000000,
   ],
 ]
 `;
@@ -336,7 +335,6 @@ Array [
     Object {
       "contract": "MagiWrapper",
     },
-    1000000000,
   ],
 ]
 `;
@@ -348,10 +346,6 @@ Array [
     "0x59E6B3d43F762310626d2905148939973db2BBd3",
     "0x8A3bEca74E0E737460bDE45a09594A8D7D8c9886",
     "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
-    Object {
-      "gasLimit": 10000,
-      "gasPrice": 1000000000,
-    },
   ],
 ]
 `;

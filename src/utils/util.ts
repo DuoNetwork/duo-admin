@@ -49,8 +49,6 @@ class Util {
 			assets: [''],
 			sources: [''],
 			exSources: [''],
-			gasPrice: 5e9,
-			gasLimit: 200000,
 			source: '',
 			event: '',
 			provider: '',
@@ -70,12 +68,6 @@ class Util {
 					break;
 				case 'assets':
 					option.assets = args[1].split(',');
-					break;
-				case 'gasPrice':
-					option.gasPrice = Number(args[1]) || option.gasPrice;
-					break;
-				case 'gasLimit':
-					option.gasLimit = Number(args[1]) || option.gasLimit;
 					break;
 				case 'source':
 					option.source = args[1] || option.source;

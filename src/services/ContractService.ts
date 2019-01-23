@@ -50,8 +50,7 @@ export default class ContractService extends BaseService {
 		priceUtil.startCommitPrices(
 			this.address,
 			magiWrapper,
-			this.option.pair,
-			this.option.gasPrice
+			this.option.pair
 		);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
@@ -70,8 +69,7 @@ export default class ContractService extends BaseService {
 				dualClassCustodianWrappers.Mozart.Perpetual,
 				dualClassCustodianWrappers.Mozart.M19
 			],
-			magiWrapper,
-			this.option.gasPrice
+			magiWrapper
 		);
 		setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
@@ -113,11 +111,7 @@ export default class ContractService extends BaseService {
 			account,
 			contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken.address,
 			contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken.address,
-			contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
-			{
-				gasPrice: this.option.gasPrice,
-				gasLimit: this.option.gasLimit
-			}
+			contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address
 		);
 	}
 

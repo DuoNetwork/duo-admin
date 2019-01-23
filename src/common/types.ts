@@ -100,8 +100,6 @@ export interface IOption {
 	gcp: boolean;
 	azure: boolean;
 	force: boolean;
-	gasPrice: number;
-	gasLimit: number;
 	source: string;
 	event: string;
 	provider: string;
