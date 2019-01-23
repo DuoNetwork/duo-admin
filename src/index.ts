@@ -33,7 +33,7 @@ switch (tool) {
 		break;
 	case CST.DB_PRICES:
 		const priceMds = new MarketDataService(tool, option);
-		priceMds.init().then(() => priceMds.startFetching(tool, option));
+		priceMds.init().then(() => priceMds.startAggregate(option.period));
 		break;
 	case CST.CLEAN_DB:
 		const dbMds = new MarketDataService(tool, option);
