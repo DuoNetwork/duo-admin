@@ -933,6 +933,16 @@ Array [
 exports[`init 1`] = `
 Array [
   Array [
+    Object {
+      "apiVersion": "2012-10-08",
+    },
+  ],
+]
+`;
+
+exports[`init 2`] = `
+Array [
+  Array [
     "config",
   ],
 ]

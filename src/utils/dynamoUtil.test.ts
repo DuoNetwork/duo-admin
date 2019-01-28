@@ -1,3 +1,4 @@
+import DynamoDB from 'aws-sdk/clients/dynamodb';
 import AWS from 'aws-sdk/global';
 import moment from 'moment';
 import * as CST from '../common/constants';
@@ -21,6 +22,7 @@ jest.mock('aws-sdk/global', () => ({
 
 test('init', async () => {
 	await dynamoUtil.init('config' as any, true, 'process', () => 0, () => ({} as any));
+	expect((DynamoDB as any).mock.calls).toMatchSnapshot();
 	expect(dynamoUtil.ddb).toBeTruthy();
 	expect(dynamoUtil.live).toBeTruthy();
 	expect(dynamoUtil.process).toBe('process');
