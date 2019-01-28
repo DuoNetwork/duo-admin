@@ -1,3 +1,4 @@
+import ws from 'ws';
 import tradesRest from '../samples/gemini/tradesRest.json';
 import tradesWs from '../samples/gemini/tradesWs.json';
 import dbUtil from '../utils/dbUtil';
@@ -82,19 +83,19 @@ test('fetchTradesWSForPair', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 	global.setTimeout = jest.fn();
 	api.handleWSTradeMessage = jest.fn();
-	const ws = api.fetchTradesWSForPair(sourcePair);
-
-	expect((ws.on as jest.Mock).mock.calls).toMatchSnapshot();
-	(ws.on as jest.Mock).mock.calls[0][1]();
-	(ws.on as jest.Mock).mock.calls[1][1]('message from ws server');
+	const w = api.fetchTradesWSForPair(sourcePair);
+	expect((ws as any).mock.calls).toMatchSnapshot();
+	expect((w.on as jest.Mock).mock.calls).toMatchSnapshot();
+	(w.on as jest.Mock).mock.calls[0][1]();
+	(w.on as jest.Mock).mock.calls[1][1]('message from ws server');
 	expect((api.handleWSTradeMessage as jest.Mock).mock.calls[0]).toMatchSnapshot();
 
-	(ws.on as jest.Mock).mock.calls[2][1]('connection error');
-	expect(ws.removeAllListeners as jest.Mock).toBeCalledTimes(1);
-	expect(ws.terminate as jest.Mock).toBeCalledTimes(1);
-	(ws.on as jest.Mock).mock.calls[3][1]('close');
-	expect(ws.removeAllListeners as jest.Mock).toBeCalledTimes(2);
-	expect(ws.terminate as jest.Mock).toBeCalledTimes(2);
+	(w.on as jest.Mock).mock.calls[2][1]('connection error');
+	expect(w.removeAllListeners as jest.Mock).toBeCalledTimes(1);
+	expect(w.terminate as jest.Mock).toBeCalledTimes(1);
+	(w.on as jest.Mock).mock.calls[3][1]('close');
+	expect(w.removeAllListeners as jest.Mock).toBeCalledTimes(2);
+	expect(w.terminate as jest.Mock).toBeCalledTimes(2);
 
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 	api.fetchTradesWSForPair = jest.fn();
