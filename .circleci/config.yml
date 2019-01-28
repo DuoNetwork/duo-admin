@@ -15,11 +15,8 @@ jobs:
                   command: cd /home/circleci/duo-contract-wrapper && npm i -f
             - run: cd ~/duo-admin
             - run:
-                  name: test
-                  command: npm test -- -w 1 --forceExit
-            - run:
                   name: test coverage
-                  command: npm test -- --coverage
+                  command: npm test -- --coverage -w 1 --forceExit
             - run:
                   name: post coverage
                   command: cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
