@@ -144,6 +144,14 @@ Array [
 exports[`fetchTradesWSForPair 1`] = `
 Array [
   Array [
+    "wss://api.gemini.com/v1/marketdata/ethusd?bids=false&offers=false&trades=true&auctions=false&heartbeat=true&top_of_book=false",
+  ],
+]
+`;
+
+exports[`fetchTradesWSForPair 2`] = `
+Array [
+  Array [
     "open",
     [Function],
   ],
@@ -162,14 +170,14 @@ Array [
 ]
 `;
 
-exports[`fetchTradesWSForPair 2`] = `
+exports[`fetchTradesWSForPair 3`] = `
 Array [
   "message from ws server",
   "ethusd",
 ]
 `;
 
-exports[`fetchTradesWSForPair 3`] = `
+exports[`fetchTradesWSForPair 4`] = `
 Array [
   Array [
     [Function],
@@ -182,7 +190,7 @@ Array [
 ]
 `;
 
-exports[`fetchTradesWSForPair 4`] = `
+exports[`fetchTradesWSForPair 5`] = `
 Array [
   Array [
     "ethusd",

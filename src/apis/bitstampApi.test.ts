@@ -1,3 +1,4 @@
+import Pusher from 'pusher-js';
 import tradesRest from '../samples/bitstamp/tradesRest.json';
 import tradesWs from '../samples/bitstamp/tradesWs.json';
 import dbUtil from '../utils/dbUtil';
@@ -96,6 +97,7 @@ test(`fetchTradesWSForPair `, async () => {
 	api.handleWSTradeMessage = jest.fn();
 	global.setTimeout = jest.fn();
 	const socket = api.fetchTradesWSForPair(`quote-base`);
+	expect((Pusher as any).mock.calls).toMatchSnapshot();
 	expect((socket.bind as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((socket.connection.bind as jest.Mock).mock.calls).toMatchSnapshot();
 
