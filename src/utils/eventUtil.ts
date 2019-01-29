@@ -77,7 +77,7 @@ class EventUtil {
 				});
 				startBlk = end + 1;
 			}
-			global.setTimeout(() => loop(), CST.EVENT_FETCH_TIME_INVERVAL);
+			global.setTimeout(() => loop(), CST.EVENT_FETCH_TIME_INTERVAL);
 		};
 		await loop();
 	}
