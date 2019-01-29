@@ -1,19 +1,21 @@
-import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
+import * as Constants from '@finbook/duo-contract-wrapper/dist/constants';
+import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
 import dynamoUtil from './dynamoUtil';
 import eventUtil from './eventUtil';
 
-jest.mock('../../../duo-contract-wrapper/src/DualClassWrapper', () =>
-	jest.fn(() => ({
+jest.mock('@finbook/duo-contract-wrapper', () => ({
+	Constants: Constants,
+	Web3Wrapper: jest.fn(() => ({
+		contractAddresses: kovan
+	})),
+	DualClassWrapper: jest.fn(() => ({
 		contract: 'dualClassWrapper'
 	}))
-);
+}));
 
-jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
-	jest.fn(() => ({
-		contractAddresses: kovan
-	}))
-);
+import { Web3Wrapper } from '@finbook/duo-contract-wrapper';
 
 test('trigger, worng event name', async () => {
 	dynamoUtil.insertHeartbeat = jest.fn();

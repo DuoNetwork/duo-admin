@@ -1,3 +1,5 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import ws from 'ws';
 import tradesRest from '../samples/gemini/tradesRest.json';
 import tradesWs from '../samples/gemini/tradesWs.json';

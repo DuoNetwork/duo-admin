@@ -1,3 +1,4 @@
+import { Constants as WrapperConstants, IEvent } from '@finbook/duo-contract-wrapper';
 import DynamoDB, {
 	AttributeMap,
 	// BatchWriteItemInput,
@@ -15,7 +16,6 @@ import * as CST from '../common/constants';
 import {
 	IAcceptedPrice,
 	IConversion,
-	IEvent,
 	IPrice,
 	IPriceStatus,
 	IStatus,
@@ -92,10 +92,10 @@ class DynamoUtil {
 
 	public convertEventToDynamo(event: IEvent, sysTime: number) {
 		let addr = '';
-		if (event.type === CST.EVENT_CREATE || event.type === CST.EVENT_REDEEM)
+		if (event.type === WrapperConstants.EVENT_CREATE || event.type === WrapperConstants.EVENT_REDEEM)
 			addr = event.parameters['sender'];
-		else if (event.type === CST.EVENT_TRANSFER) addr = event.parameters['from'];
-		else if (event.type === CST.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
+		else if (event.type === WrapperConstants.EVENT_TRANSFER) addr = event.parameters['from'];
+		else if (event.type === WrapperConstants.EVENT_APPROVAL) addr = event.parameters['tokenOwner'];
 		const dbInput: AttributeMap = {
 			[CST.DB_EV_KEY]: {
 				S:
@@ -106,7 +106,7 @@ class DynamoUtil {
 					moment
 						.utc(event.timestamp)
 						.format(
-							event.type === CST.EVENT_TOTAL_SUPPLY ? 'YYYY-MM-HH' : 'YYYY-MM-DD'
+							event.type === WrapperConstants.EVENT_TOTAL_SUPPLY ? 'YYYY-MM-HH' : 'YYYY-MM-DD'
 						) +
 					(addr ? '|' + addr : '')
 			},
@@ -402,11 +402,7 @@ class DynamoUtil {
 		return prices;
 	}
 
-	public async getTrades(
-		src: string,
-		dateHourMinute: string,
-		pair: string = ''
-	) {
+	public async getTrades(src: string, dateHourMinute: string, pair: string = '') {
 		let params: QueryInput;
 		params = {
 			TableName: `${CST.DB_DUO}.${CST.DB_TRADES}.${this.live ? CST.DB_LIVE : CST.DB_DEV}`,
@@ -430,9 +426,7 @@ class DynamoUtil {
 
 		const data = await this.queryData(params);
 		if (!data.Items || !data.Items.length) return [];
-		return data.Items.map(p =>
-			this.parseTrade(p)
-		);
+		return data.Items.map(p => this.parseTrade(p));
 	}
 
 	public async queryAcceptPriceEvent(contractAddress: string, dates: string[]) {
@@ -447,7 +441,7 @@ class DynamoUtil {
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: {
-								S: contractAddress + '|' + CST.EVENT_ACCEPT_PRICE + '|' + date
+								S: contractAddress + '|' + WrapperConstants.EVENT_ACCEPT_PRICE + '|' + date
 							}
 						}
 					})
@@ -481,7 +475,7 @@ class DynamoUtil {
 						KeyConditionExpression: CST.DB_EV_KEY + ' = :' + CST.DB_EV_KEY,
 						ExpressionAttributeValues: {
 							[':' + CST.DB_EV_KEY]: {
-								S: contractAddress + '|' + CST.EVENT_TOTAL_SUPPLY + '|' + date
+								S: contractAddress + '|' + WrapperConstants.EVENT_TOTAL_SUPPLY + '|' + date
 							}
 						}
 					})
@@ -507,7 +501,7 @@ class DynamoUtil {
 		const eventKeys: string[] = [];
 		dates.forEach(date =>
 			eventKeys.push(
-				...[CST.EVENT_CREATE, CST.EVENT_REDEEM].map(
+				...[WrapperConstants.EVENT_CREATE, WrapperConstants.EVENT_REDEEM].map(
 					ev => contractAddress + '|' + ev + '|' + date + '|' + address
 				)
 			)
@@ -604,7 +598,7 @@ class DynamoUtil {
 					S:
 						contractAddress +
 						'|' +
-						(isCreate ? CST.EVENT_CREATE : CST.EVENT_REDEEM) +
+						(isCreate ? WrapperConstants.EVENT_CREATE : WrapperConstants.EVENT_REDEEM) +
 						'|' +
 						account
 				},
@@ -621,7 +615,7 @@ class DynamoUtil {
 	}
 
 	public async queryUIConversionEvent(contractAddress: string, account: string) {
-		const eventKeys: string[] = [CST.EVENT_CREATE, CST.EVENT_REDEEM].map(
+		const eventKeys: string[] = [WrapperConstants.EVENT_CREATE, WrapperConstants.EVENT_REDEEM].map(
 			ev => contractAddress + '|' + ev + '|' + account
 		);
 		const allData: IConversion[] = [];

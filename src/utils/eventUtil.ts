@@ -1,15 +1,22 @@
-import BaseContractWrapper from '../../../duo-contract-wrapper/src/BaseContractWrapper';
-import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
+import {
+	BaseContractWrapper,
+	Constants as WrapperConstants,
+	DualClassWrapper,
+	IEvent,
+	Web3Wrapper
+} from '@finbook/duo-contract-wrapper';
 import * as CST from '../common/constants';
-import { IEvent } from '../common/types';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class EventUtil {
 	public async trigger(account: string, dualClassWrappers: DualClassWrapper[], event: string) {
 		util.logInfo('subscribing to ' + event);
-		if (![CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(event)) {
+		if (
+			![WrapperConstants.EVENT_START_PRE_RESET, WrapperConstants.EVENT_START_RESET].includes(
+				event
+			)
+		) {
 			util.logError('invalid event, exit');
 			return Promise.resolve();
 		}
@@ -21,9 +28,15 @@ class EventUtil {
 				const state = sysState.state;
 				util.logDebug('current state is ' + state + ' for ' + dcw.address);
 
-				if (event === CST.EVENT_START_PRE_RESET && state === CST.CTD_PRERESET)
+				if (
+					event === WrapperConstants.EVENT_START_PRE_RESET &&
+					state === WrapperConstants.CTD_PRERESET
+				)
 					await dcw.triggerPreReset(account);
-				else if (event === CST.EVENT_START_RESET && state === CST.CTD_RESET)
+				else if (
+					event === WrapperConstants.EVENT_START_RESET &&
+					state === WrapperConstants.CTD_RESET
+				)
 					await dcw.triggerReset(account);
 				else util.logDebug('state not matched!');
 			});
@@ -49,7 +62,10 @@ class EventUtil {
 			const currentBlk = await web3Wrapper.getCurrentBlockNumber();
 			while (startBlk <= currentBlk) {
 				const allEvents: IEvent[] = [];
-				const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
+				const end = Math.min(
+					startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL,
+					currentBlk
+				);
 				const promiseList: Array<Promise<any>> = [];
 				BaseContractWrappers.forEach(bw =>
 					bw.events.forEach(event =>

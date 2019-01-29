@@ -1,3 +1,5 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import moment from 'moment';
 // import ws from 'ws';
 import * as CST from '../common/constants';
