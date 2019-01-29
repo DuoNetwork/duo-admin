@@ -137,3 +137,19 @@ export const EXCHANGE_WEIGHTAGE_TH: { [index: number]: number[] } = {
 	3: [0.55, 0.45, 0.35],
 	2: [0.65, 0.5]
 };
+
+export const TRANSFER_TOKEN_INTERVAL = 30; // in seconds
+export const TRANSFER_TOKEN_GAS_TH = 0.01; // in ether
+export const SET_VALUE_GAS_PRICE = 3; // in Gwei
+export const COLLECT_FEE_GAS_PRICE = 4; // in Gwei
+export const ADD_ADDR_GAS_PRICE = 5; // in Gwei
+export const REMOVE_ADDR_GAS_PRICE = 5; // in Gwei
+export const UPDATE_ADDR_GAS_PRICE = 5; // in Gwei
+export const TRANSFER_INTERVAL = 10; // in seconds
+export const TRANSFER_GAS_TH = 0.01;
+export const REDEEM_INTERVAL = 10; // in seconds
+export const REDEEM_GAS_TH = 0.005;
+export const CREATE_INTERVAL = 10; // in seconds
+export const CREATE_GAS_TH = 0.01;
+export const EVENT_FETCH_BLOCK_INTERVAL = 100;
+export const EVENT_FETCH_TIME_INTERVAL = 600000;
