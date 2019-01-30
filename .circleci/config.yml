@@ -9,11 +9,6 @@ jobs:
             - run:
                   name: npm install admin
                   command: cd /home/circleci/duo-admin && npm install
-            - run: git clone https://github.com/FinBook/duo-contract-wrapper.git /home/circleci/duo-contract-wrapper
-            - run:
-                  name: install npm contract wrapper
-                  command: cd /home/circleci/duo-contract-wrapper && npm i -f
-            - run: cd ~/duo-admin
             - run:
                   name: test coverage
                   command: npm test -- --coverage -w 1 --forceExit

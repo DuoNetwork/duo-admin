@@ -1,6 +1,8 @@
-import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
-import * as CST from '../common/constants';
+import {
+	Constants as WrapperConstants,
+	DualClassWrapper,
+	Web3Wrapper
+} from '@finbook/duo-contract-wrapper';
 import { IOption } from '../common/types';
 import dbUtil from '../utils/dbUtil';
 import eventUtil from '../utils/eventUtil';
@@ -47,11 +49,7 @@ export default class ContractService extends BaseService {
 		await dbUtil.init(this.tool, this.option, this.web3Wrapper);
 		const magiWrapper = this.createMagiWrapper();
 
-		priceUtil.startCommitPrices(
-			this.address,
-			magiWrapper,
-			this.option.pair
-		);
+		priceUtil.startCommitPrices(this.address, magiWrapper, this.option.pair);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
@@ -98,8 +96,8 @@ export default class ContractService extends BaseService {
 		const type = this.option.contractType;
 		const tenor = this.option.tenor;
 		if (
-			![CST.BEETHOVEN, CST.MOZART].includes(type) ||
-			![CST.TENOR_PPT, CST.TENOR_M19].includes(tenor)
+			![WrapperConstants.BEETHOVEN, WrapperConstants.MOZART].includes(type) ||
+			![WrapperConstants.TENOR_PPT, WrapperConstants.TENOR_M19].includes(tenor)
 		) {
 			util.logDebug('no contract type or tenor specified');
 			return;

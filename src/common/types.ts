@@ -1,5 +1,4 @@
 import { ChildProcess } from 'child_process';
-export * from '../../../duo-contract-wrapper/src/types';
 
 export interface IBaseMarketData {
 	source: string;

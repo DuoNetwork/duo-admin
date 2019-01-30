@@ -1,3 +1,4 @@
+import { Constants as WrapperConstants } from '@finbook/duo-contract-wrapper';
 import moment from 'moment';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
@@ -52,7 +53,7 @@ class Util {
 			source: '',
 			event: '',
 			provider: '',
-			period: 1,
+			period: 1
 		};
 		for (let i = 3; i < argv.length; i++) {
 			const args = argv[i].split('=');
@@ -121,7 +122,10 @@ class Util {
 				type = 'EVENT';
 				source =
 					'_' +
-					([CST.EVENT_START_PRE_RESET, CST.EVENT_START_RESET].includes(option.event)
+					([
+						WrapperConstants.EVENT_START_PRE_RESET,
+						WrapperConstants.EVENT_START_RESET
+					].includes(option.event)
 						? option.event.toUpperCase()
 						: 'OTHERS');
 				break;

@@ -1,4 +1,4 @@
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
+import { Web3Wrapper } from '@finbook/duo-contract-wrapper';
 import * as CST from '../common/constants';
 import { IOption, IPriceFix, ITrade } from '../common/types';
 import dynamoUtil from './dynamoUtil';

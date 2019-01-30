@@ -1,25 +1,20 @@
-import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
+import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
 import BaseService from './BaseService';
-jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
-	jest.fn(() => ({
+
+jest.mock('@finbook/duo-contract-wrapper', () => ({
+	Web3Wrapper: jest.fn(() => ({
 		contractAddresses: kovan
-	}))
-);
-jest.mock('../../../duo-contract-wrapper/src/DualClassWrapper', () =>
-	jest.fn(() => ({
+	})),
+	DualClassWrapper: jest.fn(() => ({
 		contract: 'dualClassWrapper'
-	}))
-);
-jest.mock('../../../duo-contract-wrapper/src/EsplanadeWrapper', () =>
-	jest.fn(() => ({
+	})),
+	EsplanadeWrapper: jest.fn(() => ({
 		contract: 'EsplanadeWrapper'
-	}))
-);
-jest.mock('../../../duo-contract-wrapper/src/MagiWrapper', () =>
-	jest.fn(() => ({
+	})),
+	MagiWrapper: jest.fn(() => ({
 		contract: 'MagiWrapper'
 	}))
-);
+}));
 
 const service = new BaseService('tool', {
 	live: false,

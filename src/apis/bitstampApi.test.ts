@@ -1,3 +1,5 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import Pusher from 'pusher-js';
 import tradesRest from '../samples/bitstamp/tradesRest.json';
 import tradesWs from '../samples/bitstamp/tradesWs.json';

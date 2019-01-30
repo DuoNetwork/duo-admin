@@ -1,3 +1,5 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import tradesRest from '../samples/kraken/tradesRest.json';
 import dbUtil from '../utils/dbUtil';
 import httpUtil from '../utils/httpUtil';

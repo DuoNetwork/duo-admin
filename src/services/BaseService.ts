@@ -1,7 +1,9 @@
-import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
-import EsplanadeWrapper from '../../../duo-contract-wrapper/src/EsplanadeWrapper';
-import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
-import Web3Wrapper from '../../../duo-contract-wrapper/src/Web3Wrapper';
+import {
+	DualClassWrapper,
+	EsplanadeWrapper,
+	MagiWrapper,
+	Web3Wrapper
+} from '@finbook/duo-contract-wrapper';
 import { IOption } from '../common/types';
 import dbUtil from '../utils/dbUtil';
 
@@ -20,7 +22,7 @@ export default class BaseService {
 		return dbUtil.init(this.tool, this.option, this.web3Wrapper);
 	}
 
-	public createDuoWrappers(): {[type: string]: {[tenor: string]: DualClassWrapper}} {
+	public createDuoWrappers(): { [type: string]: { [tenor: string]: DualClassWrapper } } {
 		return {
 			Beethoven: {
 				Perpetual: new DualClassWrapper(

@@ -1,3 +1,5 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
 import tradesRest from '../samples/bitfinex/tradesRest.json';
 import tradesWsSnapshot from '../samples/bitfinex/tradesWsSnapshot.json';
 import tradesWsUpdate from '../samples/bitfinex/tradesWsUpdate.json';

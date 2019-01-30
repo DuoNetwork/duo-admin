@@ -1,12 +1,14 @@
-import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
+import * as Constants from '@finbook/duo-contract-wrapper/dist/constants';
+import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
 import dbUtil from '../utils/dbUtil';
 import eventUtil from '../utils/eventUtil';
 import keyUtil from '../utils/keyUtil';
 import priceUtil from '../utils/priceUtil';
 import ContractService from './ContractService';
 
-jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
-	jest.fn(() => ({
+jest.mock('@finbook/duo-contract-wrapper', () => ({
+	Constants: Constants,
+	Web3Wrapper: jest.fn(() => ({
 		web3: {
 			eth: {
 				accounts: {
@@ -15,24 +17,17 @@ jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
 			}
 		},
 		contractAddresses: kovan
-	}))
-);
-
-jest.mock('../../../duo-contract-wrapper/src/DualClassWrapper', () =>
-	jest.fn(() => ({
+	})),
+	DualClassWrapper: jest.fn(() => ({
 		contract: 'dualClassWrapper'
-	}))
-);
-jest.mock('../../../duo-contract-wrapper/src/EsplanadeWrapper', () =>
-	jest.fn(() => ({
+	})),
+	EsplanadeWrapper: jest.fn(() => ({
 		contract: 'EsplanadeWrapper'
-	}))
-);
-jest.mock('../../../duo-contract-wrapper/src/MagiWrapper', () =>
-	jest.fn(() => ({
+	})),
+	MagiWrapper: jest.fn(() => ({
 		contract: 'MagiWrapper'
 	}))
-);
+}));
 
 const contractService = new ContractService('tool', {
 	live: false,

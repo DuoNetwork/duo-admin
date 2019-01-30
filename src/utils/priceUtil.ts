@@ -1,8 +1,12 @@
-import DualClassWrapper from '../../../duo-contract-wrapper/src/DualClassWrapper';
-import MagiWrapper from '../../../duo-contract-wrapper/src/MagiWrapper';
+import {
+	Constants as WrapperConstants,
+	DualClassWrapper,
+	IContractPrice,
+	IDualClassStates,
+	MagiWrapper
+} from '@finbook/duo-contract-wrapper';
 import apis from '../apis';
-import * as CST from '../common/constants';
-import { IContractPrice, IDualClassStates, IPrice } from '../common/types';
+import { IPrice } from '../common/types';
 import calculator from './calculator';
 import dynamoUtil from './dynamoUtil';
 import util from './util';
@@ -43,14 +47,16 @@ class PriceUtil {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.START_MAGI_GAS);
+		util.logInfo(
+			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.START_MAGI_GAS
+		);
 		return magiWrapper.startMagi(
 			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
 			{
 				gasPrice: gasPrice,
-				gasLimit: CST.START_MAGI_GAS
+				gasLimit: WrapperConstants.START_MAGI_GAS
 			}
 		);
 	}
@@ -64,14 +70,16 @@ class PriceUtil {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
 		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
-		util.logInfo('gasPrice price ' + gasPrice + ' gasLimit is ' + CST.COMMIT_PRICE_GAS);
+		util.logInfo(
+			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.COMMIT_PRICE_GAS
+		);
 		return magiWrapper.commitPrice(
 			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
 			{
 				gasPrice: gasPrice,
-				gasLimit: CST.COMMIT_PRICE_GAS
+				gasLimit: WrapperConstants.COMMIT_PRICE_GAS
 			}
 		);
 	}
@@ -97,7 +105,7 @@ class PriceUtil {
 			for (const bw of dualClassWrappers) {
 				const btvStates: IDualClassStates = await bw.getStates();
 				if (
-					btvStates.state === CST.CTD_TRADING &&
+					btvStates.state === WrapperConstants.CTD_TRADING &&
 					lastPrice.timestamp - btvStates.lastPriceTime > 3000000
 				)
 					wrappersToCall.push(bw);
@@ -108,7 +116,7 @@ class PriceUtil {
 				promiseList.push(
 					bw.fetchPrice(account, {
 						gasPrice: gasPrice,
-						gasLimit: CST.FETCH_PRICE_GAS,
+						gasLimit: WrapperConstants.FETCH_PRICE_GAS,
 						nonce: nonce
 					})
 				);

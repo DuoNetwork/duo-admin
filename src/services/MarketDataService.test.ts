@@ -1,7 +1,7 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
+import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
 import child_process from 'child_process';
-import { kovan } from '../../../duo-contract-wrapper/src/contractAddresses';
 import geminiApi from '../apis/geminiApi';
 import dbUtil from '../utils/dbUtil';
 import dynamoUtil from '../utils/dynamoUtil';
@@ -9,11 +9,11 @@ import osUtil from '../utils/osUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
 import MarketDataService from './MarketDataService';
-jest.mock('../../../duo-contract-wrapper/src/Web3Wrapper', () =>
-	jest.fn(() => ({
+jest.mock('@finbook/duo-contract-wrapper', () => ({
+	Web3Wrapper: jest.fn(() => ({
 		contractAddresses: kovan
 	}))
-);
+}));
 
 const marketDataService = new MarketDataService('tool', {} as any);
 test('retry after long enought time', () => {

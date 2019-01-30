@@ -1,8 +1,10 @@
+// fix for @ledgerhq/hw-transport-u2f 4.28.0
+import '@babel/polyfill';
+import {Constants as WrapperConstants, IEvent} from '@finbook/duo-contract-wrapper'
 import DynamoDB from 'aws-sdk/clients/dynamodb';
 import AWS from 'aws-sdk/global';
 import moment from 'moment';
 import * as CST from '../common/constants';
-import { IEvent } from '../common/types';
 import conversion from '../samples/dynamo/conversion.json';
 import prices from '../samples/dynamo/prices.json';
 import status from '../samples/dynamo/status.json';
@@ -609,14 +611,14 @@ test('parseStatus', () => expect(convertedStatus).toMatchSnapshot());
 
 test('queryAcceptPriceEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryAcceptPriceEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryAcceptPriceEvent(WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryAcceptPriceEvent, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryAcceptPriceEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryAcceptPriceEvent(WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
@@ -677,14 +679,14 @@ test('parseAcceptedPrices, invalid type', () =>
 test('queryConversionEvent', async () => {
 	dynamoUtil.live = true;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryConversionEvent, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
@@ -693,14 +695,14 @@ test('parseConversion', () => expect(dynamoUtil.parseConversion(conversion)).toM
 test('queryTotalSupplyEvent, live', async () => {
 	dynamoUtil.live = true;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryTotalSupplyEvent(WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
 test('queryTotalSupplyEvent', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryTotalSupplyEvent(CST.DUMMY_ADDR, ['date1', 'date2']);
+	await dynamoUtil.queryTotalSupplyEvent(WrapperConstants.DUMMY_ADDR, ['date1', 'date2']);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
@@ -708,7 +710,7 @@ test('parseTotalSupply', () => expect(dynamoUtil.parseTotalSupply(totalSupply)).
 
 test('queryUIConversionEvent', async () => {
 	dynamoUtil.queryData = jest.fn(() => Promise.resolve({}));
-	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+	await dynamoUtil.queryUIConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR);
 	expect((dynamoUtil.queryData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
 });
 
@@ -744,7 +746,7 @@ test('queryUIConversionEvent, status', async () => {
 		})
 	);
 
-	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+	await dynamoUtil.queryUIConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR);
 });
 
 test('queryUIConversionEvent, status', async () => {
@@ -755,7 +757,7 @@ test('queryUIConversionEvent, status', async () => {
 		})
 	);
 
-	await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+	await dynamoUtil.queryUIConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR);
 });
 
 test('queryUIConversionEvent, status', async () => {
@@ -766,7 +768,7 @@ test('queryUIConversionEvent, status', async () => {
 	);
 	dynamoUtil.getTxStatus = jest.fn(() => Promise.reject('getStatus error!'));
 	try {
-		await dynamoUtil.queryUIConversionEvent(CST.DUMMY_ADDR, CST.DUMMY_ADDR);
+		await dynamoUtil.queryUIConversionEvent(WrapperConstants.DUMMY_ADDR, WrapperConstants.DUMMY_ADDR);
 	} catch (err) {
 		util.logError(JSON.stringify(err));
 	}
@@ -871,8 +873,8 @@ test('insertUIConversion', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	await dynamoUtil.insertUIConversion(
-		CST.DUMMY_ADDR,
-		CST.DUMMY_ADDR,
+		WrapperConstants.DUMMY_ADDR,
+		WrapperConstants.DUMMY_ADDR,
 		'0x123',
 		true,
 		123,
@@ -888,8 +890,8 @@ test('insertUIConversion, live', async () => {
 	dynamoUtil.insertData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	await dynamoUtil.insertUIConversion(
-		CST.DUMMY_ADDR,
-		CST.DUMMY_ADDR,
+		WrapperConstants.DUMMY_ADDR,
+		WrapperConstants.DUMMY_ADDR,
 		'0x123',
 		false,
 		123,
@@ -902,7 +904,7 @@ test('insertUIConversion, live', async () => {
 
 test('deleteUIConversionEvent', async () => {
 	dynamoUtil.deleteData = jest.fn(() => Promise.resolve());
-	await dynamoUtil.deleteUIConversionEvent(CST.DUMMY_ADDR, {
+	await dynamoUtil.deleteUIConversionEvent(WrapperConstants.DUMMY_ADDR, {
 		contractAddress: 'contractAddress',
 		type: 'type',
 		transactionHash: 'txHash',
@@ -919,7 +921,7 @@ test('deleteUIConversionEvent', async () => {
 test('deleteUIConversionEvent, dev', async () => {
 	dynamoUtil.live = false;
 	dynamoUtil.deleteData = jest.fn(() => Promise.resolve());
-	await dynamoUtil.deleteUIConversionEvent(CST.DUMMY_ADDR, {
+	await dynamoUtil.deleteUIConversionEvent(WrapperConstants.DUMMY_ADDR, {
 		contractAddress: 'contractAddress',
 		type: 'type',
 		transactionHash: 'txHash',

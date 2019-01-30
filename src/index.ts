@@ -1,5 +1,6 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
+import { Constants } from '@finbook/duo-contract-wrapper';
 import * as CST from './common/constants';
 import ContractService from './services/ContractService';
 import MarketDataService from './services/MarketDataService';
@@ -12,7 +13,9 @@ const option = util.parseOptions(process.argv);
 if (!option.provider) {
 	const infura = require('./keys/infura.json');
 	option.provider =
-		(option.live ? CST.PROVIDER_INFURA_MAIN : CST.PROVIDER_INFURA_KOVAN) + '/' + infura.token;
+		(option.live ? Constants.PROVIDER_INFURA_MAIN : Constants.PROVIDER_INFURA_KOVAN) +
+		'/' +
+		infura.token;
 }
 
 util.logInfo(
