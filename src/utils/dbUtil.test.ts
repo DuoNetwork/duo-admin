@@ -3,14 +3,13 @@ import '@babel/polyfill';
 import * as Constants from '@finbook/duo-market-data/dist/constants';
 import dbUtil from './dbUtil';
 import keyUtil from './keyUtil';
-// import SqlUtil from './sqlUtil';
 import util from './util';
 
 jest.mock('@finbook/duo-market-data', () => ({
 	Constants: Constants,
 	DynamoUtil: jest.fn(() => ({ test: 'DynamoUtil' }))
 }));
-jest.mock('./sqlUtil', () =>
+jest.mock('./Sql', () =>
 	jest.fn(() => ({
 		init: jest.fn(() => Promise.resolve())
 	}))

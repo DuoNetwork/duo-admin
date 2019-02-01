@@ -3,7 +3,7 @@ import { DynamoUtil, IPrice, IPriceFix, ITrade } from '@finbook/duo-market-data'
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
 import keyUtil from './keyUtil';
-import SqlUtil from './sqlUtil';
+import SqlUtil from './Sql';
 import util from './util';
 
 class DbUtil {

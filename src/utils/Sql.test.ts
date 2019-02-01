@@ -1,7 +1,7 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
 import { IPrice } from '@finbook/duo-market-data';
-import SqlUtil from './sqlUtil';
+import SqlUtil from './Sql';
 import util from './util';
 
 let connError = '';
