@@ -1,17 +1,15 @@
-import * as CST from '../common/constants';
+import { Constants } from '@finbook/duo-market-data';
 import BaseApi from './BaseApi';
-// import bitfinexApi from './bitfinexApi';
 import bitstampApi from './bitstampApi';
 import gdaxApi from './gdaxApi';
 import geminiApi from './geminiApi';
 import krakenApi from './krakenApi';
 
 const apis: { [key: string]: BaseApi } = {
-	// [CST.API_BITFINEX]: bitfinexApi,
-	[CST.API_GEMINI]: geminiApi,
-	[CST.API_KRAKEN]: krakenApi,
-	[CST.API_GDAX]: gdaxApi,
-	[CST.API_BITSTAMP]: bitstampApi
+	[Constants.API_GEMINI]: geminiApi,
+	[Constants.API_KRAKEN]: krakenApi,
+	[Constants.API_GDAX]: gdaxApi,
+	[Constants.API_BITSTAMP]: bitstampApi
 };
 
 export default apis;

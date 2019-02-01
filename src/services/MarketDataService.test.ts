@@ -4,7 +4,6 @@ import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
 import child_process from 'child_process';
 import geminiApi from '../apis/geminiApi';
 import dbUtil from '../utils/dbUtil';
-import dynamoUtil from '../utils/dynamoUtil';
 import osUtil from '../utils/osUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
@@ -15,7 +14,7 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	}))
 }));
 
-const marketDataService = new MarketDataService('tool', {} as any);
+const marketDataService = new MarketDataService();
 test('retry after long enought time', () => {
 	const launchMock = jest.fn();
 	const launchOriginal = marketDataService.launchSource;
@@ -364,7 +363,6 @@ test('startFetching source no sourcePairs', async () => {
 });
 
 test('cleanDb', async () => {
-	dbUtil.init = jest.fn();
 	dbUtil.cleanDB = jest.fn();
 	dbUtil.insertHeartbeat = jest.fn();
 	global.setInterval = jest.fn();
@@ -381,12 +379,11 @@ test('cleanDb', async () => {
 
 test('startAggregate', async () => {
 	global.setInterval = jest.fn();
-	dynamoUtil.insertHeartbeat = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
 	priceUtil.aggregatePrice = jest.fn();
 	await marketDataService.startAggregate(10);
-
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
 	(global.setInterval as jest.Mock).mock.calls[1][0]();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.aggregatePrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

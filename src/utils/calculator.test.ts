@@ -1,7 +1,7 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
+import { ITrade } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
-import { ITrade } from '../common/types';
 import trades from '../samples/ETHUSDtrades.json';
 import trades2 from '../samples/ETHUSDtrades2.json';
 import calculator from './calculator';

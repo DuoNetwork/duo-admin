@@ -5,8 +5,9 @@ import {
 	IEvent,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
+import { Constants as DataConstants } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
-import dynamoUtil from './dynamoUtil';
+import dbUtil from './dbUtil';
 import util from './util';
 
 class EventUtil {
@@ -22,7 +23,7 @@ class EventUtil {
 		}
 
 		global.setInterval(async () => {
-			dynamoUtil.insertHeartbeat();
+			dbUtil.insertHeartbeat();
 			const promiseList = dualClassWrappers.map(async dcw => {
 				const sysState = await dcw.getStates();
 				const state = sysState.state;
@@ -55,17 +56,14 @@ class EventUtil {
 
 		let startBlk = force
 			? web3Wrapper.inceptionBlockNumber
-			: Math.max(await dynamoUtil.readLastBlock(), web3Wrapper.inceptionBlockNumber);
+			: Math.max(await dbUtil.readLastBlock(), web3Wrapper.inceptionBlockNumber);
 		util.logInfo('starting blk number: ' + startBlk);
 		const loop = async () => {
 			const blockTimestampMap: { [blk: number]: number } = {};
 			const currentBlk = await web3Wrapper.getCurrentBlockNumber();
 			while (startBlk <= currentBlk) {
 				const allEvents: IEvent[] = [];
-				const end = Math.min(
-					startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL,
-					currentBlk
-				);
+				const end = Math.min(startBlk + CST.EVENT_FETCH_BLOCK_INTERVAL, currentBlk);
 				const promiseList: Array<Promise<any>> = [];
 				BaseContractWrappers.forEach(bw =>
 					bw.events.forEach(event =>
@@ -86,10 +84,10 @@ class EventUtil {
 				util.logInfo(
 					'total ' + allEvents.length + ' events from block ' + startBlk + ' to ' + end
 				);
-				if (allEvents.length > 0) await dynamoUtil.insertEventsData(allEvents);
+				if (allEvents.length > 0) await dbUtil.insertEventsData(allEvents);
 
-				await dynamoUtil.insertHeartbeat({
-					[CST.DB_ST_BLOCK]: { N: end + '' }
+				await dbUtil.insertHeartbeat({
+					[DataConstants.DB_ST_BLOCK]: { N: end + '' }
 				});
 				startBlk = end + 1;
 			}

@@ -2,6 +2,19 @@
 
 exports[`cleanDB 1`] = `"DELETE FROM trades WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 7 DAY)) * 1000"`;
 
+exports[`constructor 1`] = `
+Array [
+  Array [
+    Object {
+      "database": "priceFeedDB",
+      "host": "host",
+      "password": "pwd",
+      "user": "user",
+    },
+  ],
+]
+`;
+
 exports[`executeQuery error 1`] = `"test"`;
 
 exports[`executeQuery error ER_DUP_ENTRY 1`] = `
@@ -10,30 +23,7 @@ Object {
 }
 `;
 
-exports[`executeQuery no conn 1`] = `"sql db connection is not initialized"`;
-
 exports[`init 1`] = `
-Array [
-  Array [
-    Object {
-      "database": "priceFeedDB",
-      "host": "host",
-      "password": "pwd",
-      "user": "user",
-    },
-  ],
-  Array [
-    Object {
-      "database": "priceFeedDB",
-      "host": "host",
-      "password": "pwd",
-      "user": "user",
-    },
-  ],
-]
-`;
-
-exports[`init 2`] = `
 Array [
   Array [
     "error",
@@ -42,21 +32,35 @@ Array [
 ]
 `;
 
-exports[`init 3`] = `
+exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','123','456','ETH|USD')"`;
+
+exports[`insertTradeData 1`] = `
 Array [
   Array [
-    "host",
-    "user",
-    "pwd",
+    "REPLACE trades VALUES ('src','id','123','456','1234567890','1234567890','quote|base')",
+  ],
+  Array [
+    "REPLACE trades VALUES ('src','id','123','456','1234567890','1234567890','quote|base')",
   ],
 ]
 `;
 
-exports[`init failed 1`] = `"no connection"`;
-
-exports[`insertPrice 1`] = `"INSERT INTO historical_price VALUES ('1234567890','123','456','ETH|USD')"`;
-
-exports[`insertTradeData 1`] = `"REPLACE trades VALUES ('src','id','123','456','1234567890','1234567890','quote|base')"`;
+exports[`insertTradeData 2`] = `
+Array [
+  Array [
+    Object {
+      "amount": 456,
+      "base": "base",
+      "id": "id",
+      "price": 123,
+      "quote": "quote",
+      "source": "src",
+      "timestamp": 1234567890,
+    },
+    1234567890,
+  ],
+]
+`;
 
 exports[`readLastPrice 1`] = `
 Object {

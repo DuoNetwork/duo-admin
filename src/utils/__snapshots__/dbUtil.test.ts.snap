@@ -1,47 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cleanDB 1`] = `undefined`;
-
-exports[`init only dynamo 1`] = `
+exports[`addPrice 1`] = `
 Array [
-  true,
-  "process",
-  [Function],
-  [Function],
+  Array [
+    "price",
+  ],
 ]
 `;
 
-exports[`init only dynamo 2`] = `
+exports[`getPrices 1`] = `
+Array [
+  Array [
+    "src",
+    10,
+    123,
+    456,
+    "pair",
+  ],
+]
+`;
+
+exports[`init only dynamo 1`] = `
 Object {
-  "status": "status",
+  "test": "DynamoUtil",
 }
 `;
 
-exports[`init only dynamo 3`] = `
+exports[`init only dynamo 2`] = `
 Array [
-  Array [
-    123,
-  ],
-]
-`;
-
-exports[`init only dynamo 4`] = `
-Array [
-  Array [
-    "txHash",
-  ],
-  Array [
-    "txHash",
-  ],
+  true,
+  "process",
 ]
 `;
 
 exports[`init server 1`] = `
+Object {
+  "test": "DynamoUtil",
+}
+`;
+
+exports[`init server 2`] = `
 Array [
-  true,
+  false,
   "process",
-  [Function],
-  [Function],
+]
+`;
+
+exports[`insertEventsData 1`] = `
+Array [
+  Array [
+    "events",
+  ],
 ]
 `;
 
@@ -56,9 +65,7 @@ Array [
 ]
 `;
 
-exports[`insertPrice 1`] = `"invalid"`;
-
-exports[`insertPrice 2`] = `
+exports[`insertPrice 1`] = `
 Array [
   Array [
     "price",
@@ -84,9 +91,13 @@ Array [
 ]
 `;
 
-exports[`readLastPrice 1`] = `"invalid"`;
+exports[`readLastBlock 1`] = `
+Array [
+  Array [],
+]
+`;
 
-exports[`readLastPrice 2`] = `
+exports[`readLastPrice 1`] = `
 Array [
   Array [
     "quote",
@@ -95,9 +106,7 @@ Array [
 ]
 `;
 
-exports[`readSourceData 1`] = `"invalid"`;
-
-exports[`readSourceData 2`] = `
+exports[`readSourceData 1`] = `
 Array [
   Array [
     123,

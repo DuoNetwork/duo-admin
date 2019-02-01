@@ -1,12 +1,13 @@
+import { Constants, ITrade } from '@finbook/duo-market-data';
 import Pusher from 'pusher-js';
 import * as CST from '../common/constants';
-import { IBitstampRawTradeRest, IBitstampRawTradeWs, ITrade } from '../common/types';
+import { IBitstampRawTradeRest, IBitstampRawTradeWs } from '../common/types';
 import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class BitfinexApi extends BaseApi {
-	public source: string = CST.API_BITSTAMP;
+	public source: string = Constants.API_BITSTAMP;
 
 	protected parseTradeWS(sourcePair: string, trade: IBitstampRawTradeWs): ITrade {
 		const { base, quote } = this.parseMarketData(sourcePair);

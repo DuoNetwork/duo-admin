@@ -1,18 +1,18 @@
+import { Constants, ITrade } from '@finbook/duo-market-data';
 import moment from 'moment';
 import * as CST from '../common/constants';
-import { ITrade } from '../common/types';
 import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GdaxApi extends BaseApi {
-	public source: string = CST.API_GDAX;
+	public source: string = Constants.API_GDAX;
 	public parseTrade(sourcePair: string, trade: { [key: string]: string | number }): ITrade {
 		const { base, quote } = this.parseMarketData(sourcePair);
 		return {
 			base: base,
 			quote: quote,
-			source: CST.API_GDAX,
+			source: this.source,
 			id: trade.trade_id + '',
 			price: Number(trade.price),
 			amount: Math.abs(Number(trade.size)),

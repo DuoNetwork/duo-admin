@@ -1,7 +1,7 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
 import calculator from './calculator';
-import dynamoUtil from './dynamoUtil';
+import dbUtil from './dbUtil';
 import priceUtil from './priceUtil';
 import util from './util';
 
@@ -106,15 +106,15 @@ test('getPeriodPrice 60', () => {
 });
 
 test('aggregatePrice', async () => {
-	dynamoUtil.getPrices = jest.fn((src: string) =>
+	dbUtil.getPrices = jest.fn((src: string) =>
 		Promise.resolve(prices.filter(price => price.source === src))
 	);
-	dynamoUtil.addPrice = jest.fn(() => Promise.resolve());
+	dbUtil.addPrice = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => Math.max(...prices.map(price => price.timestamp)) + 1);
 
 	await priceUtil.aggregatePrice(1);
-	expect((dynamoUtil.getPrices as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.addPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.getPrices as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.addPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 const magiWrapper = {

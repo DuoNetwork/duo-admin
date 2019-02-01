@@ -1,4 +1,5 @@
 import { Constants as WrapperConstants } from '@finbook/duo-contract-wrapper';
+import { Constants as DataConstants } from '@finbook/duo-market-data';
 import moment from 'moment';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
@@ -135,7 +136,7 @@ class Util {
 			case CST.CLEAN_DB:
 				type = 'CLEANDB';
 				break;
-			case CST.DB_PRICES:
+			case DataConstants.DB_PRICES:
 				type = 'PRICE';
 				if (option.period === 1) source = '_MINUTELY';
 				else if (option.period === 60) source = '_HOURLY';

@@ -2,7 +2,7 @@
 import '@babel/polyfill';
 import * as Constants from '@finbook/duo-contract-wrapper/dist/constants';
 import { kovan } from '@finbook/duo-contract-wrapper/dist/contractAddresses';
-import dynamoUtil from './dynamoUtil';
+import dbUtil from './dbUtil';
 import eventUtil from './eventUtil';
 
 jest.mock('@finbook/duo-contract-wrapper', () => ({
@@ -18,7 +18,7 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 import { Web3Wrapper } from '@finbook/duo-contract-wrapper';
 
 test('trigger, worng event name', async () => {
-	dynamoUtil.insertHeartbeat = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
 	global.setInterval = jest.fn();
 	const dualClassWrapper = {
 		address: 'contractAddress',
@@ -32,11 +32,11 @@ test('trigger, worng event name', async () => {
 	} as any;
 	await eventUtil.trigger('account', [dualClassWrapper], 'event');
 	expect(global.setInterval as jest.Mock).not.toBeCalled();
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).not.toBeCalled();
+	expect(dbUtil.insertHeartbeat as jest.Mock).not.toBeCalled();
 });
 
 test('trigger, StartPreReset', async () => {
-	dynamoUtil.insertHeartbeat = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
 	global.setInterval = jest.fn();
 	const dualClassWrappers = [
 		{
@@ -69,11 +69,11 @@ test('trigger, StartPreReset', async () => {
 		expect((dcw.triggerPreReset as jest.Mock).mock.calls).toMatchSnapshot();
 		expect(dcw.triggerReset as jest.Mock).not.toBeCalled();
 	}
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('trigger, StartReset', async () => {
-	dynamoUtil.insertHeartbeat = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
 	global.setInterval = jest.fn();
 	const dualClassWrappers = [
 		{
@@ -106,11 +106,11 @@ test('trigger, StartReset', async () => {
 		expect((dcw.triggerReset as jest.Mock).mock.calls).toMatchSnapshot();
 		expect(dcw.triggerPreReset as jest.Mock).not.toBeCalled();
 	}
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('trigger, StartReset, wrong state', async () => {
-	dynamoUtil.insertHeartbeat = jest.fn();
+	dbUtil.insertHeartbeat = jest.fn();
 	global.setInterval = jest.fn();
 	const dualClassWrappers = [
 		{
@@ -143,7 +143,7 @@ test('trigger, StartReset, wrong state', async () => {
 		expect(dcw.triggerReset as jest.Mock).not.toBeCalled();
 		expect(dcw.triggerPreReset as jest.Mock).not.toBeCalled();
 	}
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 const contractEvents: { [contract: string]: { [event: string]: object } } = {
@@ -293,7 +293,7 @@ test('fetch, force', async () => {
 		} as any
 	];
 
-	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
+	dbUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
 
 	global.setTimeout = jest.fn();
 
@@ -302,12 +302,12 @@ test('fetch, force', async () => {
 		return Promise.resolve([contractEvents[contract][event]]);
 	});
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch(baseContractWrappers, true);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -332,7 +332,7 @@ test('fetch, no force', async () => {
 		} as any
 	];
 
-	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
+	dbUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
 
 	global.setTimeout = jest.fn();
 
@@ -341,12 +341,12 @@ test('fetch, no force', async () => {
 		return Promise.resolve([contractEvents[contract][event]]);
 	});
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch(baseContractWrappers, false);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -371,7 +371,7 @@ test('fetch, no force, continuous call', async () => {
 		} as any
 	];
 
-	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
+	dbUtil.readLastBlock = jest.fn(() => Promise.resolve(1001));
 
 	global.setTimeout = jest.fn();
 
@@ -380,19 +380,19 @@ test('fetch, no force, continuous call', async () => {
 		return Promise.resolve([contractEvents[contract][event]]);
 	});
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch(baseContractWrappers, false);
 	expect(Web3Wrapper.parseEvent as jest.Mock).toBeCalledTimes(4);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 
 	await (global.setTimeout as jest.Mock).mock.calls[0][0]();
 
-	expect(dynamoUtil.insertEventsData as jest.Mock).toBeCalledTimes(1);
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
+	expect(dbUtil.insertEventsData as jest.Mock).toBeCalledTimes(1);
+	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
 	expect(global.setTimeout as jest.Mock).toBeCalledTimes(2);
 });
 
@@ -417,7 +417,7 @@ test('fetch, no events', async () => {
 		} as any
 	];
 
-	dynamoUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
+	dbUtil.readLastBlock = jest.fn(() => Promise.resolve(999));
 
 	global.setTimeout = jest.fn();
 
@@ -425,13 +425,13 @@ test('fetch, no events', async () => {
 
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
 
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch(baseContractWrappers, true);
 
 	// expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(dynamoUtil.insertEventsData as jest.Mock).not.toBeCalled();
-	expect((dynamoUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
+	expect(dbUtil.insertEventsData as jest.Mock).not.toBeCalled();
+	expect((dbUtil.insertHeartbeat as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -440,12 +440,12 @@ test('fetch, no contractWrappers', async () => {
 	global.setTimeout = jest.fn();
 	Web3Wrapper.pullEvents = jest.fn(() => Promise.resolve([]));
 	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
-	dynamoUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dynamoUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
 	await eventUtil.fetch([], true);
 
 	expect(Web3Wrapper.parseEvent as jest.Mock).not.toBeCalled();
-	expect(dynamoUtil.insertEventsData as jest.Mock).not.toBeCalled();
-	expect(dynamoUtil.insertHeartbeat as jest.Mock).not.toBeCalled();
+	expect(dbUtil.insertEventsData as jest.Mock).not.toBeCalled();
+	expect(dbUtil.insertHeartbeat as jest.Mock).not.toBeCalled();
 	expect(global.setTimeout as jest.Mock).not.toBeCalled();
 });

@@ -5,10 +5,10 @@ import {
 	IDualClassStates,
 	MagiWrapper
 } from '@finbook/duo-contract-wrapper';
+import { IPrice } from '@finbook/duo-market-data';
 import apis from '../apis';
-import { IPrice } from '../common/types';
 import calculator from './calculator';
-import dynamoUtil from './dynamoUtil';
+import dbUtil from './dbUtil';
 import util from './util';
 const schedule = require('node-schedule');
 
@@ -46,7 +46,7 @@ class PriceUtil {
 	) {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
-		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
+		if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
 		util.logInfo(
 			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.START_MAGI_GAS
 		);
@@ -69,7 +69,7 @@ class PriceUtil {
 	) {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
-		if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
+		if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
 		util.logInfo(
 			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.COMMIT_PRICE_GAS
 		);
@@ -111,7 +111,7 @@ class PriceUtil {
 					wrappersToCall.push(bw);
 			}
 
-			if (!gasPrice) gasPrice = await magiWrapper.web3Wrapper.getGasPrice();
+			if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
 			for (const bw of wrappersToCall) {
 				promiseList.push(
 					bw.fetchPrice(account, {
@@ -187,7 +187,7 @@ class PriceUtil {
 					period
 				)} prices from timestamp ${util.timestampToString(start)}`
 			);
-			const basePrices = await dynamoUtil.getPrices(
+			const basePrices = await dbUtil.getPrices(
 				src,
 				this.getBasePeriod(period),
 				start,
@@ -207,7 +207,7 @@ class PriceUtil {
 
 			util.logInfo('finished process, updating database');
 			for (const pair in pairPrices)
-				for (const price of pairPrices[pair]) await dynamoUtil.addPrice(price);
+				for (const price of pairPrices[pair]) await dbUtil.addPrice(price);
 		}
 
 		util.logInfo('all source processed');

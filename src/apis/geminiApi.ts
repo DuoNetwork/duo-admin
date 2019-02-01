@@ -1,12 +1,13 @@
+import { Constants, ITrade } from '@finbook/duo-market-data';
 import ws from 'ws';
 import * as CST from '../common/constants';
-import { IGeminiTradeData, IGeminiTradeRest, IGeminiTradeWs, ITrade } from '../common/types';
+import { IGeminiTradeData, IGeminiTradeRest, IGeminiTradeWs } from '../common/types';
 import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class GeminiApi extends BaseApi {
-	public source: string = CST.API_GEMINI;
+	public source: string = Constants.API_GEMINI;
 
 	protected parseTradeWS(sourcePair: string, trade: IGeminiTradeWs): ITrade {
 		const events: IGeminiTradeData[] = trade.events;
