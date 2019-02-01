@@ -38,10 +38,10 @@ dbUtil.init(tool, option).then(() => {
 			new ContractService(tool, option).fetchEvent();
 			break;
 		case DataConstants.DB_PRICES:
-			new MarketDataService().startAggregate(tool, option);
+			new MarketDataService().startAggregate(option.period);
 			break;
 		case CST.CLEAN_DB:
-			new MarketDataService().cleanDb(tool, option);
+			new MarketDataService().cleanDb();
 			break;
 		case CST.START_CUSTODIAN:
 			new ContractService(tool, option).startCustodian();
