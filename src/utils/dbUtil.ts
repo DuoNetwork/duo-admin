@@ -1,15 +1,17 @@
-import { Web3Wrapper } from '@finbook/duo-contract-wrapper';
+import { IEvent } from '@finbook/duo-contract-wrapper';
+import { DynamoUtil, IPrice, IPriceFix, ITrade } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
-import { IOption, IPriceFix, ITrade } from '../common/types';
-import dynamoUtil from './dynamoUtil';
+import { IOption } from '../common/types';
 import keyUtil from './keyUtil';
-import sqlUtil from './sqlUtil';
+import SqlUtil from './sqlUtil';
 import util from './util';
 
 class DbUtil {
 	public dynamo: boolean = false;
+	public dynamoUtil: DynamoUtil | null = null;
+	public sqlUtil: SqlUtil | null = null;
 
-	public async init(tool: string, option: IOption, web3Wrapper: Web3Wrapper) {
+	public async init(tool: string, option: IOption) {
 		this.dynamo = option.dynamo;
 		const process = util.getStatusProcess(tool, option);
 		util.logInfo('process: ' + process);
@@ -20,37 +22,37 @@ class DbUtil {
 		} catch (error) {
 			util.logError(error);
 		}
-		await dynamoUtil.init(
-			config,
-			option.live,
-			process,
-			(value: string | number) => web3Wrapper.fromWei(value),
-			async txHash => {
-				const txReceipt = await web3Wrapper.getTransactionReceipt(txHash);
-				if (!txReceipt) return null;
-				return {
-					status: txReceipt.status
-				};
-			}
-		);
+		this.dynamoUtil = new DynamoUtil(config, option.live, process);
 		if ([CST.TRADES, CST.COMMIT, CST.CLEAN_DB].includes(tool) && !option.dynamo) {
 			const sqlAuth = await keyUtil.getSqlAuth(option);
-			return sqlUtil.init(sqlAuth.host, sqlAuth.user, sqlAuth.password);
+			this.sqlUtil = new SqlUtil(
+				sqlAuth.host,
+				sqlAuth.user,
+				sqlAuth.password,
+				this.dynamoUtil
+			);
+			return this.sqlUtil.init();
 		}
 	}
 
 	public insertTradeData(trade: ITrade, insertStatus: boolean) {
-		return this.dynamo
-			? dynamoUtil.insertTradeData(trade, insertStatus)
-			: sqlUtil.insertTradeData(trade, insertStatus);
+		return this.dynamo && this.dynamoUtil
+			? this.dynamoUtil.insertTradeData(trade, insertStatus)
+			: this.sqlUtil
+			? this.sqlUtil.insertTradeData(trade, insertStatus)
+			: Promise.reject('invalid');
 	}
 
 	public insertPrice(price: IPriceFix) {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.insertPrice(price);
+		return this.dynamo || !this.sqlUtil
+			? Promise.reject('invalid')
+			: this.sqlUtil.insertPrice(price);
 	}
 
 	public readLastPrice(quote: string, base: string): Promise<IPriceFix> {
-		return this.dynamo ? Promise.reject('invalid') : sqlUtil.readLastPrice(quote, base);
+		return this.dynamo || !this.sqlUtil
+			? Promise.reject('invalid')
+			: this.sqlUtil.readLastPrice(quote, base);
 	}
 
 	public readSourceData(
@@ -58,17 +60,41 @@ class DbUtil {
 		quote: string,
 		base: string
 	): Promise<ITrade[]> {
-		return this.dynamo
+		return this.dynamo || !this.sqlUtil
 			? Promise.reject('invalid')
-			: sqlUtil.readSourceData(currentTimestamp, base, quote);
+			: this.sqlUtil.readSourceData(currentTimestamp, base, quote);
 	}
 
 	public cleanDB(): Promise<void> {
-		return this.dynamo ? Promise.reject() : sqlUtil.cleanDB();
+		return this.dynamo || !this.sqlUtil ? Promise.reject('invalid') : this.sqlUtil.cleanDB();
 	}
 
 	public insertHeartbeat(data: object = {}): Promise<void> {
-		return dynamoUtil.insertHeartbeat(data);
+		return !this.dynamoUtil ? Promise.reject('invalid') : this.dynamoUtil.insertHeartbeat(data);
+	}
+
+	public getPrices(src: string, period: number, start: number, end?: number, pair?: string) {
+		return !this.dynamo || !this.dynamoUtil
+			? Promise.reject('invalid')
+			: this.dynamoUtil.getPrices(src, period, start, end, pair);
+	}
+
+	public addPrice(price: IPrice) {
+		return !this.dynamo || !this.dynamoUtil
+			? Promise.reject('invalid')
+			: this.dynamoUtil.addPrice(price);
+	}
+
+	public readLastBlock() {
+		return !this.dynamo || !this.dynamoUtil
+			? Promise.reject('invalid')
+			: this.dynamoUtil.readLastBlock();
+	}
+
+	public insertEventsData(events: IEvent[]) {
+		return !this.dynamo || !this.dynamoUtil
+			? Promise.reject('invalid')
+			: this.dynamoUtil.insertEventsData(events);
 	}
 }
 

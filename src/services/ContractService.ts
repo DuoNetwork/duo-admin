@@ -1,6 +1,8 @@
 import {
 	Constants as WrapperConstants,
 	DualClassWrapper,
+	EsplanadeWrapper,
+	MagiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
 import { IOption } from '../common/types';
@@ -9,13 +11,57 @@ import eventUtil from '../utils/eventUtil';
 import keyUtil from '../utils/keyUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
-import BaseService from './BaseService';
 
-export default class ContractService extends BaseService {
+export default class ContractService {
+	public web3Wrapper: Web3Wrapper;
+	public tool: string;
+	public option: IOption;
 	public key: string = '';
 	public address: string = '';
+
 	constructor(tool: string, option: IOption) {
-		super(tool, option);
+		this.option = option;
+		this.tool = tool;
+		this.web3Wrapper = new Web3Wrapper(null, option.provider, '', option.live);
+	}
+
+	public createDuoWrappers(): { [type: string]: { [tenor: string]: DualClassWrapper } } {
+		return {
+			Beethoven: {
+				Perpetual: new DualClassWrapper(
+					this.web3Wrapper,
+					this.web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
+				),
+				M19: new DualClassWrapper(
+					this.web3Wrapper,
+					this.web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
+				)
+			},
+			Mozart: {
+				Perpetual: new DualClassWrapper(
+					this.web3Wrapper,
+					this.web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
+				),
+				M19: new DualClassWrapper(
+					this.web3Wrapper,
+					this.web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
+				)
+			}
+		};
+	}
+
+	public createMagiWrapper() {
+		return new MagiWrapper(
+			this.web3Wrapper,
+			this.web3Wrapper.contractAddresses.Oracles[0].address
+		);
+	}
+
+	public createEsplanadeWrapper() {
+		return new EsplanadeWrapper(
+			this.web3Wrapper,
+			this.web3Wrapper.contractAddresses.MultiSigManagers[0].address
+		);
 	}
 
 	public async fetchKey() {
@@ -45,18 +91,13 @@ export default class ContractService extends BaseService {
 
 	public async commitPrice() {
 		await this.fetchKey();
-
-		await dbUtil.init(this.tool, this.option, this.web3Wrapper);
 		const magiWrapper = this.createMagiWrapper();
-
 		priceUtil.startCommitPrices(this.address, magiWrapper, this.option.pair);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
 	public async fetchPrice() {
 		await this.fetchKey();
-
-		await dbUtil.init(this.tool, this.option, this.web3Wrapper);
 		const dualClassCustodianWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		priceUtil.fetchPrice(

@@ -40,6 +40,18 @@ const contractService = new ContractService('tool', {
 	tenor: 'tenor'
 } as any);
 
+test('createDuoWrappers', () => {
+	expect(contractService.createDuoWrappers()).toMatchSnapshot();
+});
+
+test('createMagiWrapper', () => {
+	expect(contractService.createMagiWrapper()).toMatchSnapshot();
+});
+
+test('createEsplanadeWrapper', () => {
+	expect(contractService.createEsplanadeWrapper()).toMatchSnapshot();
+});
+
 test('fetchKey', async () => {
 	keyUtil.getKey = jest.fn(() =>
 		Promise.resolve({
@@ -73,7 +85,6 @@ test('trigger', async () => {
 
 test('commitPrice', async () => {
 	contractService.fetchKey = jest.fn();
-	dbUtil.init = jest.fn();
 	dbUtil.insertHeartbeat = jest.fn();
 	priceUtil.startCommitPrices = jest.fn();
 	global.setInterval = jest.fn();
@@ -82,13 +93,11 @@ test('commitPrice', async () => {
 	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
-	expect((dbUtil.init as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.startCommitPrices as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('fetchPrice', async () => {
 	contractService.fetchKey = jest.fn();
-	dbUtil.init = jest.fn();
 	dbUtil.insertHeartbeat = jest.fn();
 	priceUtil.fetchPrice = jest.fn();
 	global.setInterval = jest.fn();
@@ -97,7 +106,6 @@ test('fetchPrice', async () => {
 	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);
-	expect((dbUtil.init as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((priceUtil.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 

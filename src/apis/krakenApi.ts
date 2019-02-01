@@ -1,11 +1,12 @@
+import { Constants, ITrade } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
-import { IKrakenRawTrade, ITrade } from '../common/types';
+import { IKrakenRawTrade } from '../common/types';
 import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
 
 export class KrakenApi extends BaseApi {
-	public source: string = CST.API_KRAKEN;
+	public source: string = Constants.API_KRAKEN;
 	protected parseTrade(sourcePair: string, trade: string[]): ITrade {
 		const { base, quote } = this.parseMarketData(sourcePair);
 

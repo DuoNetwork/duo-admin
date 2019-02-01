@@ -1,45 +1,48 @@
+import {
+	Constants as DataConstants,
+	DynamoUtil,
+	IPriceFix,
+	ITrade
+} from '@finbook/duo-market-data';
 import * as mysql from 'mysql';
 import * as CST from '../common/constants';
-import { IPriceFix, ITrade } from '../common/types';
-import dynamoUtil from './dynamoUtil';
 import util from './util';
 
 class SqlUtil {
-	public conn: undefined | mysql.Connection = undefined;
-	public init(host: string, user: string, pwd: string) {
+	public conn: mysql.Connection;
+	public dynamoUtil: DynamoUtil;
+	constructor(host: string, user: string, pwd: string, dynamoUtil: DynamoUtil) {
 		this.conn = mysql.createConnection({
 			host: host,
 			user: user,
 			password: pwd,
 			database: CST.DB_SQL_SCHEMA_PRICEFEED
 		});
-
+		this.dynamoUtil = dynamoUtil;
+	}
+	public init() {
 		return new Promise<void>((resolve, reject) => {
-			if (this.conn) {
-				this.conn.on('error', err => {
-					if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-						util.logInfo('ERROR: Server Disconnects. Reconnecting');
-						this.init(host, user, pwd);
-					} else throw err;
-				});
-				this.conn.connect(err => {
-					if (err) reject(err);
-					util.logInfo('Connected!');
-					resolve();
-				});
-			} else reject('no connection');
+			this.conn.on('error', err => {
+				if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+					util.logInfo('ERROR: Server Disconnects. Reconnecting');
+					this.init();
+				} else throw err;
+			});
+			this.conn.connect(err => {
+				if (err) reject(err);
+				util.logInfo('Connected!');
+				resolve();
+			});
 		});
 	}
 
 	public executeQuery(sqlQuery: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			if (this.conn)
-				this.conn.query(sqlQuery, (err, result) => {
-					if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY') reject(err);
-					else if (err) reject(err);
-					else resolve(result);
-				});
-			else reject('sql db connection is not initialized');
+			this.conn.query(sqlQuery, (err, result) => {
+				if (err && err.code !== undefined && err.code === 'ER_DUP_ENTRY') reject(err);
+				else if (err) reject(err);
+				else resolve(result);
+			});
 		});
 	}
 
@@ -73,8 +76,8 @@ class SqlUtil {
 			"')";
 		await this.executeQuery(sql);
 		if (insertStatus)
-			await dynamoUtil.insertStatusData(
-				dynamoUtil.convertTradeToDynamo(trade, systemTimestamp)
+			await this.dynamoUtil.insertStatusData(
+				this.dynamoUtil.convertTradeToDynamo(trade, systemTimestamp)
 			);
 	}
 
@@ -100,14 +103,14 @@ class SqlUtil {
 		const pair = quote + '|' + base;
 		const res = await this.executeQuery(
 			`SELECT * FROM ${CST.DB_SQL_HISTORY} WHERE pair='${pair}' ORDER BY ${
-				CST.DB_HISTORY_TIMESTAMP
+				DataConstants.DB_HISTORY_TIMESTAMP
 			} DESC LIMIT 1;`
 		);
 		return res[0]
 			? {
-					price: Number(res[0][CST.DB_HISTORY_PRICE]),
-					timestamp: Number(res[0][CST.DB_HISTORY_TIMESTAMP]),
-					volume: Number(res[0][CST.DB_HISTORY_VOLUME]),
+					price: Number(res[0][DataConstants.DB_HISTORY_PRICE]),
+					timestamp: Number(res[0][DataConstants.DB_HISTORY_TIMESTAMP]),
+					volume: Number(res[0][DataConstants.DB_HISTORY_VOLUME]),
 					source: '',
 					base: base,
 					quote: quote
@@ -134,23 +137,23 @@ class SqlUtil {
 			'SELECT * FROM ' +
 				CST.DB_SQL_TRADE +
 				' WHERE ' +
-				CST.DB_TX_TS +
+				DataConstants.DB_TX_TS +
 				' >= ' +
 				lowerTime +
 				' AND ' +
-				CST.DB_TX_TS +
+				DataConstants.DB_TX_TS +
 				' <= ' +
 				upperTime +
 				` AND pair = '${pair}';`
 		);
 		return res.map(item => ({
-			quote: item[CST.DB_TX_QTE],
-			base: item[CST.DB_TX_BASE],
-			id: item[CST.DB_TX_ID],
-			source: item[CST.DB_TX_SRC],
-			price: Number(item[CST.DB_TX_PRICE]),
-			amount: Number(item[CST.DB_TX_AMOUNT]),
-			timestamp: Number(item[CST.DB_TX_TS])
+			quote: item[DataConstants.DB_TX_QTE],
+			base: item[DataConstants.DB_TX_BASE],
+			id: item[DataConstants.DB_TX_ID],
+			source: item[DataConstants.DB_TX_SRC],
+			price: Number(item[DataConstants.DB_TX_PRICE]),
+			amount: Number(item[DataConstants.DB_TX_AMOUNT]),
+			timestamp: Number(item[DataConstants.DB_TX_TS])
 		}));
 	}
 
@@ -165,5 +168,4 @@ class SqlUtil {
 	}
 }
 
-const sqlUtil = new SqlUtil();
-export default sqlUtil;
+export default SqlUtil;

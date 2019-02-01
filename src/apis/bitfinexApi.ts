@@ -1,5 +1,6 @@
+import { Constants, ITrade } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
-import {IBitfinexRawTradeRest, IBitfinexRawTradeWS, ITrade } from '../common/types';
+import {IBitfinexRawTradeRest, IBitfinexRawTradeWS } from '../common/types';
 import httpUtil from '../utils/httpUtil';
 import util from '../utils/util';
 import BaseApi from './BaseApi';
@@ -7,7 +8,7 @@ import BaseApi from './BaseApi';
 const BFX = require('bitfinex-api-node');
 
 export class BitfinexApi extends BaseApi {
-	public source: string = CST.API_BITFINEX;
+	public source: string = Constants.API_BITFINEX;
 
 	protected parseTradeWS(sourcePair: string, trade: IBitfinexRawTradeWS): ITrade {
 		const { base, quote } = this.parseMarketData(sourcePair);

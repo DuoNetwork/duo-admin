@@ -1,5 +1,5 @@
+import {Constants, IPriceFix, ITrade} from '@finbook/duo-market-data'
 import * as CST from '../common/constants';
-import { IPriceFix, ITrade } from '../common/types';
 import dbUtil from './dbUtil';
 import util from './util';
 
@@ -119,24 +119,24 @@ class Calculateor {
 		const currentTimestamp: number = util.getUTCNowTimestamp();
 		const trades = await dbUtil.readSourceData(currentTimestamp, base, quote);
 		const EXCHANGES_TRADES: { [key: string]: ITrade[] } = {
-			[CST.API_BITFINEX]: [],
-			[CST.API_GEMINI]: [],
-			[CST.API_GDAX]: [],
-			[CST.API_KRAKEN]: [],
-			[CST.API_BITSTAMP]: []
+			[Constants.API_BITFINEX]: [],
+			[Constants.API_GEMINI]: [],
+			[Constants.API_GDAX]: [],
+			[Constants.API_KRAKEN]: [],
+			[Constants.API_BITSTAMP]: []
 		};
 
 		trades.forEach(item => {
-			if (item.source === CST.API_BITFINEX)
-				EXCHANGES_TRADES[CST.API_BITFINEX].push(item);
-			else if (item.source === CST.API_GEMINI)
-				EXCHANGES_TRADES[CST.API_GEMINI].push(item);
-			else if (item.source === CST.API_GDAX)
-				EXCHANGES_TRADES[CST.API_GDAX].push(item);
-			else if (item.source === CST.API_KRAKEN)
-				EXCHANGES_TRADES[CST.API_KRAKEN].push(item);
-			else if (item.source === CST.API_BITSTAMP)
-				EXCHANGES_TRADES[CST.API_BITSTAMP].push(item);
+			if (item.source === Constants.API_BITFINEX)
+				EXCHANGES_TRADES[Constants.API_BITFINEX].push(item);
+			else if (item.source === Constants.API_GEMINI)
+				EXCHANGES_TRADES[Constants.API_GEMINI].push(item);
+			else if (item.source === Constants.API_GDAX)
+				EXCHANGES_TRADES[Constants.API_GDAX].push(item);
+			else if (item.source === Constants.API_KRAKEN)
+				EXCHANGES_TRADES[Constants.API_KRAKEN].push(item);
+			else if (item.source === Constants.API_BITSTAMP)
+				EXCHANGES_TRADES[Constants.API_BITSTAMP].push(item);
 		});
 
 		const exchangePriceVolume = CST.API_LIST.map(src =>

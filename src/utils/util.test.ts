@@ -1,5 +1,6 @@
 // fix for @ledgerhq/hw-transport-u2f 4.28.0
 import '@babel/polyfill';
+import { Constants as DataConstants } from '@finbook/duo-market-data';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
 import util from './util';
@@ -111,7 +112,7 @@ const toolToTest = [
 	CST.TRIGGER,
 	CST.FETCH_EVENTS,
 	CST.FETCH_PRICE,
-	CST.DB_PRICES
+	DataConstants.DB_PRICES
 ];
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
@@ -134,9 +135,9 @@ test(`getStatusProcess PRICE`, () => {
 	option.azure = false;
 	option.dynamo = true;
 	option.period = 60;
-	expect(util.getStatusProcess(CST.DB_PRICES, option)).toMatchSnapshot();
+	expect(util.getStatusProcess(DataConstants.DB_PRICES, option)).toMatchSnapshot();
 	option.period = 10;
-	expect(util.getStatusProcess(CST.DB_PRICES, option)).toMatchSnapshot();
+	expect(util.getStatusProcess(DataConstants.DB_PRICES, option)).toMatchSnapshot();
 });
 
 test(`getStatusProcess EVENT`, () => {

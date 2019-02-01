@@ -1,6 +1,7 @@
+import { IBaseMarketData, ITrade } from '@finbook/duo-market-data';
 import ws from 'ws';
 import * as CST from '../common/constants';
-import { IBaseMarketData, ISource, ISourceAsset, ISourceSettings, ITrade } from '../common/types';
+import { ISource, ISourceAsset, ISourceSettings } from '../common/types';
 import sources from '../static/sources.json';
 import dbUtil from '../utils/dbUtil';
 import util from '../utils/util';
@@ -83,17 +84,15 @@ export default abstract class BaseApi {
 		const since = filterTrades ? this.last[localPair] : '';
 
 		return trades
-			.filter(
-				trade =>
-					this.settings.filterByTimestamp
-						? trade.timestamp > Number(since)
-						: trade.id.localeCompare(since) > 0
+			.filter(trade =>
+				this.settings.filterByTimestamp
+					? trade.timestamp > Number(since)
+					: trade.id.localeCompare(since) > 0
 			)
-			.sort(
-				(t1, t2) =>
-					this.settings.filterByTimestamp
-						? -t1.timestamp + t2.timestamp
-						: -t1.id.localeCompare(t2.id)
+			.sort((t1, t2) =>
+				this.settings.filterByTimestamp
+					? -t1.timestamp + t2.timestamp
+					: -t1.id.localeCompare(t2.id)
 			);
 	}
 
@@ -176,11 +175,10 @@ export default abstract class BaseApi {
 	}
 
 	public fetchTradesWS(sourcePairs: string[]): any {
-
 		const w = new ws(this.settings.wsLink);
 
 		w.on('open', () => {
-			this.handleWSTradeOpen(sourcePairs, w)
+			this.handleWSTradeOpen(sourcePairs, w);
 		});
 
 		w.on('message', m => this.handleWSTradeMessage(m.toString(), w));
