@@ -29,6 +29,13 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	}))
 }));
 
+import {
+	DualClassWrapper,
+	EsplanadeWrapper,
+	MagiWrapper,
+	Web3Wrapper
+} from '@finbook/duo-contract-wrapper';
+
 const contractService = new ContractService('tool', {
 	live: false,
 	provider: 'provider',
@@ -40,16 +47,23 @@ const contractService = new ContractService('tool', {
 	tenor: 'tenor'
 } as any);
 
+test('Web3Wrapper', () => {
+	expect((Web3Wrapper as any).mock.calls).toMatchSnapshot();
+});
+
 test('createDuoWrappers', () => {
 	expect(contractService.createDuoWrappers()).toMatchSnapshot();
+	expect((DualClassWrapper as any).mock.calls).toMatchSnapshot();
 });
 
 test('createMagiWrapper', () => {
 	expect(contractService.createMagiWrapper()).toMatchSnapshot();
+	expect((MagiWrapper as any).mock.calls).toMatchSnapshot();
 });
 
 test('createEsplanadeWrapper', () => {
 	expect(contractService.createEsplanadeWrapper()).toMatchSnapshot();
+	expect((EsplanadeWrapper as any).mock.calls).toMatchSnapshot();
 });
 
 test('fetchKey', async () => {
