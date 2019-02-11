@@ -69,7 +69,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 60000,
+      "gasLimit": 80000,
       "gasPrice": 1000000000,
     },
   ],
@@ -83,7 +83,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 60000,
+      "gasLimit": 80000,
       "gasPrice": 1000000000,
     },
   ],
@@ -92,7 +92,7 @@ Array [
     100,
     1234567890,
     Object {
-      "gasLimit": 60000,
+      "gasLimit": 80000,
       "gasPrice": 1000000000,
     },
   ],
@@ -371,7 +371,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
@@ -380,7 +380,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
@@ -529,7 +529,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
@@ -538,7 +538,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
@@ -658,7 +658,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
@@ -667,7 +667,7 @@ Array [
             100,
             1234567890,
             Object {
-              "gasLimit": 60000,
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
