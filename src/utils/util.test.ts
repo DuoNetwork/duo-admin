@@ -192,7 +192,7 @@ test('log debug', () => {
 });
 
 test('sleep', async () => {
-	global.setTimeout = jest.fn(resolve => resolve());
+	global.setTimeout = jest.fn(resolve => resolve()) as any;
 	await util.sleep(1);
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 });

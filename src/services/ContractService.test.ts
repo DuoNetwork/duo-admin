@@ -70,7 +70,7 @@ test('fetchKey', async () => {
 	keyUtil.getKey = jest.fn(() =>
 		Promise.resolve({
 			privateKey: '0xprivateKey'
-		})
+		} as any)
 	);
 	await contractService.fetchKey();
 	expect((keyUtil.getKey as jest.Mock).mock.calls).toMatchSnapshot();
@@ -82,7 +82,7 @@ test('fetchKey, key not start with 0x', async () => {
 	keyUtil.getKey = jest.fn(() =>
 		Promise.resolve({
 			privateKey: 'privateKey'
-		})
+		} as any)
 	);
 	await contractService.fetchKey();
 	expect((keyUtil.getKey as jest.Mock).mock.calls).toMatchSnapshot();
@@ -140,7 +140,7 @@ test('fetchEvent', async () => {
 			Perpetual: 'MZT-PPT',
 			M19: 'MZT-M19'
 		}
-	}));
+	} as any));
 	await contractService.fetchEvent();
 	expect((eventUtil.fetch as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -167,7 +167,7 @@ test('startCustodian', async () => {
 				}
 			}
 		}
-	}));
+	} as any));
 	await contractService1.startCustodian();
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });

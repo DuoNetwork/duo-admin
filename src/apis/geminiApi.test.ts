@@ -31,7 +31,7 @@ test('fetchTradesREST spot', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 
 	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 
 	await api.fetchTradesREST(sourcePair);
 	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
@@ -45,7 +45,7 @@ test('handleWSTradeMessage heartbeat spot', async () => {
 	api.last = {};
 	api.tradeStatusLastUpdatedAt = {};
 
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	api.addTrades = jest.fn();
 	const msgTradesWS = { type: 'heartbeat', socket_sequence: 3 };
@@ -58,7 +58,7 @@ test('handleWSTradeMessage update trade', async () => {
 	api.last = {};
 	api.tradeStatusLastUpdatedAt = {};
 
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	api.addTrades = jest.fn();
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	const msgTradesWS = tradesWs;
@@ -71,7 +71,7 @@ test('handleWSTradeMessage other type', async () => {
 	api.last = {};
 	api.tradeStatusLastUpdatedAt = {};
 
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	api.addTrades = jest.fn();
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	const msgTradesWS = { type: 'other', socket_sequence: 3 };

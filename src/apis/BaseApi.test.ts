@@ -112,34 +112,34 @@ test(`addTrades WS `, async () => {
 	api.isInitialized = false;
 	api.settings.supportWS = true;
 	util.getUTCNowTimestamp = jest.fn(() => CST.TRADES_STATUS_LAST_UPDATE_INTERVAL_WS * 1000 + 1);
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	const localPair = `${parsedTrades[0].quote}|${parsedTrades[0].base}`;
 	await api.addTrades(localPair, parsedTrades, false);
 	expect(api.settings.supportWS).toEqual(true);
-	expect((dbUtil.insertTradeData as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertTradeData as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test(`addTrades WS  no trade`, async () => {
 	api.isInitialized = false;
 	api.settings.supportWS = true;
 	util.getUTCNowTimestamp = jest.fn(() => CST.TRADES_STATUS_LAST_UPDATE_INTERVAL_WS * 1000 + 1);
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	const localPair = `${parsedTrades[0].quote}|${parsedTrades[0].base}`;
 	await api.addTrades(localPair, [], false);
 	expect(api.settings.supportWS).toEqual(true);
-	expect((dbUtil.insertTradeData as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertTradeData as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test(`addTrades WS no tradeStatusLastUpdatedAt`, async () => {
 	api.isInitialized = false;
 	api.settings.supportWS = true;
 	util.getUTCNowTimestamp = jest.fn(() => CST.TRADES_STATUS_LAST_UPDATE_INTERVAL_WS * 1000 + 1);
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	const localPair = `${parsedTrades[0].quote}|${parsedTrades[0].base}`;
 	api.tradeStatusLastUpdatedAt[localPair] = 1234567890000;
 	await api.addTrades(localPair, parsedTrades, false);
 	expect(api.settings.supportWS).toEqual(true);
-	expect((dbUtil.insertTradeData as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	expect((dbUtil.insertTradeData as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test(`fetchTrades WS `, async () => {
@@ -175,7 +175,7 @@ test(`fetchTrades WS `, async () => {
 test(`fetchTrades, supportWs false`, async () => {
 	api.isInitialized = false;
 	api.settings.supportWS = false;
-	api.fetchTradesREST = jest.fn(() => Promise.resolve({}));
+	api.fetchTradesREST = jest.fn(() => Promise.resolve());
 	global.setInterval = jest.fn();
 	await api.fetchTrades([`quote-base`]);
 	expect((global.setInterval as jest.Mock).mock.calls).toMatchSnapshot();
@@ -186,7 +186,7 @@ test(`fetchTrades, supportWs false`, async () => {
 test(`fetchTrades, supportWs true`, async () => {
 	api.isInitialized = false;
 	api.settings.supportWS = true;
-	api.fetchTradesREST = jest.fn(() => Promise.resolve({}));
+	api.fetchTradesREST = jest.fn(() => Promise.resolve());
 	api.fetchTradesWS = jest.fn();
 	global.setInterval = jest.fn();
 	await api.fetchTrades([`quote-base`]);

@@ -32,7 +32,7 @@ test('fetchTradesREST spot', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 
 	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 
 	await api.fetchTradesREST(sourcePair);
 	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
@@ -47,7 +47,7 @@ test('fetchTradesREST spot with last localPair', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 
 	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	api.last[localCashPair] = '1234567890';
 	await api.fetchTradesREST(sourcePair);
 	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
@@ -61,7 +61,7 @@ test('handleWSTradeMessage spot', async () => {
 	api.last = {};
 	api.tradeStatusLastUpdatedAt = {};
 
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	const msgTradesWS = [
 		tradesWsSnapshot,

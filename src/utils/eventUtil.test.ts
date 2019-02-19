@@ -299,11 +299,11 @@ test('fetch, force', async () => {
 
 	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
 		console.log(start, end);
-		return Promise.resolve([contractEvents[contract][event]]);
+		return Promise.resolve([contractEvents[contract][event]] as any);
 	});
-	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash] as any);
 	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
 	await eventUtil.fetch(baseContractWrappers, true);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dbUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
@@ -338,11 +338,11 @@ test('fetch, no force', async () => {
 
 	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
 		console.log(start, end);
-		return Promise.resolve([contractEvents[contract][event]]);
+		return Promise.resolve([contractEvents[contract][event]] as any);
 	});
-	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash] as any);
 	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
 	await eventUtil.fetch(baseContractWrappers, false);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect((dbUtil.insertEventsData as jest.Mock).mock.calls).toMatchSnapshot();
@@ -377,11 +377,11 @@ test('fetch, no force, continuous call', async () => {
 
 	Web3Wrapper.pullEvents = jest.fn((contract, start, end, event) => {
 		console.log(start, end);
-		return Promise.resolve([contractEvents[contract][event]]);
+		return Promise.resolve([contractEvents[contract][event]] as any);
 	});
-	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash] as any);
 	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
 	await eventUtil.fetch(baseContractWrappers, false);
 	expect(Web3Wrapper.parseEvent as jest.Mock).toBeCalledTimes(4);
 	expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
@@ -423,10 +423,10 @@ test('fetch, no events', async () => {
 
 	Web3Wrapper.pullEvents = jest.fn(() => Promise.resolve([]));
 
-	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash] as any);
 
 	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
 	await eventUtil.fetch(baseContractWrappers, true);
 
 	// expect((Web3Wrapper.parseEvent as jest.Mock).mock.calls).toMatchSnapshot();
@@ -439,9 +439,9 @@ test('fetch, no contractWrappers', async () => {
 	// const baseContractWrappers = [];
 	global.setTimeout = jest.fn();
 	Web3Wrapper.pullEvents = jest.fn(() => Promise.resolve([]));
-	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash]);
+	Web3Wrapper.parseEvent = jest.fn(el => parsedEvents[el.transactionHash] as any);
 	dbUtil.insertEventsData = jest.fn(() => Promise.resolve());
-	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve(1));
+	dbUtil.insertHeartbeat = jest.fn(() => Promise.resolve());
 	await eventUtil.fetch([], true);
 
 	expect(Web3Wrapper.parseEvent as jest.Mock).not.toBeCalled();
