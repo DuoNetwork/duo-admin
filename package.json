@@ -15,7 +15,9 @@
 		"cleanDB": "ts-node ./src/index cleanDB",
 		"fetchPrice": "ts-node ./src/index fetchPrice",
 		"fetchEvents": "ts-node ./src/index fetchEvents",
-		"startCustodian": "ts-node ./src/index startCustodian"
+		"startCustodian": "ts-node ./src/index startCustodian",
+		"startRound": "ts-node ./src/index startRound",
+		"endRound": "ts-node ./src/index endRound"
 	},
 	"jest": {
 		"roots": [
@@ -49,7 +51,7 @@
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.2.5",
-		"@finbook/duo-contract-wrapper": "^1.1.2",
+		"@finbook/duo-contract-wrapper": "^1.2.0",
 		"@finbook/duo-market-data": "^1.0.1",
 		"@google-cloud/storage": "^2.4.1",
 		"aws-cli-js": "^2.0.4",

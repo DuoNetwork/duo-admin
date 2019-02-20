@@ -6,6 +6,28 @@ import keyUtil from '../utils/keyUtil';
 import priceUtil from '../utils/priceUtil';
 import ContractService from './ContractService';
 
+const option = {
+	forceREST: false,
+	live: false,
+	dbLive: false,
+	server: false,
+	dynamo: false,
+	aws: false,
+	gcp: false,
+	azure: false,
+	force: false,
+	pair: 'pair',
+	contractType: 'Beethoven',
+	tenor: '100C-3H',
+	assets: [''],
+	sources: [''],
+	exSources: [''],
+	source: '',
+	event: '',
+	provider: '',
+	period: 1
+};
+
 jest.mock('@finbook/duo-contract-wrapper', () => ({
 	Constants: Constants,
 	Web3Wrapper: jest.fn(() => ({
@@ -20,6 +42,9 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	})),
 	DualClassWrapper: jest.fn(() => ({
 		contract: 'dualClassWrapper'
+	})),
+	VivaldiWrapper: jest.fn(() => ({
+		contract: 'VivaldiWrapper'
 	})),
 	EsplanadeWrapper: jest.fn(() => ({
 		contract: 'EsplanadeWrapper'
@@ -125,22 +150,25 @@ test('fetchPrice', async () => {
 
 test('startCustodian, worng type', async () => {
 	contractService.createDuoWrappers = jest.fn();
-	await contractService.startCustodian();
+	await contractService.startCustodian(option);
 	expect(contractService.createDuoWrappers as jest.Mock).not.toBeCalled();
 });
 
 test('fetchEvent', async () => {
 	eventUtil.fetch = jest.fn();
-	contractService.createDuoWrappers = jest.fn(() => ({
-		Beethoven: {
-			Perpetual: 'BTV-PPT',
-			M19: 'BTV-M19'
-		},
-		Mozart: {
-			Perpetual: 'MZT-PPT',
-			M19: 'MZT-M19'
-		}
-	} as any));
+	contractService.createDuoWrappers = jest.fn(
+		() =>
+			({
+				Beethoven: {
+					Perpetual: 'BTV-PPT',
+					M19: 'BTV-M19'
+				},
+				Mozart: {
+					Perpetual: 'MZT-PPT',
+					M19: 'MZT-M19'
+				}
+			} as any)
+	);
 	await contractService.fetchEvent();
 	expect((eventUtil.fetch as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -158,16 +186,19 @@ test('startCustodian', async () => {
 	} as any);
 	const startCustodian = jest.fn();
 
-	contractService1.createDuoWrappers = jest.fn(() => ({
-		Beethoven: {
-			Perpetual: {
-				startCustodian: startCustodian,
-				web3Wrapper: {
-					contractAddresses: kovan
+	contractService1.createDuoWrappers = jest.fn(
+		() =>
+			({
+				Beethoven: {
+					Perpetual: {
+						startCustodian: startCustodian,
+						web3Wrapper: {
+							contractAddresses: kovan
+						}
+					}
 				}
-			}
-		}
-	} as any));
-	await contractService1.startCustodian();
+			} as any)
+	);
+	await contractService1.startCustodian(option);
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });

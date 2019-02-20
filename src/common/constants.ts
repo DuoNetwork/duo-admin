@@ -6,6 +6,8 @@ export const CLEAN_DB = 'cleanDB';
 export const FETCH_PRICE = 'fetchPrice';
 export const START_CUSTODIAN = 'startCustodian';
 export const FETCH_EVENTS = 'fetchEvents';
+export const START_ROUND = 'startRound';
+export const END_ROUND = 'endRound';
 
 // db setting
 export const DB_SQL_SCHEMA_PRICEFEED = 'priceFeedDB';

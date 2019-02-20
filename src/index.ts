@@ -44,7 +44,7 @@ dbUtil.init(tool, option).then(() => {
 			new MarketDataService().cleanDb();
 			break;
 		case CST.START_CUSTODIAN:
-			new ContractService(tool, option).startCustodian();
+			new ContractService(tool, option).startCustodian(option);
 			break;
 		case CST.TRIGGER:
 			new ContractService(tool, option).trigger();
@@ -54,6 +54,12 @@ dbUtil.init(tool, option).then(() => {
 			break;
 		case CST.FETCH_PRICE:
 			new ContractService(tool, option).fetchPrice();
+			break;
+		case CST.START_ROUND:
+			new ContractService(tool, option).startRound(option);
+			break;
+		case CST.END_ROUND:
+			new ContractService(tool, option).endRound(option);
 			break;
 		default:
 			util.logInfo('no such tool ' + tool);
