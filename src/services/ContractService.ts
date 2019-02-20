@@ -123,14 +123,16 @@ export default class ContractService {
 			],
 			magiWrapper
 		);
-		setInterval(() => dbUtil.insertHeartbeat(), 30000);
+		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
 	public async checkRound(contractWrapper: VivaldiWrapper, magiWrapper: MagiWrapper) {
 		const states = await contractWrapper.getStates();
 		const magiPrice = await magiWrapper.getLastPrice();
-		if (util.getUTCNowTimestamp() - states.lastPriceTime > states.period)
-			throw new Error(' option contract has skipped one period!');
+		if (states.lastPriceTime === 0 && states.state === Constants.CTD_TRADING)
+			contractWrapper.startRound(this.address);
+		else if (util.getUTCNowTimestamp() - states.lastPriceTime > states.period * 1.5)
+			return Promise.reject(' option contract has skipped one period!');
 		else if (states.state !== Constants.CTD_TRADING) {
 			util.logDebug('contract not in trading state!');
 			return;
@@ -156,6 +158,7 @@ export default class ContractService {
 				contractWrapper.endRound(this.address);
 		}
 
+		return;
 	}
 
 	public async round(option: IOption) {
@@ -166,9 +169,9 @@ export default class ContractService {
 		const magiWrapper = this.createMagiWrapper();
 
 		await this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper);
-		setInterval(
+		global.setInterval(
 			() => this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper),
-			60 * 1000
+			30 * 1000
 		);
 	}
 

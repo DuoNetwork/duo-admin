@@ -60,6 +60,7 @@ import {
 	MagiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
+import util from '../utils/util';
 
 const contractService = new ContractService('tool', {
 	live: false,
@@ -201,4 +202,125 @@ test('startCustodian', async () => {
 	);
 	await contractService1.startCustodian(option);
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('checkRound, skiped round', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1200000000);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000000,
+				period: 100,
+				state: 'Trading',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 0
+			})
+		)
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000000,
+				price: 100
+			})
+		)
+	} as any;
+
+	try {
+		await contractService.checkRound(contractWrapper, magiWrapper);
+	} catch (err) {
+		expect(err).toMatchSnapshot();
+	}
+});
+
+test('checkRound, state non trading', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000050);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000000,
+				period: 100,
+				state: 'Reset',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 0
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000000,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect(contractWrapper.startRound as jest.Mock).not.toBeCalled();
+	expect(contractWrapper.endRound as jest.Mock).not.toBeCalled();
+});
+
+test('checkRound, startRound', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000050);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000000,
+				period: 100,
+				state: 'Reset',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 0
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000000,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect(contractWrapper.startRound as jest.Mock).not.toBeCalled();
+	expect(contractWrapper.endRound as jest.Mock).not.toBeCalled();
+});
+
+test('round', async () => {
+	contractService.fetchKey = jest.fn();
+	contractService.createDuoWrappers = jest.fn(
+		() =>
+			({
+				Beethoven: {
+					Perpetual: 'BTV-PPT-Wrapper',
+					M19: 'BTV-M19-Wrapper'
+				},
+				Mozart: {
+					Perpetual: 'MZT-PPT-Wrapper',
+					M19: 'MZT-M19-Wrapper'
+				},
+				Vivaldi: {
+					'100C-3H': '100C-3H-Wrapper'
+				}
+			} as any)
+	);
+
+	contractService.createMagiWrapper = jest.fn(() => 'magiWrapper');
+	contractService.checkRound = jest.fn(() => Promise.resolve());
+	global.setInterval = jest.fn();
+
+	await contractService.round({ contractType: 'Vivaldi', tenor: '100C-3H' } as any);
+	expect((contractService.checkRound as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((global.setInterval as jest.Mock).mock.calls).toMatchSnapshot();
+
+	(global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect(contractService.checkRound as jest.Mock).toBeCalledTimes(2);
 });
