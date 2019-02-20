@@ -7,14 +7,12 @@ import {
 	VivaldiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
-import moment from 'moment';
 import { IOption } from '../common/types';
 import dbUtil from '../utils/dbUtil';
 import eventUtil from '../utils/eventUtil';
 import keyUtil from '../utils/keyUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
-const schedule = require('node-schedule');
 
 export default class ContractService {
 	public web3Wrapper: Web3Wrapper;
@@ -128,79 +126,50 @@ export default class ContractService {
 		setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
-	public async startRound(option: IOption) {
+	public async checkRound(contractWrapper: VivaldiWrapper, magiWrapper: MagiWrapper) {
+		const states = await contractWrapper.getStates();
+		const magiPrice = await magiWrapper.getLastPrice();
+		if (util.getUTCNowTimestamp() - states.lastPriceTime > states.period)
+			throw new Error(' option contract has skipped one period!');
+		else if (states.state !== Constants.CTD_TRADING) {
+			util.logDebug('contract not in trading state!');
+			return;
+		} else if (states.lastPriceTime < states.resetPriceTime)
+			if (states.priceFetchCoolDown === 0) contractWrapper.startRound(this.address);
+			else {
+				const requiredTime = states.resetPriceTime + states.priceFetchCoolDown;
+
+				if (
+					util.getUTCNowTimestamp() > requiredTime &&
+					magiPrice.timestamp > requiredTime &&
+					magiPrice.price > 0
+				)
+					contractWrapper.startRound(this.address);
+			}
+		else if (states.lastPriceTime >= states.resetPriceTime) {
+			const miniMumTime = states.resetPriceTime + states.period;
+			if (
+				util.getUTCNowTimestamp() >= miniMumTime &&
+				magiPrice.timestamp === miniMumTime &&
+				magiPrice.price > 0
+			)
+				contractWrapper.endRound(this.address);
+		}
+
+	}
+
+	public async round(option: IOption) {
 		await this.fetchKey();
 		const custodianContract = this.createDuoWrappers();
 		const contractWrapper: DualClassWrapper | VivaldiWrapper =
 			custodianContract[option.contractType][option.tenor];
-		const states = await contractWrapper.getStates();
+		const magiWrapper = this.createMagiWrapper();
 
-		if (states.lastPriceTime === 0)
-			await (contractWrapper as VivaldiWrapper).startRound(this.address);
-		else if (util.getUTCNowTimestamp() - states.lastPriceTime > states.period)
-			throw new Error(' option contract has skipped one period!');
-
-		const numOfHours = states.period / 1000 / 3600;
-		const rule = `* * /${numOfHours} * * *`;
-		util.logInfo(
-			`startRound every ${numOfHours} hours, starting from ${moment
-				.utc(states.lastPriceTime)
-				.format('YYYY-MM-DD hh:mm:ss')}`
+		await this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper);
+		setInterval(
+			() => this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper),
+			60 * 1000
 		);
-		schedule.scheduleJob(
-			{
-				start:
-					states.lastPriceTime === 0
-						? states.lastPriceTime + states.period * 1.5
-						: states.lastPriceTime,
-				rule
-			},
-			() => this.safeStartRound(contractWrapper as VivaldiWrapper)
-		);
-	}
-
-	private async safeStartRound(contractWrapper: VivaldiWrapper) {
-		let retryTimes = 0;
-		let isRoundStarted = false;
-		while (retryTimes < 5 && !isRoundStarted) {
-			await contractWrapper.startRound(this.address);
-			const states = await contractWrapper.getStates();
-			if (states.lastPriceTime >= states.resetPriceTime) isRoundStarted = true;
-			else retryTimes++;
-		}
-	}
-
-	public async endRound(option: IOption) {
-		await this.fetchKey();
-		const custodianContract = this.createDuoWrappers();
-		const contractWrapper: DualClassWrapper | VivaldiWrapper =
-			custodianContract[option.contractType][option.tenor];
-		const states = await contractWrapper.getStates();
-
-		if (util.getUTCNowTimestamp() - states.resetPriceTime > states.period)
-			throw new Error(' option contract has skipped one period!');
-
-		const numOfHours = states.period / 1000 / 3600;
-		const rule = `* * /${numOfHours} * * *`;
-		util.logInfo(
-			`endRound every ${numOfHours} hours, starting from ${moment
-				.utc(states.resetPriceTime)
-				.format('YYYY-MM-DD hh:mm:ss')}`
-		);
-		schedule.scheduleJob({ start: states.resetPriceTime, rule }, () =>
-			this.safeEndRound(contractWrapper as VivaldiWrapper)
-		);
-	}
-
-	private async safeEndRound(contractWrapper: VivaldiWrapper) {
-		let retryTimes = 0;
-		let isEnded = false;
-		while (retryTimes < 5 && !isEnded) {
-			await contractWrapper.endRound(this.address);
-			const states = await contractWrapper.getStates();
-			if (states.state === Constants.CTD_TRADING) retryTimes++;
-			else isEnded = true;
-		}
 	}
 
 	public async startCustodian(option: IOption) {

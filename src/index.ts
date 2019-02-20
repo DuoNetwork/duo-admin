@@ -55,11 +55,8 @@ dbUtil.init(tool, option).then(() => {
 		case CST.FETCH_PRICE:
 			new ContractService(tool, option).fetchPrice();
 			break;
-		case CST.START_ROUND:
-			new ContractService(tool, option).startRound(option);
-			break;
-		case CST.END_ROUND:
-			new ContractService(tool, option).endRound(option);
+		case CST.ROUND:
+			new ContractService(tool, option).round(option);
 			break;
 		default:
 			util.logInfo('no such tool ' + tool);
