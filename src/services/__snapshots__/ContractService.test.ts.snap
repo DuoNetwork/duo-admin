@@ -918,6 +918,7 @@ Array [
       Object {
         "contract": "EsplanadeWrapper",
       },
+      "VVD-tenor",
     ],
     false,
   ],
@@ -1013,13 +1014,27 @@ Array [
 ]
 `;
 
-exports[`startCustodian 1`] = `
+exports[`startCustodian, dualClass 1`] = `
 Array [
   Array [
     "account",
     "0x59E6B3d43F762310626d2905148939973db2BBd3",
     "0x8A3bEca74E0E737460bDE45a09594A8D7D8c9886",
     "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
+  ],
+]
+`;
+
+exports[`startCustodian, vivaldi 1`] = `
+Array [
+  Array [
+    "account",
+    "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+    "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+    "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
+    1,
+    true,
+    true,
   ],
 ]
 `;

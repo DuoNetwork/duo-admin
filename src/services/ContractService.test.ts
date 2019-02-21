@@ -149,12 +149,6 @@ test('fetchPrice', async () => {
 	expect((priceUtil.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
-test('startCustodian, worng type', async () => {
-	contractService.createDuoWrappers = jest.fn();
-	await contractService.startCustodian(option);
-	expect(contractService.createDuoWrappers as jest.Mock).not.toBeCalled();
-});
-
 test('fetchEvent', async () => {
 	eventUtil.fetch = jest.fn();
 	contractService.createDuoWrappers = jest.fn(
@@ -167,6 +161,9 @@ test('fetchEvent', async () => {
 				Mozart: {
 					Perpetual: 'MZT-PPT',
 					M19: 'MZT-M19'
+				},
+				Vivaldi: {
+					tenor: 'VVD-tenor'
 				}
 			} as any)
 	);
@@ -174,7 +171,13 @@ test('fetchEvent', async () => {
 	expect((eventUtil.fetch as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
-test('startCustodian', async () => {
+test('startCustodian, worng type', async () => {
+	contractService.createDuoWrappers = jest.fn();
+	await contractService.startCustodian(option);
+	expect(contractService.createDuoWrappers as jest.Mock).not.toBeCalled();
+});
+
+test('startCustodian, dualClass', async () => {
 	const contractService1 = new ContractService('tool', {
 		live: false,
 		provider: 'provider',
@@ -204,6 +207,67 @@ test('startCustodian', async () => {
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
+test('startCustodian, wrong type', async () => {
+	const contractService1 = new ContractService('tool', {
+		live: false,
+		provider: 'provider',
+		event: 'event',
+		gasPrice: 1000000000,
+		gasLimit: 10000,
+		pair: 'quote|base',
+		contractType: 'type',
+		tenor: 'Perpetual'
+	} as any);
+	const startCustodian = jest.fn();
+
+	contractService1.createDuoWrappers = jest.fn(
+		() =>
+			({
+				Beethoven: {
+					Perpetual: {
+						startCustodian: startCustodian,
+						web3Wrapper: {
+							contractAddresses: kovan
+						}
+					}
+				}
+			} as any)
+	);
+	await contractService1.startCustodian(option);
+	expect(startCustodian as jest.Mock).not.toBeCalled();
+});
+
+test('startCustodian, vivaldi', async () => {
+	const option1 = ({
+		live: false,
+		provider: 'provider',
+		event: 'event',
+		gasPrice: 1000000000,
+		gasLimit: 10000,
+		pair: 'quote|base',
+		contractType: 'Vivaldi',
+		tenor: '100C-3H'
+	} as any) as any;
+	const contractService2 = new ContractService('tool', option1);
+	const startCustodian = jest.fn();
+
+	contractService2.createDuoWrappers = jest.fn(
+		() =>
+			({
+				Vivaldi: {
+					'100C-3H': {
+						startCustodian: startCustodian,
+						web3Wrapper: {
+							contractAddresses: kovan
+						}
+					}
+				}
+			} as any)
+	);
+	await contractService2.startCustodian(option1);
+	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
 test('checkRound, just started, startRound', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1200000000);
 	const contractWrapper = {
@@ -230,7 +294,6 @@ test('checkRound, just started, startRound', async () => {
 
 	await contractService.checkRound(contractWrapper, magiWrapper);
 	expect((contractWrapper.startRound as jest.Mock).mock.calls).toMatchSnapshot();
-
 });
 
 test('checkRound, skiped round', async () => {
@@ -378,7 +441,6 @@ test('checkRound, startRound, priceFetchCoolDown > 0', async () => {
 
 	await contractService.checkRound(contractWrapper, magiWrapper);
 	expect(contractWrapper.startRound as jest.Mock).not.toBeCalled();
-
 });
 
 test('checkRound, endRound', async () => {

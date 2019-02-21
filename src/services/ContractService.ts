@@ -187,6 +187,18 @@ export default class ContractService {
 					address: 'account',
 					privateKey: ''
 				}
+			},
+			Mozart: {
+				operator: {
+					address: 'account',
+					privateKey: ''
+				}
+			},
+			Vivaldi: {
+				operator: {
+					address: 'account',
+					privateKey: ''
+				}
 			}
 		};
 		try {
