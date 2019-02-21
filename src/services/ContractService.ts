@@ -129,6 +129,7 @@ export default class ContractService {
 	}
 
 	public async checkRound(contractWrapper: VivaldiWrapper, magiWrapper: MagiWrapper) {
+		await dbUtil.insertHeartbeat();
 		const states = await contractWrapper.getStates();
 		const magiPrice = await magiWrapper.getLastPrice();
 		if (states.lastPriceTime === 0 && states.state === Constants.CTD_TRADING)
