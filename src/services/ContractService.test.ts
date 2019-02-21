@@ -204,6 +204,35 @@ test('startCustodian', async () => {
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
+test('checkRound, just started, startRound', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1200000000);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 0,
+				period: 100,
+				state: 'Trading',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 0
+			})
+		),
+		startRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000000,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect((contractWrapper.startRound as jest.Mock).mock.calls).toMatchSnapshot();
+
+});
+
 test('checkRound, skiped round', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1200000000);
 	const contractWrapper = {
@@ -264,15 +293,15 @@ test('checkRound, state non trading', async () => {
 	expect(contractWrapper.endRound as jest.Mock).not.toBeCalled();
 });
 
-test('checkRound, startRound', async () => {
+test('checkRound, startRound, priceFetchCoolDown = 0', async () => {
 	util.getUTCNowTimestamp = jest.fn(() => 1000000050);
 	const contractWrapper = {
 		getStates: jest.fn(() =>
 			Promise.resolve({
 				lastPriceTime: 1000000000,
 				period: 100,
-				state: 'Reset',
-				resetPriceTime: 1000000000,
+				state: 'Trading',
+				resetPriceTime: 1000000100,
 				priceFetchCoolDown: 0
 			})
 		),
@@ -284,6 +313,124 @@ test('checkRound, startRound', async () => {
 		getLastPrice: jest.fn(() =>
 			Promise.resolve({
 				timestamp: 1000000000,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect((contractWrapper.startRound as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('checkRound, startRound, priceFetchCoolDown > 0', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000251);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000060,
+				period: 200,
+				state: 'Trading',
+				resetPriceTime: 1000000200,
+				priceFetchCoolDown: 50
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000251,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect((contractWrapper.startRound as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('checkRound, startRound, priceFetchCoolDown > 0', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000251);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000060,
+				period: 200,
+				state: 'Trading',
+				resetPriceTime: 1000000200,
+				priceFetchCoolDown: 50
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000249,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect(contractWrapper.startRound as jest.Mock).not.toBeCalled();
+
+});
+
+test('checkRound, endRound', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000100);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000060,
+				period: 100,
+				state: 'Trading',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 50
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000100,
+				price: 100
+			})
+		)
+	} as any;
+
+	await contractService.checkRound(contractWrapper, magiWrapper);
+	expect(contractWrapper.startRound as jest.Mock).not.toBeCalled();
+	expect((contractWrapper.endRound as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('checkRound, endRound, time too early', async () => {
+	util.getUTCNowTimestamp = jest.fn(() => 1000000100);
+	const contractWrapper = {
+		getStates: jest.fn(() =>
+			Promise.resolve({
+				lastPriceTime: 1000000060,
+				period: 100,
+				state: 'Trading',
+				resetPriceTime: 1000000000,
+				priceFetchCoolDown: 50
+			})
+		),
+		startRound: jest.fn(),
+		endRound: jest.fn()
+	} as any;
+
+	const magiWrapper = {
+		getLastPrice: jest.fn(() =>
+			Promise.resolve({
+				timestamp: 1000000090,
 				price: 100
 			})
 		)

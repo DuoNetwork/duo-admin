@@ -11,7 +11,39 @@ Array [
 ]
 `;
 
+exports[`checkRound, endRound 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
+exports[`checkRound, just started, startRound 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
 exports[`checkRound, skiped round 1`] = `" option contract has skipped one period!"`;
+
+exports[`checkRound, startRound, priceFetchCoolDown = 0 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
+exports[`checkRound, startRound, priceFetchCoolDown > 0 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
 
 exports[`commitPrice 1`] = `30000`;
 
