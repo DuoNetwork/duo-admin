@@ -238,17 +238,21 @@ export default class ContractService {
 	}
 
 	public fetchEvent() {
-		const dualClassCustodianWrappers = this.createDuoWrappers();
+		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		const esplanadeWrapper = this.createEsplanadeWrapper();
+		const VivaldiWrappers = [];
+		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor]);
+
 		eventUtil.fetch(
 			[
-				dualClassCustodianWrappers.Beethoven.Perpetual,
-				dualClassCustodianWrappers.Beethoven.M19,
-				dualClassCustodianWrappers.Mozart.Perpetual,
-				dualClassCustodianWrappers.Mozart.M19,
+				duoWrappers.Beethoven.Perpetual,
+				duoWrappers.Beethoven.M19,
+				duoWrappers.Mozart.Perpetual,
+				duoWrappers.Mozart.M19,
 				magiWrapper,
-				esplanadeWrapper
+				esplanadeWrapper,
+				...VivaldiWrappers
 			],
 			this.option.force
 		);
