@@ -19,7 +19,7 @@ test('fetchTradesREST spot', async () => {
 	api.tradeStatusLastUpdatedAt = {};
 
 	httpUtil.get = jest.fn(() => Promise.resolve(JSON.stringify(tradesRest)));
-	dbUtil.insertTradeData = jest.fn(() => Promise.resolve({}));
+	dbUtil.insertTradeData = jest.fn(() => Promise.resolve());
 
 	await api.fetchTradesREST(sourceCashPair);
 	expect((httpUtil.get as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();

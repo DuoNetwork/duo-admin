@@ -1,8 +1,10 @@
 import {
+	Constants,
 	Constants as WrapperConstants,
 	DualClassWrapper,
 	EsplanadeWrapper,
 	MagiWrapper,
+	VivaldiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
 import { IOption } from '../common/types';
@@ -25,7 +27,9 @@ export default class ContractService {
 		this.web3Wrapper = new Web3Wrapper(null, option.provider, '', option.live);
 	}
 
-	public createDuoWrappers(): { [type: string]: { [tenor: string]: DualClassWrapper } } {
+	public createDuoWrappers(): {
+		[type: string]: { [tenor: string]: DualClassWrapper | VivaldiWrapper };
+	} {
 		return {
 			Beethoven: {
 				Perpetual: new DualClassWrapper(
@@ -45,6 +49,14 @@ export default class ContractService {
 				M19: new DualClassWrapper(
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
+				)
+			},
+			Vivaldi: {
+				'100C-3H': new VivaldiWrapper(
+					this.web3Wrapper,
+					this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
+						'100C-3H'
+					].custodian.address
 				)
 			}
 		};
@@ -75,15 +87,18 @@ export default class ContractService {
 
 	public async trigger() {
 		await this.fetchKey();
-		const dualClassCustodianWrappers = this.createDuoWrappers();
+		const duoWrappers = this.createDuoWrappers();
+		const VivaldiWrappers: VivaldiWrapper[] = [];
+		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
 
 		eventUtil.trigger(
 			this.address,
 			[
-				dualClassCustodianWrappers.Beethoven.Perpetual,
-				dualClassCustodianWrappers.Beethoven.M19,
-				dualClassCustodianWrappers.Mozart.Perpetual,
-				dualClassCustodianWrappers.Mozart.M19
+				duoWrappers.Beethoven.Perpetual as DualClassWrapper,
+				duoWrappers.Beethoven.M19 as DualClassWrapper,
+				duoWrappers.Mozart.Perpetual as DualClassWrapper,
+				duoWrappers.Mozart.M19 as DualClassWrapper,
+				...VivaldiWrappers
 			],
 			this.option.event
 		);
@@ -103,19 +118,83 @@ export default class ContractService {
 		priceUtil.fetchPrice(
 			this.address,
 			[
-				dualClassCustodianWrappers.Beethoven.Perpetual,
-				dualClassCustodianWrappers.Beethoven.M19,
-				dualClassCustodianWrappers.Mozart.Perpetual,
-				dualClassCustodianWrappers.Mozart.M19
+				dualClassCustodianWrappers.Beethoven.Perpetual as DualClassWrapper,
+				dualClassCustodianWrappers.Beethoven.M19 as DualClassWrapper,
+				dualClassCustodianWrappers.Mozart.Perpetual as DualClassWrapper,
+				dualClassCustodianWrappers.Mozart.M19 as DualClassWrapper
 			],
 			magiWrapper
 		);
-		setInterval(() => dbUtil.insertHeartbeat(), 30000);
+		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
-	public async startCustodian() {
-		let kovanManagerAccount = {
+	public async checkRound(contractWrapper: VivaldiWrapper, magiWrapper: MagiWrapper) {
+		await dbUtil.insertHeartbeat();
+		const states = await contractWrapper.getStates();
+		const magiPrice = await magiWrapper.getLastPrice();
+		if (states.lastPriceTime === 0 && states.state === Constants.CTD_TRADING)
+			contractWrapper.startRound(this.address);
+		else if (util.getUTCNowTimestamp() - states.lastPriceTime > states.period * 1.5)
+			return Promise.reject(' option contract has skipped one period!');
+		else if (states.state !== Constants.CTD_TRADING) {
+			util.logDebug('contract not in trading state!');
+			return;
+		} else if (states.lastPriceTime < states.resetPriceTime)
+			if (states.priceFetchCoolDown === 0) contractWrapper.startRound(this.address);
+			else {
+				const requiredTime = states.resetPriceTime + states.priceFetchCoolDown;
+
+				if (
+					util.getUTCNowTimestamp() > requiredTime &&
+					magiPrice.timestamp > requiredTime &&
+					magiPrice.price > 0
+				)
+					contractWrapper.startRound(this.address);
+			}
+		else if (states.lastPriceTime >= states.resetPriceTime) {
+			const miniMumTime = states.resetPriceTime + states.period;
+			if (
+				util.getUTCNowTimestamp() >= miniMumTime &&
+				magiPrice.timestamp === miniMumTime &&
+				magiPrice.price > 0
+			)
+				contractWrapper.endRound(this.address);
+		}
+
+		return;
+	}
+
+	public async round(option: IOption) {
+		await this.fetchKey();
+		const custodianContract = this.createDuoWrappers();
+		const contractWrapper: DualClassWrapper | VivaldiWrapper =
+			custodianContract[option.contractType][option.tenor];
+		const magiWrapper = this.createMagiWrapper();
+
+		await this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper);
+		global.setInterval(
+			() => this.checkRound(contractWrapper as VivaldiWrapper, magiWrapper),
+			30 * 1000
+		);
+	}
+
+	public async startCustodian(option: IOption) {
+		let kovanManagerAccount: {
+			[type: string]: { operator: { privateKey: string; address: string } };
+		} = {
 			Beethoven: {
+				operator: {
+					address: 'account',
+					privateKey: ''
+				}
+			},
+			Mozart: {
+				operator: {
+					address: 'account',
+					privateKey: ''
+				}
+			},
+			Vivaldi: {
 				operator: {
 					address: 'account',
 					privateKey: ''
@@ -130,42 +209,65 @@ export default class ContractService {
 		this.web3Wrapper = new Web3Wrapper(
 			null,
 			this.option.provider,
-			kovanManagerAccount.Beethoven.operator.privateKey,
+			kovanManagerAccount[option.contractType].operator.privateKey,
 			this.option.live
 		);
 		const account = kovanManagerAccount.Beethoven.operator.address;
 		const type = this.option.contractType;
 		const tenor = this.option.tenor;
 		if (
-			![WrapperConstants.BEETHOVEN, WrapperConstants.MOZART].includes(type) ||
-			![WrapperConstants.TENOR_PPT, WrapperConstants.TENOR_M19].includes(tenor)
+			![
+				WrapperConstants.BEETHOVEN,
+				WrapperConstants.MOZART,
+				WrapperConstants.VIVALDI
+			].includes(type) ||
+			![WrapperConstants.TENOR_PPT, WrapperConstants.TENOR_M19, '100C-3H'].includes(tenor)
 		) {
 			util.logDebug('no contract type or tenor specified');
 			return;
 		}
-		const dualClassCustodianWrappers = this.createDuoWrappers();
-		const contractWrapper: DualClassWrapper = dualClassCustodianWrappers[type][tenor];
-
-		contractWrapper.startCustodian(
-			account,
-			contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken.address,
-			contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken.address,
-			contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address
-		);
+		const custodianContract = this.createDuoWrappers();
+		const contractWrapper: DualClassWrapper | VivaldiWrapper = custodianContract[type][tenor];
+		if (option.contractType === WrapperConstants.VIVALDI) {
+			util.logInfo(`start custodian of vivaldi`);
+			(contractWrapper as VivaldiWrapper).startCustodian(
+				account,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address,
+				1.0,
+				true,
+				true
+			);
+		} else
+			(contractWrapper as DualClassWrapper).startCustodian(
+				account,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].aToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Custodians[type][tenor].bToken
+					.address,
+				contractWrapper.web3Wrapper.contractAddresses.Oracles[0].address
+			);
 	}
 
 	public fetchEvent() {
-		const dualClassCustodianWrappers = this.createDuoWrappers();
+		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		const esplanadeWrapper = this.createEsplanadeWrapper();
+		const VivaldiWrappers = [];
+		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor]);
+
 		eventUtil.fetch(
 			[
-				dualClassCustodianWrappers.Beethoven.Perpetual,
-				dualClassCustodianWrappers.Beethoven.M19,
-				dualClassCustodianWrappers.Mozart.Perpetual,
-				dualClassCustodianWrappers.Mozart.M19,
+				duoWrappers.Beethoven.Perpetual,
+				duoWrappers.Beethoven.M19,
+				duoWrappers.Mozart.Perpetual,
+				duoWrappers.Mozart.M19,
 				magiWrapper,
-				esplanadeWrapper
+				esplanadeWrapper,
+				...VivaldiWrappers
 			],
 			this.option.force
 		);

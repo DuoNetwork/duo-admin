@@ -18,7 +18,7 @@ jest.mock('./Sql', () =>
 import { DynamoUtil } from '@finbook/duo-market-data';
 
 test('init only dynamo', async () => {
-	keyUtil.getSqlAuth = jest.fn(() => Promise.resolve());
+	keyUtil.getSqlAuth = jest.fn(() => Promise.resolve({} as any));
 	util.getStatusProcess = jest.fn(() => 'process');
 	await dbUtil.init('tool', { dynamo: true, live: true } as any);
 	expect(dbUtil.dynamo).toBeTruthy();

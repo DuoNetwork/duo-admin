@@ -224,7 +224,7 @@ test('launchSource success not windows', () => {
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect(
-		(marketDataService.subProcesses['source'].instance.on as jest.Mock<void>).mock.calls
+		(marketDataService.subProcesses['source'].instance.on as jest.Mock).mock.calls
 	).toMatchSnapshot();
 });
 

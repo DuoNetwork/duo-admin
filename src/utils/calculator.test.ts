@@ -46,7 +46,7 @@ test('getPriceFix case 1', async () => {
 });
 
 test('getPriceFix case 2', async () => {
-	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades2));
+	dbUtil.readSourceData = jest.fn(() => Promise.resolve(trades2 as any));
 	dbUtil.insertPrice = jest.fn(() => Promise.resolve());
 	util.getUTCNowTimestamp = jest.fn(() => 1524547909941);
 	await calculator.getPriceFix('ETH', 'USD');
@@ -61,10 +61,10 @@ test('getPriceFix, no priceFix', async () => {
 		Promise.resolve({
 			price: 100,
 			volume: 1000
-		})
+		} as any)
 	);
 	await calculator.getPriceFix('ETH', 'USD');
-	expect((dbUtil.readSourceData as jest.Mock<Promise<void>>).mock.calls).toMatchSnapshot();
+	expect((dbUtil.readSourceData as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
 test('getWeights', () => {

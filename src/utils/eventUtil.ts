@@ -3,6 +3,7 @@ import {
 	Constants as WrapperConstants,
 	DualClassWrapper,
 	IEvent,
+	VivaldiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
 import { Constants as DataConstants } from '@finbook/duo-market-data';
@@ -11,7 +12,11 @@ import dbUtil from './dbUtil';
 import util from './util';
 
 class EventUtil {
-	public async trigger(account: string, dualClassWrappers: DualClassWrapper[], event: string) {
+	public async trigger(
+		account: string,
+		dualClassWrappers: Array<DualClassWrapper | VivaldiWrapper>,
+		event: string
+	) {
 		util.logInfo('subscribing to ' + event);
 		if (
 			![WrapperConstants.EVENT_START_PRE_RESET, WrapperConstants.EVENT_START_RESET].includes(

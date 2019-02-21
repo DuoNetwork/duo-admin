@@ -145,6 +145,9 @@ class Util {
 			case CST.FETCH_PRICE:
 				type = 'FETCH';
 				break;
+			case CST.ROUND:
+				type = 'ROUND';
+				break;
 			default:
 				return '';
 		}

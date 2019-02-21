@@ -11,6 +11,40 @@ Array [
 ]
 `;
 
+exports[`checkRound, endRound 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
+exports[`checkRound, just started, startRound 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
+exports[`checkRound, skiped round 1`] = `" option contract has skipped one period!"`;
+
+exports[`checkRound, startRound, priceFetchCoolDown = 0 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
+exports[`checkRound, startRound, priceFetchCoolDown > 0 1`] = `
+Array [
+  Array [
+    "0xpublicKey",
+  ],
+]
+`;
+
 exports[`commitPrice 1`] = `30000`;
 
 exports[`commitPrice 2`] = `
@@ -41,6 +75,11 @@ Object {
     },
     "Perpetual": Object {
       "contract": "dualClassWrapper",
+    },
+  },
+  "Vivaldi": Object {
+    "100C-3H": Object {
+      "contract": "VivaldiWrapper",
     },
   },
 }
@@ -109,6 +148,50 @@ Array [
               "custodian": Object {
                 "address": "0x00be45Fe5903AB1b33a9d3969b05b29552a6d18b",
                 "code": "MOZART-PPT",
+              },
+            },
+          },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
               },
             },
           },
@@ -200,6 +283,50 @@ Array [
               },
             },
           },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
+              },
+            },
+          },
         },
         "MultiSigManagers": Array [
           Object {
@@ -288,6 +415,50 @@ Array [
               },
             },
           },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
+              },
+            },
+          },
         },
         "MultiSigManagers": Array [
           Object {
@@ -373,6 +544,50 @@ Array [
               "custodian": Object {
                 "address": "0x00be45Fe5903AB1b33a9d3969b05b29552a6d18b",
                 "code": "MOZART-PPT",
+              },
+            },
+          },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
               },
             },
           },
@@ -475,6 +690,50 @@ Array [
               },
             },
           },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
+              },
+            },
+          },
         },
         "MultiSigManagers": Array [
           Object {
@@ -574,6 +833,50 @@ Array [
               },
             },
           },
+          "Vivaldi": Object {
+            "095P-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-095P-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-095C-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-095P-3H",
+              },
+            },
+            "100C-3H": Object {
+              "aToken": Object {
+                "address": "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+                "code": "ETH-100C-3H",
+              },
+              "bToken": Object {
+                "address": "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+                "code": "ETH-100P-3H",
+              },
+              "custodian": Object {
+                "address": "0x5734Fe05187857066Ed00d963D4bBBeB619797f4",
+                "code": "VIVALDI-100C-3H",
+              },
+            },
+            "105C-3H": Object {
+              "aToken": Object {
+                "address": "0x0",
+                "code": "ETH-105C-3H",
+              },
+              "bToken": Object {
+                "address": "0x0",
+                "code": "ETH-105P-3H",
+              },
+              "custodian": Object {
+                "address": "0x0",
+                "code": "VIVALDI-105C-3H",
+              },
+            },
+          },
         },
         "MultiSigManagers": Array [
           Object {
@@ -615,6 +918,7 @@ Array [
       Object {
         "contract": "EsplanadeWrapper",
       },
+      "VVD-tenor",
     ],
     false,
   ],
@@ -692,13 +996,45 @@ Array [
 ]
 `;
 
-exports[`startCustodian 1`] = `
+exports[`round 1`] = `
+Array [
+  Array [
+    "100C-3H-Wrapper",
+    "magiWrapper",
+  ],
+]
+`;
+
+exports[`round 2`] = `
+Array [
+  Array [
+    [Function],
+    30000,
+  ],
+]
+`;
+
+exports[`startCustodian, dualClass 1`] = `
 Array [
   Array [
     "account",
     "0x59E6B3d43F762310626d2905148939973db2BBd3",
     "0x8A3bEca74E0E737460bDE45a09594A8D7D8c9886",
     "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
+  ],
+]
+`;
+
+exports[`startCustodian, vivaldi 1`] = `
+Array [
+  Array [
+    "account",
+    "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
+    "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
+    "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
+    1,
+    true,
+    true,
   ],
 ]
 `;
@@ -719,6 +1055,9 @@ Array [
       },
       Object {
         "contract": "dualClassWrapper",
+      },
+      Object {
+        "contract": "VivaldiWrapper",
       },
     ],
     "event",

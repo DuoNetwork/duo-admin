@@ -190,7 +190,7 @@ test('commitPrice', async () => {
 		Promise.resolve({
 			price: 100,
 			timestamp: 1234567890000
-		})
+		} as any)
 	);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
 
@@ -204,7 +204,7 @@ test('commitPrice gasPrice', async () => {
 		Promise.resolve({
 			price: 100,
 			timestamp: 1234567890000
-		})
+		} as any)
 	);
 
 	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
@@ -217,7 +217,7 @@ test('startMagi', async () => {
 		Promise.resolve({
 			price: 100,
 			timestamp: 1234567890000
-		})
+		} as any)
 	);
 
 	await priceUtil.startMagi('account', magiWrapper, 'quote|base');
@@ -230,7 +230,7 @@ test('startMagi gasPrice', async () => {
 		Promise.resolve({
 			price: 100,
 			timestamp: 1234567890000
-		})
+		} as any)
 	);
 
 	await priceUtil.startMagi('account', magiWrapper, 'quote|base', 1000000000);
