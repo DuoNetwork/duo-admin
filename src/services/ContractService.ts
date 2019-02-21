@@ -88,6 +88,8 @@ export default class ContractService {
 	public async trigger() {
 		await this.fetchKey();
 		const duoWrappers = this.createDuoWrappers();
+		const VivaldiWrappers: VivaldiWrapper[] = [];
+		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
 
 		eventUtil.trigger(
 			this.address,
@@ -96,7 +98,7 @@ export default class ContractService {
 				duoWrappers.Beethoven.M19 as DualClassWrapper,
 				duoWrappers.Mozart.Perpetual as DualClassWrapper,
 				duoWrappers.Mozart.M19 as DualClassWrapper,
-				duoWrappers.Vivaldi['100C-3H'] as VivaldiWrapper
+				...VivaldiWrappers
 			],
 			this.option.event
 		);
