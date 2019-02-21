@@ -522,8 +522,8 @@ test('round', async () => {
 			} as any)
 	);
 
-	contractService.createMagiWrapper = jest.fn(() => 'magiWrapper');
-	contractService.checkRound = jest.fn(() => Promise.resolve());
+	contractService.createMagiWrapper = jest.fn(() => 'magiWrapper' as any);
+	contractService.checkRound = jest.fn(() => Promise.resolve(undefined));
 	global.setInterval = jest.fn();
 
 	await contractService.round({ contractType: 'Vivaldi', tenor: '100C-3H' } as any);
