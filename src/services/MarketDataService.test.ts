@@ -36,7 +36,8 @@ test('retry after long enought time', () => {
 			live: false
 		} as any,
 		'source',
-		['asset1', 'asset2', 'asset3']
+		['asset1', 'asset2', 'asset3'],
+		false
 	);
 	expect(marketDataService.subProcesses['source']).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
@@ -63,7 +64,8 @@ test('retry within short time', () => {
 			live: false
 		} as any,
 		'source',
-		['asset1', 'asset2', 'asset3']
+		['asset1', 'asset2', 'asset3'],
+		false
 	);
 	expect(marketDataService.subProcesses['source']).toMatchSnapshot();
 });
