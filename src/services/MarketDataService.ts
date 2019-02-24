@@ -2,12 +2,14 @@ import child_process from 'child_process';
 import apis from '../apis';
 import * as CST from '../common/constants';
 import { IOption, ISubProcess } from '../common/types';
+import ContractService from '../services/ContractService';
 import dbUtil from '../utils/dbUtil';
 import osUtil from '../utils/osUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
 
 export default class MarketDataService {
+
 	public subProcesses: { [key: string]: ISubProcess } = {};
 
 	public async startFetching(tool: string, option: IOption): Promise<void> {
@@ -39,12 +41,28 @@ export default class MarketDataService {
 			}
 			util.logInfo(
 				`[${option.source}]:` +
-					'start fetching for pairs ' +
-					JSON.stringify(
-						sourceInstruments.map(instrument => api.sourcePairMapping[instrument])
-					)
+				'start fetching for pairs ' +
+				JSON.stringify(
+					sourceInstruments.map(instrument => api.sourcePairMapping[instrument])
+				)
 			);
 			apis[option.source].fetchTrades(sourceInstruments);
+		}
+	}
+
+	public async startFetchingEvent(tool: string, option: IOption): Promise<void> {
+		if (!option.event) {
+			option.event = 'public';
+			this.subProcesses[option.event] = {
+				source: option.event,
+				lastFailTimestamp: 0,
+				failCount: 0,
+				instance: undefined as any
+			};
+			this.launchEvent(tool, option.event, option);
+		} else {
+			util.logDebug('start fetching events');
+			new ContractService(tool, option).fetchEvent();
 		}
 	}
 
@@ -52,9 +70,9 @@ export default class MarketDataService {
 		util.logInfo(source);
 		const cmd =
 			`npm run ${tool} source=${source} assets=${assets.join(',')}${
-				option.dynamo ? ' dynamo' : ''
+			option.dynamo ? ' dynamo' : ''
 			}${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
-				option.server ? ' server' : ''
+			option.server ? ' server' : ''
 			} ${option.forceREST ? 'rest' : ''}` +
 			(osUtil.isWindows() ? '>>' : '&>') +
 			` ${tool}.${source}.${assets.join('.')}.log`;
@@ -71,17 +89,49 @@ export default class MarketDataService {
 
 		if (!procInstance) {
 			util.logError('Failed to launch ' + source);
-			this.retry(tool, option, source, assets);
+			this.retry(tool, option, source, assets, false);
 		} else {
 			util.logInfo(`[${source}]: Launched ${tool}  ${assets.join(',')}`);
 			procInstance.on('exit', code => {
 				util.logError(`[${source}]: Exit with code ${code}`);
-				if (code) this.retry(tool, option, source, assets);
+				if (code) this.retry(tool, option, source, assets, false);
 			});
 		}
 	}
 
-	public retry(tool: string, option: IOption, source: string, assets: string[]) {
+	launchEvent(tool: string, event: string, option: IOption) {
+		const cmd =
+			`npm run ${tool} event=${event}${
+			option.dynamo ? ' dynamo' : ''
+			} ${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
+			option.server ? ' server' : ''
+			}` +
+			(osUtil.isWindows() ? '>>' : '&>') +
+			` ${tool}.${option.event}.log`;
+
+		console.log(cmd);
+		const procInstance = child_process.exec(
+			cmd,
+			osUtil.isWindows() ? {} : { shell: '/bin/bash' }
+		);
+
+		this.subProcesses[option.event].instance = procInstance;
+		this.subProcesses[option.event].lastFailTimestamp = util.getUTCNowTimestamp();
+
+		if (!procInstance) {
+			util.logError('Failed to launch public event ');
+			this.retry(tool, option, option.event, [], true);
+		} else {
+
+			procInstance.on('exit', code => {
+				util.logError(`[${option.event}]: Exit with code ${code}`);
+				if (code) this.retry(tool, option, option.event, [], true);
+			});
+		}
+
+	}
+
+	public retry(tool: string, option: IOption, source: string, assets: string[], isEvent: boolean) {
 		const now: number = util.getUTCNowTimestamp();
 
 		if (now - this.subProcesses[source].lastFailTimestamp < 30000)
@@ -90,8 +140,12 @@ export default class MarketDataService {
 
 		this.subProcesses[source].lastFailTimestamp = now;
 
-		if (this.subProcesses[source].failCount < 3)
+		if (this.subProcesses[source].failCount < 3 && isEvent) {
+			global.setTimeout(() => this.launchEvent(tool, option.event, option), 5000);
+		} else if (this.subProcesses[source].failCount < 3 && !isEvent) {
 			global.setTimeout(() => this.launchSource(tool, source, assets, option), 5000);
+
+		}
 		else util.logError('Retry Aborted ' + source);
 	}
 

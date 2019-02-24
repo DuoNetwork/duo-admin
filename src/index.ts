@@ -35,7 +35,7 @@ dbUtil.init(tool, option).then(() => {
 			new MarketDataService().startFetching(tool, option);
 			break;
 		case CST.FETCH_EVENTS:
-			new ContractService(tool, option).fetchEvent();
+			new MarketDataService().startFetchingEvent(tool, option);
 			break;
 		case DataConstants.DB_PRICES:
 			new MarketDataService().startAggregate(option.period);
