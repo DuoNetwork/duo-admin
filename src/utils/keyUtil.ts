@@ -32,7 +32,7 @@ class KeyUtil {
 
 	public async getGcpKey(name: string, live: boolean): Promise<string> {
 		const storage = new Storage({
-			projectId: CST.KEY_GCP_PROJECT_ID
+			projectId: live ? CST.KEY_GCP_PROJECT_ID_LIVE : CST.KEY_GCP_PROJECT_ID_DEV
 		});
 
 		const bucketName = live ? CST.KEY_GCP_BUKKET_NAME_LIVE : CST.KEY_GCP_BUKKET_NAME_DEV;
