@@ -84,4 +84,4 @@ export const REDEEM_GAS_TH = 0.005;
 export const CREATE_INTERVAL = 10; // in seconds
 export const CREATE_GAS_TH = 0.01;
 export const EVENT_FETCH_BLOCK_INTERVAL = 100;
-export const EVENT_FETCH_TIME_INTERVAL = 600000;
+export const EVENT_FETCH_TIME_INTERVAL = 300000;
