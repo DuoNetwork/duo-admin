@@ -122,11 +122,13 @@ const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);
 for (const tool of toolToTest) {
 	test(`getStatusProcess ${tool} useDynamo`, () => {
 		option.dynamo = true;
+		option.event = CST.EVENTS_OTHERS;
 		expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 	});
 
 	test(`getStatusProcess ${tool} do not useDynamo`, () => {
 		option.dynamo = false;
+		option.event = '';
 		expect(util.getStatusProcess(tool, option)).toMatchSnapshot();
 	});
 }

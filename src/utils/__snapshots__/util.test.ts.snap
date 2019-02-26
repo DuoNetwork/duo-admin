@@ -20,7 +20,7 @@ exports[`getStatusProcess commit useDynamo 1`] = `"FEED_AWS_PUBLIC"`;
 
 exports[`getStatusProcess events do not useDynamo 1`] = `"EVENT_AWS_PRIVATE"`;
 
-exports[`getStatusProcess events useDynamo 1`] = `"EVENT_AWS_PUBLIC"`;
+exports[`getStatusProcess events useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
 
 exports[`getStatusProcess fetchPrice do not useDynamo 1`] = `"FETCH_AWS_PRIVATE"`;
 
