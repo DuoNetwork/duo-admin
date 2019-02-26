@@ -158,7 +158,7 @@ exports[`fetch, force 4`] = `
 Array [
   Array [
     [Function],
-    600000,
+    300000,
   ],
 ]
 `;
@@ -179,7 +179,7 @@ exports[`fetch, no events 2`] = `
 Array [
   Array [
     [Function],
-    600000,
+    300000,
   ],
 ]
 `;
@@ -342,7 +342,7 @@ exports[`fetch, no force 4`] = `
 Array [
   Array [
     [Function],
-    600000,
+    300000,
   ],
 ]
 `;
@@ -505,7 +505,7 @@ exports[`fetch, no force, continuous call 4`] = `
 Array [
   Array [
     [Function],
-    600000,
+    300000,
   ],
 ]
 `;

@@ -2,7 +2,7 @@
 
 exports[`composeQuery 1`] = `"?key1=value1&key2=value2"`;
 
-exports[`getStatusProcess EVENT 1`] = `"EVENT_GCP_PUBLIC_STARTPRERESET"`;
+exports[`getStatusProcess EVENT 1`] = `""`;
 
 exports[`getStatusProcess PRICE 1`] = `"PRICE_AWS_PUBLIC_HOURLY"`;
 
@@ -18,9 +18,9 @@ exports[`getStatusProcess commit do not useDynamo 1`] = `"FEED_AWS_PRIVATE"`;
 
 exports[`getStatusProcess commit useDynamo 1`] = `"FEED_AWS_PUBLIC"`;
 
-exports[`getStatusProcess fetchEvents do not useDynamo 1`] = `"EVENT_AWS_PRIVATE_OTHERS"`;
+exports[`getStatusProcess events do not useDynamo 1`] = `"EVENT_AWS_PRIVATE"`;
 
-exports[`getStatusProcess fetchEvents useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
+exports[`getStatusProcess events useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
 
 exports[`getStatusProcess fetchPrice do not useDynamo 1`] = `"FETCH_AWS_PRIVATE"`;
 
@@ -30,13 +30,13 @@ exports[`getStatusProcess prices do not useDynamo 1`] = `"PRICE_AWS_PRIVATE_MINU
 
 exports[`getStatusProcess prices useDynamo 1`] = `"PRICE_AWS_PUBLIC_MINUTELY"`;
 
+exports[`getStatusProcess round do not useDynamo 1`] = `"ROUND_AWS_PRIVATE"`;
+
+exports[`getStatusProcess round useDynamo 1`] = `"ROUND_AWS_PUBLIC"`;
+
 exports[`getStatusProcess trades do not useDynamo 1`] = `"TRADE_AWS_PRIVATE"`;
 
 exports[`getStatusProcess trades useDynamo 1`] = `"TRADE_AWS_PUBLIC"`;
-
-exports[`getStatusProcess trigger do not useDynamo 1`] = `"EVENT_AWS_PRIVATE_OTHERS"`;
-
-exports[`getStatusProcess trigger useDynamo 1`] = `"EVENT_AWS_PUBLIC_OTHERS"`;
 
 exports[`log debug 1`] = `
 Array [
@@ -83,6 +83,10 @@ Object {
   "dbLive": false,
   "dynamo": false,
   "event": "event",
+  "events": Array [
+    "event1",
+    "event2",
+  ],
   "exSources": Array [
     "ex1",
     "ex2",
@@ -115,6 +119,9 @@ Object {
   "dbLive": false,
   "dynamo": false,
   "event": "",
+  "events": Array [
+    "",
+  ],
   "exSources": Array [
     "",
   ],

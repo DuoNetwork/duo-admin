@@ -9,14 +9,13 @@
 		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
 		"commit": "ts-node ./src/index commit",
 		"trades": "ts-node src/index trades",
-		"trigger": "ts-node ./src/index trigger",
 		"prices": "ts-node src/index prices",
 		"node": "ts-node ./src/index node",
 		"cleanDB": "ts-node ./src/index cleanDB",
 		"fetchPrice": "ts-node ./src/index fetchPrice",
-		"fetchEvents": "ts-node ./src/index fetchEvents",
 		"startCustodian": "ts-node ./src/index startCustodian",
-		"round": "ts-node ./src/index round"
+		"round": "ts-node ./src/index round",
+		"events": "ts-node ./src/index events"
 	},
 	"jest": {
 		"roots": [

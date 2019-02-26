@@ -4,6 +4,168 @@ exports[`cleanDb 1`] = `86400000`;
 
 exports[`cleanDb 2`] = `30000`;
 
+exports[`launchEvent  1`] = `
+Array [
+  Array [
+    "npm run tool event=event  gcp&> tool.event.log",
+    Object {
+      "shell": "/bin/bash",
+    },
+  ],
+]
+`;
+
+exports[`launchEvent  2`] = `
+Object {
+  "event": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "event",
+  },
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchEvent azure 1`] = `
+Array [
+  Array [
+    "npm run tool event=event  azure&> tool.event.log",
+    Object {
+      "shell": "/bin/bash",
+    },
+  ],
+]
+`;
+
+exports[`launchEvent azure 2`] = `Array []`;
+
+exports[`launchEvent azure 3`] = `
+Array [
+  Array [
+    "exit",
+    [Function],
+  ],
+]
+`;
+
+exports[`launchEvent azure 4`] = `
+Object {
+  "event": Object {
+    "failCount": 0,
+    "instance": Object {
+      "on": [MockFunction] {
+        "calls": Array [
+          Array [
+            "exit",
+            [Function],
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+    },
+    "lastFailTimestamp": 1234567890,
+    "source": "event",
+  },
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`launchEvent azure 5`] = `
+Array [
+  Array [
+    "tool",
+    "event",
+    Object {
+      "azure": true,
+      "debug": false,
+      "event": "event",
+      "forceREST": false,
+      "live": true,
+    },
+  ],
+]
+`;
+
+exports[`launchEvent with existingInstance, no windows 1`] = `
+Array [
+  Array [
+    "Others",
+    [Function],
+  ],
+]
+`;
+
+exports[`launchEvent with existingInstance, no windows 2`] = `
+Array [
+  Array [
+    "tool",
+    "Others",
+    Object {
+      "aws": true,
+      "debug": false,
+      "event": "Others",
+      "forceREST": false,
+      "live": true,
+      "server": true,
+    },
+  ],
+]
+`;
+
+exports[`launchEvent with existingInstance, no windows 3`] = `
+Object {
+  "Others": Object {
+    "failCount": 0,
+    "instance": null,
+    "lastFailTimestamp": 1234567890,
+    "source": "Others",
+  },
+  "event": Object {
+    "failCount": 0,
+    "instance": Object {
+      "on": [MockFunction] {
+        "calls": Array [
+          Array [
+            "exit",
+            [Function],
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+    },
+    "lastFailTimestamp": 1234567890,
+    "source": "event",
+  },
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
 exports[`launchSource debug not windows 1`] = `
 Array [
   Array [
@@ -71,18 +233,8 @@ Object {
 exports[`launchSource fail not windows 3`] = `
 Array [
   Array [
-    "tool",
-    Object {
-      "debug": false,
-      "forceREST": false,
-      "live": false,
-    },
     "source",
-    Array [
-      "asset1",
-      "asset2",
-      "asset3",
-    ],
+    [Function],
   ],
 ]
 `;
@@ -100,7 +252,7 @@ exports[`launchSource fail windows 2`] = `
 Object {
   "source": Object {
     "failCount": 0,
-    "instance": undefined,
+    "instance": false,
     "lastFailTimestamp": 1234567890,
     "source": "source",
   },
@@ -110,7 +262,22 @@ Object {
 exports[`launchSource fail windows 3`] = `
 Array [
   Array [
+    "source",
+    [Function],
+  ],
+]
+`;
+
+exports[`launchSource fail windows 4`] = `
+Array [
+  Array [
     "tool",
+    "source",
+    Array [
+      "asset1",
+      "asset2",
+      "asset3",
+    ],
     Object {
       "azure": true,
       "debug": false,
@@ -118,12 +285,6 @@ Array [
       "forceREST": false,
       "live": false,
     },
-    "source",
-    Array [
-      "asset1",
-      "asset2",
-      "asset3",
-    ],
   ],
 ]
 `;
@@ -305,19 +466,28 @@ Array [
 exports[`launchSource success windows 4`] = `
 Array [
   Array [
+    "source",
+    [Function],
+  ],
+]
+`;
+
+exports[`launchSource success windows 5`] = `
+Array [
+  Array [
     "tool",
-    Object {
-      "aws": true,
-      "debug": false,
-      "forceREST": false,
-      "live": false,
-    },
     "source",
     Array [
       "asset1",
       "asset2",
       "asset3",
     ],
+    Object {
+      "aws": true,
+      "debug": false,
+      "forceREST": false,
+      "live": false,
+    },
   ],
 ]
 `;
@@ -336,25 +506,6 @@ Array [
   Array [
     [Function],
     5000,
-  ],
-]
-`;
-
-exports[`retry after long enought time 3`] = `
-Array [
-  Array [
-    "tool",
-    "source",
-    Array [
-      "asset1",
-      "asset2",
-      "asset3",
-    ],
-    Object {
-      "debug": false,
-      "forceREST": false,
-      "live": false,
-    },
   ],
 ]
 `;
@@ -655,6 +806,128 @@ Array [
     Array [
       "quote|base",
     ],
+  ],
+]
+`;
+
+exports[`startFetchingEvent no event 1`] = `
+Array [
+  Array [
+    "tool",
+    "event1",
+    Object {
+      "debug": false,
+      "event": "event2",
+      "events": Array [
+        "event1",
+        "event2",
+      ],
+    },
+  ],
+  Array [
+    "tool",
+    "event2",
+    Object {
+      "debug": false,
+      "event": "event2",
+      "events": Array [
+        "event1",
+        "event2",
+      ],
+    },
+  ],
+]
+`;
+
+exports[`startFetchingEvent no event 2`] = `
+Object {
+  "Others": Object {
+    "failCount": 0,
+    "instance": null,
+    "lastFailTimestamp": 1234567890,
+    "source": "Others",
+  },
+  "bitstamp": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "bitstamp",
+  },
+  "event": Object {
+    "failCount": 0,
+    "instance": Object {
+      "on": [MockFunction] {
+        "calls": Array [
+          Array [
+            "exit",
+            [Function],
+          ],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      },
+    },
+    "lastFailTimestamp": 1234567890,
+    "source": "event",
+  },
+  "event1": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "event1",
+  },
+  "event2": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "event2",
+  },
+  "gdax": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "gdax",
+  },
+  "gemini": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "gemini",
+  },
+  "kraken": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 0,
+    "source": "kraken",
+  },
+  "source": Object {
+    "failCount": 0,
+    "instance": undefined,
+    "lastFailTimestamp": 1234567890,
+    "source": "source",
+  },
+}
+`;
+
+exports[`startFetchingEvent with event 1`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "event": "event",
+    },
+  ],
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "event": "StartReset",
+    },
   ],
 ]
 `;

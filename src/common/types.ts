@@ -17,6 +17,7 @@ export interface IOption {
 	sources: string[];
 	exSources: string[];
 	assets: string[];
+	events: string[];
 	live: boolean;
 	dbLive: boolean;
 	server: boolean;

@@ -2,6 +2,7 @@ import child_process from 'child_process';
 import apis from '../apis';
 import * as CST from '../common/constants';
 import { IOption, ISubProcess } from '../common/types';
+import ContractService from '../services/ContractService';
 import dbUtil from '../utils/dbUtil';
 import osUtil from '../utils/osUtil';
 import priceUtil from '../utils/priceUtil';
@@ -48,6 +49,27 @@ export default class MarketDataService {
 		}
 	}
 
+	public async startFetchingEvent(tool: string, option: IOption): Promise<void> {
+		if (!option.event)
+			for (const event of option.events) {
+				option.event = event;
+				this.subProcesses[event] = {
+					source: option.event,
+					lastFailTimestamp: 0,
+					failCount: 0,
+					instance: undefined as any
+				};
+				this.launchEvent(tool, event, option);
+			}
+		else {
+			util.logDebug('start fetching events');
+			const contractService = new ContractService(tool, option);
+			if ([CST.EVENTS_START_PRE_RESET, CST.EVENTS_START_RESET].includes(option.event))
+				contractService.trigger();
+			else contractService.fetchEvent();
+		}
+	}
+
 	public launchSource(tool: string, source: string, assets: string[], option: IOption) {
 		util.logInfo(source);
 		const cmd =
@@ -71,28 +93,55 @@ export default class MarketDataService {
 
 		if (!procInstance) {
 			util.logError('Failed to launch ' + source);
-			this.retry(tool, option, source, assets);
+			this.retry(source, () => this.launchSource(tool, source, assets, option));
 		} else {
 			util.logInfo(`[${source}]: Launched ${tool}  ${assets.join(',')}`);
 			procInstance.on('exit', code => {
 				util.logError(`[${source}]: Exit with code ${code}`);
-				if (code) this.retry(tool, option, source, assets);
+				if (code) this.retry(source, () => this.launchSource(tool, source, assets, option));
 			});
 		}
 	}
 
-	public retry(tool: string, option: IOption, source: string, assets: string[]) {
+	public launchEvent(tool: string, event: string, option: IOption) {
+		const cmd =
+			`npm run ${tool} event=${event}${option.event === CST.EVENTS_OTHERS ? ' dynamo' : ''} ${
+				option.azure ? ' azure' : ''
+			}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
+				option.server ? ' server' : ''
+			}` +
+			(osUtil.isWindows() ? '>>' : '&>') +
+			` ${tool}.${option.event}.log`;
+
+		const procInstance = child_process.exec(
+			cmd,
+			osUtil.isWindows() ? {} : { shell: '/bin/bash' }
+		);
+
+		this.subProcesses[option.event].instance = procInstance;
+		this.subProcesses[option.event].lastFailTimestamp = util.getUTCNowTimestamp();
+
+		if (!procInstance) {
+			util.logError('Failed to launch public event ');
+			this.retry(event, () => this.launchEvent(tool, event, option));
+		} else
+			procInstance.on('exit', code => {
+				util.logError(`[${option.event}]: Exit with code ${code}`);
+				if (code) this.retry(event, () => this.launchEvent(tool, event, option));
+			});
+	}
+
+	public retry(name: string, task: () => any) {
 		const now: number = util.getUTCNowTimestamp();
 
-		if (now - this.subProcesses[source].lastFailTimestamp < 30000)
-			this.subProcesses[source].failCount++;
-		else this.subProcesses[source].failCount = 1;
+		if (now - this.subProcesses[name].lastFailTimestamp < 30000)
+			this.subProcesses[name].failCount++;
+		else this.subProcesses[name].failCount = 1;
 
-		this.subProcesses[source].lastFailTimestamp = now;
+		this.subProcesses[name].lastFailTimestamp = now;
 
-		if (this.subProcesses[source].failCount < 3)
-			global.setTimeout(() => this.launchSource(tool, source, assets, option), 5000);
-		else util.logError('Retry Aborted ' + source);
+		if (this.subProcesses[name].failCount < 3) global.setTimeout(() => task(), 5000);
+		else util.logError('Retry Aborted ' + name);
 	}
 
 	public async cleanDb() {
