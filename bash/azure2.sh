@@ -1,1 +1,0 @@
-npm run events server events=StartReset,StartPreReset,Others $1 &>> events.log &
