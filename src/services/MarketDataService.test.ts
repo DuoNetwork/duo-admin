@@ -63,7 +63,7 @@ test('retry within short time', () => {
 
 test('launchSource fail windows', () => {
 	osUtil.isWindows = jest.fn(() => true);
-	child_process.exec = jest.fn() as any;
+	child_process.exec = jest.fn(() => false) as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
 	marketDataService.retry = jest.fn();
 	marketDataService.subProcesses['source'] = {
@@ -79,9 +79,14 @@ test('launchSource fail windows', () => {
 		dynamo: true,
 		azure: true
 	} as any);
+	const originalLaunchSource = marketDataService.launchSource;
+	marketDataService.launchSource = jest.fn();
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect((marketDataService.retry as jest.Mock<void>).mock.calls).toMatchSnapshot();
+	(marketDataService.retry as jest.Mock).mock.calls[0][1]();
+	expect((marketDataService.launchSource as jest.Mock).mock.calls).toMatchSnapshot();
+	marketDataService.launchSource = originalLaunchSource;
 });
 
 test('launchSource success windows', () => {
@@ -106,12 +111,17 @@ test('launchSource success windows', () => {
 		live: false,
 		aws: true
 	} as any);
+	const originalLaunchSource = marketDataService.launchSource;
+	marketDataService.launchSource = jest.fn();
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect(execOn.mock.calls).toMatchSnapshot();
 	execOn.mock.calls[0][1]();
 	execOn.mock.calls[0][1](1);
 	expect((marketDataService.retry as jest.Mock).mock.calls).toMatchSnapshot();
+	(marketDataService.retry as jest.Mock).mock.calls[0][1]();
+	expect((marketDataService.launchSource as jest.Mock).mock.calls).toMatchSnapshot();
+	marketDataService.launchSource = originalLaunchSource;
 });
 
 test('launchSource forceREST windows', () => {
@@ -320,20 +330,24 @@ test('launchEvent azure', () => {
 		event: 'event',
 		azure: true
 	} as any);
+	const originalLaunchEvent = marketDataService.launchEvent;
+	marketDataService.launchEvent = jest.fn();
 	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
-	expect(marketDataService.subProcesses).toMatchSnapshot();
 	expect((marketDataService.retry as jest.Mock).mock.calls).toMatchSnapshot();
-	(on as jest.Mock).mock.calls[0][1]('');
+	(on as jest.Mock).mock.calls[0][1]();
+	(on as jest.Mock).mock.calls[0][1]('code');
 	expect((on as jest.Mock).mock.calls).toMatchSnapshot();
+	(marketDataService.retry as jest.Mock).mock.calls[0][1]();
+	expect(marketDataService.subProcesses).toMatchSnapshot();
+	expect((marketDataService.launchEvent as jest.Mock).mock.calls).toMatchSnapshot();
+	marketDataService.launchEvent = originalLaunchEvent;
 });
 
 test('launchEvent with existingInstance, no windows', () => {
-	const on = jest.fn();
 	osUtil.isWindows = jest.fn(() => true);
-	child_process.exec = jest.fn(() => ({
-		on: on
-	})) as any;
+	child_process.exec = jest.fn(() => null) as any;
 	util.getUTCNowTimestamp = jest.fn(() => 1234567890);
+	marketDataService.retry = jest.fn();
 	marketDataService.subProcesses['Others'] = {
 		source: 'Others',
 		lastFailTimestamp: 0,
@@ -348,10 +362,13 @@ test('launchEvent with existingInstance, no windows', () => {
 		server: true,
 		aws: true
 	} as any);
-	expect(((child_process.exec as any) as jest.Mock).mock.calls).toMatchSnapshot();
+	const originalLaunchEvent = marketDataService.launchEvent;
+	marketDataService.launchEvent = jest.fn();
+	expect((marketDataService.retry as jest.Mock).mock.calls).toMatchSnapshot();
+	(marketDataService.retry as jest.Mock).mock.calls[0][1]();
+	expect((marketDataService.launchEvent as jest.Mock).mock.calls).toMatchSnapshot();
 	expect(marketDataService.subProcesses).toMatchSnapshot();
-	(on as jest.Mock).mock.calls[0][1]('code');
-	expect((on as jest.Mock).mock.calls).toMatchSnapshot();
+	marketDataService.launchEvent = originalLaunchEvent;
 });
 
 test('startFetching no source', async () => {
