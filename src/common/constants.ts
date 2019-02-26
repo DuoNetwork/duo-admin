@@ -57,6 +57,29 @@ export const API_KRK_TRADE = '/Trades';
 export const API_GDAX_BASE_URL = 'https://api.gdax.com:443/products';
 export const API_GDAX_TRADE = '/trades';
 
+export const KEY_AWS_ETH_NAME_DEV = 'price-feed-private';
+export const KEY_AWS_ETH_NAME_LIVE = '';
+export const KEY_AWS_SQL_NAME_DEV = 'MySQL-DB-Dev';
+export const KEY_AWS_SQL_NAME_LIVE = 'MySQL-DB-Live';
+
+export const KEY_AZURE_ETH_NAME_DEV = 'price-feed-private';
+export const KEY_AZURE_ETH_NAME_LIVE = '';
+export const KEY_AZURE_SQL_NAME_DEV = 'MySQL-DB-Dev';
+export const KEY_AZURE_SQL_NAME_LIVE = 'MySQL-DB-Live';
+export const KEY_AZURE_BASE_URL =
+	'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net';
+export const KEY_AZURE_URL_DEV = 'https://price-dev-test.vault.azure.net/secrets/';
+export const KEY_AZURE_URL_LIVE = '';
+export const KEY_AZURE_API_VERSION = '?api-version=2016-10-01';
+
+export const KEY_GCP_ETH_NAME_DEV = 'price-feed-private';
+export const KEY_GCP_ETH_NAME_LIVE = '';
+export const KEY_GCP_PROJECT_ID = 'duo-network';
+export const KEY_GCP_BUKKET_NAME_DEV = 'eth-test';
+export const KEY_GCP_BUKKET_NAME_LIVE = '';
+export const KEY_GCP_SQL_NAME_DEV = 'MySQL-DB-Dev';
+export const KEY_GCP_SQL_NAME_LIVE = 'MySQL-DB-Live';
+
 export const API_LIST = [
 	Constants.API_KRAKEN,
 	Constants.API_GEMINI,

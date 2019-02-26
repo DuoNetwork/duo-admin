@@ -3,7 +3,7 @@
 exports[`getKey server and live 1`] = `
 Array [
   Array [
-    "price-feed-private",
+    "",
   ],
 ]
 `;
@@ -11,7 +11,8 @@ Array [
 exports[`getKey server and live 2`] = `
 Array [
   Array [
-    "price-feed-private",
+    "",
+    true,
   ],
 ]
 `;
@@ -19,7 +20,8 @@ Array [
 exports[`getKey server and live 3`] = `
 Array [
   Array [
-    "price-feed-private",
+    "",
+    true,
   ],
 ]
 `;
@@ -27,7 +29,7 @@ Array [
 exports[`getSqlAuth server and live 1`] = `
 Array [
   Array [
-    "MySQL-DB-Dev",
+    "MySQL-DB-Live",
   ],
 ]
 `;
@@ -35,7 +37,8 @@ Array [
 exports[`getSqlAuth server and live 2`] = `
 Array [
   Array [
-    "MySQL-DB-Dev",
+    "MySQL-DB-Live",
+    true,
   ],
 ]
 `;
@@ -43,7 +46,8 @@ Array [
 exports[`getSqlAuth server and live 3`] = `
 Array [
   Array [
-    "MySQL-DB-Dev",
+    "MySQL-DB-Live",
+    true,
   ],
 ]
 `;
