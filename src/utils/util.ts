@@ -1,4 +1,3 @@
-import { Constants as WrapperConstants } from '@finbook/duo-contract-wrapper';
 import { Constants as DataConstants } from '@finbook/duo-market-data';
 import moment from 'moment';
 import * as CST from '../common/constants';
@@ -126,18 +125,6 @@ class Util {
 				type = 'EVENT';
 				source = option.event ? '_' + option.event.toUpperCase() : '';
 				if (option.event === CST.EVENTS_OTHERS) privacy = '_PUBLIC';
-				break;
-			case CST.TRIGGER:
-			case CST.FETCH_EVENTS:
-				type = 'EVENT';
-				source =
-					'_' +
-					([
-						WrapperConstants.EVENT_START_PRE_RESET,
-						WrapperConstants.EVENT_START_RESET
-					].includes(option.event)
-						? option.event.toUpperCase()
-						: 'OTHERS');
 				break;
 			case CST.COMMIT:
 				type = 'FEED';

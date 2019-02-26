@@ -60,6 +60,7 @@ test('parseOptions default', () => {
 		'source=',
 		'pair=',
 		'event=',
+		'events=',
 		'provider=',
 		'contractType=',
 		'tenor='
@@ -82,6 +83,7 @@ test('parseOptions', () => {
 		'sources=s1,s2',
 		'pair=pair',
 		'event=event',
+		'events=event1,event2',
 		'provider=provider',
 		'contractType=contractType',
 		'tenor=tenor'
@@ -109,10 +111,10 @@ const toolToTest = [
 	CST.TRADES,
 	CST.COMMIT,
 	CST.CLEAN_DB,
-	CST.TRIGGER,
-	CST.FETCH_EVENTS,
+	CST.EVENTS,
 	CST.FETCH_PRICE,
-	DataConstants.DB_PRICES
+	DataConstants.DB_PRICES,
+	CST.ROUND
 ];
 
 const option: IOption = util.parseOptions(['npm', 'run', 'tool', 'period=1']);

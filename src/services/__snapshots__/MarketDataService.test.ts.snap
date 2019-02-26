@@ -877,3 +877,22 @@ Object {
   },
 }
 `;
+
+exports[`startFetchingEvent with event 1`] = `
+Array [
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "event": "event",
+    },
+  ],
+  Array [
+    "tool",
+    Object {
+      "debug": false,
+      "event": "StartReset",
+    },
+  ],
+]
+`;

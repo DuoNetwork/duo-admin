@@ -49,10 +49,6 @@ export default class MarketDataService {
 		}
 	}
 
-	public initContractService(tool: string, option: IOption) {
-		return new ContractService(tool, option);
-	}
-
 	public async startFetchingEvent(tool: string, option: IOption): Promise<void> {
 		if (!option.event)
 			for (const event of option.events) {
@@ -67,7 +63,7 @@ export default class MarketDataService {
 			}
 		else {
 			util.logDebug('start fetching events');
-			const contractService = this.initContractService(tool, option);
+			const contractService = new ContractService(tool, option);
 			if ([CST.EVENTS_START_PRE_RESET, CST.EVENTS_START_RESET].includes(option.event))
 				contractService.trigger();
 			else contractService.fetchEvent();

@@ -15,6 +15,17 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	}))
 }));
 
+const triggerMock = jest.fn();
+const fetchEventMock = jest.fn();
+jest.mock('../services/ContractService', () =>
+	jest.fn().mockImplementation(() => ({
+		trigger: triggerMock,
+		fetchEvent: fetchEventMock
+	}))
+);
+
+import ContractService from '../services/ContractService';
+
 const marketDataService = new MarketDataService();
 test('retry after long enought time', () => {
 	const launchMock = jest.fn();
@@ -29,10 +40,7 @@ test('retry after long enought time', () => {
 		failCount: 2,
 		instance: undefined as any
 	};
-	marketDataService.retry(
-		'source',
-		launchMock
-	);
+	marketDataService.retry('source', launchMock);
 	expect(marketDataService.subProcesses['source']).toMatchSnapshot();
 	expect((global.setTimeout as jest.Mock).mock.calls).toMatchSnapshot();
 	(global.setTimeout as jest.Mock).mock.calls[0][0]();
@@ -317,7 +325,6 @@ test('launchEvent azure', () => {
 	expect((marketDataService.retry as jest.Mock).mock.calls).toMatchSnapshot();
 	(on as jest.Mock).mock.calls[0][1]('');
 	expect((on as jest.Mock).mock.calls).toMatchSnapshot();
-
 });
 
 test('launchEvent with existingInstance, no windows', () => {
@@ -441,11 +448,6 @@ test('startFetchingEvent no event', async () => {
 test('startFetchingEvent with event', async () => {
 	util.sleep = jest.fn();
 	marketDataService.launchEvent = jest.fn();
-	const event = jest.fn();
-	marketDataService.initContractService = jest.fn(() => ({
-		fetchEvent: event,
-		trigger: event
-	}));
 
 	await marketDataService.startFetchingEvent('tool', {
 		event: 'event',
@@ -457,7 +459,9 @@ test('startFetchingEvent with event', async () => {
 		debug: false
 	} as any);
 
-	expect(event as jest.Mock).toBeCalledTimes(2);
+	expect(triggerMock).toBeCalledTimes(1);
+	expect(fetchEventMock).toBeCalledTimes(1);
+	expect((ContractService as any).mock.calls).toMatchSnapshot();
 });
 
 test('cleanDb', async () => {
