@@ -1,5 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Aws } from 'aws-cli-js';
+import * as CST from '../common/constants';
 import { IKey, IOption, ISqlAuth } from '../common/types';
 import httpUtil from './httpUtil';
 import util from './util';
@@ -14,27 +15,27 @@ class KeyUtil {
 		return keyData.object.Parameter.Value;
 	}
 
-	public async getAzureKey(name: string): Promise<string> {
-		const baseUrl =
-			'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net';
+	public async getAzureKey(name: string, live: boolean): Promise<string> {
+		const baseUrl = CST.KEY_AZURE_BASE_URL;
 
 		const response: any = await httpUtil.get(baseUrl, { Metadata: 'true' });
 		const responseJson = JSON.parse(response);
 		const savedAccessToken = 'Bearer ' + responseJson.access_token;
-		const url =
-			'https://price-dev-test.vault.azure.net/secrets/' + name + '?api-version=2016-10-01';
+		const url = live
+			? `${CST.KEY_AZURE_URL_LIVE}${name}${CST.KEY_AZURE_API_VERSION}`
+			: `${CST.KEY_AZURE_URL_DEV}${name}${CST.KEY_AZURE_API_VERSION}`;
 		const bodyKey: any = await httpUtil.get(url, { Authorization: savedAccessToken });
 
 		const responseKeyJson = JSON.parse(bodyKey);
 		return responseKeyJson.value;
 	}
 
-	public async getGcpKey(name: string): Promise<string> {
+	public async getGcpKey(name: string, live: boolean): Promise<string> {
 		const storage = new Storage({
-			projectId: 'duo-network'
+			projectId: live ? CST.KEY_GCP_PROJECT_ID_LIVE : CST.KEY_GCP_PROJECT_ID_DEV
 		});
 
-		const bucketName = 'eth-test';
+		const bucketName = live ? CST.KEY_GCP_BUKKET_NAME_LIVE : CST.KEY_GCP_BUKKET_NAME_DEV;
 		const fileName = name + '.txt';
 		return (storage
 			.bucket(bucketName)
@@ -62,9 +63,26 @@ class KeyUtil {
 				privateKey: key.privateKey
 			};
 		} else {
-			if (option.aws) key = JSON.parse(await this.getAwsKey('price-feed-private'))[tool];
-			else if (option.azure) key = JSON.parse(await this.getAzureKey('price-feed-private'))[tool];
-			else if (option.gcp) key = JSON.parse(await this.getGcpKey('price-feed-private'))[tool];
+			if (option.aws)
+				key = JSON.parse(
+					await this.getAwsKey(
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV
+					)
+				)[tool];
+			else if (option.azure)
+				key = JSON.parse(
+					await this.getAzureKey(
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV,
+						option.live
+					)
+				)[tool];
+			else if (option.gcp)
+				key = JSON.parse(
+					await this.getGcpKey(
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV,
+						option.live
+					)
+				)[tool];
 
 			return {
 				publicKey: key.publicKey,
@@ -91,9 +109,26 @@ class KeyUtil {
 				password: key.password
 			};
 		} else {
-			if (option.aws) key = JSON.parse(await this.getAwsKey('MySQL-DB-Dev'));
-			else if (option.azure) key = JSON.parse(await this.getAzureKey('MySQL-DB-Dev'));
-			else if (option.gcp) key = JSON.parse(await this.getGcpKey('MySQL-DB-Dev'));
+			if (option.aws)
+				key = JSON.parse(
+					await this.getAwsKey(
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV
+					)
+				);
+			else if (option.azure)
+				key = JSON.parse(
+					await this.getAzureKey(
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV,
+						option.live
+					)
+				);
+			else if (option.gcp)
+				key = JSON.parse(
+					await this.getGcpKey(
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV,
+						option.live
+					)
+				);
 
 			return {
 				host: key['host'],
