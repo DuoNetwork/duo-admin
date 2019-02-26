@@ -173,7 +173,7 @@ test('fetchEvent', async () => {
 
 test('startCustodian, worng type', async () => {
 	contractService.createDuoWrappers = jest.fn();
-	await contractService.startCustodian(option);
+	await contractService.startCustodian(option as any);
 	expect(contractService.createDuoWrappers as jest.Mock).not.toBeCalled();
 });
 
@@ -203,7 +203,7 @@ test('startCustodian, dualClass', async () => {
 				}
 			} as any)
 	);
-	await contractService1.startCustodian(option);
+	await contractService1.startCustodian(option as any);
 	expect((startCustodian as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
@@ -233,7 +233,7 @@ test('startCustodian, wrong type', async () => {
 				}
 			} as any)
 	);
-	await contractService1.startCustodian(option);
+	await contractService1.startCustodian(option as any);
 	expect(startCustodian as jest.Mock).not.toBeCalled();
 });
 

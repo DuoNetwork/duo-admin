@@ -16,7 +16,8 @@
 		"fetchPrice": "ts-node ./src/index fetchPrice",
 		"fetchEvents": "ts-node ./src/index fetchEvents",
 		"startCustodian": "ts-node ./src/index startCustodian",
-		"round": "ts-node ./src/index round"
+		"round": "ts-node ./src/index round",
+		"events": "ts-node ./src/index events"
 	},
 	"jest": {
 		"roots": [

@@ -1,3 +1,1 @@
-npm run trigger server aws event=StartPreReset &>> preReset.log &
-npm run trigger server aws event=StartReset &>> reset.log &
-npm run fetchPrice server aws &>> fetchPrice.log &
+npm run events server events=StartReset,StartPreReset,Others $1 &>> events.log &

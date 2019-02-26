@@ -34,7 +34,7 @@ dbUtil.init(tool, option).then(() => {
 		case CST.TRADES:
 			new MarketDataService().startFetching(tool, option);
 			break;
-		case CST.FETCH_EVENTS:
+		case CST.EVENTS:
 			new MarketDataService().startFetchingEvent(tool, option);
 			break;
 		case DataConstants.DB_PRICES:
@@ -45,9 +45,6 @@ dbUtil.init(tool, option).then(() => {
 			break;
 		case CST.START_CUSTODIAN:
 			new ContractService(tool, option).startCustodian(option);
-			break;
-		case CST.TRIGGER:
-			new ContractService(tool, option).trigger();
 			break;
 		case CST.COMMIT:
 			new ContractService(tool, option).commitPrice();

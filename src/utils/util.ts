@@ -49,6 +49,7 @@ class Util {
 			contractType: 'Beethoven',
 			tenor: 'Perpetual',
 			assets: [''],
+			events: [''],
 			sources: [''],
 			exSources: [''],
 			source: '',
@@ -70,6 +71,9 @@ class Util {
 					break;
 				case 'assets':
 					option.assets = args[1].split(',');
+					break;
+				case 'events':
+					option.events = args[1].split(',');
 					break;
 				case 'source':
 					option.source = args[1] || option.source;
@@ -110,13 +114,18 @@ class Util {
 	public getStatusProcess(tool: string, option: IOption) {
 		let type = '';
 		const platform = option.azure ? '_AZURE' : option.gcp ? '_GCP' : '_AWS';
-		const privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
+		let privacy = option.dynamo ? '_PUBLIC' : '_PRIVATE';
 		let source = '';
 
 		switch (tool) {
 			case CST.TRADES:
 				type = 'TRADE';
 				source = option.source ? '_' + option.source.toUpperCase() : '';
+				break;
+			case CST.EVENTS:
+				type = 'EVENT';
+				source = option.event ? '_' + option.event.toUpperCase() : '';
+				if (option.event === CST.EVENTS_OTHERS) privacy = '_PUBLIC';
 				break;
 			case CST.TRIGGER:
 			case CST.FETCH_EVENTS:

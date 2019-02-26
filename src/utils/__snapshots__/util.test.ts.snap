@@ -83,6 +83,9 @@ Object {
   "dbLive": false,
   "dynamo": false,
   "event": "event",
+  "events": Array [
+    "",
+  ],
   "exSources": Array [
     "ex1",
     "ex2",
@@ -115,6 +118,9 @@ Object {
   "dbLive": false,
   "dynamo": false,
   "event": "",
+  "events": Array [
+    "",
+  ],
   "exSources": Array [
     "",
   ],
