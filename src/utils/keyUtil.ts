@@ -66,20 +66,20 @@ class KeyUtil {
 			if (option.aws)
 				key = JSON.parse(
 					await this.getAwsKey(
-						option.live ? CST.KEY_AWS_ETH_NAME_LIVE : CST.KEY_AWS_ETH_NAME_DEV
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV
 					)
 				)[tool];
 			else if (option.azure)
 				key = JSON.parse(
 					await this.getAzureKey(
-						option.live ? CST.KEY_AZURE_ETH_NAME_LIVE : CST.KEY_AZURE_ETH_NAME_DEV,
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV,
 						option.live
 					)
 				)[tool];
 			else if (option.gcp)
 				key = JSON.parse(
 					await this.getGcpKey(
-						option.live ? CST.KEY_GCP_ETH_NAME_LIVE : CST.KEY_GCP_ETH_NAME_DEV,
+						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV,
 						option.live
 					)
 				)[tool];
@@ -112,20 +112,20 @@ class KeyUtil {
 			if (option.aws)
 				key = JSON.parse(
 					await this.getAwsKey(
-						option.live ? CST.KEY_AWS_SQL_NAME_LIVE : CST.KEY_AWS_SQL_NAME_DEV
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV
 					)
 				);
 			else if (option.azure)
 				key = JSON.parse(
 					await this.getAzureKey(
-						option.live ? CST.KEY_AZURE_SQL_NAME_LIVE : CST.KEY_AZURE_SQL_NAME_DEV,
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV,
 						option.live
 					)
 				);
 			else if (option.gcp)
 				key = JSON.parse(
 					await this.getGcpKey(
-						option.live ? CST.KEY_GCP_SQL_NAME_LIVE : CST.KEY_GCP_SQL_NAME_DEV,
+						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV,
 						option.live
 					)
 				);
