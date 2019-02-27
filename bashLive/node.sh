@@ -1,1 +1,0 @@
-npm run node live server aws &>> node.log &
