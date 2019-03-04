@@ -71,11 +71,6 @@ Object {
       "contract": "dualClassWrapper",
     },
   },
-  "Vivaldi": Object {
-    "100C-3H": Object {
-      "contract": "VivaldiWrapper",
-    },
-  },
 }
 `;
 
@@ -554,9 +549,6 @@ Array [
         "contract": "dualClassWrapper",
       },
       undefined,
-      Object {
-        "contract": "VivaldiWrapper",
-      },
     ],
     "event",
   ],
