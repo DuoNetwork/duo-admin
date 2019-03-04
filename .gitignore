@@ -18,3 +18,4 @@ sachielAssets.json
 *.txt
 keys
 *kovan*.json
+*live*.json
