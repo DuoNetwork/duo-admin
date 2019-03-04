@@ -410,9 +410,7 @@ Array [
   Array [
     Array [
       "BTV-PPT",
-      undefined,
       "MZT-PPT",
-      undefined,
       Object {
         "contract": "MagiWrapper",
       },
@@ -480,11 +478,9 @@ Array [
       Object {
         "contract": "dualClassWrapper",
       },
-      undefined,
       Object {
         "contract": "dualClassWrapper",
       },
-      undefined,
     ],
     Object {
       "contract": "MagiWrapper",
@@ -522,19 +518,7 @@ Array [
 ]
 `;
 
-exports[`startCustodian, vivaldi 1`] = `
-Array [
-  Array [
-    "account",
-    "0x2C4bD22588af822a95Fb9D7e972A1F1C4aE28F13",
-    "0x9f49bb024EB176d227d4b85A58730a5dDeEF529D",
-    "0x0d729B3C11b3E6Bf5792d36f640f3Be6f187Dd67",
-    1,
-    true,
-    true,
-  ],
-]
-`;
+exports[`startCustodian, vivaldi 1`] = `Array []`;
 
 exports[`trigger 1`] = `
 Array [
@@ -544,11 +528,9 @@ Array [
       Object {
         "contract": "dualClassWrapper",
       },
-      undefined,
       Object {
         "contract": "dualClassWrapper",
       },
-      undefined,
     ],
     "event",
   ],
