@@ -35,20 +35,12 @@ export default class ContractService {
 				Perpetual: new DualClassWrapper(
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-				),
-				M19: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
 				)
 			},
 			Mozart: {
 				Perpetual: new DualClassWrapper(
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
-				),
-				M19: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
 				)
 			},
 			Vivaldi: {
@@ -89,7 +81,8 @@ export default class ContractService {
 		await this.fetchKey();
 		const duoWrappers = this.createDuoWrappers();
 		const VivaldiWrappers: VivaldiWrapper[] = [];
-		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
+		for (const tenor in duoWrappers.Vivaldi)
+			VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
 
 		eventUtil.trigger(
 			this.address,
