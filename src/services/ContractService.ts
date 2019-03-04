@@ -42,15 +42,15 @@ export default class ContractService {
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
 				)
-			},
-			Vivaldi: {
-				'100C-3H': new VivaldiWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
-						'100C-3H'
-					].custodian.address
-				)
 			}
+			// ,Vivaldi: {
+			// 	'100C-3H': new VivaldiWrapper(
+			// 		this.web3Wrapper,
+			// 		this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
+			// 			'100C-3H'
+			// 		].custodian.address
+			// 	)
+			// }
 		};
 	}
 
