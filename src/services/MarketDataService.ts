@@ -111,7 +111,7 @@ export default class MarketDataService {
 				option.live ? ' live' : ''
 			} ${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${
 				option.aws ? ' aws' : ''
-			}${option.server ? ' server' : ''}` +
+			}${option.server ? ' server' : ''}${option.force ? ' force' : ''}` +
 			(osUtil.isWindows() ? ' >>' : ' &>') +
 			` ${tool}.${option.event}.log`;
 
