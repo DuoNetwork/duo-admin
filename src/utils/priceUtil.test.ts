@@ -161,6 +161,7 @@ const resetDualClassWrapper = {
 test('fetchPrice, not started', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => false);
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
 	await priceUtil.fetchPrice(
 		'account',
 		[tradingDualClassWrapper, resetDualClassWrapper],
@@ -173,6 +174,23 @@ test('fetchPrice, not started', async () => {
 test('fetchPrice gasPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
+
+	await priceUtil.fetchPrice(
+		'account',
+		[tradingDualClassWrapper, resetDualClassWrapper],
+		magiWrapper,
+		1000000000
+	);
+	await (global.setInterval as jest.Mock).mock.calls[0][0]();
+	expect((tradingDualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect(resetDualClassWrapper.fetchPrice as jest.Mock).not.toBeCalled();
+});
+
+test('fetchPrice isLive', async () => {
+	global.setInterval = jest.fn();
+	magiWrapper.isStarted = jest.fn(() => true);
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => true);
 
 	await priceUtil.fetchPrice(
 		'account',
@@ -189,6 +207,7 @@ test('fetchPrice', async () => {
 	global.setInterval = jest.fn();
 	magiWrapper.isStarted = jest.fn(() => true);
 	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve(1000000000));
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
 	await priceUtil.fetchPrice(
 		'account',
 		[tradingDualClassWrapper, resetDualClassWrapper],

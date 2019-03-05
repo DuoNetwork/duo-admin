@@ -94,40 +94,44 @@ class PriceUtil {
 		gasPrice: number = 0
 	) {
 		const isStarted = await magiWrapper.isStarted();
+		const isLive = magiWrapper.web3Wrapper.isLive();
 		if (!isStarted) {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
 		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(account);
-		global.setInterval(async () => {
-			// first checking Magi current time is set correctly
-			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			const promiseList: Array<Promise<void>> = [];
-			const wrappersToCall: DualClassWrapper[] = [];
+		global.setInterval(
+			async () => {
+				// first checking Magi current time is set correctly
+				const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
+				const promiseList: Array<Promise<void>> = [];
+				const wrappersToCall: DualClassWrapper[] = [];
 
-			for (const bw of dualClassWrappers) {
-				const btvStates: IDualClassStates = await bw.getStates();
-				if (
-					btvStates.state === WrapperConstants.CTD_TRADING &&
-					lastPrice.timestamp - btvStates.lastPriceTime > 3000000
-				)
-					wrappersToCall.push(bw);
-			}
+				for (const bw of dualClassWrappers) {
+					const btvStates: IDualClassStates = await bw.getStates();
+					if (
+						btvStates.state === WrapperConstants.CTD_TRADING &&
+						lastPrice.timestamp - btvStates.lastPriceTime > 3000000
+					)
+						wrappersToCall.push(bw);
+				}
+				const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+				if (!gasPrice) gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+				for (const bw of wrappersToCall) {
+					promiseList.push(
+						bw.fetchPrice(account, {
+							gasPrice: gasPrice,
+							gasLimit: WrapperConstants.FETCH_PRICE_GAS,
+							nonce: nonce
+						})
+					);
+					nonce++;
+				}
 
-			if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
-			for (const bw of wrappersToCall) {
-				promiseList.push(
-					bw.fetchPrice(account, {
-						gasPrice: gasPrice,
-						gasLimit: WrapperConstants.FETCH_PRICE_GAS,
-						nonce: nonce
-					})
-				);
-				nonce++;
-			}
-
-			await Promise.all(promiseList);
-		}, 15000);
+				await Promise.all(promiseList);
+			},
+			isLive ? 30000 : 15000
+		);
 	}
 
 	public getBasePeriod(period: number) {

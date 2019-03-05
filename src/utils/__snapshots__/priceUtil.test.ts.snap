@@ -70,7 +70,7 @@ Array [
     1234567890,
     Object {
       "gasLimit": 80000,
-      "gasPrice": 1000000000,
+      "gasPrice": 1500000000,
     },
   ],
 ]
@@ -84,7 +84,7 @@ Array [
     1234567890,
     Object {
       "gasLimit": 80000,
-      "gasPrice": 1000000000,
+      "gasPrice": 1500000000,
     },
   ],
   Array [
@@ -107,7 +107,7 @@ Array [
     1234567890,
     Object {
       "gasLimit": 80000,
-      "gasPrice": 1000000000,
+      "gasPrice": 1500000000,
     },
   ],
   Array [
@@ -149,11 +149,40 @@ Array [
       "nonce": 100,
     },
   ],
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
 ]
 `;
 
 exports[`fetchPrice gasPrice 1`] = `
 Array [
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+]
+`;
+
+exports[`fetchPrice isLive 1`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
   Array [
     "account",
     Object {
@@ -404,7 +433,7 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
-              "gasPrice": 1000000000,
+              "gasPrice": 1500000000,
             },
           ],
           Array [
@@ -445,8 +474,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
@@ -576,7 +613,7 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
-              "gasPrice": 1000000000,
+              "gasPrice": 1500000000,
             },
           ],
           Array [
@@ -617,8 +654,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
@@ -719,7 +764,7 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
-              "gasPrice": 1000000000,
+              "gasPrice": 1500000000,
             },
           ],
           Array [
@@ -760,8 +805,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
