@@ -69,7 +69,10 @@ class PriceUtil {
 	) {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
-		if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+		const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+		if (!gasPrice)
+			gasPrice = magiWrapper.web3Wrapper.isLive ? networkGasPrice * 1.5 : networkGasPrice;
+
 		util.logInfo(
 			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.COMMIT_PRICE_GAS
 		);
@@ -187,12 +190,7 @@ class PriceUtil {
 					period
 				)} prices from timestamp ${util.timestampToString(start)}`
 			);
-			const basePrices = await dbUtil.getPrices(
-				src,
-				this.getBasePeriod(period),
-				start,
-				now
-			);
+			const basePrices = await dbUtil.getPrices(src, this.getBasePeriod(period), start, now);
 			util.logInfo(`fetched ${basePrices.length} basePeriod prices`);
 			const pairPeriodPrices = this.sortPricesByPairPeriod(basePrices, period);
 			const pairPrices: { [pair: string]: IPrice[] } = {};

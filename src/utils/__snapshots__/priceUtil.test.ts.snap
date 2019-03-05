@@ -99,6 +99,38 @@ Array [
 ]
 `;
 
+exports[`commitPrice, live 1`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
+]
+`;
+
 exports[`fetchPrice 1`] = `
 Array [
   Array [
@@ -384,8 +416,21 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -484,6 +529,7 @@ Array [
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction],
       },
     },
     "ETH|USD",
@@ -542,8 +588,21 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -637,6 +696,7 @@ Array [
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction],
       },
     },
     "ETH|USD",
@@ -671,8 +731,21 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -766,6 +839,7 @@ Array [
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction],
       },
     },
     "ETH|USD",
