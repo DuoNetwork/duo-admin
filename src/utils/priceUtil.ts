@@ -127,8 +127,12 @@ class PriceUtil {
 					)
 						wrappersToCall.push(bw);
 				}
-				const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
-				if (!gasPrice) gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+
+				if (!gasPrice) {
+					const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+					gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+				}
+
 				for (const bw of wrappersToCall) {
 					promiseList.push(
 						bw.fetchPrice(account, {
