@@ -195,8 +195,7 @@ test('fetchPrice isLive', async () => {
 	await priceUtil.fetchPrice(
 		'account',
 		[tradingDualClassWrapper, resetDualClassWrapper],
-		magiWrapper,
-		1000000000
+		magiWrapper
 	);
 	await (global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect((tradingDualClassWrapper.fetchPrice as jest.Mock).mock.calls).toMatchSnapshot();
@@ -225,22 +224,10 @@ test('commitPrice', async () => {
 			timestamp: 1234567890000
 		} as any)
 	);
-	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
-
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve('1000000000'));
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => Promise.resolve(1234567890001));
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
 	await priceUtil.commitPrice('account', magiWrapper, 'quote|base');
-
-	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
-});
-
-test('commitPrice gasPrice', async () => {
-	calculator.getPriceFix = jest.fn(() =>
-		Promise.resolve({
-			price: 100,
-			timestamp: 1234567890000
-		} as any)
-	);
-
-	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
 
 	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
@@ -252,9 +239,48 @@ test('commitPrice, live', async () => {
 			timestamp: 1234567890000
 		} as any)
 	);
-	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => 1000000000);
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve('1000000000'));
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => Promise.resolve(1234567890001));
 	magiWrapper.web3Wrapper.isLive = jest.fn(() => true);
 	await priceUtil.commitPrice('account', magiWrapper, 'quote|base');
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('commitPrice, gasPrice', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		} as any)
+	);
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => Promise.resolve(1234567890001));
+	magiWrapper.web3Wrapper.getGasPrice = jest.fn(() => Promise.resolve('1000000000'));
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
+test('commitPrice should wait', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		} as any)
+	);
+	let count = 0;
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => {
+		if (count < 1) {
+			count++;
+			return Promise.resolve(1234567889999);
+		} else return Promise.resolve(1234567890001);
+	});
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
+	util.sleep = jest.fn(() => Promise.resolve());
+
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
+	expect((util.sleep as jest.Mock).mock.calls).toMatchSnapshot();
 
 	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });

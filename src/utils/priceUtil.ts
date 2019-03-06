@@ -69,14 +69,26 @@ class PriceUtil {
 	) {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
-		const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
-		if (!gasPrice)
-			gasPrice = magiWrapper.web3Wrapper.isLive ? networkGasPrice * 1.5 : networkGasPrice;
+		const isLive = magiWrapper.web3Wrapper.isLive();
+
+		let currentBlkTime = 0;
+		let ready = false;
+		while (!ready) {
+			currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
+			if (currentPrice.timestamp <= currentBlkTime) ready = true;
+			else await util.sleep(5000);
+		}
+
+		if (!gasPrice) {
+			const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+			gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+		}
 
 		util.logInfo(
 			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.COMMIT_PRICE_GAS
 		);
-		return magiWrapper.commitPrice(
+
+		magiWrapper.commitPrice(
 			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
