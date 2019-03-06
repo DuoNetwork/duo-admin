@@ -414,14 +414,14 @@ exports[`fetchEvent 1`] = `
 Array [
   Array [
     Array [
-      "BTV-PPT",
-      "MZT-PPT",
       Object {
         "contract": "MagiWrapper",
       },
       Object {
         "contract": "EsplanadeWrapper",
       },
+      "BTV-PPT",
+      "MZT-PPT",
       "VVD-tenor",
     ],
     false,

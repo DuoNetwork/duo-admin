@@ -84,21 +84,11 @@ export default class ContractService {
 	public async trigger() {
 		await this.fetchKey();
 		const duoWrappers = this.createDuoWrappers();
-		const VivaldiWrappers: VivaldiWrapper[] = [];
-		for (const tenor in duoWrappers.Vivaldi)
-			VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
+		const DualWrappers = [];
+		for (const type in duoWrappers)
+			for (const tenor in duoWrappers[type]) DualWrappers.push(duoWrappers[type][tenor]);
 
-		eventUtil.trigger(
-			this.address,
-			[
-				duoWrappers.Beethoven.Perpetual as DualClassWrapper,
-				// duoWrappers.Beethoven.M19 as DualClassWrapper,
-				duoWrappers.Mozart.Perpetual as DualClassWrapper,
-				// duoWrappers.Mozart.M19 as DualClassWrapper,
-				...VivaldiWrappers
-			],
-			this.option.event
-		);
+		eventUtil.trigger(this.address, DualWrappers, this.option.event);
 	}
 
 	public async commitPrice() {
@@ -110,18 +100,15 @@ export default class ContractService {
 
 	public async fetchPrice() {
 		await this.fetchKey();
-		const dualClassCustodianWrappers = this.createDuoWrappers();
+		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
-		priceUtil.fetchPrice(
-			this.address,
-			[
-				dualClassCustodianWrappers.Beethoven.Perpetual as DualClassWrapper,
-				// dualClassCustodianWrappers.Beethoven.M19 as DualClassWrapper,
-				dualClassCustodianWrappers.Mozart.Perpetual as DualClassWrapper
-				// dualClassCustodianWrappers.Mozart.M19 as DualClassWrapper
-			],
-			magiWrapper
-		);
+		const DualWrappers: DualClassWrapper[] = [];
+		for (const type in duoWrappers)
+			if (type !== WrapperConstants.VIVALDI)
+				for (const tenor in duoWrappers[type])
+					DualWrappers.push(duoWrappers[type][tenor] as DualClassWrapper);
+
+		priceUtil.fetchPrice(this.address, DualWrappers, magiWrapper);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
@@ -199,7 +186,9 @@ export default class ContractService {
 			}
 		};
 		try {
-			kovanManagerAccount = require('../static/kovanManagerAccount.json');
+			kovanManagerAccount = require(`../static/${
+				option.live ? 'live' : 'kovan'
+			}ManagerAccount.json`);
 		} catch (error) {
 			console.log(error);
 		}
@@ -212,17 +201,15 @@ export default class ContractService {
 		const account = kovanManagerAccount.Beethoven.operator.address;
 		const type = this.option.contractType;
 		const tenor = this.option.tenor;
+
 		if (
-			![
-				WrapperConstants.BEETHOVEN,
-				WrapperConstants.MOZART,
-				WrapperConstants.VIVALDI
-			].includes(type) ||
-			![WrapperConstants.TENOR_PPT, '100C-3H'].includes(tenor)
+			!this.web3Wrapper.contractAddresses.Custodians[type] ||
+			!this.web3Wrapper.contractAddresses.Custodians[type][tenor]
 		) {
 			util.logDebug('no contract type or tenor specified');
 			return;
 		}
+
 		const custodianContract = this.createDuoWrappers();
 		const contractWrapper: DualClassWrapper | VivaldiWrapper = custodianContract[type][tenor];
 		if (option.contractType === WrapperConstants.VIVALDI) {
@@ -253,20 +240,10 @@ export default class ContractService {
 		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		const esplanadeWrapper = this.createEsplanadeWrapper();
-		const VivaldiWrappers = [];
-		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor]);
 
-		eventUtil.fetch(
-			[
-				duoWrappers.Beethoven.Perpetual,
-				// duoWrappers.Beethoven.M19,
-				duoWrappers.Mozart.Perpetual,
-				// duoWrappers.Mozart.M19,
-				magiWrapper,
-				esplanadeWrapper,
-				...VivaldiWrappers
-			],
-			this.option.force
-		);
+		const DualWrappers = [];
+		for (const type in duoWrappers)
+			for (const tenor in duoWrappers[type]) DualWrappers.push(duoWrappers[type][tenor]);
+		eventUtil.fetch([magiWrapper, esplanadeWrapper, ...DualWrappers], this.option.force);
 	}
 }
