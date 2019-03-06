@@ -30,28 +30,32 @@ export default class ContractService {
 	public createDuoWrappers(): {
 		[type: string]: { [tenor: string]: DualClassWrapper | VivaldiWrapper };
 	} {
-		return {
-			Beethoven: {
-				Perpetual: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-				)
-			},
-			Mozart: {
-				Perpetual: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
-				)
-			}
-			// ,Vivaldi: {
-			// 	'100C-3H': new VivaldiWrapper(
-			// 		this.web3Wrapper,
-			// 		this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
-			// 			'100C-3H'
-			// 		].custodian.address
-			// 	)
-			// }
-		};
+		const duoWrappers: {
+			[type: string]: { [tenor: string]: DualClassWrapper | VivaldiWrapper };
+		} = {};
+		const custodianAddrs = this.web3Wrapper.contractAddresses.Custodians;
+		for (const contractType in custodianAddrs)
+			if (!util.isEmptyObject(custodianAddrs[contractType]))
+				for (const tenor in custodianAddrs[contractType])
+					Object.assign(duoWrappers, {
+						[contractType]: {
+							[tenor]:
+								contractType === WrapperConstants.VIVALDI
+									? new VivaldiWrapper(
+											this.web3Wrapper,
+											this.web3Wrapper.contractAddresses.Custodians[
+												contractType
+											][tenor].custodian.address
+									)
+									: new DualClassWrapper(
+											this.web3Wrapper,
+											this.web3Wrapper.contractAddresses.Custodians[
+												contractType
+											][tenor].custodian.address
+									)
+						}
+					});
+		return duoWrappers;
 	}
 
 	public createMagiWrapper() {
@@ -214,7 +218,7 @@ export default class ContractService {
 				WrapperConstants.MOZART,
 				WrapperConstants.VIVALDI
 			].includes(type) ||
-			![WrapperConstants.TENOR_PPT].includes(tenor)
+			![WrapperConstants.TENOR_PPT, '100C-3H'].includes(tenor)
 		) {
 			util.logDebug('no contract type or tenor specified');
 			return;
