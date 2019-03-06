@@ -69,11 +69,26 @@ class PriceUtil {
 	) {
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
-		if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+		const isLive = magiWrapper.web3Wrapper.isLive();
+
+		let currentBlkTime = 0;
+		let ready = false;
+		while (!ready) {
+			currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
+			if (currentPrice.timestamp <= currentBlkTime) ready = true;
+			else await util.sleep(5000);
+		}
+
+		if (!gasPrice) {
+			const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+			gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+		}
+
 		util.logInfo(
 			'gasPrice price ' + gasPrice + ' gasLimit is ' + WrapperConstants.COMMIT_PRICE_GAS
 		);
-		return magiWrapper.commitPrice(
+
+		magiWrapper.commitPrice(
 			account,
 			currentPrice.price,
 			Math.floor(currentPrice.timestamp / 1000),
@@ -91,40 +106,48 @@ class PriceUtil {
 		gasPrice: number = 0
 	) {
 		const isStarted = await magiWrapper.isStarted();
+		const isLive = magiWrapper.web3Wrapper.isLive();
 		if (!isStarted) {
 			util.logDebug('Magi not ready, please start Magi first');
 			return;
 		}
 		let nonce = await dualClassWrappers[0].web3Wrapper.getTransactionCount(account);
-		global.setInterval(async () => {
-			// first checking Magi current time is set correctly
-			const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
-			const promiseList: Array<Promise<void>> = [];
-			const wrappersToCall: DualClassWrapper[] = [];
+		global.setInterval(
+			async () => {
+				// first checking Magi current time is set correctly
+				const lastPrice: IContractPrice = await magiWrapper.getLastPrice();
+				const promiseList: Array<Promise<void>> = [];
+				const wrappersToCall: DualClassWrapper[] = [];
 
-			for (const bw of dualClassWrappers) {
-				const btvStates: IDualClassStates = await bw.getStates();
-				if (
-					btvStates.state === WrapperConstants.CTD_TRADING &&
-					lastPrice.timestamp - btvStates.lastPriceTime > 3000000
-				)
-					wrappersToCall.push(bw);
-			}
+				for (const bw of dualClassWrappers) {
+					const btvStates: IDualClassStates = await bw.getStates();
+					if (
+						btvStates.state === WrapperConstants.CTD_TRADING &&
+						lastPrice.timestamp - btvStates.lastPriceTime > 3000000
+					)
+						wrappersToCall.push(bw);
+				}
 
-			if (!gasPrice) gasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
-			for (const bw of wrappersToCall) {
-				promiseList.push(
-					bw.fetchPrice(account, {
-						gasPrice: gasPrice,
-						gasLimit: WrapperConstants.FETCH_PRICE_GAS,
-						nonce: nonce
-					})
-				);
-				nonce++;
-			}
+				if (!gasPrice) {
+					const networkGasPrice = Number(await magiWrapper.web3Wrapper.getGasPrice());
+					gasPrice = isLive ? networkGasPrice * 1.5 : networkGasPrice;
+				}
 
-			await Promise.all(promiseList);
-		}, 15000);
+				for (const bw of wrappersToCall) {
+					promiseList.push(
+						bw.fetchPrice(account, {
+							gasPrice: gasPrice,
+							gasLimit: WrapperConstants.FETCH_PRICE_GAS,
+							nonce: nonce
+						})
+					);
+					nonce++;
+				}
+
+				await Promise.all(promiseList);
+			},
+			isLive ? 30000 : 15000
+		);
 	}
 
 	public getBasePeriod(period: number) {
@@ -187,12 +210,7 @@ class PriceUtil {
 					period
 				)} prices from timestamp ${util.timestampToString(start)}`
 			);
-			const basePrices = await dbUtil.getPrices(
-				src,
-				this.getBasePeriod(period),
-				start,
-				now
-			);
+			const basePrices = await dbUtil.getPrices(src, this.getBasePeriod(period), start, now);
 			util.logInfo(`fetched ${basePrices.length} basePeriod prices`);
 			const pairPeriodPrices = this.sortPricesByPairPeriod(basePrices, period);
 			const pairPrices: { [pair: string]: IPrice[] } = {};

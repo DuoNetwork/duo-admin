@@ -76,8 +76,34 @@ Array [
 ]
 `;
 
-exports[`commitPrice gasPrice 1`] = `
+exports[`commitPrice should wait 1`] = `
 Array [
+  Array [
+    5000,
+  ],
+]
+`;
+
+exports[`commitPrice should wait 2`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
   Array [
     "account",
     100,
@@ -99,6 +125,61 @@ Array [
 ]
 `;
 
+exports[`commitPrice, gasPrice 1`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
+exports[`commitPrice, live 1`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
+]
+`;
+
 exports[`fetchPrice 1`] = `
 Array [
   Array [
@@ -106,6 +187,14 @@ Array [
     Object {
       "gasLimit": 150000,
       "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1500000000,
       "nonce": 100,
     },
   ],
@@ -127,6 +216,27 @@ Array [
     Object {
       "gasLimit": 150000,
       "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+]
+`;
+
+exports[`fetchPrice isLive 1`] = `
+Array [
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1000000000,
+      "nonce": 100,
+    },
+  ],
+  Array [
+    "account",
+    Object {
+      "gasLimit": 150000,
+      "gasPrice": 1500000000,
       "nonce": 100,
     },
   ],
@@ -381,11 +491,37 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -400,8 +536,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
@@ -467,7 +611,7 @@ Array [
         ],
       },
       "web3Wrapper": Object {
-        "getGasPrice": [MockFunction] {
+        "getBlockTimestamp": [MockFunction] {
           "calls": Array [
             Array [],
             Array [],
@@ -475,15 +619,37 @@ Array [
           "results": Array [
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
             },
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
+            },
+          ],
+        },
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
             },
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": false,
+            },
+          ],
+        },
       },
     },
     "ETH|USD",
@@ -539,11 +705,37 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -558,8 +750,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
@@ -620,7 +820,7 @@ Array [
         ],
       },
       "web3Wrapper": Object {
-        "getGasPrice": [MockFunction] {
+        "getBlockTimestamp": [MockFunction] {
           "calls": Array [
             Array [],
             Array [],
@@ -628,15 +828,37 @@ Array [
           "results": Array [
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
             },
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
+            },
+          ],
+        },
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
             },
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": false,
+            },
+          ],
+        },
       },
     },
     "ETH|USD",
@@ -668,11 +890,37 @@ Array [
             1234567890,
             Object {
               "gasLimit": 80000,
+              "gasPrice": 1500000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
               "gasPrice": 1000000000,
             },
           ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -687,8 +935,16 @@ Array [
         "calls": Array [
           Array [],
           Array [],
+          Array [],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": Object {
+              "price": 100,
+              "timestamp": 2234567890000,
+            },
+          },
           Object {
             "isThrow": false,
             "value": Object {
@@ -749,7 +1005,7 @@ Array [
         ],
       },
       "web3Wrapper": Object {
-        "getGasPrice": [MockFunction] {
+        "getBlockTimestamp": [MockFunction] {
           "calls": Array [
             Array [],
             Array [],
@@ -757,15 +1013,37 @@ Array [
           "results": Array [
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
             },
             Object {
               "isThrow": false,
-              "value": 1000000000,
+              "value": Promise {},
+            },
+          ],
+        },
+        "getGasPrice": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
             },
           ],
         },
         "getTransactionCount": [MockFunction],
+        "isLive": [MockFunction] {
+          "calls": Array [
+            Array [],
+          ],
+          "results": Array [
+            Object {
+              "isThrow": false,
+              "value": false,
+            },
+          ],
+        },
       },
     },
     "ETH|USD",

@@ -7,7 +7,7 @@ exports[`cleanDb 2`] = `30000`;
 exports[`launchEvent  1`] = `
 Array [
   Array [
-    "npm run tool event=event  gcp&> tool.event.log",
+    "npm run tool event=event live  gcp &> tool.event.log",
     Object {
       "shell": "/bin/bash",
     },
@@ -35,7 +35,7 @@ Object {
 exports[`launchEvent azure 1`] = `
 Array [
   Array [
-    "npm run tool event=event  azure&> tool.event.log",
+    "npm run tool event=event live  azure &> tool.event.log",
     Object {
       "shell": "/bin/bash",
     },
@@ -334,7 +334,7 @@ Object {
 exports[`launchSource live not windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 &> tool.source.asset1.asset2.asset3.log",
+    "npm run tool source=source assets=asset1,asset2,asset3 live &> tool.source.asset1.asset2.asset3.log",
     Object {
       "shell": "/bin/bash",
     },
@@ -356,7 +356,7 @@ Object {
 exports[`launchSource live windows 1`] = `
 Array [
   Array [
-    "npm run tool source=source assets=asset1,asset2,asset3 >> tool.source.asset1.asset2.asset3.log",
+    "npm run tool source=source assets=asset1,asset2,asset3 live >> tool.source.asset1.asset2.asset3.log",
     Object {},
   ],
 ]

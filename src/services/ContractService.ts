@@ -35,30 +35,22 @@ export default class ContractService {
 				Perpetual: new DualClassWrapper(
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Beethoven.Perpetual.custodian.address
-				),
-				M19: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Beethoven.M19.custodian.address
 				)
 			},
 			Mozart: {
 				Perpetual: new DualClassWrapper(
 					this.web3Wrapper,
 					this.web3Wrapper.contractAddresses.Custodians.Mozart.Perpetual.custodian.address
-				),
-				M19: new DualClassWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Mozart.M19.custodian.address
-				)
-			},
-			Vivaldi: {
-				'100C-3H': new VivaldiWrapper(
-					this.web3Wrapper,
-					this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
-						'100C-3H'
-					].custodian.address
 				)
 			}
+			// ,Vivaldi: {
+			// 	'100C-3H': new VivaldiWrapper(
+			// 		this.web3Wrapper,
+			// 		this.web3Wrapper.contractAddresses.Custodians.Vivaldi[
+			// 			'100C-3H'
+			// 		].custodian.address
+			// 	)
+			// }
 		};
 	}
 
@@ -89,15 +81,16 @@ export default class ContractService {
 		await this.fetchKey();
 		const duoWrappers = this.createDuoWrappers();
 		const VivaldiWrappers: VivaldiWrapper[] = [];
-		for (const tenor in duoWrappers.Vivaldi) VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
+		for (const tenor in duoWrappers.Vivaldi)
+			VivaldiWrappers.push(duoWrappers.Vivaldi[tenor] as VivaldiWrapper);
 
 		eventUtil.trigger(
 			this.address,
 			[
 				duoWrappers.Beethoven.Perpetual as DualClassWrapper,
-				duoWrappers.Beethoven.M19 as DualClassWrapper,
+				// duoWrappers.Beethoven.M19 as DualClassWrapper,
 				duoWrappers.Mozart.Perpetual as DualClassWrapper,
-				duoWrappers.Mozart.M19 as DualClassWrapper,
+				// duoWrappers.Mozart.M19 as DualClassWrapper,
 				...VivaldiWrappers
 			],
 			this.option.event
@@ -119,9 +112,9 @@ export default class ContractService {
 			this.address,
 			[
 				dualClassCustodianWrappers.Beethoven.Perpetual as DualClassWrapper,
-				dualClassCustodianWrappers.Beethoven.M19 as DualClassWrapper,
-				dualClassCustodianWrappers.Mozart.Perpetual as DualClassWrapper,
-				dualClassCustodianWrappers.Mozart.M19 as DualClassWrapper
+				// dualClassCustodianWrappers.Beethoven.M19 as DualClassWrapper,
+				dualClassCustodianWrappers.Mozart.Perpetual as DualClassWrapper
+				// dualClassCustodianWrappers.Mozart.M19 as DualClassWrapper
 			],
 			magiWrapper
 		);
@@ -221,7 +214,7 @@ export default class ContractService {
 				WrapperConstants.MOZART,
 				WrapperConstants.VIVALDI
 			].includes(type) ||
-			![WrapperConstants.TENOR_PPT, WrapperConstants.TENOR_M19, '100C-3H'].includes(tenor)
+			![WrapperConstants.TENOR_PPT].includes(tenor)
 		) {
 			util.logDebug('no contract type or tenor specified');
 			return;
@@ -262,9 +255,9 @@ export default class ContractService {
 		eventUtil.fetch(
 			[
 				duoWrappers.Beethoven.Perpetual,
-				duoWrappers.Beethoven.M19,
+				// duoWrappers.Beethoven.M19,
 				duoWrappers.Mozart.Perpetual,
-				duoWrappers.Mozart.M19,
+				// duoWrappers.Mozart.M19,
 				magiWrapper,
 				esplanadeWrapper,
 				...VivaldiWrappers

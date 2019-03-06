@@ -155,12 +155,10 @@ test('fetchEvent', async () => {
 		() =>
 			({
 				Beethoven: {
-					Perpetual: 'BTV-PPT',
-					M19: 'BTV-M19'
+					Perpetual: 'BTV-PPT'
 				},
 				Mozart: {
-					Perpetual: 'MZT-PPT',
-					M19: 'MZT-M19'
+					Perpetual: 'MZT-PPT'
 				},
 				Vivaldi: {
 					tenor: 'VVD-tenor'
@@ -509,12 +507,10 @@ test('round', async () => {
 		() =>
 			({
 				Beethoven: {
-					Perpetual: 'BTV-PPT-Wrapper',
-					M19: 'BTV-M19-Wrapper'
+					Perpetual: 'BTV-PPT-Wrapper'
 				},
 				Mozart: {
-					Perpetual: 'MZT-PPT-Wrapper',
-					M19: 'MZT-M19-Wrapper'
+					Perpetual: 'MZT-PPT-Wrapper'
 				},
 				Vivaldi: {
 					'100C-3H': '100C-3H-Wrapper'

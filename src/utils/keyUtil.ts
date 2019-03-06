@@ -51,10 +51,10 @@ class KeyUtil {
 		if (!option.live && !option.server) {
 			try {
 				key = option.azure
-					? require('../keys/kovan/pfAzure.json')
+					? require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfAzure.json`)
 					: option.gcp
-					? require('../keys/kovan/pfGcp.json')
-					: require('../keys/kovan/pfAws.json');
+					? require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfGcp.json`)
+					: require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfAws.json`);
 			} catch (error) {
 				util.logError(error);
 			}
@@ -65,9 +65,7 @@ class KeyUtil {
 		} else {
 			if (option.aws)
 				key = JSON.parse(
-					await this.getAwsKey(
-						option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV
-					)
+					await this.getAwsKey(option.live ? CST.KEY_ETH_NAME_LIVE : CST.KEY_ETH_NAME_DEV)
 				)[tool];
 			else if (option.azure)
 				key = JSON.parse(
@@ -111,9 +109,7 @@ class KeyUtil {
 		} else {
 			if (option.aws)
 				key = JSON.parse(
-					await this.getAwsKey(
-						option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV
-					)
+					await this.getAwsKey(option.live ? CST.KEY_SQL_NAME_LIVE : CST.KEY_SQL_NAME_DEV)
 				);
 			else if (option.azure)
 				key = JSON.parse(

@@ -75,9 +75,11 @@ export default class MarketDataService {
 		const cmd =
 			`npm run ${tool} source=${source} assets=${assets.join(',')}${
 				option.dynamo ? ' dynamo' : ''
-			}${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
-				option.server ? ' server' : ''
-			} ${option.forceREST ? 'rest' : ''}` +
+			}${option.live ? ' live' : ''}${option.azure ? ' azure' : ''}${
+				option.gcp ? ' gcp' : ''
+			}${option.aws ? ' aws' : ''}${option.server ? ' server' : ''} ${
+				option.forceREST ? 'rest' : ''
+			}` +
 			(osUtil.isWindows() ? '>>' : '&>') +
 			` ${tool}.${source}.${assets.join('.')}.log`;
 
@@ -105,12 +107,12 @@ export default class MarketDataService {
 
 	public launchEvent(tool: string, event: string, option: IOption) {
 		const cmd =
-			`npm run ${tool} event=${event}${option.event === CST.EVENTS_OTHERS ? ' dynamo' : ''} ${
-				option.azure ? ' azure' : ''
-			}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
-				option.server ? ' server' : ''
-			}` +
-			(osUtil.isWindows() ? '>>' : '&>') +
+			`npm run ${tool} event=${event}${option.event === CST.EVENTS_OTHERS ? ' dynamo' : ''}${
+				option.live ? ' live' : ''
+			} ${option.azure ? ' azure' : ''}${option.gcp ? ' gcp' : ''}${
+				option.aws ? ' aws' : ''
+			}${option.server ? ' server' : ''}${option.force ? ' force' : ''}` +
+			(osUtil.isWindows() ? ' >>' : ' &>') +
 			` ${tool}.${option.event}.log`;
 
 		const procInstance = child_process.exec(
