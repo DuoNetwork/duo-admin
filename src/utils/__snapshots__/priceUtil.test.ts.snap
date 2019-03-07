@@ -79,7 +79,7 @@ Array [
 exports[`commitPrice should wait 1`] = `
 Array [
   Array [
-    5000,
+    10000,
   ],
 ]
 `;
@@ -143,6 +143,146 @@ Array [
     Object {
       "gasLimit": 80000,
       "gasPrice": 1500000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
+exports[`commitPrice, getTimeStamp throw 1`] = `
+Array [
+  Array [
+    10000,
+  ],
+]
+`;
+
+exports[`commitPrice, getTimeStamp throw 2`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+]
+`;
+
+exports[`commitPrice, getTimeStamp throw max time allowed 1`] = `
+Array [
+  Array [
+    10000,
+  ],
+  Array [
+    10000,
+  ],
+  Array [
+    10000,
+  ],
+  Array [
+    10000,
+  ],
+  Array [
+    10000,
+  ],
+  Array [
+    10000,
+  ],
+]
+`;
+
+exports[`commitPrice, getTimeStamp throw max time allowed 2`] = `
+Array [
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1500000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
+    },
+  ],
+  Array [
+    "account",
+    100,
+    1234567890,
+    Object {
+      "gasLimit": 80000,
+      "gasPrice": 1000000000,
     },
   ],
   Array [
@@ -512,8 +652,34 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -615,8 +781,28 @@ Array [
           "calls": Array [
             Array [],
             Array [],
+            Array [],
+            Array [],
+            Array [],
+            Array [],
           ],
           "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
             Object {
               "isThrow": false,
               "value": Promise {},
@@ -726,8 +912,34 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -824,8 +1036,28 @@ Array [
           "calls": Array [
             Array [],
             Array [],
+            Array [],
+            Array [],
+            Array [],
+            Array [],
           ],
           "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
             Object {
               "isThrow": false,
               "value": Promise {},
@@ -911,8 +1143,34 @@ Array [
               "gasPrice": 1000000000,
             },
           ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
+          Array [
+            "account",
+            100,
+            1234567890,
+            Object {
+              "gasLimit": 80000,
+              "gasPrice": 1000000000,
+            },
+          ],
         ],
         "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
           Object {
             "isThrow": false,
             "value": undefined,
@@ -1009,8 +1267,28 @@ Array [
           "calls": Array [
             Array [],
             Array [],
+            Array [],
+            Array [],
+            Array [],
+            Array [],
           ],
           "results": Array [
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
+            Object {
+              "isThrow": false,
+              "value": Promise {},
+            },
             Object {
               "isThrow": false,
               "value": Promise {},

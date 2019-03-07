@@ -72,11 +72,16 @@ class PriceUtil {
 		const isLive = magiWrapper.web3Wrapper.isLive();
 
 		let currentBlkTime = 0;
-		let ready = false;
-		while (!ready) {
-			currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
-			if (currentPrice.timestamp <= currentBlkTime) ready = true;
-			else await util.sleep(5000);
+
+		for (let i = 0; i < 6; i++) {
+			try {
+				currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
+				if (currentPrice.timestamp <= currentBlkTime) break;
+			} catch (err) {
+				util.logError(err);
+			}
+
+			await util.sleep(10000);
 		}
 
 		if (!gasPrice) {

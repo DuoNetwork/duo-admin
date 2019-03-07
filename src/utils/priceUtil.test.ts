@@ -285,6 +285,53 @@ test('commitPrice should wait', async () => {
 	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
 });
 
+test('commitPrice, getTimeStamp throw', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		} as any)
+	);
+	let count = 0;
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => {
+		if (count < 1) {
+			count++;
+			return Promise.reject('no timestamp');
+		} else return Promise.resolve(1234567890001);
+	});
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
+	util.sleep = jest.fn(() => Promise.resolve());
+
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
+	expect((util.sleep as jest.Mock).mock.calls).toMatchSnapshot();
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+	expect((magiWrapper.web3Wrapper.getBlockTimestamp as jest.Mock)).toBeCalledTimes(2);
+});
+
+test('commitPrice, getTimeStamp throw max time allowed', async () => {
+	calculator.getPriceFix = jest.fn(() =>
+		Promise.resolve({
+			price: 100,
+			timestamp: 1234567890000
+		} as any)
+	);
+	let count = 0;
+	magiWrapper.web3Wrapper.getBlockTimestamp = jest.fn(() => {
+		if (count < 6) {
+			count++;
+			return Promise.reject('no timestamp');
+		} else return Promise.resolve(1234567890001);
+	});
+	magiWrapper.web3Wrapper.isLive = jest.fn(() => false);
+	util.sleep = jest.fn(() => Promise.resolve());
+
+	await priceUtil.commitPrice('account', magiWrapper, 'quote|base', 1000000000);
+	expect((util.sleep as jest.Mock).mock.calls).toMatchSnapshot();
+
+	expect((magiWrapper.commitPrice as jest.Mock).mock.calls).toMatchSnapshot();
+});
+
 test('startMagi', async () => {
 	calculator.getPriceFix = jest.fn(() =>
 		Promise.resolve({
