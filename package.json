@@ -49,7 +49,7 @@
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.2.5",
-		"@finbook/duo-contract-wrapper": "^1.3.3",
+		"@finbook/duo-contract-wrapper": "^1.3.4",
 		"@finbook/duo-market-data": "^1.0.4",
 		"@google-cloud/storage": "^2.4.1",
 		"aws-cli-js": "^2.0.4",
