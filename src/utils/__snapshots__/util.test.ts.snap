@@ -97,7 +97,8 @@ Object {
   "live": false,
   "pair": "pair",
   "pairs": Array [
-    "",
+    "pair1",
+    "pair2",
   ],
   "period": 10,
   "provider": "provider",
