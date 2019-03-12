@@ -96,6 +96,10 @@ Object {
   "gcp": false,
   "live": false,
   "pair": "pair",
+  "pairs": Array [
+    "pair1",
+    "pair2",
+  ],
   "period": 10,
   "provider": "provider",
   "server": false,
@@ -130,6 +134,9 @@ Object {
   "gcp": false,
   "live": false,
   "pair": "",
+  "pairs": Array [
+    "",
+  ],
   "period": 1,
   "provider": "",
   "server": false,

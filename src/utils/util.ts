@@ -51,6 +51,7 @@ class Util {
 			events: [''],
 			sources: [''],
 			exSources: [''],
+			pairs: [''],
 			source: '',
 			event: '',
 			provider: '',
@@ -73,6 +74,9 @@ class Util {
 					break;
 				case 'events':
 					option.events = args[1].split(',');
+					break;
+				case 'pairs':
+					option.pairs = args[1].split(',');
 					break;
 				case 'source':
 					option.source = args[1] || option.source;
