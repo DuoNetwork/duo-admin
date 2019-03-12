@@ -32,7 +32,7 @@ util.logInfo(
 dbUtil.init(tool, option).then(() => {
 	switch (tool) {
 		case CST.TRADES:
-			new MarketDataService().startFetching(tool, option);
+			new MarketDataService().startFetchingTrade(tool, option);
 			break;
 		case CST.EVENTS:
 			new MarketDataService().startFetchingEvent(tool, option);
@@ -43,14 +43,14 @@ dbUtil.init(tool, option).then(() => {
 		case CST.CLEAN_DB:
 			new MarketDataService().cleanDb();
 			break;
-		case CST.START_CUSTODIAN:
-			new ContractService(tool, option).startCustodian(option);
-			break;
 		case CST.COMMIT:
-			new ContractService(tool, option).commitPrice();
+			new MarketDataService().startPriceFixService(tool, option);
 			break;
 		case CST.FETCH_PRICE:
-			new ContractService(tool, option).fetchPrice();
+			new MarketDataService().startPriceFixService(tool, option);
+			break;
+		case CST.START_CUSTODIAN:
+			new ContractService(tool, option).startCustodian(option);
 			break;
 		case CST.ROUND:
 			new ContractService(tool, option).round(option);

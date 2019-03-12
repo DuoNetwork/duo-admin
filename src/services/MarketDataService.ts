@@ -11,7 +11,7 @@ import util from '../utils/util';
 export default class MarketDataService {
 	public subProcesses: { [key: string]: ISubProcess } = {};
 
-	public async startFetching(tool: string, option: IOption): Promise<void> {
+	public async startFetchingTrade(tool: string, option: IOption): Promise<void> {
 		const assetIds = option.assets.length
 			? option.assets
 			: option.pair.split('|').filter(asset => asset !== '');
@@ -21,7 +21,7 @@ export default class MarketDataService {
 			for (const source in apis) {
 				await util.sleep(1000);
 				this.subProcesses[source] = {
-					source: source,
+					processName: source,
 					lastFailTimestamp: 0,
 					failCount: 0,
 					instance: undefined as any
@@ -54,7 +54,7 @@ export default class MarketDataService {
 			for (const event of option.events) {
 				option.event = event;
 				this.subProcesses[event] = {
-					source: option.event,
+					processName: option.event,
 					lastFailTimestamp: 0,
 					failCount: 0,
 					instance: undefined as any
@@ -68,6 +68,66 @@ export default class MarketDataService {
 				contractService.trigger();
 			else contractService.fetchEvent();
 		}
+	}
+
+	public async startPriceFixService(tool: string, option: IOption): Promise<void> {
+		if ((!option.pairs || !option.pairs.length) && !option.pair) {
+			util.logDebug(`no pairs or pair specified`);
+			return;
+		} else if (!option.pair)
+			for (const pair of option.pairs) {
+				option.pair = pair;
+				this.subProcesses[pair] = {
+					processName: option.pair,
+					lastFailTimestamp: 0,
+					failCount: 0,
+					instance: undefined as any
+				};
+				this.launchPriceFixService(tool, pair, option);
+			}
+		else {
+			util.logDebug(`start committing price fix for pair ${option.pair}`);
+			const contractService = new ContractService(tool, option);
+			switch (tool) {
+				case CST.COMMIT:
+					contractService.commitPrice();
+					break;
+				case CST.FETCH_PRICE:
+					contractService.fetchPrice();
+					break;
+				default:
+					util.logDebug(`tool ${tool} is wrong`);
+					break;
+			}
+		}
+	}
+
+	public launchPriceFixService(tool: string, pair: string, option: IOption) {
+		const cmd =
+			`npm run ${tool} pair=${pair}${option.live ? ' live' : ''} ${
+				option.azure ? ' azure' : ''
+			}${option.gcp ? ' gcp' : ''}${option.aws ? ' aws' : ''}${
+				option.server ? ' server' : ''
+			}` +
+			(osUtil.isWindows() ? ' >>' : ' &>') +
+			` ${tool}.${option.pair}.log`;
+
+		const procInstance = child_process.exec(
+			cmd,
+			osUtil.isWindows() ? {} : { shell: '/bin/bash' }
+		);
+
+		this.subProcesses[option.pair].instance = procInstance;
+		this.subProcesses[option.pair].lastFailTimestamp = util.getUTCNowTimestamp();
+
+		if (!procInstance) {
+			util.logError('Failed to launch public pair ');
+			this.retry(pair, () => this.launchPriceFixService(tool, pair, option));
+		} else
+			procInstance.on('exit', code => {
+				util.logError(`[${option.pair}]: Exit with code ${code}`);
+				if (code) this.retry(pair, () => this.launchPriceFixService(tool, pair, option));
+			});
 	}
 
 	public launchSource(tool: string, source: string, assets: string[], option: IOption) {

@@ -14,6 +14,7 @@ export interface ISqlAuth {
 export interface IOption {
 	forceREST: boolean;
 	pair: string;
+	pairs: string[];
 	sources: string[];
 	exSources: string[];
 	assets: string[];
@@ -143,7 +144,7 @@ export interface IGdaxRawTradeRest {
 }
 
 export interface ISubProcess {
-	source: string;
+	processName: string;
 	instance: ChildProcess;
 	lastFailTimestamp: number;
 	failCount: number;
