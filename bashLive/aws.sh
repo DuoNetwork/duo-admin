@@ -5,4 +5,4 @@ npm run cleanDB server aws live &>> cleanDB.log &
 npm run commit server aws live pairs=ETH_USD &>> commit.log &
 npm run fetchPrice server pairs=ETH_USD aws live &>> fetchPrice.log &
 npm run events server aws live events=StartReset,StartPreReset $1 &>> events.log &
-npm run round contractType=Vivaldi tenor=100C-1H server aws &>> vivaldi-100C-1H.log &
+npm run round contractType=Vivaldi tenor=100C-1H server aws live &>> vivaldi-100C-1H.log &
