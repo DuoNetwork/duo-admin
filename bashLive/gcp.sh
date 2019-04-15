@@ -5,3 +5,4 @@ npm run cleanDB server gcp live &>> cleanDB.log &
 npm run commit server gcp live pairs=ETH_USD &>> commit.log &
 npm run fetchPrice server pairs=ETH_USD gcp live &>> fetchPrice.log &
 npm run events server gcp live events=StartReset,StartPreReset $1 &>> events.log &
+npm run round contractType=Vivaldi tenor=100C-1H server gcp &>> vivaldi-100C-1H.log &
