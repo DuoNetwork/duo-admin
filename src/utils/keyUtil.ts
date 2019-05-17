@@ -48,7 +48,7 @@ class KeyUtil {
 			publicKey: '',
 			privateKey: ''
 		};
-		if (!option.live && !option.server) {
+		if (!option.server) {
 			try {
 				key = option.azure
 					? require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfAzure.json`)
