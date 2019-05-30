@@ -134,6 +134,10 @@ Array [
             },
           },
         },
+        "DUO": Object {
+          "address": "0x61ca89cfc5e8099702e64e97d9b5fc457cf1d355",
+          "code": "DUO",
+        },
         "MultiSigManagers": Array [
           Object {
             "address": "0xD728681490d63582047A6Cd2fC80B1343C6AbA20",
@@ -146,6 +150,10 @@ Array [
             "code": "Magi",
           },
         ],
+        "Stake": Object {
+          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+          "code": "Stake",
+        },
       },
       "web3": Object {
         "eth": Object {
@@ -210,6 +218,10 @@ Array [
             },
           },
         },
+        "DUO": Object {
+          "address": "0x61ca89cfc5e8099702e64e97d9b5fc457cf1d355",
+          "code": "DUO",
+        },
         "MultiSigManagers": Array [
           Object {
             "address": "0xD728681490d63582047A6Cd2fC80B1343C6AbA20",
@@ -222,6 +234,10 @@ Array [
             "code": "Magi",
           },
         ],
+        "Stake": Object {
+          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+          "code": "Stake",
+        },
       },
       "web3": Object {
         "eth": Object {
@@ -297,6 +313,10 @@ Array [
             },
           },
         },
+        "DUO": Object {
+          "address": "0x61ca89cfc5e8099702e64e97d9b5fc457cf1d355",
+          "code": "DUO",
+        },
         "MultiSigManagers": Array [
           Object {
             "address": "0xD728681490d63582047A6Cd2fC80B1343C6AbA20",
@@ -309,6 +329,10 @@ Array [
             "code": "Magi",
           },
         ],
+        "Stake": Object {
+          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+          "code": "Stake",
+        },
       },
       "web3": Object {
         "eth": Object {
@@ -384,6 +408,10 @@ Array [
             },
           },
         },
+        "DUO": Object {
+          "address": "0x61ca89cfc5e8099702e64e97d9b5fc457cf1d355",
+          "code": "DUO",
+        },
         "MultiSigManagers": Array [
           Object {
             "address": "0xD728681490d63582047A6Cd2fC80B1343C6AbA20",
@@ -396,6 +424,10 @@ Array [
             "code": "Magi",
           },
         ],
+        "Stake": Object {
+          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+          "code": "Stake",
+        },
       },
       "web3": Object {
         "eth": Object {
@@ -416,6 +448,9 @@ Array [
     Array [
       Object {
         "contract": "MagiWrapper",
+      },
+      Object {
+        "contract": "StakeWrapper",
       },
       Object {
         "contract": "EsplanadeWrapper",
