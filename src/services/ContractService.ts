@@ -4,6 +4,7 @@ import {
 	DualClassWrapper,
 	EsplanadeWrapper,
 	MagiWrapper,
+	StakeWrapper,
 	VivaldiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
@@ -62,6 +63,13 @@ export default class ContractService {
 		return new MagiWrapper(
 			this.web3Wrapper,
 			this.web3Wrapper.contractAddresses.Oracles[0].address
+		);
+	}
+
+	public createStakeWrapper() {
+		return new StakeWrapper(
+			this.web3Wrapper,
+			this.web3Wrapper.contractAddresses.Stake.address
 		);
 	}
 
@@ -240,10 +248,11 @@ export default class ContractService {
 		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		const esplanadeWrapper = this.createEsplanadeWrapper();
+		const stakeWrapper = this.createStakeWrapper();
 
 		const DualWrappers = [];
 		for (const type in duoWrappers)
 			for (const tenor in duoWrappers[type]) DualWrappers.push(duoWrappers[type][tenor]);
-		eventUtil.fetch([magiWrapper, esplanadeWrapper, ...DualWrappers], this.option.force);
+		eventUtil.fetch([magiWrapper, stakeWrapper, esplanadeWrapper, ...DualWrappers], this.option.force);
 	}
 }
