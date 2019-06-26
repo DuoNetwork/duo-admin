@@ -150,10 +150,16 @@ Array [
             "code": "Magi",
           },
         ],
-        "Stake": Object {
-          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
-          "code": "Stake",
-        },
+        "Stakes": Array [
+          Object {
+            "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+            "code": "Stake-0",
+          },
+          Object {
+            "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
+            "code": "Stake-60",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -234,10 +240,16 @@ Array [
             "code": "Magi",
           },
         ],
-        "Stake": Object {
-          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
-          "code": "Stake",
-        },
+        "Stakes": Array [
+          Object {
+            "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+            "code": "Stake-0",
+          },
+          Object {
+            "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
+            "code": "Stake-60",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -329,10 +341,16 @@ Array [
             "code": "Magi",
           },
         ],
-        "Stake": Object {
-          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
-          "code": "Stake",
-        },
+        "Stakes": Array [
+          Object {
+            "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+            "code": "Stake-0",
+          },
+          Object {
+            "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
+            "code": "Stake-60",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -424,10 +442,16 @@ Array [
             "code": "Magi",
           },
         ],
-        "Stake": Object {
-          "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
-          "code": "Stake",
-        },
+        "Stakes": Array [
+          Object {
+            "address": "0x71E17030E49A1361b8E1902d613C4e5dD2185e8A",
+            "code": "Stake-0",
+          },
+          Object {
+            "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
+            "code": "Stake-60",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -450,14 +474,17 @@ Array [
         "contract": "MagiWrapper",
       },
       Object {
-        "contract": "StakeWrapper",
-      },
-      Object {
         "contract": "EsplanadeWrapper",
       },
       "BTV-PPT",
       "MZT-PPT",
       "VVD-tenor",
+      Object {
+        "contract": "StakeWrapper",
+      },
+      Object {
+        "contract": "StakeWrapper",
+      },
     ],
     false,
   ],
