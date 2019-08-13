@@ -160,6 +160,12 @@ Array [
             "code": "Stake-60",
           },
         ],
+        "StakesV2": Array [
+          Object {
+            "address": "0xc99814003fdeb4eb77d808cb1cf08bca0d8502e5",
+            "code": "Stake-0",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -248,6 +254,12 @@ Array [
           Object {
             "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
             "code": "Stake-60",
+          },
+        ],
+        "StakesV2": Array [
+          Object {
+            "address": "0xc99814003fdeb4eb77d808cb1cf08bca0d8502e5",
+            "code": "Stake-0",
           },
         ],
       },
@@ -351,6 +363,12 @@ Array [
             "code": "Stake-60",
           },
         ],
+        "StakesV2": Array [
+          Object {
+            "address": "0xc99814003fdeb4eb77d808cb1cf08bca0d8502e5",
+            "code": "Stake-0",
+          },
+        ],
       },
       "web3": Object {
         "eth": Object {
@@ -450,6 +468,12 @@ Array [
           Object {
             "address": "0x0646B77D768a459aA5F84E6A160A5B72b88d76eA",
             "code": "Stake-60",
+          },
+        ],
+        "StakesV2": Array [
+          Object {
+            "address": "0xc99814003fdeb4eb77d808cb1cf08bca0d8502e5",
+            "code": "Stake-0",
           },
         ],
       },
