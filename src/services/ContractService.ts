@@ -47,13 +47,13 @@ export default class ContractService {
 											this.web3Wrapper.contractAddresses.Custodians[
 												contractType
 											][tenor].custodian.address
-									)
+									  )
 									: new DualClassWrapper(
 											this.web3Wrapper,
 											this.web3Wrapper.contractAddresses.Custodians[
 												contractType
 											][tenor].custodian.address
-									)
+									  )
 						}
 					});
 		return duoWrappers;
@@ -65,7 +65,7 @@ export default class ContractService {
 			this.web3Wrapper.contractAddresses.Oracles[0].address
 		);
 	}
-	
+
 	public createEsplanadeWrapper() {
 		return new EsplanadeWrapper(
 			this.web3Wrapper,
@@ -99,15 +99,26 @@ export default class ContractService {
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
 
-	public async fetchPrice() {
+	public async fetchPrice(option: IOption) {
 		await this.fetchKey();
 		const duoWrappers = this.createDuoWrappers();
 		const magiWrapper = this.createMagiWrapper();
 		const DualWrappers: DualClassWrapper[] = [];
-		for (const type in duoWrappers)
-			if (type !== WrapperConstants.VIVALDI)
-				for (const tenor in duoWrappers[type])
-					DualWrappers.push(duoWrappers[type][tenor] as DualClassWrapper);
+		if (!option.contractType || !option.tenor) {
+			for (const type in duoWrappers)
+				if (type !== WrapperConstants.VIVALDI)
+					for (const tenor in duoWrappers[type])
+						DualWrappers.push(duoWrappers[type][tenor] as DualClassWrapper);
+		} else if (!option.tenor && option.contractType && duoWrappers[option.contractType]) {
+			if (option.contractType !== WrapperConstants.VIVALDI)
+				for (const tenor in duoWrappers[option.contractType])
+					DualWrappers.push(duoWrappers[option.contractType][tenor] as DualClassWrapper);
+		} else if (option.contractType && option.tenor)
+			DualWrappers.push(duoWrappers[option.contractType][option.tenor] as DualClassWrapper);
+		else {
+			util.logError('please check option contractType and tenor');
+			return;
+		}
 
 		priceUtil.fetchPrice(this.address, DualWrappers, magiWrapper);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
@@ -244,18 +255,16 @@ export default class ContractService {
 
 		const StakeWrappers = [];
 
-		for (const stake of this.web3Wrapper.contractAddresses.Stakes){
-			StakeWrappers.push(
-				 new StakeWrapper(
-					this.web3Wrapper,
-					stake.address
-				)
-			)
+		for (const stake of this.web3Wrapper.contractAddresses.Stakes) {
+			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
 		}
 
 		const DualWrappers = [];
 		for (const type in duoWrappers)
 			for (const tenor in duoWrappers[type]) DualWrappers.push(duoWrappers[type][tenor]);
-		eventUtil.fetch([magiWrapper, esplanadeWrapper, ...DualWrappers, ...StakeWrappers], this.option.force);
+		eventUtil.fetch(
+			[magiWrapper, esplanadeWrapper, ...DualWrappers, ...StakeWrappers],
+			this.option.force
+		);
 	}
 }
