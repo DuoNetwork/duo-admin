@@ -93,7 +93,7 @@ export default class MarketDataService {
 					contractService.commitPrice();
 					break;
 				case CST.FETCH_PRICE:
-					contractService.fetchPrice();
+					contractService.fetchPrice(option);
 					break;
 				default:
 					util.logDebug(`tool ${tool} is wrong`);
