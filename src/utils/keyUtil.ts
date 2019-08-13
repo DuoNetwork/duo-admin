@@ -1,5 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Aws } from 'aws-cli-js';
+import * as fs from 'fs';
 import * as CST from '../common/constants';
 import { IKey, IOption, ISqlAuth } from '../common/types';
 import httpUtil from './httpUtil';
@@ -50,11 +51,11 @@ class KeyUtil {
 		};
 		if (!option.server) {
 			try {
-				key = option.azure
-					? require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfAzure.json`)
+				key = JSON.parse(fs.readFileSync(option.azure
+					? `./src/keys/eth/${option.live ? 'live' : 'kovan'}/pfAzure.json`
 					: option.gcp
-					? require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfGcp.json`)
-					: require(`../keys/eth/${option.live ? 'live' : 'kovan'}/pfAws.json`);
+					? `./src/keys/eth/${option.live ? 'live' : 'kovan'}/pfGcp.json`
+					: `./src/keys/eth/${option.live ? 'live' : 'kovan'}/pfAws.json`, 'utf8'));
 			} catch (error) {
 				util.logError(error);
 			}
