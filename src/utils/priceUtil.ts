@@ -25,6 +25,8 @@ class PriceUtil {
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = 0;
 
+		console.log("get is started");
+
 		const isStarted = await magiWrapper.isStarted();
 		console.log("isStarted", isStarted);
 
