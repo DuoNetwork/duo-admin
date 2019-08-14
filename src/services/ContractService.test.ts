@@ -57,6 +57,12 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	}))
 }));
 
+jest.mock('@finbook/duo-contract-wrapper/dist/StakeV2Wrapper', () => ({
+	StakeV2Wrapper: jest.fn(() => ({
+		contract: 'StakeV2Wrapper'
+	}))
+}));
+
 import {
 	DualClassWrapper,
 	EsplanadeWrapper,
@@ -526,7 +532,7 @@ test('round', async () => {
 	);
 
 	contractService.createMagiWrapper = jest.fn(() => 'magiWrapper' as any);
-	contractService.checkRound = jest.fn(() => Promise.resolve(undefined));
+	contractService.checkRound = jest.fn(() => Promise.resolve(undefined)) as any;
 	global.setInterval = jest.fn();
 
 	await contractService.round({ contractType: 'Vivaldi', tenor: '100C-3H' } as any);

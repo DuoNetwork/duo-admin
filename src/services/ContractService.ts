@@ -8,6 +8,7 @@ import {
 	VivaldiWrapper,
 	Web3Wrapper
 } from '@finbook/duo-contract-wrapper';
+import { StakeV2Wrapper } from '@finbook/duo-contract-wrapper/dist/StakeV2Wrapper';
 import { IOption } from '../common/types';
 import dbUtil from '../utils/dbUtil';
 import eventUtil from '../utils/eventUtil';
@@ -43,17 +44,17 @@ export default class ContractService {
 							[tenor]:
 								contractType === WrapperConstants.VIVALDI
 									? new VivaldiWrapper(
-											this.web3Wrapper,
-											this.web3Wrapper.contractAddresses.Custodians[
-												contractType
-											][tenor].custodian.address
-									  )
+										this.web3Wrapper,
+										this.web3Wrapper.contractAddresses.Custodians[
+											contractType
+										][tenor].custodian.address
+									)
 									: new DualClassWrapper(
-											this.web3Wrapper,
-											this.web3Wrapper.contractAddresses.Custodians[
-												contractType
-											][tenor].custodian.address
-									  )
+										this.web3Wrapper,
+										this.web3Wrapper.contractAddresses.Custodians[
+											contractType
+										][tenor].custodian.address
+									)
 						}
 					});
 		return duoWrappers;
@@ -200,7 +201,7 @@ export default class ContractService {
 		try {
 			kovanManagerAccount = require(`../static/${
 				option.live ? 'live' : 'kovan'
-			}ManagerAccount.json`);
+				}ManagerAccount.json`);
 		} catch (error) {
 			console.log(error);
 		}
@@ -255,13 +256,11 @@ export default class ContractService {
 
 		const StakeWrappers = [];
 
-		for (const stake of this.web3Wrapper.contractAddresses.Stakes) {
+		for (const stake of this.web3Wrapper.contractAddresses.Stakes)
 			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
-		}
 
-		for (const stake of this.web3Wrapper.contractAddresses.StakesV2) {
-			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
-		}
+		for (const stake of this.web3Wrapper.contractAddresses.StakesV2)
+			StakeWrappers.push(new StakeV2Wrapper(this.web3Wrapper, stake.address));
 
 		const DualWrappers = [];
 		for (const type in duoWrappers)

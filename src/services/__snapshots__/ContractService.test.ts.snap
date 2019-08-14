@@ -510,7 +510,7 @@ Array [
         "contract": "StakeWrapper",
       },
       Object {
-        "contract": "StakeWrapper",
+        "contract": "StakeV2Wrapper",
       },
     ],
     false,
