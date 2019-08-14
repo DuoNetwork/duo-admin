@@ -7,6 +7,7 @@ import dbUtil from '../utils/dbUtil';
 import osUtil from '../utils/osUtil';
 import priceUtil from '../utils/priceUtil';
 import util from '../utils/util';
+// import { Constants } from '@finbook/duo-market-data';
 
 export default class MarketDataService {
 	public subProcesses: { [key: string]: ISubProcess } = {};
@@ -71,12 +72,15 @@ export default class MarketDataService {
 	}
 
 	public async startPriceFixService(tool: string, option: IOption): Promise<void> {
+		console.log("##########################")
 		if ((!option.pairs || !option.pairs.length) && !option.pair) {
-			util.logDebug(`no pairs or pair specified`);
+			console.log(`no pairs or pair specified`);
 			return;
 		} else if (!option.pair)
 			for (const pair of option.pairs) {
+				console.log('pair');
 				option.pair = pair;
+				console.log(option.pair)
 				this.subProcesses[pair] = {
 					processName: option.pair,
 					lastFailTimestamp: 0,
@@ -86,7 +90,7 @@ export default class MarketDataService {
 				this.launchPriceFixService(tool, pair, option);
 			}
 		else {
-			util.logDebug(`start committing price fix for pair ${option.pair}`);
+			console.log(`start committing price fix for pair ${option.pair}`);
 			const contractService = new ContractService(tool, option);
 			switch (tool) {
 				case CST.COMMIT:
@@ -121,11 +125,11 @@ export default class MarketDataService {
 		this.subProcesses[option.pair].lastFailTimestamp = util.getUTCNowTimestamp();
 
 		if (!procInstance) {
-			util.logError('Failed to launch public pair ');
+			console.log('Failed to launch public pair ');
 			this.retry(pair, () => this.launchPriceFixService(tool, pair, option));
 		} else
 			procInstance.on('exit', code => {
-				util.logError(`[${option.pair}]: Exit with code ${code}`);
+				console.log(`[${option.pair}]: Exit with code ${code}`);
 				if (code) this.retry(pair, () => this.launchPriceFixService(tool, pair, option));
 			});
 	}

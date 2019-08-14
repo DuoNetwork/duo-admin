@@ -21,7 +21,7 @@ class PriceUtil {
 	) {
 		const startTime = util.getUTCNowTimestamp();
 		const endTime = startTime.valueOf() + 3500000;
-		const commitStart = endTime + 50000;
+		// const commitStart = endTime + 50000;
 		const rule = new schedule.RecurrenceRule();
 		rule.minute = 0;
 
@@ -33,9 +33,9 @@ class PriceUtil {
 				this.startMagi(account, magiWrapper, pair, gasPrice)
 			);
 
-		schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, () =>
-			this.commitPrice(account, magiWrapper, pair, gasPrice)
-		);
+		// schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, () =>
+		this.commitPrice(account, magiWrapper, pair, gasPrice)
+		// );
 	}
 
 	public async startMagi(
@@ -67,8 +67,17 @@ class PriceUtil {
 		pair: string,
 		gasPrice: number = 0
 	) {
+		console.log(pair);
 		const [quote, base] = pair.split('|');
 		const currentPrice = await calculator.getPriceFix(quote, base);
+		// const currentPrice = {
+		// 	price: 200,
+		// 	volume: 100,
+		// 	source: "source",
+		// 	base: "base",
+		// 	quote: "quote",
+		// 	timestamp: Date.now()
+		// }
 		const isLive = magiWrapper.web3Wrapper.isLive();
 
 		let currentBlkTime = 0;
@@ -76,10 +85,13 @@ class PriceUtil {
 		for (let i = 0; i < 6; i++) {
 			try {
 				currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
+				console.log(currentPrice.timestamp, currentBlkTime)
 				if (currentPrice.timestamp <= currentBlkTime) break;
 			} catch (err) {
 				util.logError(err);
 			}
+
+			console.log("sleep" + i)
 
 			await util.sleep(10000);
 		}
