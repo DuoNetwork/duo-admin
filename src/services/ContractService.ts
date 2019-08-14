@@ -259,6 +259,10 @@ export default class ContractService {
 			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
 		}
 
+		for (const stake of this.web3Wrapper.contractAddresses.StakesV2) {
+			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
+		}
+
 		const DualWrappers = [];
 		for (const type in duoWrappers)
 			for (const tenor in duoWrappers[type]) DualWrappers.push(duoWrappers[type][tenor]);

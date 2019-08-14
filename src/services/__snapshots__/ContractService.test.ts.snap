@@ -509,6 +509,9 @@ Array [
       Object {
         "contract": "StakeWrapper",
       },
+      Object {
+        "contract": "StakeWrapper",
+      },
     ],
     false,
   ],
