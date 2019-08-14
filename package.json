@@ -10,7 +10,7 @@
 		"build": "tsc",
 		"prepare": "npm run build",
 		"tslint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts{,x} --fix",
-		"commit": "ts-node ./src/index commit",
+		"commit": "node ./src/index commit",
 		"trades": "node ./dist/index trades",
 		"prices": "node ./dist/index prices",
 		"node": "node ./dist/index node",

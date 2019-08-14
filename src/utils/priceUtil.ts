@@ -84,6 +84,7 @@ class PriceUtil {
 
 		for (let i = 0; i < 6; i++) {
 			try {
+				console.log("start getting blockTime");
 				currentBlkTime = await magiWrapper.web3Wrapper.getBlockTimestamp();
 				console.log(currentPrice.timestamp, currentBlkTime)
 				if (currentPrice.timestamp <= currentBlkTime) break;
