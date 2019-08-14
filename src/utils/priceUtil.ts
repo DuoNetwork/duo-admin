@@ -26,13 +26,14 @@ class PriceUtil {
 		rule.minute = 0;
 
 		const isStarted = await magiWrapper.isStarted();
+		console.log("isStarted", isStarted);
 
 		if (!isStarted)
 			// contract is in inception state; start contract first and then commit price
 			schedule.scheduleJob({ start: startTime, end: endTime, rule }, () =>
 				this.startMagi(account, magiWrapper, pair, gasPrice)
 			);
-
+		console.log("sending price")
 		// schedule.scheduleJob({ start: !isStarted ? commitStart : startTime, rule }, () =>
 		this.commitPrice(account, magiWrapper, pair, gasPrice)
 		// );

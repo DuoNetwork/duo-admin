@@ -96,6 +96,7 @@ export default class ContractService {
 	public async commitPrice() {
 		await this.fetchKey();
 		const magiWrapper = this.createMagiWrapper();
+		console.log("starting commit prices ...........")
 		priceUtil.startCommitPrices(this.address, magiWrapper, this.option.pair);
 		global.setInterval(() => dbUtil.insertHeartbeat(), 30000);
 	}
