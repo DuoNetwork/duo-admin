@@ -4,9 +4,9 @@
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
 		"moduleResolution": "node",
-		"outDir": "./dist/",
+		"outDir": "dist",
 		"target": "es5",
-		"sourceMap": true,
+		"sourceMap": false,
 		"lib": ["es2017", "es2015", "es6"],
 		"noImplicitAny": true,
 		"strict": true,
@@ -15,6 +15,10 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"allowSyntheticDefaultImports": true,
-		"allowJs": true
-	}
+		"allowJs": false
+	},
+	"exclude": [
+		"**/*.test.*",
+		"coverage"
+	]
 }

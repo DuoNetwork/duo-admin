@@ -673,27 +673,27 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -706,21 +706,21 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
@@ -735,11 +735,11 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": true,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": true,
           },
         ],
@@ -767,11 +767,11 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -788,27 +788,27 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -819,7 +819,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -831,7 +831,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": false,
             },
           ],
@@ -933,27 +933,27 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -966,21 +966,21 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
@@ -994,7 +994,7 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": false,
           },
         ],
@@ -1022,11 +1022,11 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -1043,27 +1043,27 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -1074,7 +1074,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -1086,7 +1086,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": false,
             },
           ],
@@ -1164,27 +1164,27 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -1197,21 +1197,21 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
             },
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": Object {
               "price": 100,
               "timestamp": 2234567890000,
@@ -1225,7 +1225,7 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": false,
           },
         ],
@@ -1253,11 +1253,11 @@ Array [
         ],
         "results": Array [
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
           Object {
-            "isThrow": false,
+            "type": "return",
             "value": undefined,
           },
         ],
@@ -1274,27 +1274,27 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -1305,7 +1305,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": Promise {},
             },
           ],
@@ -1317,7 +1317,7 @@ Array [
           ],
           "results": Array [
             Object {
-              "isThrow": false,
+              "type": "return",
               "value": false,
             },
           ],

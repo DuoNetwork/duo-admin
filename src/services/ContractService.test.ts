@@ -144,8 +144,12 @@ test('fetchPrice', async () => {
 	dbUtil.insertHeartbeat = jest.fn();
 	priceUtil.fetchPrice = jest.fn();
 	global.setInterval = jest.fn();
+	const fetchPriceOption = {
+		contractType : "",
+		tenor : ""
+	};
 
-	await contractService.fetchPrice();
+	await contractService.fetchPrice(fetchPriceOption as any);
 	expect((global.setInterval as jest.Mock).mock.calls[0][1]).toMatchSnapshot();
 	(global.setInterval as jest.Mock).mock.calls[0][0]();
 	expect(dbUtil.insertHeartbeat as jest.Mock).toBeCalledTimes(1);

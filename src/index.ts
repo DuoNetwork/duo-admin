@@ -2,6 +2,7 @@
 import '@babel/polyfill';
 import { Constants as WrapperConstants } from '@finbook/duo-contract-wrapper';
 import { Constants as DataConstants } from '@finbook/duo-market-data';
+import * as fs from 'fs';
 import * as CST from './common/constants';
 import ContractService from './services/ContractService';
 import MarketDataService from './services/MarketDataService';
@@ -13,7 +14,7 @@ util.logInfo('tool ' + tool);
 const option = util.parseOptions(process.argv);
 
 if (!option.provider) {
-	const infura = require('./keys/infura.json');
+	const infura = JSON.parse(fs.readFileSync('./src/keys/infura.json', 'utf8'))
 	option.provider =
 		(option.live
 			? WrapperConstants.PROVIDER_INFURA_MAIN

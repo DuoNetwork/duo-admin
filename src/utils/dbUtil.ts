@@ -1,5 +1,6 @@
 import { IEvent } from '@finbook/duo-contract-wrapper';
 import { DynamoUtil, IPrice, IPriceFix, ITrade } from '@finbook/duo-market-data';
+import * as fs from 'fs';
 import * as CST from '../common/constants';
 import { IOption } from '../common/types';
 import keyUtil from './keyUtil';
@@ -18,7 +19,7 @@ class DbUtil {
 
 		let config = {};
 		try {
-			config = require('../keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json');
+			config = JSON.parse(fs.readFileSync('./src/keys/aws/' + (option.live ? 'live' : 'dev') + '/admin.json', 'utf8'));
 		} catch (error) {
 			util.logError(error);
 		}
