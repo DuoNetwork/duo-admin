@@ -9,7 +9,7 @@ WorkingDirectory=/home/ubuntu/duo-admin
 Type=simple
 User=ubuntu
 ExecStart=/usr/bin/node /home/ubuntu/duo-admin/dist/index prices period=1 dev dynamo
-Restart=on-failure
+Restart=always
  
 [Install]
 WantedBy=multi-user.target

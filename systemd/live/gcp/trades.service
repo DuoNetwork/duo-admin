@@ -9,7 +9,7 @@ WorkingDirectory=/home/ubuntu/duo-admin
 Type=simple
 User=ubuntu
 ExecStart=/usr/bin/node /home/ubuntu/duo-admin/dist/index trades assets=ETH,USD server gcp live
-Restart=on-failure
+Restart=always
  
 [Install]
 WantedBy=multi-user.target

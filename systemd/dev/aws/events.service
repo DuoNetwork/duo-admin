@@ -8,8 +8,8 @@ Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/
 WorkingDirectory=/home/ubuntu/duo-admin
 Type=simple
 User=ubuntu
-ExecStart=/usr/bin/node /home/ubuntu/duo-admin/dist/index events server aws events=StartReset,StartPreReset $1
-Restart=on-failure
+ExecStart=/usr/bin/node /home/ubuntu/duo-admin/dist/index events server aws events=StartReset,StartPreReset
+Restart=always
  
 [Install]
 WantedBy=multi-user.target
