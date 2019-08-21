@@ -1,0 +1,15 @@
+[Unit]
+Description=DUO GCP Events Service
+Documentation=https://github.com/FinBook/duo-admin
+After=network.target
+ 
+[Service]
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+WorkingDirectory=/home/ubuntu/duo-admin
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/node /home/ubuntu/duo-admin/dist/index events server gcp live events=StartReset,StartPreReset $1
+Restart=on-failure
+ 
+[Install]
+WantedBy=multi-user.target
