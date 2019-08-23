@@ -54,6 +54,9 @@ jest.mock('@finbook/duo-contract-wrapper', () => ({
 	})),
 	StakeWrapper: jest.fn(() => ({
 		contract: 'StakeWrapper'
+	})),
+	StakeV2Wrapper: jest.fn(() => ({
+		contract: 'StakeV2Wrapper'
 	}))
 }));
 
