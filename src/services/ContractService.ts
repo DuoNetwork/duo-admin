@@ -4,6 +4,7 @@ import {
 	DualClassWrapper,
 	EsplanadeWrapper,
 	MagiWrapper,
+	StakeV2Wrapper,
 	StakeWrapper,
 	VivaldiWrapper,
 	Web3Wrapper
@@ -260,7 +261,7 @@ export default class ContractService {
 		}
 
 		for (const stake of this.web3Wrapper.contractAddresses.StakesV2) {
-			StakeWrappers.push(new StakeWrapper(this.web3Wrapper, stake.address));
+			StakeWrappers.push(new StakeV2Wrapper(this.web3Wrapper, stake.address));
 		}
 
 		const DualWrappers = [];
